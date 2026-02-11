@@ -4,7 +4,7 @@ import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
   site: "https://saimon1004.github.io",
-  base: "/ai-saite",
+  base: "/ai-saite/",
   output: "static",
   vite: {
     plugins: [tailwindcss()],
