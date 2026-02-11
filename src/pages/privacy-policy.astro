@@ -1,0 +1,191 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import Container from "../components/ui/Container.astro";
+import AnimateOnScroll from "../components/ui/AnimateOnScroll.astro";
+import { company } from "../data/company";
+
+const base = import.meta.env.BASE_URL;
+
+const breadcrumbs = [
+  { label: "ホーム", href: `${base}` },
+  { label: "プライバシーポリシー" },
+];
+---
+
+<PageLayout
+  title="プライバシーポリシー | 株式会社SAIMON"
+  description="株式会社SAIMONのプライバシーポリシー。個人情報の取り扱いについてご説明します。"
+  breadcrumbs={breadcrumbs}
+>
+  <!-- Hero Banner -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-navy via-navy-light to-navy py-20 sm:py-28">
+    <div class="absolute inset-0 opacity-10" aria-hidden="true">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-teal rounded-full blur-3xl"></div>
+    </div>
+    <Container class="relative text-center">
+      <p class="text-teal text-sm font-bold tracking-[0.3em] uppercase mb-4">Privacy Policy</p>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight">
+        PRIVACY POLICY
+      </h1>
+      <p class="mt-4 text-lg text-white/70">プライバシーポリシー</p>
+    </Container>
+  </section>
+
+  <!-- Privacy Policy Content -->
+  <section class="py-20 sm:py-28 bg-surface">
+    <Container>
+      <AnimateOnScroll>
+        <div class="max-w-3xl mx-auto">
+          <div class="prose prose-lg max-w-none">
+
+            <!-- 基本方針 -->
+            <div class="mb-12">
+              <h2 class="text-2xl font-bold text-text-primary mb-4 pb-3 border-b-2 border-teal">
+                基本方針
+              </h2>
+              <p class="text-text-secondary leading-relaxed">
+                {company.name}（以下「当社」といいます）は、個人情報の保護に関する法律（個人情報保護法）その他の関連法令を遵守し、お客様の個人情報を適切に取り扱うことを基本方針とします。当社は、お客様からお預かりした個人情報の保護に万全を期してまいります。
+              </p>
+            </div>
+
+            <!-- 個人情報の定義 -->
+            <div class="mb-12">
+              <h2 class="text-2xl font-bold text-text-primary mb-4 pb-3 border-b-2 border-teal">
+                個人情報の定義
+              </h2>
+              <p class="text-text-secondary leading-relaxed">
+                本プライバシーポリシーにおいて「個人情報」とは、個人情報保護法に定める個人情報を指し、生存する個人に関する情報であって、氏名、メールアドレス、電話番号その他の記述等により特定の個人を識別できるものをいいます。
+              </p>
+            </div>
+
+            <!-- 個人情報の収集方法 -->
+            <div class="mb-12">
+              <h2 class="text-2xl font-bold text-text-primary mb-4 pb-3 border-b-2 border-teal">
+                個人情報の収集方法
+              </h2>
+              <p class="text-text-secondary leading-relaxed">
+                当社は、お客様が当社のウェブサイト上のお問い合わせフォームをご利用いただく際に、氏名、メールアドレス等の個人情報をお伺いすることがあります。個人情報の提供は任意ですが、必要な情報をご提供いただけない場合、適切な対応ができないことがあります。
+              </p>
+            </div>
+
+            <!-- 利用目的 -->
+            <div class="mb-12">
+              <h2 class="text-2xl font-bold text-text-primary mb-4 pb-3 border-b-2 border-teal">
+                利用目的
+              </h2>
+              <p class="text-text-secondary leading-relaxed mb-4">
+                当社が個人情報を収集・利用する目的は、以下のとおりです。
+              </p>
+              <ul class="space-y-2 text-text-secondary">
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2.5 shrink-0" aria-hidden="true"></span>
+                  <span>お問い合わせに対するご回答・ご連絡のため</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2.5 shrink-0" aria-hidden="true"></span>
+                  <span>当社サービスに関するご案内のため</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2.5 shrink-0" aria-hidden="true"></span>
+                  <span>サービスの改善・新サービスの開発のため</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2.5 shrink-0" aria-hidden="true"></span>
+                  <span>その他上記の利用目的に付随する目的のため</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 第三者提供 -->
+            <div class="mb-12">
+              <h2 class="text-2xl font-bold text-text-primary mb-4 pb-3 border-b-2 border-teal">
+                第三者への提供
+              </h2>
+              <p class="text-text-secondary leading-relaxed mb-4">
+                当社は、以下の場合を除き、お客様の個人情報を第三者に提供することはありません。
+              </p>
+              <ul class="space-y-2 text-text-secondary">
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2.5 shrink-0" aria-hidden="true"></span>
+                  <span>お客様の同意がある場合</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2.5 shrink-0" aria-hidden="true"></span>
+                  <span>法令に基づく場合</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2.5 shrink-0" aria-hidden="true"></span>
+                  <span>人の生命、身体または財産の保護のために必要がある場合であって、本人の同意を得ることが困難であるとき</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2.5 shrink-0" aria-hidden="true"></span>
+                  <span>国の機関もしくは地方公共団体またはその委託を受けた者が法令の定める事務を遂行することに対して協力する必要がある場合</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 個人情報の管理 -->
+            <div class="mb-12">
+              <h2 class="text-2xl font-bold text-text-primary mb-4 pb-3 border-b-2 border-teal">
+                個人情報の管理
+              </h2>
+              <p class="text-text-secondary leading-relaxed">
+                当社は、お客様の個人情報を正確かつ最新の状態に保ち、個人情報への不正アクセス、紛失、破損、改ざん、漏洩などを防止するため、適切な安全管理措置を講じます。また、個人情報の取り扱いを外部に委託する場合は、委託先に対して必要かつ適切な監督を行います。
+              </p>
+            </div>
+
+            <!-- 開示・訂正・削除 -->
+            <div class="mb-12">
+              <h2 class="text-2xl font-bold text-text-primary mb-4 pb-3 border-b-2 border-teal">
+                開示・訂正・削除について
+              </h2>
+              <p class="text-text-secondary leading-relaxed">
+                お客様ご本人から個人情報の開示、訂正、追加、削除、利用停止のご請求があった場合、ご本人であることを確認した上で、合理的な期間内に対応いたします。ご請求については、下記のお問い合わせ窓口までご連絡ください。
+              </p>
+            </div>
+
+            <!-- お問い合わせ窓口 -->
+            <div class="mb-12">
+              <h2 class="text-2xl font-bold text-text-primary mb-4 pb-3 border-b-2 border-teal">
+                お問い合わせ窓口
+              </h2>
+              <p class="text-text-secondary leading-relaxed mb-4">
+                個人情報の取り扱いに関するお問い合わせは、下記までご連絡ください。
+              </p>
+              <div class="bg-surface-dim rounded-[var(--radius-card)] p-6 border border-border">
+                <dl class="space-y-3 text-sm">
+                  <div class="flex flex-col sm:flex-row sm:gap-4">
+                    <dt class="font-bold text-text-primary sm:w-24 shrink-0">会社名</dt>
+                    <dd class="text-text-secondary">{company.name}</dd>
+                  </div>
+                  <div class="flex flex-col sm:flex-row sm:gap-4">
+                    <dt class="font-bold text-text-primary sm:w-24 shrink-0">所在地</dt>
+                    <dd class="text-text-secondary">{company.postalCode} {company.address}</dd>
+                  </div>
+                  <div class="flex flex-col sm:flex-row sm:gap-4">
+                    <dt class="font-bold text-text-primary sm:w-24 shrink-0">Email</dt>
+                    <dd>
+                      <a
+                        href={`mailto:${company.email}`}
+                        class="text-navy hover:text-teal transition-colors duration-200 underline decoration-navy/30 hover:decoration-teal"
+                      >
+                        {company.email}
+                      </a>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+
+            <!-- 制定日 -->
+            <div class="pt-8 border-t border-border text-right">
+              <p class="text-sm text-text-secondary">制定日: 2020年10月1日</p>
+              <p class="text-sm font-bold text-text-primary mt-1">{company.name}</p>
+            </div>
+
+          </div>
+        </div>
+      </AnimateOnScroll>
+    </Container>
+  </section>
+</PageLayout>

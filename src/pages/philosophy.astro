@@ -1,0 +1,155 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import Container from "../components/ui/Container.astro";
+import AnimateOnScroll from "../components/ui/AnimateOnScroll.astro";
+import { company } from "../data/company";
+
+const base = import.meta.env.BASE_URL;
+
+const breadcrumbs = [
+  { label: "ホーム", href: `${base}` },
+  { label: "経営理念" },
+];
+---
+
+<PageLayout
+  title="経営理念 | 株式会社SAIMON"
+  description="株式会社SAIMONの経営理念。「面白い」を実現させるをミッションに掲げ、テクノロジーで企業の成長を支援します。"
+  breadcrumbs={breadcrumbs}
+>
+  <!-- Hero Banner -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-navy via-navy-light to-navy py-20 sm:py-28">
+    <div class="absolute inset-0 opacity-10" aria-hidden="true">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-teal rounded-full blur-3xl"></div>
+    </div>
+    <Container class="relative text-center">
+      <p class="text-teal text-sm font-bold tracking-[0.3em] uppercase mb-4">Philosophy</p>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight">
+        PHILOSOPHY
+      </h1>
+      <p class="mt-4 text-lg text-white/70">経営理念</p>
+    </Container>
+  </section>
+
+  <!-- VISION Section -->
+  <section class="py-20 sm:py-28 bg-surface">
+    <Container>
+      <AnimateOnScroll>
+        <div class="max-w-3xl mx-auto">
+          <div class="glass-light rounded-[var(--radius-card)] p-10 sm:p-14 text-center relative overflow-hidden">
+            <!-- Decorative accent -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-teal rounded-full" aria-hidden="true"></div>
+
+            <!-- Eye icon -->
+            <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-navy/5 text-navy mx-auto mb-8">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+
+            <p class="text-sm font-bold tracking-[0.3em] text-teal uppercase mb-6">Vision</p>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-navy tracking-tight mb-8">
+              VISION
+            </h2>
+            <p class="text-lg sm:text-xl md:text-2xl leading-relaxed font-medium text-text-primary">
+              {company.visionFull}
+            </p>
+          </div>
+        </div>
+      </AnimateOnScroll>
+    </Container>
+  </section>
+
+  <!-- MISSION Section -->
+  <section class="py-20 sm:py-28 bg-surface-dim">
+    <Container>
+      <AnimateOnScroll delay={100}>
+        <div class="max-w-3xl mx-auto">
+          <div class="glass-light rounded-[var(--radius-card)] p-10 sm:p-14 text-center relative overflow-hidden">
+            <!-- Decorative accent -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-navy rounded-full" aria-hidden="true"></div>
+
+            <!-- Target icon -->
+            <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-teal/10 text-teal mx-auto mb-8">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 17a5 5 0 100-10 5 5 0 000 10z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 13a1 1 0 100-2 1 1 0 000 2z" />
+              </svg>
+            </div>
+
+            <p class="text-sm font-bold tracking-[0.3em] text-navy uppercase mb-6">Mission</p>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-navy tracking-tight mb-8">
+              MISSION
+            </h2>
+            <p class="text-2xl sm:text-3xl md:text-4xl leading-relaxed font-black text-text-primary">
+              {company.mission}
+            </p>
+          </div>
+        </div>
+      </AnimateOnScroll>
+    </Container>
+  </section>
+
+  <!-- FOUNDING STORY Section -->
+  <section class="py-20 sm:py-28 bg-surface">
+    <Container>
+      <AnimateOnScroll delay={200}>
+        <div class="max-w-3xl mx-auto">
+          <!-- Section heading -->
+          <div class="text-center mb-12">
+            <div class="w-12 h-1 bg-teal rounded-full mx-auto mb-4" aria-hidden="true"></div>
+            <h2 class="text-3xl md:text-4xl font-bold text-text-primary tracking-tight">
+              創業ストーリー
+            </h2>
+          </div>
+
+          <!-- Story content -->
+          <div class="relative">
+            <!-- Decorative quote mark -->
+            <div class="absolute -top-4 -left-2 sm:-left-6 text-navy/5 select-none pointer-events-none" aria-hidden="true">
+              <svg class="w-16 h-16 sm:w-24 sm:h-24" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151C7.546 6.068 5.983 8.789 5.983 11H10v10H0z" />
+              </svg>
+            </div>
+
+            <div class="space-y-6 text-base sm:text-lg leading-relaxed text-text-secondary pl-0 sm:pl-4">
+              <p>
+                2009年、保険代理店でのキャリアをスタートしました。人事、Webマーケティング、経営企画と幅広い業務に携わる中で、多くの中小企業が抱える課題を目の当たりにしてきました。
+              </p>
+              <p>
+                人材が集まらない、社内の仕組みが整っていない、テクノロジーをどう活用すればいいかわからない——そうした悩みを持つ経営者に寄り添い、共に解決策を模索する日々。
+              </p>
+              <p>
+                その中で強く感じたのは、テクノロジーの力を正しく活用すれば、企業はもっと「面白く」なれるということでした。
+              </p>
+              <p>
+                2020年10月、「面白い」を実現させるという想いを胸に、株式会社SAIMONを設立。採用定着支援、AI研修、バックオフィス構築という3つの柱で、企業の成長をテクノロジーの力で後押ししています。
+              </p>
+              <p>
+                私たちが目指すのは、経営者の夢が実現する面白い社会。SAIMONは、その実現に向けて歩み続けます。
+              </p>
+            </div>
+
+            <!-- CEO signature -->
+            <div class="mt-12 pt-8 border-t border-border">
+              <div class="flex items-center justify-end gap-4">
+                <div class="text-right">
+                  <p class="text-sm text-text-secondary mb-1">代表取締役</p>
+                  <p class="text-xl sm:text-2xl font-bold text-text-primary tracking-wide">
+                    {company.ceo}
+                  </p>
+                </div>
+                <!-- Decorative geometric accent -->
+                <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-navy to-teal flex items-center justify-center" aria-hidden="true">
+                  <div class="w-6 h-6 border-2 border-white/50 rounded-sm rotate-45"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </AnimateOnScroll>
+    </Container>
+  </section>
+</PageLayout>

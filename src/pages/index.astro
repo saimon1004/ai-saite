@@ -1,0 +1,65 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import HeroSection from "../components/home/HeroSection.astro";
+import PhilosophyPreview from "../components/home/PhilosophyPreview.astro";
+import ServicesGrid from "../components/home/ServicesGrid.astro";
+import CeoMessage from "../components/home/CeoMessage.astro";
+import CompanyInfoPreview from "../components/home/CompanyInfoPreview.astro";
+import { company } from "../data/company";
+import { siteConfig } from "../data/seo";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${company.url}/#organization`,
+      name: company.name,
+      alternateName: company.nameEn,
+      url: company.url,
+      logo: {
+        "@type": "ImageObject",
+        url: `${company.url}/logo.png`,
+      },
+      founder: {
+        "@type": "Person",
+        name: company.ceo,
+      },
+      foundingDate: "2020-10",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "大阪市中央区",
+        addressRegion: "大阪府",
+        addressCountry: "JP",
+        postalCode: "540-0014",
+        streetAddress: "龍造寺町4-3",
+      },
+      telephone: company.tel,
+      email: company.email,
+      description: siteConfig.defaultDescription,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${company.url}/#website`,
+      url: company.url,
+      name: company.name,
+      publisher: {
+        "@id": `${company.url}/#organization`,
+      },
+      inLanguage: "ja",
+    },
+  ],
+};
+---
+
+<PageLayout
+  title="株式会社SAIMON | 面白いを実現させる"
+  description={siteConfig.defaultDescription}
+  jsonLd={jsonLd}
+>
+  <HeroSection />
+  <PhilosophyPreview />
+  <ServicesGrid />
+  <CeoMessage />
+  <CompanyInfoPreview />
+</PageLayout>

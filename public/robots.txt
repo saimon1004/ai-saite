@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://saimon1004.github.io/ai-saite/sitemap-index.xml

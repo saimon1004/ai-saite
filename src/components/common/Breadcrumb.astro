@@ -1,0 +1,71 @@
+---
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+
+const base = import.meta.env.BASE_URL;
+
+// Build full breadcrumb list with Home at the start
+const allItems: BreadcrumbItem[] = [
+  { label: "ホーム", href: `${base}` },
+  ...items,
+];
+
+// Schema.org BreadcrumbList
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: allItems.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.label,
+    ...(item.href ? { item: new URL(item.href, Astro.site).href } : {}),
+  })),
+};
+---
+
+<nav aria-label="パンくずリスト" class="bg-surface-dim border-b border-border">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+    <ol class="flex items-center flex-wrap gap-1 text-sm">
+      {allItems.map((item, index) => {
+        const isLast = index === allItems.length - 1;
+        return (
+          <li class="flex items-center">
+            {index > 0 && (
+              <svg
+                class="w-4 h-4 mx-1 text-text-secondary/50"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            )}
+            {isLast ? (
+              <span class="text-text-secondary font-medium" aria-current="page">
+                {item.label}
+              </span>
+            ) : (
+              <a
+                href={item.href}
+                class="text-text-secondary hover:text-navy transition-colors duration-200"
+              >
+                {item.label}
+              </a>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  </div>
+</nav>
+
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />

@@ -1,0 +1,24 @@
+---
+interface Props {
+  delay?: number;
+  class?: string;
+  animation?: "fade-up" | "fade-in" | "scale-in";
+}
+
+const { delay, class: className = "", animation = "fade-up" } = Astro.props;
+
+const animationClasses: Record<string, string> = {
+  "fade-up": "animate-fade-up",
+  "fade-in": "animate-fade-in",
+  "scale-in": "animate-scale-in",
+};
+
+const animClass = animationClasses[animation] ?? "animate-fade-up";
+const delayStyle = delay ? `transition-delay: ${delay}ms;` : undefined;
+---
+
+<div class:list={[animClass, className]} style={delayStyle}>
+  <slot />
+</div>
+
+<script src="../../scripts/scroll-animations.ts"></script>

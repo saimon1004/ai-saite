@@ -1,0 +1,131 @@
+---
+import { navigation } from "../../data/navigation";
+
+const base = import.meta.env.BASE_URL;
+---
+
+<header
+  id="site-header"
+  class="sticky top-0 z-50 w-full transition-all duration-300 bg-transparent"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 lg:h-20">
+      <!-- Logo -->
+      <a
+        href={`${base}`}
+        class="flex items-center gap-2 text-navy font-black text-2xl tracking-tight hover:opacity-80 transition-opacity"
+        aria-label="SAIMONホームページへ"
+      >
+        SAIMON
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden lg:flex items-center gap-1" aria-label="メインナビゲーション">
+        {navigation.map((item) => (
+          item.href === "/contact/" ? (
+            <a
+              href={`${base}contact/`}
+              class="ml-4 inline-flex items-center px-5 py-2.5 rounded-[var(--radius-button)] bg-teal text-white text-sm font-bold hover:bg-teal-light transition-colors duration-200"
+            >
+              {item.label}
+            </a>
+          ) : item.children ? (
+            <div class="relative group">
+              <a
+                href={`${base}${item.href.replace(/^\//, "")}`}
+                class="px-4 py-2 text-sm font-medium text-text-primary hover:text-navy transition-colors duration-200 rounded-lg hover:bg-surface-dim"
+              >
+                {item.label}
+              </a>
+              <div class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div class="bg-surface rounded-xl shadow-card-hover border border-border py-2 min-w-[220px]">
+                  {item.children.map((child) => (
+                    <a
+                      href={`${base}${child.href.replace(/^\//, "")}`}
+                      class="block px-4 py-2.5 text-sm text-text-primary hover:text-navy hover:bg-surface-dim transition-colors duration-200"
+                    >
+                      {child.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <a
+              href={`${base}${item.href.replace(/^\//, "")}`}
+              class="px-4 py-2 text-sm font-medium text-text-primary hover:text-navy transition-colors duration-200 rounded-lg hover:bg-surface-dim"
+            >
+              {item.label}
+            </a>
+          )
+        ))}
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button
+        data-menu-toggle
+        class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg text-text-primary hover:bg-surface-dim transition-colors"
+        aria-label="メニューを開く"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div
+    id="mobile-menu"
+    data-mobile-menu
+    class="hidden lg:hidden bg-surface border-t border-border shadow-card"
+  >
+    <nav class="max-w-7xl mx-auto px-4 py-4 space-y-1" aria-label="モバイルナビゲーション">
+      {navigation.map((item) => (
+        <>
+          <a
+            href={`${base}${item.href.replace(/^\//, "")}`}
+            class:list={[
+              "block px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200",
+              item.href === "/contact/"
+                ? "bg-teal text-white text-center mt-3 hover:bg-teal-light"
+                : "text-text-primary hover:text-navy hover:bg-surface-dim",
+            ]}
+          >
+            {item.label}
+          </a>
+          {item.children && item.children.map((child) => (
+            <a
+              href={`${base}${child.href.replace(/^\//, "")}`}
+              class="block pl-8 pr-4 py-2.5 rounded-lg text-sm text-text-secondary hover:text-navy hover:bg-surface-dim transition-colors duration-200"
+            >
+              {child.label}
+            </a>
+          ))}
+        </>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Header scroll effect
+  const header = document.getElementById("site-header");
+  if (header) {
+    const onScroll = () => {
+      if (window.scrollY > 10) {
+        header.classList.add("bg-surface", "shadow-card");
+        header.classList.remove("bg-transparent");
+      } else {
+        header.classList.remove("bg-surface", "shadow-card");
+        header.classList.add("bg-transparent");
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+</script>
+
+<script src="../../scripts/mobile-menu.ts"></script>

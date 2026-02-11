@@ -1,0 +1,92 @@
+---
+const curriculum = [
+  {
+    day: 1,
+    time: "13:00-16:30",
+    theme: "生成AI基礎と活用事例",
+    topics: [
+      { title: "オリエンテーション", duration: "30分", detail: "" },
+      { title: "主要AIツール比較", duration: "60分", detail: "ChatGPT, Claude, Gemini" },
+      { title: "先進企業活用事例", duration: "45分", detail: "" },
+      { title: "マーケティング活用", duration: "60分", detail: "" },
+    ],
+  },
+  {
+    day: 2,
+    time: "13:00-16:30",
+    theme: "バックオフィス業務効率化",
+    topics: [
+      { title: "振り返り", duration: "15分", detail: "" },
+      { title: "人事領域活用", duration: "60分", detail: "" },
+      { title: "総務効率化", duration: "60分", detail: "NotebookLM活用" },
+      { title: "コールセンター改善", duration: "60分", detail: "" },
+    ],
+  },
+  {
+    day: 3,
+    time: "13:00-17:00",
+    theme: "実践ワークショップ",
+    topics: [
+      { title: "セットアップ", duration: "30分", detail: "Claude Code / Remotion" },
+      { title: "Claude Code基礎", duration: "45分", detail: "" },
+      { title: "Remotion基礎", duration: "45分", detail: "" },
+      { title: "自己紹介動画制作", duration: "60分", detail: "" },
+      { title: "発表・まとめ", duration: "60分", detail: "" },
+    ],
+  },
+];
+---
+
+<div class="space-y-8 md:space-y-12">
+  {curriculum.map((dayBlock, dayIndex) => (
+    <div class="animate-fade-up" style={`transition-delay: ${dayIndex * 150}ms;`}>
+      <div class="flex items-start gap-4 md:gap-6">
+        <!-- Day Number Circle -->
+        <div class="shrink-0">
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-navy text-white flex flex-col items-center justify-center">
+            <span class="text-xs font-medium uppercase leading-none opacity-80">Day</span>
+            <span class="text-2xl md:text-3xl font-black leading-none">{dayBlock.day}</span>
+          </div>
+        </div>
+
+        <!-- Day Content -->
+        <div class="flex-1 min-w-0">
+          {/* Header */}
+          <div class="mb-4">
+            <div class="flex flex-wrap items-center gap-2 mb-1">
+              <h3 class="text-lg md:text-xl font-bold text-navy">{dayBlock.theme}</h3>
+            </div>
+            <span class="inline-flex items-center gap-1 text-sm text-text-secondary">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {dayBlock.time}
+            </span>
+          </div>
+
+          {/* Topic Cards */}
+          <div class="space-y-3">
+            {dayBlock.topics.map((topic) => (
+              <div class="flex items-start gap-3 p-3 bg-surface-dim rounded-lg border border-border/50">
+                <span class="shrink-0 px-2 py-0.5 rounded text-xs font-bold bg-teal/10 text-teal">
+                  {topic.duration}
+                </span>
+                <div class="min-w-0">
+                  <span class="text-sm font-medium text-text-primary">{topic.title}</span>
+                  {topic.detail && (
+                    <span class="block text-xs text-text-secondary mt-0.5">{topic.detail}</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Connector line between days */}
+      {dayIndex < curriculum.length - 1 && (
+        <div class="ml-8 md:ml-10 h-8 md:h-12 border-l-2 border-dashed border-navy/20" aria-hidden="true" />
+      )}
+    </div>
+  ))}
+</div>

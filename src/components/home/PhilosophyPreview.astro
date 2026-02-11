@@ -1,0 +1,93 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+
+<section class="py-24 sm:py-32 bg-surface">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section heading -->
+    <div class="text-center mb-16 animate-fade-up" data-animate>
+      <p class="text-teal text-sm font-bold tracking-[0.3em] uppercase mb-3">Philosophy</p>
+      <h2 class="text-3xl sm:text-4xl font-black text-text-primary">
+        PHILOSOPHY
+      </h2>
+      <div class="mt-4 w-12 h-1 bg-teal mx-auto rounded-full"></div>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <!-- Vision card -->
+      <div
+        class="glass-light rounded-[var(--radius-card)] p-8 sm:p-10 hover:shadow-card-hover transition-shadow duration-500 animate-fade-up"
+        data-animate
+        style="transition-delay: 0.1s;"
+      >
+        <div class="flex flex-col items-center text-center">
+          <!-- Eye icon -->
+          <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-navy/5 text-navy mb-6">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h3 class="text-sm font-bold tracking-[0.2em] text-teal uppercase mb-4">Vision</h3>
+          <p class="text-text-primary text-base sm:text-lg leading-relaxed font-medium">
+            経営者の想い描く夢を実現させることによって、さらに面白い社会へ。
+          </p>
+        </div>
+      </div>
+
+      <!-- Mission card -->
+      <div
+        class="glass-light rounded-[var(--radius-card)] p-8 sm:p-10 hover:shadow-card-hover transition-shadow duration-500 animate-fade-up"
+        data-animate
+        style="transition-delay: 0.2s;"
+      >
+        <div class="flex flex-col items-center text-center">
+          <!-- Target icon -->
+          <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-navy/5 text-navy mb-6">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 17a5 5 0 100-10 5 5 0 000 10z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 13a1 1 0 100-2 1 1 0 000 2z" />
+            </svg>
+          </div>
+          <h3 class="text-sm font-bold tracking-[0.2em] text-teal uppercase mb-4">Mission</h3>
+          <p class="text-text-primary text-base sm:text-lg leading-relaxed font-medium">
+            「面白い」を実現させる。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Link to philosophy page -->
+    <div class="text-center mt-12 animate-fade-up" data-animate style="transition-delay: 0.3s;">
+      <a
+        href={`${base}philosophy/`}
+        class="inline-flex items-center gap-2 text-navy font-bold hover:text-teal transition-colors duration-200 group"
+      >
+        経営理念について
+        <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const philosophyElements = document.querySelectorAll<HTMLElement>('.bg-surface [data-animate]');
+  if (philosophyElements.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    philosophyElements.forEach((el) => observer.observe(el));
+  }
+</script>

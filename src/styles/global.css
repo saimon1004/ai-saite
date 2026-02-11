@@ -1,0 +1,113 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #0d0084;
+  --color-navy-light: #1a10a0;
+  --color-navy-dark: #09005c;
+  --color-teal: #31b9b5;
+  --color-teal-light: #4dd4d0;
+  --color-teal-dark: #238e8b;
+
+  --color-surface: #ffffff;
+  --color-surface-dim: #f8f9fa;
+  --color-surface-dark: #0f172a;
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #64748b;
+  --color-text-on-dark: #f1f5f9;
+  --color-border: #e2e8f0;
+
+  --font-sans: "Noto Sans JP", system-ui, -apple-system, sans-serif;
+
+  --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+  --shadow-card-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-glass: 0 8px 32px 0 rgb(13 0 132 / 0.1);
+
+  --radius-card: 1rem;
+  --radius-button: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-surface: #0f172a;
+    --color-surface-dim: #1e293b;
+    --color-text-primary: #f1f5f9;
+    --color-text-secondary: #94a3b8;
+    --color-border: #334155;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+}
+
+@utility glass {
+  background: rgb(255 255 255 / 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgb(255 255 255 / 0.12);
+}
+
+@utility glass-light {
+  background: rgb(255 255 255 / 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgb(255 255 255 / 0.3);
+  box-shadow: var(--shadow-glass);
+}
+
+@utility animate-fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility animate-fade-in {
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility animate-scale-in {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+@utility animate-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-scale-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background-color: rgb(49 185 181 / 0.3);
+  color: var(--color-text-primary);
+}

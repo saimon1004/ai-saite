@@ -1,0 +1,61 @@
+---
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  items: FAQItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="divide-y divide-border">
+  {items.map((item) => (
+    <details class="group" >
+      <summary class="flex items-center justify-between gap-4 py-5 cursor-pointer list-none text-left font-bold text-text-primary hover:text-navy transition-colors duration-200 [&::-webkit-details-marker]:hidden">
+        <span class="text-base md:text-lg">{item.question}</span>
+        <svg
+          class="w-5 h-5 shrink-0 text-navy transition-transform duration-300 group-open:rotate-180"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </summary>
+      <div class="pb-5 pr-8">
+        <p class="text-sm md:text-base text-text-secondary leading-relaxed">
+          {item.answer}
+        </p>
+      </div>
+    </details>
+  ))}
+</div>
+
+<style>
+  details summary {
+    list-style: none;
+  }
+
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  details[open] > div {
+    animation: faq-open 0.3s ease-out;
+  }
+
+  @keyframes faq-open {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

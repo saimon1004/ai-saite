@@ -1,0 +1,58 @@
+---
+interface Props {
+  variant?: "primary" | "secondary" | "outline";
+  size?: "sm" | "md" | "lg";
+  href?: string;
+  isExternal?: boolean;
+  class?: string;
+  type?: string;
+}
+
+const {
+  variant = "primary",
+  size = "md",
+  href,
+  isExternal = false,
+  class: className = "",
+  type = "button",
+} = Astro.props;
+
+const variantClasses: Record<string, string> = {
+  primary:
+    "bg-navy text-white hover:bg-navy-light focus-visible:ring-2 focus-visible:ring-navy/50",
+  secondary:
+    "bg-teal text-white hover:bg-teal-light focus-visible:ring-2 focus-visible:ring-teal/50",
+  outline:
+    "border-2 border-navy text-navy hover:bg-navy hover:text-white focus-visible:ring-2 focus-visible:ring-navy/50",
+};
+
+const sizeClasses: Record<string, string> = {
+  sm: "px-4 py-2 text-sm",
+  md: "px-6 py-3 text-base",
+  lg: "px-8 py-4 text-lg",
+};
+
+const baseClasses =
+  "inline-flex items-center justify-center gap-2 font-bold rounded-[var(--radius-button)] transition-all duration-200 hover:shadow-card-hover active:scale-[0.98]";
+
+const classes = [baseClasses, variantClasses[variant], sizeClasses[size], className]
+  .filter(Boolean)
+  .join(" ");
+
+const externalAttrs = isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {};
+---
+
+{href ? (
+  <a href={href} class={classes} {...externalAttrs}>
+    <slot />
+    {isExternal && (
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+      </svg>
+    )}
+  </a>
+) : (
+  <button type={type} class={classes}>
+    <slot />
+  </button>
+)}

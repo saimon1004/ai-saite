@@ -1,0 +1,199 @@
+---
+const plans = [
+  {
+    name: "Basic",
+    recommended: false,
+    initial: "0円",
+    monthly: "50,000円",
+    features: [
+      "戦略立案",
+      "ロードマップ作成",
+      "競合調査",
+      "社員アンケート",
+      "求人票作成・編集",
+    ],
+  },
+  {
+    name: "Plus",
+    recommended: true,
+    initial: "250,000円",
+    monthly: "100,000円",
+    features: [
+      "Basicの全機能",
+      "採用専用ページ制作",
+    ],
+  },
+  {
+    name: "Premium",
+    recommended: false,
+    initial: "250,000円",
+    monthly: "200,000円",
+    features: [
+      "Plusの全機能",
+      "面接サポート",
+    ],
+  },
+];
+
+const notes = [
+  "初月無料でお試しいただけます",
+  "最低4ヶ月からのご契約となります",
+  "月3件まで求人票の作成・編集が含まれます",
+];
+---
+
+<!-- Mobile: Card Layout -->
+<div class="grid grid-cols-1 gap-6 md:hidden">
+  {plans.map((plan) => (
+    <div
+      class:list={[
+        "rounded-[var(--radius-card)] p-6 relative",
+        plan.recommended
+          ? "border-2 border-teal shadow-card-hover"
+          : "border border-border shadow-card",
+      ]}
+    >
+      {plan.recommended && (
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+          <span class="bg-teal text-white text-xs font-bold px-4 py-1 rounded-full">
+            おすすめ
+          </span>
+        </div>
+      )}
+
+      <div class="text-center mb-6">
+        <h3 class:list={[
+          "text-lg font-bold mb-1",
+          plan.recommended ? "text-teal" : "text-navy",
+        ]}>
+          {plan.name}
+        </h3>
+        <div class="text-text-secondary text-sm mb-2">
+          初期費用: <span class="font-bold text-text-primary">{plan.initial}</span>
+        </div>
+        <div class="text-3xl font-bold text-navy">
+          {plan.monthly}
+          <span class="text-sm font-normal text-text-secondary">/月</span>
+        </div>
+      </div>
+
+      <ul class="space-y-3">
+        {plan.features.map((feature) => (
+          <li class="flex items-start gap-2 text-sm">
+            <svg class="w-5 h-5 text-teal shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{feature}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</div>
+
+<!-- Desktop: Table Layout -->
+<div class="hidden md:block overflow-x-auto">
+  <table class="w-full border-collapse">
+    <thead>
+      <tr>
+        <th class="p-4 text-left text-sm font-bold text-text-secondary border-b border-border w-1/4">
+          プラン内容
+        </th>
+        {plans.map((plan) => (
+          <th
+            class:list={[
+              "p-4 text-center border-b w-1/4 relative",
+              plan.recommended
+                ? "border-2 border-teal border-b-teal rounded-t-xl bg-teal/5"
+                : "border-border",
+            ]}
+          >
+            {plan.recommended && (
+              <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span class="bg-teal text-white text-xs font-bold px-4 py-1 rounded-full whitespace-nowrap">
+                  おすすめ
+                </span>
+              </div>
+            )}
+            <span class:list={[
+              "text-lg font-bold",
+              plan.recommended ? "text-teal" : "text-navy",
+            ]}>
+              {plan.name}
+            </span>
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 初期費用 -->
+      <tr class="border-b border-border">
+        <td class="p-4 text-sm font-medium text-text-secondary">初期費用</td>
+        {plans.map((plan) => (
+          <td
+            class:list={[
+              "p-4 text-center font-bold text-lg",
+              plan.recommended ? "border-x-2 border-teal bg-teal/5" : "",
+            ]}
+          >
+            {plan.initial}
+          </td>
+        ))}
+      </tr>
+      <!-- 月額費用 -->
+      <tr class="border-b border-border">
+        <td class="p-4 text-sm font-medium text-text-secondary">月額費用</td>
+        {plans.map((plan) => (
+          <td
+            class:list={[
+              "p-4 text-center",
+              plan.recommended ? "border-x-2 border-teal bg-teal/5" : "",
+            ]}
+          >
+            <span class="text-2xl font-bold text-navy">{plan.monthly}</span>
+            <span class="text-sm text-text-secondary">/月</span>
+          </td>
+        ))}
+      </tr>
+      <!-- 機能 -->
+      <tr>
+        <td class="p-4 text-sm font-medium text-text-secondary align-top">含まれるサービス</td>
+        {plans.map((plan) => (
+          <td
+            class:list={[
+              "p-4 align-top",
+              plan.recommended
+                ? "border-x-2 border-b-2 border-teal bg-teal/5 rounded-b-xl"
+                : "",
+            ]}
+          >
+            <ul class="space-y-2">
+              {plan.features.map((feature) => (
+                <li class="flex items-start gap-2 text-sm">
+                  <svg class="w-4 h-4 text-teal shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </td>
+        ))}
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Notes -->
+<div class="mt-8 p-4 bg-surface-dim rounded-lg">
+  <ul class="space-y-2">
+    {notes.map((note) => (
+      <li class="flex items-start gap-2 text-sm text-text-secondary">
+        <svg class="w-4 h-4 text-navy shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>{note}</span>
+      </li>
+    ))}
+  </ul>
+</div>
