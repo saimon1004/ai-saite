@@ -1,0 +1,13 @@
+---
+interface Props {
+  variant?: "dark" | "light";
+  class?: string;
+}
+
+const { variant = "dark", class: className = "" } = Astro.props;
+const baseColor = variant === "dark" ? "text-[#0f1d3a]" : "text-white";
+---
+
+<span class:list={["logo-text font-heading font-black tracking-tight select-none", baseColor, className]} aria-label="SAIMON">
+  S<span class="text-[#0066FF]">AI</span>MON
+</span>
