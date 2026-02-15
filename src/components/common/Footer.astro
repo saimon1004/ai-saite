@@ -12,10 +12,10 @@ const currentYear = new Date().getFullYear();
     <div class="mb-12">
       <a
         href={`${base}#`}
-        class="font-heading font-black text-white text-3xl tracking-tight hover:opacity-80 transition-opacity"
+        class="hover:opacity-80 transition-opacity inline-block"
         aria-label="SAIMON - ページトップへ"
       >
-        SAIMON
+        <img src={`${base}logo.png`} alt="SAIMON" class="h-10 w-auto brightness-0 invert" />
       </a>
       <p class="mt-3 text-text-on-dark/60 text-sm max-w-md">
         {company.tagline}
