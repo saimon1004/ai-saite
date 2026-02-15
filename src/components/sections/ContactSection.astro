@@ -116,8 +116,6 @@ const base = import.meta.env.BASE_URL;
             送信する
           </button>
 
-          <!-- 送信結果表示エリア -->
-          <div id="form-result" class="text-center text-sm mt-4" aria-live="polite"></div>
         </form>
       </div>
 
@@ -153,11 +151,66 @@ const base = import.meta.env.BASE_URL;
   </div>
 </section>
 
+<!-- Result Modal -->
+<div id="form-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+  <div class="absolute inset-0 bg-black/60" id="form-modal-backdrop"></div>
+  <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 sm:p-10 text-center transform scale-95 transition-transform duration-300" id="form-modal-content">
+    <!-- Icon -->
+    <div id="form-modal-icon" class="w-16 h-16 rounded-full mx-auto mb-5 flex items-center justify-center"></div>
+    <!-- Title -->
+    <h3 id="form-modal-title" class="text-xl font-black text-text-primary mb-3"></h3>
+    <!-- Message -->
+    <p id="form-modal-message" class="text-sm text-text-secondary leading-relaxed mb-8"></p>
+    <!-- Close button -->
+    <button id="form-modal-close" class="bg-navy text-white font-bold text-sm px-8 py-3 rounded-[var(--radius-button)] hover:bg-navy/90 transition-colors duration-200 cursor-pointer">
+      閉じる
+    </button>
+  </div>
+</div>
+
 <script>
   const contactForm = document.getElementById("contact-form") as HTMLFormElement | null;
-  const resultDiv = document.getElementById("form-result");
+  const modal = document.getElementById("form-modal");
+  const modalBackdrop = document.getElementById("form-modal-backdrop");
+  const modalContent = document.getElementById("form-modal-content");
+  const modalIcon = document.getElementById("form-modal-icon");
+  const modalTitle = document.getElementById("form-modal-title");
+  const modalMessage = document.getElementById("form-modal-message");
+  const modalClose = document.getElementById("form-modal-close");
 
-  if (contactForm && resultDiv) {
+  function showModal(success: boolean) {
+    if (!modal || !modalContent || !modalIcon || !modalTitle || !modalMessage) return;
+
+    if (success) {
+      modalIcon.className = "w-16 h-16 rounded-full mx-auto mb-5 flex items-center justify-center bg-teal/10";
+      modalIcon.innerHTML = '<svg class="w-8 h-8 text-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>';
+      modalTitle.textContent = "送信完了";
+      modalMessage.textContent = "お問い合わせありがとうございます。担当者より折り返しご連絡いたします。";
+    } else {
+      modalIcon.className = "w-16 h-16 rounded-full mx-auto mb-5 flex items-center justify-center bg-red-50";
+      modalIcon.innerHTML = '<svg class="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>';
+      modalTitle.textContent = "送信失敗";
+      modalMessage.textContent = "送信に失敗しました。お手数ですが、もう一度お試しください。";
+    }
+
+    modal.classList.remove("opacity-0", "pointer-events-none");
+    modalContent.classList.remove("scale-95");
+    modalContent.classList.add("scale-100");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    if (!modal || !modalContent) return;
+    modal.classList.add("opacity-0", "pointer-events-none");
+    modalContent.classList.remove("scale-100");
+    modalContent.classList.add("scale-95");
+    document.body.style.overflow = "";
+  }
+
+  modalClose?.addEventListener("click", closeModal);
+  modalBackdrop?.addEventListener("click", closeModal);
+
+  if (contactForm) {
     contactForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const submitBtn = contactForm.querySelector<HTMLButtonElement>('button[type="submit"]');
@@ -176,16 +229,13 @@ const base = import.meta.env.BASE_URL;
         const data = await response.json();
 
         if (data.success) {
-          resultDiv.innerHTML =
-            '<p class="text-teal font-bold">お問い合わせありがとうございます。担当者より折り返しご連絡いたします。</p>';
+          showModal(true);
           contactForm.reset();
         } else {
-          resultDiv.innerHTML =
-            '<p class="text-red-400 font-bold">送信に失敗しました。お手数ですが、もう一度お試しください。</p>';
+          showModal(false);
         }
       } catch {
-        resultDiv.innerHTML =
-          '<p class="text-red-400 font-bold">通信エラーが発生しました。お手数ですが、もう一度お試しください。</p>';
+        showModal(false);
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;
