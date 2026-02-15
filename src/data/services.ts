@@ -2,6 +2,8 @@ export interface TrainingModule {
   number: string;
   title: string;
   subtitle: string;
+  description: string;
+  learns: string[];
   tools: string[];
   color: string;
 }
@@ -9,6 +11,17 @@ export interface TrainingModule {
 export interface Stat {
   value: string;
   label: string;
+  subtext?: string;
+}
+
+export interface TopTool {
+  name: string;
+  badge: string;
+  description: string;
+}
+
+export interface Outcome {
+  text: string;
 }
 
 export interface Strength {
@@ -68,6 +81,8 @@ export const aiImpactLab = {
       number: "I",
       title: "思考と対話の「脳」",
       subtitle: "LLM",
+      description: "主要な大規模言語モデルを比較しながら、目的別の最適な使い分けを習得。プロンプトエンジニアリングの基礎から応用まで。",
+      learns: ["各LLMの特性と使い分け", "高精度な指示の出し方", "長文分析・レポート作成"],
       tools: ["ChatGPT", "Claude", "Gemini"],
       color: "bg-blue-50 border-blue-200",
     },
@@ -75,6 +90,8 @@ export const aiImpactLab = {
       number: "II",
       title: "自律実行と知識管理",
       subtitle: "AIエージェント",
+      description: "AIが自律的にタスクを遂行するエージェント技術と、社内ナレッジの統合管理手法を体験。",
+      learns: ["AIエージェントによる業務代行", "社内文書のナレッジ化", "LINE/BOT連携"],
       tools: ["Manus", "NotebookLM"],
       color: "bg-orange-50 border-orange-200",
     },
@@ -82,6 +99,8 @@ export const aiImpactLab = {
       number: "III",
       title: "業務プロセスの自動化",
       subtitle: "ノーコード",
+      description: "コードを書かずにアプリ間連携・業務フローの自動化を実現。メール・会議・承認などの定型業務を効率化。",
+      learns: ["アプリ間の自動連携", "条件分岐・統合フロー構築", "メール・会議の自動処理"],
       tools: ["Make", "Google Workspace Flows"],
       color: "bg-green-50 border-green-200",
     },
@@ -89,17 +108,33 @@ export const aiImpactLab = {
       number: "IV",
       title: "視覚化とデザイン",
       subtitle: "クリエイティブ",
+      description: "テキストから高品質なビジュアルを生成。プレゼン資料、広告バナー、動画など多様なアウトプットに対応。",
+      learns: ["テキストからビジュアル生成", "プレゼン資料の自動作成", "広告バナー・動画制作"],
       tools: ["Google Mixboard"],
       color: "bg-purple-50 border-purple-200",
     },
   ] as TrainingModule[],
 
   stats: [
-    { value: "4.8", label: "総合満足度（5.0満点）" },
+    { value: "4.8", label: "総合満足度", subtext: "/ 5.0（非常に高い）" },
     { value: "4.7", label: "業務活用度" },
-    { value: "50+", label: "改善アイデア創出数" },
-    { value: "70%", label: "実習比率" },
+    { value: "4.7", label: "分かりやすさ" },
+    { value: "4.2", label: "適度な難易度" },
   ] as Stat[],
+
+  topTools: [
+    { name: "NotebookLM", badge: "最高評価", description: "社内ナレッジ統合・情報検索・新人研修に最適" },
+    { name: "Manus", badge: "高機能", description: "AIエージェント・BOT作成・LINE連携" },
+    { name: "Gemini Gem", badge: "実用的", description: "プラン作成量産化・業務効率化" },
+    { name: "Make", badge: "達成感", description: "ツール横断自動化・業務フロー構築" },
+  ] as TopTool[],
+
+  outcomes: [
+    { text: "具体的な改善アイデア 50件以上を創出" },
+    { text: "「明日から使える」実践スキルを習得" },
+    { text: "AIファースト思考と自信を獲得" },
+    { text: "難関ツール（Make等）への挑戦意欲が向上" },
+  ] as Outcome[],
 
   strengths: [
     {
