@@ -1,73 +1,45 @@
 ---
 import SectionHeading from "../common/SectionHeading.astro";
+
+const base = import.meta.env.BASE_URL;
 ---
 
 <section id="team" class="bg-surface-dim py-20 sm:py-28">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="animate-fade-up" data-animate>
       <SectionHeading titleEn="TEAM" titleJa="代表プロフィール" />
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 mt-16">
-      <!-- Left: Profile image placeholder (2 columns) -->
-      <div class="lg:col-span-2 animate-fade-up" data-animate>
-        <div class="aspect-[3/4] bg-navy/5 rounded-[var(--radius-card)] flex items-center justify-center">
-          <span class="text-8xl font-heading font-black text-navy/20 select-none" aria-hidden="true">
-            S
-          </span>
-        </div>
+    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-8 mt-12 animate-fade-up" data-animate>
+      <!-- Photo -->
+      <div class="shrink-0">
+        <img
+          src={`${base}ceo.jpg`}
+          alt="齋本 竜也"
+          class="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl object-cover object-top"
+          loading="lazy"
+        />
       </div>
 
-      <!-- Right: Profile details (3 columns) -->
-      <div class="lg:col-span-3 animate-fade-up" data-animate>
-        <!-- Name -->
-        <h3 class="text-3xl sm:text-4xl font-black text-text-primary">
+      <!-- Profile -->
+      <div class="flex-1 text-center sm:text-left">
+        <h3 class="text-2xl sm:text-3xl font-black text-text-primary">
           齋本 竜也
         </h3>
-        <p class="font-heading text-sm tracking-wider text-text-secondary uppercase mt-1">
+        <p class="font-heading text-xs tracking-wider text-text-secondary uppercase mt-1">
           TATSUYA SAIMOTO
         </p>
+        <p class="text-sm text-navy font-bold mt-2">代表取締役</p>
 
-        <!-- Role -->
-        <p class="text-lg text-navy font-bold mt-4">
-          代表取締役
+        <p class="text-sm text-text-secondary leading-relaxed mt-4">
+          2009年、関西学院大学卒業後、上場保険代理店に入社。11年半にわたり人事・経理・総務・マーケティング・コンプライアンスなど多様な実務を経験。2020年、株式会社SAIMONを創業。AI研修事業を主軸に、最新技術を実装に落とし込み企業の変革を加速させている。
         </p>
 
-        <!-- Biography -->
-        <div class="mt-6 text-text-secondary leading-relaxed space-y-4">
-          <p>
-            2009年、関西学院大学卒業後、上場保険代理店に入社。11年半にわたり人事・経理・総務・マーケティング・コンプライアンスなど多様な実務を経験し、ビジネスの基礎を網羅的に習得。
-          </p>
-          <p>
-            2020年、「世界を変えよう」とする経営者の夢を実務とAIで実現したいという想いから、株式会社SAIMONを創業。現在はAI研修事業を主軸に、最新技術を実装に落とし込み、企業の変革を加速させている。
-          </p>
-        </div>
-
-        <!-- Career timeline -->
-        <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="bg-navy/5 rounded-xl p-4 text-center">
-            <p class="text-[10px] font-bold text-teal uppercase tracking-wider mb-1">原点</p>
-            <p class="text-xs font-bold text-text-primary">全体を俯瞰する力</p>
-          </div>
-          <div class="bg-navy/5 rounded-xl p-4 text-center">
-            <p class="text-[10px] font-bold text-teal uppercase tracking-wider mb-1">実務経験</p>
-            <p class="text-xs font-bold text-text-primary">10年超の現場感と対応力</p>
-          </div>
-          <div class="bg-navy/5 rounded-xl p-4 text-center">
-            <p class="text-[10px] font-bold text-teal uppercase tracking-wider mb-1">創業・挑戦</p>
-            <p class="text-xs font-bold text-text-primary">好奇心と行動力</p>
-          </div>
-          <div class="bg-navy/5 rounded-xl p-4 text-center">
-            <p class="text-[10px] font-bold text-teal uppercase tracking-wider mb-1">現在・未来</p>
-            <p class="text-xs font-bold text-text-primary">顧客の夢を実現するパートナー</p>
-          </div>
-        </div>
-
-        <!-- Motto -->
-        <div class="mt-6 border-t border-border pt-6">
-          <p class="text-sm text-text-secondary">
-            <span class="font-bold text-navy">原動力：</span>『とりあえずやってみる！』×『好奇心』
-          </p>
+        <!-- Career keywords -->
+        <div class="flex flex-wrap justify-center sm:justify-start gap-2 mt-4">
+          <span class="text-[11px] font-bold text-teal bg-teal/5 border border-teal/15 px-3 py-1 rounded-full">10年超の現場経験</span>
+          <span class="text-[11px] font-bold text-teal bg-teal/5 border border-teal/15 px-3 py-1 rounded-full">好奇心と行動力</span>
+          <span class="text-[11px] font-bold text-teal bg-teal/5 border border-teal/15 px-3 py-1 rounded-full">顧客の夢を実現</span>
         </div>
       </div>
     </div>
