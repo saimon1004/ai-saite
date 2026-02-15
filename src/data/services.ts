@@ -24,6 +24,16 @@ export interface Outcome {
   text: string;
 }
 
+export interface DeptTrend {
+  dept: string;
+  usecases: string;
+}
+
+export interface SuccessFactor {
+  title: string;
+  detail: string;
+}
+
 export interface Strength {
   title: string;
   description: string;
@@ -135,6 +145,19 @@ export const aiImpactLab = {
     { text: "AIファースト思考と自信を獲得" },
     { text: "難関ツール（Make等）への挑戦意欲が向上" },
   ] as Outcome[],
+
+  deptTrends: [
+    { dept: "マーケティング部", usecases: "プラン・コンテンツ量産、画像・動画生成" },
+    { dept: "CS・人事部", usecases: "顧客対応自動化（LINE/BOT）、ナレッジ・研修効率化" },
+    { dept: "営業部", usecases: "事務自動化による営業時間確保" },
+  ] as DeptTrend[],
+
+  successFactors: [
+    { title: "実践重視", detail: "実習70%：講義30%" },
+    { title: "多様なツール", detail: "10種以上を体験" },
+    { title: "段階的設計", detail: "基礎→応用→実践" },
+    { title: "業務直結", detail: "即課題解決に活用" },
+  ] as SuccessFactor[],
 
   strengths: [
     {
