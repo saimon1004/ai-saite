@@ -1,47 +1,48 @@
 ---
-import Logo from "../common/Logo.astro";
+const base = import.meta.env.BASE_URL;
 ---
 
-<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-  <!-- Navy gradient background -->
-  <div class="hero-bg absolute inset-0 -z-10" aria-hidden="true"></div>
+<section class="relative min-h-screen flex items-end overflow-hidden">
+  <!-- Video background -->
+  <video
+    class="absolute inset-0 w-full h-full object-cover"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="auto"
+    aria-hidden="true"
+  >
+    <source src={`${base}hero.mp4`} type="video/mp4" />
+  </video>
 
-  <!-- Subtle grid pattern -->
-  <div class="hero-grid absolute inset-0 -z-5 pointer-events-none" aria-hidden="true"></div>
+  <!-- Dark overlay -->
+  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" aria-hidden="true"></div>
 
   <!-- Content -->
-  <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <!-- Pre-label -->
-    <div
-      class="mb-6 animate-fade-up"
+  <div class="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-24 sm:pb-32">
+    <!-- Sub text -->
+    <p
+      class="text-sm sm:text-base tracking-[0.2em] uppercase text-white/60 font-heading font-medium mb-4 animate-fade-up"
       data-animate
     >
-      <Logo variant="light" class="text-sm tracking-[0.3em]" />
-    </div>
+      テクノロジーで企業を前進させる
+    </p>
 
     <!-- Main heading -->
     <h1
-      class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-tight animate-fade-up"
+      class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.1] animate-fade-up"
       data-animate
       style="transition-delay: 0.1s;"
     >
-      「面白い」を実現させる。
+      「面白い」を<br class="hidden sm:block" />実現させる。
     </h1>
 
-    <!-- Sub text -->
-    <p
-      class="text-lg sm:text-xl text-white/70 mt-6 max-w-2xl mx-auto animate-fade-up"
-      data-animate
-      style="transition-delay: 0.2s;"
-    >
-      テクノロジーで企業を前進させる経営コンサルティング
-    </p>
-
     <!-- CTA Button -->
-    <div class="mt-10 animate-fade-up" data-animate style="transition-delay: 0.3s;">
+    <div class="mt-8 sm:mt-10 animate-fade-up" data-animate style="transition-delay: 0.2s;">
       <a
         href="#contact"
-        class="inline-flex items-center gap-2 bg-teal text-white px-8 py-4 rounded-[var(--radius-button)] font-bold hover:bg-teal-light transition-colors duration-300"
+        class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white border border-white/30 px-8 py-4 rounded-full font-bold hover:bg-white/20 transition-all duration-300"
       >
         お問い合わせ
         <span aria-hidden="true">&rarr;</span>
@@ -50,10 +51,10 @@ import Logo from "../common/Logo.astro";
   </div>
 
   <!-- Scroll indicator -->
-  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/50" aria-hidden="true">
-    <span class="text-xs font-heading tracking-widest uppercase">Scroll</span>
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40" aria-hidden="true">
+    <span class="text-[10px] font-heading tracking-[0.3em] uppercase">Scroll</span>
     <div class="scroll-indicator">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
     </div>
@@ -61,21 +62,6 @@ import Logo from "../common/Logo.astro";
 </section>
 
 <style>
-  .hero-bg {
-    background: linear-gradient(
-      160deg,
-      #09005c 0%,
-      #0d0084 100%
-    );
-  }
-
-  .hero-grid {
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-  }
-
   .scroll-indicator {
     animation: scrollBounce 2s ease-in-out infinite;
   }
@@ -86,8 +72,8 @@ import Logo from "../common/Logo.astro";
       opacity: 1;
     }
     50% {
-      transform: translateY(8px);
-      opacity: 0.4;
+      transform: translateY(6px);
+      opacity: 0.3;
     }
   }
 
