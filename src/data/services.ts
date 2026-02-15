@@ -27,11 +27,41 @@ export interface FAQ {
   answer: string;
 }
 
+export interface Pillar {
+  title: string;
+  subtitle: string;
+  points: { metric: string; description: string }[];
+  outcome: string;
+}
+
 export const aiImpactLab = {
   nameEn: "AI IMPACT LAB",
   tagline: "人が育つ会社に、人は集まる。",
   description:
     "AIリテラシーは「企業の生存戦略」そのもの。全社的AIリスキリングで現場力の強化と採用ブランディングの両方を実現します。",
+
+  pillars: [
+    {
+      title: "現場力の強化",
+      subtitle: "経済的利益の源泉（価値創出）",
+      points: [
+        { metric: "18.6万時間/年 削減", description: "パナソニック コネクト — 全社員1.2万人にAI展開" },
+        { metric: "営業効率 68% 向上", description: "日清食品 — AIをコンサルとして活用" },
+        { metric: "2025年の崖 回避", description: "IT/AIリテラシーがモダナイゼーションの鍵" },
+      ],
+      outcome: "収益構造の抜本的改善",
+    },
+    {
+      title: "採用ブランディング",
+      subtitle: "人材獲得競争の勝利（選ばれるインフラ）",
+      points: [
+        { metric: "26卒の 82.7% がAI活用", description: "AIは「あって当たり前のインフラ」に（マイナビ調査）" },
+        { metric: "志望度に直結", description: "DX推進度・AI環境が求職者の企業選定基準に（CodeZine調査）" },
+        { metric: "離職リスク抑制", description: "デジタルフリクション低減で世代間ギャップ解消（Gartner）" },
+      ],
+      outcome: "イノベーション源泉の確保",
+    },
+  ] as Pillar[],
 
   modules: [
     {
