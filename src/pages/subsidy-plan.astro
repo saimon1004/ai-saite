@@ -1,0 +1,331 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/common/Header.astro";
+import Footer from "../components/common/Footer.astro";
+import ScrollToTop from "../components/common/ScrollToTop.astro";
+import { company } from "../data/company";
+
+const base = import.meta.env.BASE_URL;
+
+const goals = [
+  {
+    icon: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>`,
+    title: "AI実践体験とアクションプラン策定",
+    description: "AIの実践的な活用を体験し、具体的なアクションプランを策定します。",
+  },
+  {
+    icon: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>`,
+    title: "社内DX推進人材の育成",
+    description: "組織内でDXを推進できるリーダー人材を育成します。",
+  },
+  {
+    icon: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>`,
+    title: "企業理解の深化と組織結束力の強化",
+    description: "全社的な取り組みを通じて、組織の結束力を高めます。",
+  },
+];
+
+const overview = [
+  { label: "研修時間", value: "計11時間 / 3日間", detail: "3.5h + 3.5h + 4h" },
+  { label: "形式", value: "オンライン（Zoom）or 対面" },
+  { label: "比率", value: "講義30% : 実習70%" },
+  { label: "料金", value: "¥400,000 /人", detail: "税抜" },
+];
+
+const tools = ["ChatGPT", "Claude", "Gemini", "NotebookLM", "Manus", "Make"];
+
+const days = [
+  {
+    day: "DAY 1",
+    title: "生成AI基礎",
+    time: "13:00 - 16:30（3.5時間）",
+    color: "bg-blue-50 border-blue-200",
+    accentColor: "text-blue-600",
+    objectives: [
+      "AI導入の可能性を理解する",
+      "主要ツールの特徴と使い分けをマスターする",
+      "マーケティング業務への即時応用を学ぶ",
+    ],
+    schedule: [
+      { time: "13:00 - 13:30", content: "オリエンテーション・ゴール設定" },
+      { time: "13:30 - 14:30", content: "AIツール比較（ChatGPT / Claude / Gemini / NotebookLM）" },
+      { time: "14:30 - 14:45", content: "休憩" },
+      { time: "14:45 - 15:30", content: "企業導入事例の紹介" },
+      { time: "15:30 - 16:30", content: "マーケティングワークフロー自動化（コピーライティング・アイデア創出・画像生成）" },
+    ],
+  },
+  {
+    day: "DAY 2",
+    title: "バックオフィス効率化",
+    time: "13:00 - 16:30（3.5時間）",
+    color: "bg-green-50 border-green-200",
+    accentColor: "text-green-600",
+    objectives: [
+      "バックオフィス業務の自動化手法を習得する",
+      "NotebookLMでナレッジ管理を実践する",
+      "音声テキスト処理スキルを身につける",
+    ],
+    schedule: [
+      { time: "13:00 - 13:15", content: "振り返り・体験共有" },
+      { time: "13:15 - 14:15", content: "人事活用（面接書き起こし・評価支援）" },
+      { time: "14:15 - 14:30", content: "休憩" },
+      { time: "14:30 - 15:30", content: "管理業務自動化（会議録・文書作成）" },
+      { time: "15:30 - 16:30", content: "カスタマーサービス改善（FAQ自動化・対応品質向上）" },
+    ],
+  },
+  {
+    day: "DAY 3",
+    title: "実践ワークショップ",
+    time: "13:00 - 17:00（4時間）",
+    color: "bg-purple-50 border-purple-200",
+    accentColor: "text-purple-600",
+    subtitle: "Claude Code × Remotion を使った実践動画制作",
+    objectives: [
+      "Claude Codeを使ってRemotionプロジェクトを独自に構築する",
+      "自然言語での指示で動画を修正する",
+      "30秒の完成動画をエクスポートする",
+    ],
+    schedule: [
+      { time: "13:00 - 13:30", content: "イントロダクション・環境構築" },
+      { time: "13:30 - 14:15", content: "Claude Code基礎" },
+      { time: "14:15 - 14:30", content: "休憩" },
+      { time: "14:30 - 15:15", content: "Remotionの概念（コンポジション・シーケンス・アニメーション）" },
+      { time: "15:15 - 16:15", content: "自己紹介動画の制作（ハンズオン）" },
+      { time: "16:15 - 16:30", content: "プレゼンテーション・まとめ" },
+      { time: "16:30 - 17:00", content: "Q&A・最終ディスカッション" },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="助成金活用プラン | AI IMPACT LAB | 株式会社SAIMON"
+  description="人材開発支援助成金を活用したAI研修パッケージ。3日間・計11時間の実践型AI研修プログラムで、社内DX推進人材を育成します。"
+>
+  <Header />
+
+  <!-- Hero Banner -->
+  <section class="bg-navy py-20 sm:py-28">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="font-heading text-sm font-bold tracking-[0.3em] uppercase text-teal mb-4">Subsidy Plan</p>
+      <h1 class="font-heading text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-wider uppercase">
+        AI IMPACT LAB
+      </h1>
+      <p class="mt-4 text-lg text-white/60">助成金活用 研修パッケージ</p>
+    </div>
+  </section>
+
+  <!-- Goals -->
+  <section class="py-20 sm:py-24 bg-surface">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-heading text-xs tracking-wider text-teal uppercase font-bold mb-2 text-center">OBJECTIVES</h2>
+      <p class="text-center text-2xl sm:text-3xl font-black text-text-primary mb-12">研修の目的</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {goals.map((goal, idx) => (
+          <div class="bg-surface-dim rounded-2xl p-8 text-center">
+            <div class="w-14 h-14 rounded-2xl bg-navy/5 flex items-center justify-center text-navy mx-auto mb-5">
+              <Fragment set:html={goal.icon} />
+            </div>
+            <span class="font-heading text-4xl font-black text-navy/10 leading-none" aria-hidden="true">
+              {String(idx + 1).padStart(2, "0")}
+            </span>
+            <h3 class="text-lg font-bold text-text-primary mt-2">{goal.title}</h3>
+            <p class="text-sm text-text-secondary mt-2 leading-relaxed">{goal.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Overview -->
+  <section class="py-20 sm:py-24 bg-surface-dim">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-heading text-xs tracking-wider text-teal uppercase font-bold mb-2 text-center">OVERVIEW</h2>
+      <p class="text-center text-2xl sm:text-3xl font-black text-text-primary mb-12">研修概要</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        {overview.map((item) => (
+          <div class="bg-surface rounded-2xl border border-border p-6 text-center">
+            <p class="text-xs font-bold text-teal uppercase tracking-wider mb-2">{item.label}</p>
+            <p class="text-lg font-black text-text-primary">{item.value}</p>
+            {item.detail && <p class="text-xs text-text-secondary mt-1">{item.detail}</p>}
+          </div>
+        ))}
+      </div>
+
+      <!-- Tools -->
+      <div class="bg-surface rounded-2xl border border-border p-6 sm:p-8">
+        <p class="text-sm font-bold text-text-primary mb-4 text-center">使用ツール</p>
+        <div class="flex flex-wrap justify-center gap-3">
+          {tools.map((tool) => (
+            <span class="text-sm font-medium bg-navy/5 text-navy px-4 py-2 rounded-full">{tool}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Curriculum -->
+  <section class="py-20 sm:py-24 bg-surface">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-heading text-xs tracking-wider text-teal uppercase font-bold mb-2 text-center">CURRICULUM</h2>
+      <p class="text-center text-2xl sm:text-3xl font-black text-text-primary mb-12">カリキュラム</p>
+
+      <div class="space-y-8">
+        {days.map((day) => (
+          <div class:list={["rounded-2xl border overflow-hidden", day.color]}>
+            <!-- Day header -->
+            <div class="px-6 sm:px-8 py-5 border-b border-inherit">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div>
+                  <span class:list={["font-heading text-xs tracking-wider uppercase font-bold", day.accentColor]}>{day.day}</span>
+                  <h3 class="text-xl sm:text-2xl font-black text-text-primary mt-1">{day.title}</h3>
+                  {day.subtitle && <p class="text-sm text-text-secondary mt-1">{day.subtitle}</p>}
+                </div>
+                <span class="text-sm font-medium text-text-secondary whitespace-nowrap">{day.time}</span>
+              </div>
+            </div>
+
+            <div class="px-6 sm:px-8 py-6 grid grid-cols-1 lg:grid-cols-5 gap-6">
+              <!-- Learning objectives -->
+              <div class="lg:col-span-2">
+                <p class="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3">学習目標</p>
+                <div class="space-y-2">
+                  {day.objectives.map((obj) => (
+                    <div class="flex items-start gap-2">
+                      <svg class="w-4 h-4 text-teal shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span class="text-sm text-text-primary">{obj}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <!-- Schedule -->
+              <div class="lg:col-span-3">
+                <p class="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3">タイムスケジュール</p>
+                <div class="space-y-2">
+                  {day.schedule.map((s) => (
+                    <div class:list={[
+                      "flex items-start gap-3 text-sm",
+                      s.content === "休憩" ? "opacity-50" : "",
+                    ]}>
+                      <span class="font-mono text-xs text-text-secondary whitespace-nowrap pt-0.5 w-28 shrink-0">{s.time}</span>
+                      <span class="text-text-primary">{s.content}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Subsidy Info -->
+  <section class="py-20 sm:py-24 bg-surface-dim">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-heading text-xs tracking-wider text-teal uppercase font-bold mb-2 text-center">SUBSIDY</h2>
+      <p class="text-center text-2xl sm:text-3xl font-black text-text-primary mb-12">助成金について</p>
+
+      <div class="bg-surface rounded-2xl border border-border p-8 sm:p-10">
+        <div class="flex items-start gap-4 mb-8">
+          <div class="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-text-primary">人材開発支援助成金</h3>
+            <p class="text-sm text-text-secondary mt-1 leading-relaxed">
+              厚生労働省の「人材開発支援助成金」を活用することで、研修費用の大幅な削減が可能です。事業展開等リスキリング支援コースでは、中小企業の場合、経費の最大75%が助成されます。
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div class="bg-teal/5 border border-teal/15 rounded-xl p-5 text-center">
+            <p class="text-xs font-bold text-teal uppercase tracking-wider mb-2">助成率（中小企業）</p>
+            <p class="text-3xl font-black text-navy">最大75%</p>
+          </div>
+          <div class="bg-teal/5 border border-teal/15 rounded-xl p-5 text-center">
+            <p class="text-xs font-bold text-teal uppercase tracking-wider mb-2">通常料金</p>
+            <p class="text-3xl font-black text-navy">¥400,000<span class="text-sm font-bold text-text-secondary">/人</span></p>
+          </div>
+          <div class="bg-navy rounded-xl p-5 text-center">
+            <p class="text-xs font-bold text-teal uppercase tracking-wider mb-2">助成金活用後</p>
+            <p class="text-3xl font-black text-white">実質¥100,000〜<span class="text-sm font-bold text-white/60">/人</span></p>
+          </div>
+        </div>
+
+        <p class="text-xs text-text-secondary text-center leading-relaxed">
+          ※ 助成金額は企業規模・申請内容により異なります。詳しくはお問い合わせください。<br />
+          ※ 申請手続きのサポートも承ります。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Note -->
+  <section class="py-16 bg-surface">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-surface-dim rounded-2xl p-8 sm:p-10 border border-border">
+        <div class="flex items-start gap-3 mb-4">
+          <svg class="w-5 h-5 text-text-secondary shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+          </svg>
+          <p class="text-sm font-bold text-text-primary">備考</p>
+        </div>
+        <ul class="space-y-2 text-sm text-text-secondary">
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2 shrink-0" aria-hidden="true"></span>
+            <span>スケジュールは業種・レベルに合わせて柔軟にカスタマイズ可能です。</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2 shrink-0" aria-hidden="true"></span>
+            <span>実習70%の構成で、受講者が即日業務に活かせるスキルを習得します。</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2 shrink-0" aria-hidden="true"></span>
+            <span>研修後のフォローアップや伴走サポートもご相談いただけます。</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 sm:py-24 bg-navy">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="font-heading text-sm font-bold tracking-[0.3em] uppercase text-teal mb-4">CONTACT</p>
+      <h2 class="text-2xl sm:text-3xl font-black text-white mb-4">まずはお気軽にご相談ください</h2>
+      <p class="text-sm text-white/60 mb-8 leading-relaxed">
+        助成金の申請手続きサポートから、貴社に最適な研修プランのご提案まで、丁寧にご対応いたします。
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a
+          href={`${base}#contact`}
+          class="inline-flex items-center gap-2 bg-teal text-white px-8 py-4 rounded-full font-bold hover:bg-teal-dark transition-colors duration-300"
+        >
+          お問い合わせ
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+        <a
+          href={`mailto:${company.email}`}
+          class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white border border-white/30 px-8 py-4 rounded-full font-bold hover:bg-white/20 transition-all duration-300"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          {company.email}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+  <ScrollToTop />
+</BaseLayout>
