@@ -1,29 +1,29 @@
 ---
 interface Props {
-  title: string;
-  subtitle?: string;
-  align?: "left" | "center";
+  id?: string;
+  titleEn: string;
+  titleJa: string;
   light?: boolean;
 }
 
-const { title, subtitle, align = "center", light = false } = Astro.props;
-
-const alignClasses = align === "center" ? "text-center items-center" : "text-left items-start";
-const titleColor = light ? "text-white" : "text-text-primary";
-const subtitleColor = light ? "text-white/70" : "text-text-secondary";
+const { id, titleEn, titleJa, light = false } = Astro.props;
 ---
 
-<div class:list={["flex flex-col gap-4 mb-12", alignClasses]}>
-  <!-- Accent line -->
-  <div class="w-12 h-1 bg-teal rounded-full" aria-hidden="true"></div>
-
-  <h2 class:list={["text-3xl md:text-4xl font-bold tracking-tight", titleColor]}>
-    {title}
+<div id={id} class="scroll-mt-24 text-center mb-20">
+  <h2
+    class:list={[
+      "font-heading text-5xl sm:text-6xl md:text-7xl font-black tracking-wider uppercase",
+      light ? "text-white" : "text-navy",
+    ]}
+  >
+    {titleEn}
   </h2>
-
-  {subtitle && (
-    <p class:list={["text-base md:text-lg max-w-2xl leading-relaxed", subtitleColor]}>
-      {subtitle}
-    </p>
-  )}
+  <p
+    class:list={[
+      "mt-3 text-base",
+      light ? "text-white/60" : "text-text-secondary",
+    ]}
+  >
+    {titleJa}
+  </p>
 </div>

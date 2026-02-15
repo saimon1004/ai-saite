@@ -4,102 +4,72 @@ import { navigation } from "../../data/navigation";
 
 const base = import.meta.env.BASE_URL;
 const currentYear = new Date().getFullYear();
-
-const serviceLinks = navigation.find((item) => item.href === "/services/")?.children ?? [];
-const pageLinks = navigation.filter((item) => item.href !== "/services/" && item.href !== "/contact/");
 ---
 
 <footer class="bg-navy text-text-on-dark">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
-      <!-- Company Info -->
-      <div class="space-y-4">
-        <a href={`${base}`} class="text-2xl font-black tracking-tight text-white hover:opacity-80 transition-opacity">
-          SAIMON
-        </a>
-        <p class="text-sm text-text-on-dark/70 leading-relaxed">
-          {company.tagline}
-        </p>
-        <p class="text-sm text-text-on-dark/70 leading-relaxed">
-          {company.business}
-        </p>
-      </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+    <!-- Top Section: Logo + Tagline -->
+    <div class="mb-12">
+      <a
+        href={`${base}#`}
+        class="font-heading font-black text-white text-3xl tracking-tight hover:opacity-80 transition-opacity"
+        aria-label="SAIMON - ページトップへ"
+      >
+        SAIMON
+      </a>
+      <p class="mt-3 text-text-on-dark/60 text-sm max-w-md">
+        {company.tagline}
+      </p>
+    </div>
 
-      <!-- Services -->
-      <div>
-        <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider">サービス</h3>
-        <ul class="space-y-3">
-          {serviceLinks.map((link) => (
-            <li>
-              <a
-                href={`${base}${link.href.replace(/^\//, "")}`}
-                class="text-sm text-text-on-dark/70 hover:text-teal transition-colors duration-200"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <!-- Pages -->
-      <div>
-        <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider">ページ</h3>
-        <ul class="space-y-3">
-          {pageLinks.map((link) => (
-            <li>
-              <a
-                href={`${base}${link.href.replace(/^\//, "")}`}
-                class="text-sm text-text-on-dark/70 hover:text-teal transition-colors duration-200"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <!-- Contact Info -->
-      <div>
-        <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider">お問い合わせ</h3>
-        <ul class="space-y-3 text-sm text-text-on-dark/70">
-          <li class="flex items-start gap-2">
-            <svg class="w-4 h-4 mt-0.5 shrink-0 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <span>{company.postalCode}<br />{company.address}</span>
-          </li>
-          <li class="flex items-center gap-2">
-            <svg class="w-4 h-4 shrink-0 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-            </svg>
-            <a href={`tel:${company.tel.replace(/-/g, "")}`} class="hover:text-teal transition-colors">
-              {company.tel}
+    <!-- Navigation Links (horizontal) -->
+    <nav class="mb-10" aria-label="フッターナビゲーション">
+      <ul class="flex flex-wrap gap-x-8 gap-y-3">
+        {navigation.map((item) => (
+          <li>
+            <a
+              href={`${base}${item.href}`}
+              class="text-sm text-text-on-dark/70 hover:text-teal transition-colors duration-200"
+            >
+              {item.labelEn}
             </a>
           </li>
-          <li class="flex items-center gap-2">
-            <svg class="w-4 h-4 shrink-0 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            <a href={`mailto:${company.email}`} class="hover:text-teal transition-colors">
-              {company.email}
-            </a>
-          </li>
-        </ul>
-      </div>
+        ))}
+      </ul>
+    </nav>
+
+    <!-- Contact Info -->
+    <div class="mb-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-text-on-dark/70">
+      <a
+        href={`tel:${company.tel.replace(/-/g, "")}`}
+        class="flex items-center gap-2 hover:text-teal transition-colors duration-200"
+      >
+        <svg class="w-4 h-4 shrink-0 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+        </svg>
+        {company.tel}
+      </a>
+      <a
+        href={`mailto:${company.email}`}
+        class="flex items-center gap-2 hover:text-teal transition-colors duration-200"
+      >
+        <svg class="w-4 h-4 shrink-0 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        {company.email}
+      </a>
     </div>
 
     <!-- Bottom Bar -->
-    <div class="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
       <p class="text-xs text-text-on-dark/50">
         &copy; {currentYear} {company.name} All rights reserved.
       </p>
       <a
-        href={`${base}contact/`}
-        class="text-xs text-teal hover:text-teal-light transition-colors duration-200"
+        href={`${base}privacy-policy/`}
+        class="text-xs text-text-on-dark/50 hover:text-teal transition-colors duration-200"
       >
-        お問い合わせはこちら
+        プライバシーポリシー
       </a>
     </div>
   </div>

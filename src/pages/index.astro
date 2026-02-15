@@ -1,10 +1,12 @@
 ---
-import PageLayout from "../layouts/PageLayout.astro";
-import HeroSection from "../components/home/HeroSection.astro";
-import PhilosophyPreview from "../components/home/PhilosophyPreview.astro";
-import ServicesGrid from "../components/home/ServicesGrid.astro";
-import CeoMessage from "../components/home/CeoMessage.astro";
-import CompanyInfoPreview from "../components/home/CompanyInfoPreview.astro";
+import SinglePageLayout from "../layouts/SinglePageLayout.astro";
+import HeroSection from "../components/sections/HeroSection.astro";
+import AboutSection from "../components/sections/AboutSection.astro";
+import SolutionSection from "../components/sections/SolutionSection.astro";
+import WorksSection from "../components/sections/WorksSection.astro";
+import TeamSection from "../components/sections/TeamSection.astro";
+import CompanySection from "../components/sections/CompanySection.astro";
+import ContactSection from "../components/sections/ContactSection.astro";
 import { company } from "../data/company";
 import { siteConfig } from "../data/seo";
 
@@ -52,14 +54,16 @@ const jsonLd = {
 };
 ---
 
-<PageLayout
+<SinglePageLayout
   title="株式会社SAIMON | 面白いを実現させる"
   description={siteConfig.defaultDescription}
   jsonLd={jsonLd}
 >
   <HeroSection />
-  <PhilosophyPreview />
-  <ServicesGrid />
-  <CeoMessage />
-  <CompanyInfoPreview />
-</PageLayout>
+  <AboutSection />
+  <SolutionSection />
+  <WorksSection />
+  <TeamSection />
+  <CompanySection />
+  <ContactSection />
+</SinglePageLayout>

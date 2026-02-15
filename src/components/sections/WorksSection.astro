@@ -1,0 +1,60 @@
+---
+import SectionHeading from "../common/SectionHeading.astro";
+import { works } from "../../data/works";
+
+// Recruitment works for the metric highlights
+const recruitmentWorks = works.filter((w) => w.service === "recruitment");
+---
+
+<section id="works" class="bg-surface py-32 sm:py-40">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionHeading titleEn="WORKS" titleJa="導入事例" />
+
+    <!-- Metric Highlight Bar -->
+    <div class="grid grid-cols-3 gap-8 text-center mb-20 animate-fade-up">
+      {recruitmentWorks.map((work) => (
+        <div class="flex flex-col items-center">
+          <span
+            class="text-5xl sm:text-6xl font-heading font-black text-navy"
+            data-counter={work.metricNumber}
+          >
+            {work.metric}
+          </span>
+          <span class="text-sm text-text-secondary mt-2">
+            {work.category} / {work.metricLabel}
+          </span>
+        </div>
+      ))}
+    </div>
+
+    <!-- Works Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {works.map((work, index) => (
+        <div
+          class="animate-fade-up bg-surface-dim rounded-[var(--radius-card)] p-8 border border-border hover:shadow-card-hover hover:border-teal/30 transition-all duration-300"
+          style={`transition-delay: ${0.1 * index}s`}
+        >
+          <!-- Category Tag -->
+          <span class="font-heading text-xs tracking-wider uppercase text-teal font-bold">
+            {work.categoryEn}
+          </span>
+
+          <!-- Metric -->
+          <p class="text-3xl font-heading font-black text-navy mt-3">
+            {work.metric}
+          </p>
+
+          <!-- Metric Label -->
+          <p class="text-sm text-text-secondary mt-1">
+            {work.metricLabel}
+          </p>
+
+          <!-- Description -->
+          <p class="text-sm text-text-secondary mt-4 leading-relaxed line-clamp-3">
+            {work.description}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

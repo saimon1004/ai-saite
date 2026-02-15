@@ -1,0 +1,67 @@
+---
+interface AccordionItem {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  items: AccordionItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="divide-y divide-border">
+  {items.map((item, index) => (
+    <details class="group" data-accordion-item>
+      <summary class="flex items-center justify-between gap-4 py-5 sm:py-6 cursor-pointer list-none select-none text-left">
+        <span class="text-base sm:text-lg font-medium text-text-primary group-open:text-navy transition-colors">
+          {item.question}
+        </span>
+        <span class="shrink-0 w-8 h-8 flex items-center justify-center rounded-full border border-border group-open:border-navy group-open:bg-navy transition-all duration-300">
+          <svg
+            class="w-4 h-4 text-text-secondary group-open:text-white transition-transform duration-300 group-open:rotate-45"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+        </span>
+      </summary>
+      <div class="accordion-content" data-open="false">
+        <div>
+          <p class="pb-5 sm:pb-6 text-text-secondary leading-relaxed pr-12">
+            {item.answer}
+          </p>
+        </div>
+      </div>
+    </details>
+  ))}
+</div>
+
+<script>
+  function initAccordions(): void {
+    const items = document.querySelectorAll<HTMLDetailsElement>("[data-accordion-item]");
+
+    items.forEach((item) => {
+      const content = item.querySelector<HTMLElement>(".accordion-content");
+      if (!content) return;
+
+      item.addEventListener("toggle", () => {
+        if (item.open) {
+          content.setAttribute("data-open", "true");
+        } else {
+          content.setAttribute("data-open", "false");
+        }
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAccordions);
+  } else {
+    initAccordions();
+  }
+</script>

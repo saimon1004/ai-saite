@@ -1,0 +1,74 @@
+---
+import SectionHeading from "../common/SectionHeading.astro";
+---
+
+<section id="team" class="bg-surface-dim py-32 sm:py-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="animate-fade-up" data-animate>
+      <SectionHeading titleEn="TEAM" titleJa="代表プロフィール" />
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 mt-16">
+      <!-- Left: Profile image placeholder (2 columns) -->
+      <div class="lg:col-span-2 animate-fade-up" data-animate>
+        <div class="aspect-[3/4] bg-navy/5 rounded-[var(--radius-card)] flex items-center justify-center">
+          <span class="text-8xl font-heading font-black text-navy/20 select-none" aria-hidden="true">
+            S
+          </span>
+        </div>
+      </div>
+
+      <!-- Right: Profile details (3 columns) -->
+      <div class="lg:col-span-3 animate-fade-up" data-animate>
+        <!-- Name -->
+        <h3 class="text-3xl sm:text-4xl font-black text-text-primary">
+          齋本 竜也
+        </h3>
+        <p class="font-heading text-sm tracking-wider text-text-secondary uppercase mt-1">
+          TATSUYA SAIMOTO
+        </p>
+
+        <!-- Role -->
+        <p class="text-lg text-navy font-bold mt-4">
+          代表取締役 / 採用定着士
+        </p>
+
+        <!-- Biography -->
+        <div class="mt-6 text-text-secondary leading-relaxed space-y-4">
+          <p>
+            岡山県出身。関西学院大学卒業後、2009年より保険代理店にて人事・Webマーケティング・経営企画に従事。
+          </p>
+          <p>
+            中小企業が直面する「人材確保」「組織体制」「テクノロジー活用」の課題に真正面から向き合い、テクノロジーの適切な活用が企業をより「面白く」できると確信。
+          </p>
+          <p>
+            2020年10月、株式会社SAIMONを設立。採用定着支援、AI研修、バックオフィス構築の3事業を通じて、企業の成長をサポートしている。
+          </p>
+        </div>
+
+        <!-- Affiliation -->
+        <div class="mt-6 text-sm text-text-secondary border-t border-border pt-6">
+          採用定着支援協会 会員
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const teamElements = document.querySelectorAll<HTMLElement>('#team [data-animate]');
+  if (teamElements.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    teamElements.forEach((el) => observer.observe(el));
+  }
+</script>

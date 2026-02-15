@@ -1,0 +1,117 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <!-- Navy gradient background -->
+  <div class="hero-bg absolute inset-0 -z-10" aria-hidden="true"></div>
+
+  <!-- Subtle grid pattern -->
+  <div class="hero-grid absolute inset-0 -z-5 pointer-events-none" aria-hidden="true"></div>
+
+  <!-- Content -->
+  <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <!-- Pre-label -->
+    <p
+      class="text-teal text-sm tracking-[0.3em] uppercase font-heading font-bold mb-6 animate-fade-up"
+      data-animate
+    >
+      SAIMON
+    </p>
+
+    <!-- Main heading -->
+    <h1
+      class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-tight animate-fade-up"
+      data-animate
+      style="transition-delay: 0.1s;"
+    >
+      「面白い」を実現させる。
+    </h1>
+
+    <!-- Sub text -->
+    <p
+      class="text-lg sm:text-xl text-white/70 mt-6 max-w-2xl mx-auto animate-fade-up"
+      data-animate
+      style="transition-delay: 0.2s;"
+    >
+      テクノロジーで企業を前進させる経営コンサルティング
+    </p>
+
+    <!-- CTA Button -->
+    <div class="mt-10 animate-fade-up" data-animate style="transition-delay: 0.3s;">
+      <a
+        href="#contact"
+        class="inline-flex items-center gap-2 bg-teal text-white px-8 py-4 rounded-[var(--radius-button)] font-bold hover:bg-teal-light transition-colors duration-300"
+      >
+        お問い合わせ
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/50" aria-hidden="true">
+    <span class="text-xs font-heading tracking-widest uppercase">Scroll</span>
+    <div class="scroll-indicator">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-bg {
+    background: linear-gradient(
+      160deg,
+      #09005c 0%,
+      #0d0084 100%
+    );
+  }
+
+  .hero-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .scroll-indicator {
+    animation: scrollBounce 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollBounce {
+    0%, 100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(8px);
+      opacity: 0.4;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-indicator {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const heroElements = document.querySelectorAll<HTMLElement>('[data-animate]');
+  if (heroElements.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    heroElements.forEach((el) => observer.observe(el));
+  }
+</script>

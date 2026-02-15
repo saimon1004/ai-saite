@@ -1,0 +1,80 @@
+---
+import SectionHeading from "../common/SectionHeading.astro";
+---
+
+<section id="about" class="bg-surface py-32 sm:py-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="animate-fade-up" data-animate>
+      <SectionHeading titleEn="ABOUT" titleJa="私たちについて" />
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 mt-16">
+      <!-- Left column: Vision / Mission -->
+      <div>
+        <!-- Vision -->
+        <div class="py-10 animate-fade-up" data-animate>
+          <span class="font-heading text-sm tracking-wider text-teal font-bold uppercase">
+            VISION
+          </span>
+          <p class="text-2xl sm:text-3xl font-black text-text-primary leading-relaxed mt-4">
+            経営者の想い描く夢を実現させることによって、さらに面白い社会へ。
+          </p>
+        </div>
+
+        <div class="border-b border-border"></div>
+
+        <!-- Mission -->
+        <div class="py-10 animate-fade-up" data-animate>
+          <span class="font-heading text-sm tracking-wider text-teal font-bold uppercase">
+            MISSION
+          </span>
+          <p class="text-2xl sm:text-3xl font-black text-text-primary leading-relaxed mt-4">
+            「面白い」を実現させる。
+          </p>
+        </div>
+      </div>
+
+      <!-- Right column: Message -->
+      <div class="animate-fade-up" data-animate>
+        <span class="font-heading text-sm tracking-wider text-teal font-bold uppercase">
+          MESSAGE
+        </span>
+
+        <div class="mt-6 text-text-secondary leading-relaxed space-y-4">
+          <p>
+            2009年から保険代理店にてキャリアをスタートし、人事・Webマーケティング・経営企画と幅広い業務に携わってまいりました。
+          </p>
+          <p>
+            その中で、中小企業が直面する「人材確保」「組織体制」「テクノロジー活用」の課題に真正面から向き合い、テクノロジーの適切な活用が企業をより「面白く」できると確信しました。
+          </p>
+          <p>
+            2020年10月、株式会社SAIMONを設立。採用定着支援、AI研修、バックオフィス構築の3事業を通じて、中小企業の経営者が想い描く「面白い」を一つでも多く実現できるよう、全力でサポートしてまいります。
+          </p>
+        </div>
+
+        <div class="mt-8">
+          <p class="font-black text-text-primary">齋本 竜也</p>
+          <p class="text-text-secondary text-sm mt-1">代表取締役</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const aboutElements = document.querySelectorAll<HTMLElement>('#about [data-animate]');
+  if (aboutElements.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    aboutElements.forEach((el) => observer.observe(el));
+  }
+</script>

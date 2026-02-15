@@ -1,0 +1,73 @@
+---
+import SectionHeading from "../common/SectionHeading.astro";
+import { company } from "../../data/company";
+
+const items = [
+  { label: "会社名", value: company.name },
+  { label: "代表取締役", value: company.ceo },
+  { label: "設立", value: company.founded },
+  { label: "事業内容", value: company.business },
+  {
+    label: "所在地",
+    value: `${company.postalCode} ${company.address}`,
+  },
+  {
+    label: "TEL",
+    value: company.tel,
+    href: `tel:${company.tel}`,
+  },
+  {
+    label: "Email",
+    value: company.email,
+    href: `mailto:${company.email}`,
+  },
+];
+---
+
+<section id="company" class="bg-surface py-32 sm:py-40">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="animate-fade-up" data-animate>
+      <SectionHeading titleEn="COMPANY" titleJa="会社概要" />
+    </div>
+
+    <dl class="animate-fade-up" data-animate>
+      {items.map((item) => (
+        <div class="grid grid-cols-1 sm:grid-cols-[160px_1fr] border-b border-border">
+          <dt class="py-5 text-sm font-bold text-text-secondary">
+            {item.label}
+          </dt>
+          <dd class="py-5 text-base text-text-primary">
+            {item.href ? (
+              <a
+                href={item.href}
+                class="text-navy hover:text-teal transition-colors duration-200 underline-offset-4 hover:underline"
+              >
+                {item.value}
+              </a>
+            ) : (
+              item.value
+            )}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<script>
+  const companyElements = document.querySelectorAll<HTMLElement>('#company [data-animate]');
+  if (companyElements.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    companyElements.forEach((el) => observer.observe(el));
+  }
+</script>
