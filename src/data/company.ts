@@ -7,7 +7,7 @@ export const company = {
   business: "経営コンサルタント事業",
   postalCode: "〒540-0014",
   address: "大阪府大阪市中央区龍造寺町4-3",
-  tel: "080-4026-9068",
+
   email: "info@sai-mon.co.jp",
   url: "https://sai-mon.co.jp",
   tagline: "「面白い」を実現させる。",
