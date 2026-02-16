@@ -73,6 +73,7 @@ const resolvedCanonical = canonicalUrl || Astro.url.href;
     <script is:inline define:vars={{ basePath: import.meta.env.BASE_URL }}>
       window.FAQChatbotConfig = {
         videoBasePath: basePath + 'videos/chatbot/',
+        triggerImageUrl: basePath + 'videos/chatbot/trigger-thumb.jpg',
         videos: [
           { id: 'greeting', videoUrl: 'greeting.mp4', duration: 10, isPlaceholder: false },
           { id: 'faq-apply-1', videoUrl: 'faq-apply-1.mp4', duration: 15, isPlaceholder: false },
