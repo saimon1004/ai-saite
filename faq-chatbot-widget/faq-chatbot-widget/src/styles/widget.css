@@ -129,6 +129,20 @@
     }
   }
 
+  /* チャットボット - 吹き出しバウンスアニメーション */
+  .chatbot-speech-bounce {
+    animation: speechBounce 2s ease-in-out infinite;
+  }
+
+  @keyframes speechBounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
   /* チャットボット - 動画終了後の背景ブラー */
   .video-blur {
     filter: blur(4px);
