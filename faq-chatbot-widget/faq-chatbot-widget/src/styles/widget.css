@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ウィジェットルートのスコープリセット */
+#faq-chatbot-root {
+  font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+#faq-chatbot-root *,
+#faq-chatbot-root *::before,
+#faq-chatbot-root *::after {
+  box-sizing: border-box;
+}
+
+/* チャットボット - トリガーパルスアニメーション */
+@layer components {
+  /* アイコン用パルス（画像なし） */
+  .chatbot-trigger-ring-pulse {
+    animation: triggerRingPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes triggerRingPulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(0, 119, 182, 0.6), 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(0, 119, 182, 0), 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  /* 画像用パルス（borderなし、box-shadowで枠を表現） */
+  .chatbot-trigger-image-pulse {
+    animation: triggerImagePulse 2s ease-in-out infinite;
+  }
+
+  @keyframes triggerImagePulse {
+    0%, 100% {
+      box-shadow:
+        inset 0 0 0 2px rgba(0, 119, 182, 0.8),
+        0 0 0 0 rgba(0, 119, 182, 0.5),
+        0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    50% {
+      box-shadow:
+        inset 0 0 0 2px rgba(0, 119, 182, 0.8),
+        0 0 0 8px rgba(0, 119, 182, 0),
+        0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  /* チャットボット - ウィンドウアニメーション */
+  .chatbot-window-enter {
+    animation: chatWindowSlideUp 0.3s ease-out;
+  }
+
+  .chatbot-window-exit {
+    animation: chatWindowSlideDown 0.2s ease-in forwards;
+  }
+
+  @keyframes chatWindowSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes chatWindowSlideDown {
+    from {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+  }
+
+  /* チャットボット - メッセージアニメーション */
+  .chat-message-enter {
+    animation: messageSlideIn 0.3s ease-out;
+  }
+
+  @keyframes messageSlideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* チャットボット - 動画終了後のボタンパルス */
+  .video-ended-button {
+    animation: buttonPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes buttonPulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7), 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 0 12px rgba(59, 130, 246, 0), 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  /* チャットボット - オーバーレイ拡大アニメーション（下から上へ） */
+  .overlay-slide-up {
+    animation: overlaySlideUp 0.5s ease-out forwards;
+  }
+
+  @keyframes overlaySlideUp {
+    from {
+      transform: translateY(60%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* チャットボット - 動画終了後の背景ブラー */
+  .video-blur {
+    filter: blur(4px);
+    transition: filter 0.5s ease-out;
+  }
+}
