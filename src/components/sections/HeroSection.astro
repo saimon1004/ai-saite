@@ -2,7 +2,7 @@
 const base = import.meta.env.BASE_URL;
 ---
 
-<section class="relative h-[67vh] flex items-end overflow-hidden">
+<section class="relative h-[67vh] flex items-center justify-center overflow-hidden">
   <!-- Video background -->
   <video
     class="absolute inset-0 w-full h-full object-cover"
@@ -17,13 +17,13 @@ const base = import.meta.env.BASE_URL;
   </video>
 
   <!-- Dark overlay -->
-  <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-black/25" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-black/50" aria-hidden="true"></div>
 
   <!-- Content -->
-  <div class="hero-content relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-12 sm:pb-16">
+  <div class="hero-content relative z-10 text-center px-6 sm:px-8 lg:px-12">
     <!-- Sub text -->
     <p
-      class="text-sm sm:text-base tracking-[0.2em] uppercase text-white/80 font-heading font-bold mb-4 animate-fade-up"
+      class="text-xs sm:text-sm tracking-[0.25em] uppercase text-white/70 font-heading font-bold mb-5 sm:mb-6 animate-fade-up"
       data-animate
     >
       企業をテクノロジーで<span class="text-teal">SHINKA</span>させる。
@@ -31,20 +31,19 @@ const base = import.meta.env.BASE_URL;
 
     <!-- Main heading -->
     <h1
-      class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.1] animate-fade-up"
+      class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-[1.08] tracking-tight animate-fade-up"
       data-animate
       style="transition-delay: 0.1s;"
     >
-      「面白い」を<br class="hidden sm:block" />実現させる。
+      「面白い」を<br />実現させる。
     </h1>
-
   </div>
 
   <!-- Scroll indicator -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40" aria-hidden="true">
-    <span class="text-[10px] font-heading tracking-[0.3em] uppercase">Scroll</span>
+  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-white/30" aria-hidden="true">
+    <span class="text-[9px] font-heading tracking-[0.3em] uppercase">Scroll</span>
     <div class="scroll-indicator">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
     </div>
