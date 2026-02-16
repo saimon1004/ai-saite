@@ -67,5 +67,23 @@ const resolvedCanonical = canonicalUrl || Astro.url.href;
   </head>
   <body class="min-h-screen flex flex-col bg-surface text-text-primary font-sans antialiased">
     <slot />
+
+    <!-- FAQ動画チャットボット -->
+    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}faq-chatbot.css`} />
+    <script is:inline define:vars={{ basePath: import.meta.env.BASE_URL }}>
+      window.FAQChatbotConfig = {
+        videoBasePath: basePath + 'videos/chatbot/',
+        videos: [
+          { id: 'greeting', videoUrl: 'greeting.mp4', duration: 10, isPlaceholder: false },
+          { id: 'faq-apply-1', videoUrl: 'faq-apply-1.mp4', duration: 15, isPlaceholder: false },
+          { id: 'faq-apply-2', videoUrl: 'faq-apply-2.mp4', duration: 15, isPlaceholder: false },
+          { id: 'faq-work-1', videoUrl: 'faq-work-1.mp4', duration: 15, isPlaceholder: false },
+          { id: 'faq-work-2', videoUrl: 'faq-work-2.mp4', duration: 15, isPlaceholder: false },
+        ],
+      };
+      var _s = document.createElement('script');
+      _s.src = basePath + 'faq-chatbot.js';
+      document.body.appendChild(_s);
+    </script>
   </body>
 </html>
