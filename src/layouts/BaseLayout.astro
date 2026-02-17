@@ -66,7 +66,55 @@ const resolvedCanonical = canonicalUrl || Astro.url.href;
     )}
   </head>
   <body class="min-h-screen flex flex-col bg-surface text-text-primary font-sans antialiased">
-    <slot />
+    <!-- Password Gate -->
+    <div id="password-gate" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#0d0084;">
+      <div style="text-align:center;padding:2rem;max-width:360px;width:100%;">
+        <img src={`${import.meta.env.BASE_URL}Logo.png`} alt="SAIMON" style="height:48px;margin:0 auto 2rem;" />
+        <p style="color:#fff;font-size:0.875rem;margin-bottom:1rem;">閲覧にはパスワードが必要です</p>
+        <form id="password-form" style="display:flex;flex-direction:column;gap:0.75rem;">
+          <input
+            id="password-input"
+            type="password"
+            placeholder="パスワードを入力"
+            autocomplete="off"
+            style="padding:0.75rem 1rem;border:2px solid rgba(255,255,255,0.2);border-radius:0.5rem;background:rgba(255,255,255,0.1);color:#fff;font-size:1rem;outline:none;text-align:center;"
+          />
+          <button
+            type="submit"
+            style="padding:0.75rem 1rem;border:none;border-radius:0.5rem;background:#31b9b5;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;"
+          >
+            Enter
+          </button>
+          <p id="password-error" style="color:#f87171;font-size:0.8rem;margin:0;display:none;">パスワードが正しくありません</p>
+        </form>
+      </div>
+    </div>
+    <div id="site-content" style="display:none;">
+      <slot />
+    </div>
+    <script is:inline>
+      (function() {
+        var gate = document.getElementById('password-gate');
+        var content = document.getElementById('site-content');
+        if (sessionStorage.getItem('site-auth') === '1') {
+          gate.style.display = 'none';
+          content.style.display = 'contents';
+        }
+        document.getElementById('password-form').addEventListener('submit', function(e) {
+          e.preventDefault();
+          var pw = document.getElementById('password-input').value;
+          if (pw === 'saimon') {
+            sessionStorage.setItem('site-auth', '1');
+            gate.style.display = 'none';
+            content.style.display = 'contents';
+          } else {
+            var err = document.getElementById('password-error');
+            err.style.display = 'block';
+            document.getElementById('password-input').style.borderColor = '#f87171';
+          }
+        });
+      })();
+    </script>
 
     <!-- FAQ動画チャットボット -->
     <link rel="stylesheet" href={`${import.meta.env.BASE_URL}faq-chatbot.css`} />
