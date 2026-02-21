@@ -260,7 +260,7 @@ export const aiImpactLab = {
       ],
       color: "from-teal to-emerald-600",
       interview: {
-        name: "上本",
+        name: "上本 様",
         role: "",
         company: "株式会社NASH",
         image: "interview-01.jpg",
