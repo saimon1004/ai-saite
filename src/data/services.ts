@@ -57,6 +57,17 @@ export interface Pillar {
   outcome: string;
 }
 
+export interface CaseStudy {
+  number: string;
+  titleEn: string;
+  titleJa: string;
+  description: string;
+  tools: string[];
+  steps: { title: string; description: string }[];
+  highlights: string[];
+  color: string;
+}
+
 export const aiImpactLab = {
   nameEn: "AI IMPACT LAB",
   tagline: "人が育つ会社に、人は集まる。",
@@ -194,6 +205,81 @@ export const aiImpactLab = {
     { number: 4, title: "研修実施", description: "オンラインまたは対面にて、研修を実施します。" },
     { number: 5, title: "伴走サポート", description: "継続的なサポートを実施します。" },
   ] as Step[],
+
+  caseStudies: [
+    {
+      number: "01",
+      titleEn: "Video Production",
+      titleJa: "会社紹介動画の制作",
+      description:
+        "コードを一切書かずに、Claude Codeに日本語で指示を出すだけで会社紹介動画をMP4ファイルとして出力。動画編集ソフトの専門スキルがなくても、現場の担当者が自然言語の指示だけで動画を内製できます。",
+      tools: ["Claude Code", "Remotion", "Voicevox", "Node.js"],
+      steps: [
+        {
+          title: "環境構築",
+          description: "VS Code + Claude Code + 音声合成ソフト(Voicevox) + Node.jsをセットアップ",
+        },
+        {
+          title: "動画構成を指示",
+          description: "「会社紹介動画を作って」と日本語で指示するだけでシーン構成・デザインを自動生成",
+        },
+        {
+          title: "プレビュー・修正",
+          description: "ブラウザでリアルタイムプレビューを確認しながら、気になる箇所を日本語で修正指示",
+        },
+        {
+          title: "ナレーション・BGM追加",
+          description: "Voicevoxで自動ナレーション生成、フリー素材BGMを組み込み、字幕も自動配置",
+        },
+        {
+          title: "レンダリング・出力",
+          description: "「レンダリングして」の一言でMP4ファイルとして書き出し完了",
+        },
+      ],
+      highlights: [
+        "非エンジニアでも日本語の指示だけで動画が完成",
+        "一度作ったフローをスキル化して動画を量産可能",
+        "学習コンテンツや広告動画にも応用できる",
+      ],
+      color: "from-blue-500 to-indigo-600",
+    },
+    {
+      number: "02",
+      titleEn: "Recruitment Website",
+      titleJa: "採用サイトの制作",
+      description:
+        "AIがPC内のファイルを直接操作し、React/Next.jsの本格的な採用サイトを環境構築から公開まで一貫して制作。エンジニアがいなくても、プロ品質のWebサイトを現場主導で完成させられます。",
+      tools: ["Claude Code", "VS Code", "React / Next.js", "Git", "XServer"],
+      steps: [
+        {
+          title: "環境構築",
+          description: "Claude Desktop + VS Code + Claude Codeをインストール、プロジェクトフォルダを作成",
+        },
+        {
+          title: "要件定義・構築",
+          description: "「採用サイトを作りたい」と要件を伝えるだけでAIがサイト全体を自動構築",
+        },
+        {
+          title: "デザイン修正",
+          description: "ブラウザでプレビューしながら「ここをもっとかっこよくして」等の指示で調整",
+        },
+        {
+          title: "機能追加",
+          description: "FAQチャットボット、CMS連携、問い合わせフォーム等を日本語の指示で追加",
+        },
+        {
+          title: "公開・デプロイ",
+          description: "サーバーへの接続からドメイン設定、本番公開までAIに指示して完了",
+        },
+      ],
+      highlights: [
+        "エンジニアなしでプロ品質のサイトが完成",
+        "運用・保守・更新もAIで継続対応可能",
+        "CMS導入で非エンジニアでもコンテンツ更新が容易",
+      ],
+      color: "from-teal to-emerald-600",
+    },
+  ] as CaseStudy[],
 
   faq: [
     {
