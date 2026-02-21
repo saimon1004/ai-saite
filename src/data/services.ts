@@ -6,6 +6,8 @@ export interface TrainingModule {
   learns: string[];
   tools: string[];
   color: string;
+  image: string;
+  overlayColor: string;
 }
 
 export interface Stat {
@@ -106,6 +108,8 @@ export const aiImpactLab = {
       learns: ["各LLMの特性と使い分け", "高精度な指示の出し方", "長文分析・レポート作成"],
       tools: ["ChatGPT", "Claude", "Gemini"],
       color: "bg-blue-50 border-blue-200",
+      image: "module-llm.jpg",
+      overlayColor: "rgba(13, 0, 132, 0.72)",
     },
     {
       number: "II",
@@ -115,6 +119,8 @@ export const aiImpactLab = {
       learns: ["AIエージェントによる業務代行", "社内文書のナレッジ化", "LINE/BOT連携"],
       tools: ["Manus", "NotebookLM"],
       color: "bg-orange-50 border-orange-200",
+      image: "module-agent.jpg",
+      overlayColor: "rgba(154, 52, 18, 0.72)",
     },
     {
       number: "III",
@@ -124,6 +130,8 @@ export const aiImpactLab = {
       learns: ["アプリ間の自動連携", "条件分岐・統合フロー構築", "メール・会議の自動処理"],
       tools: ["Make", "Google Workspace Flows"],
       color: "bg-green-50 border-green-200",
+      image: "module-nocode.jpg",
+      overlayColor: "rgba(5, 102, 68, 0.72)",
     },
     {
       number: "IV",
@@ -133,6 +141,8 @@ export const aiImpactLab = {
       learns: ["テキストからビジュアル生成", "プレゼン資料の自動作成", "広告バナー・動画制作"],
       tools: ["Google Mixboard"],
       color: "bg-purple-50 border-purple-200",
+      image: "module-creative.jpg",
+      overlayColor: "rgba(88, 28, 135, 0.72)",
     },
   ] as TrainingModule[],
 
