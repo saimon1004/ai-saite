@@ -133,3 +133,97 @@ body {
 .nav-link[data-active="true"]::after {
   width: 100%;
 }
+
+/* ===================================
+   Section Background Decorations
+   =================================== */
+
+/* Dot pattern — light sections */
+.bg-dot-pattern {
+  position: relative;
+}
+.bg-dot-pattern::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgb(13 0 132 / 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Dot pattern — dark sections */
+.bg-dot-pattern-dark {
+  position: relative;
+}
+.bg-dot-pattern-dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgb(255 255 255 / 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Content above dot pattern */
+.bg-dot-pattern > *,
+.bg-dot-pattern-dark > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Section micro-gradients --- */
+#about {
+  background: linear-gradient(180deg, #fff 0%, #f5f5ff 50%, #fff 100%);
+}
+
+#solution {
+  background: radial-gradient(ellipse at 50% 0%, rgb(49 185 181 / 0.03) 0%, transparent 60%), var(--color-surface-dim);
+}
+
+#team {
+  background: radial-gradient(ellipse at 50% 100%, rgb(49 185 181 / 0.04) 0%, transparent 60%), var(--color-surface-dim);
+}
+
+#company {
+  background: radial-gradient(ellipse at 50% 100%, rgb(13 0 132 / 0.03) 0%, transparent 60%), var(--color-surface);
+}
+
+#contact {
+  background: radial-gradient(ellipse at 50% 30%, rgb(26 16 160 / 0.40) 0%, transparent 60%), var(--color-navy);
+}
+
+/* --- Decorative blur shapes --- */
+#about,
+#company {
+  overflow: hidden;
+}
+
+#about::after {
+  content: "";
+  position: absolute;
+  top: -80px;
+  right: -120px;
+  width: 400px;
+  height: 400px;
+  background: rgb(49 185 181 / 0.04);
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#company::after {
+  content: "";
+  position: absolute;
+  bottom: -60px;
+  left: -100px;
+  width: 350px;
+  height: 350px;
+  background: rgb(13 0 132 / 0.04);
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
