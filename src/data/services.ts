@@ -219,42 +219,6 @@ export const aiImpactLab = {
   caseStudies: [
     {
       number: "01",
-      titleEn: "Video Production",
-      titleJa: "会社紹介動画の制作",
-      description:
-        "コードを一切書かずに、Claude Codeに日本語で指示を出すだけで会社紹介動画をMP4ファイルとして出力。動画編集ソフトの専門スキルがなくても、現場の担当者が自然言語の指示だけで動画を内製できます。",
-      tools: ["Claude Code", "Remotion", "Voicevox", "Node.js"],
-      steps: [
-        {
-          title: "環境構築",
-          description: "VS Code + Claude Code + 音声合成ソフト(Voicevox) + Node.jsをセットアップ",
-        },
-        {
-          title: "動画構成を指示",
-          description: "「会社紹介動画を作って」と日本語で指示するだけでシーン構成・デザインを自動生成",
-        },
-        {
-          title: "プレビュー・修正",
-          description: "ブラウザでリアルタイムプレビューを確認しながら、気になる箇所を日本語で修正指示",
-        },
-        {
-          title: "ナレーション・BGM追加",
-          description: "Voicevoxで自動ナレーション生成、フリー素材BGMを組み込み、字幕も自動配置",
-        },
-        {
-          title: "レンダリング・出力",
-          description: "「レンダリングして」の一言でMP4ファイルとして書き出し完了",
-        },
-      ],
-      highlights: [
-        "非エンジニアでも日本語の指示だけで動画が完成",
-        "一度作ったフローをスキル化して動画を量産可能",
-        "学習コンテンツや広告動画にも応用できる",
-      ],
-      color: "from-blue-500 to-indigo-600",
-    },
-    {
-      number: "02",
       titleEn: "Recruitment Website",
       titleJa: "採用サイトの制作",
       description:
