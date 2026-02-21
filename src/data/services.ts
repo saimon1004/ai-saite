@@ -203,11 +203,15 @@ export const aiImpactLab = {
   ] as Strength[],
 
   pricing: {
-    hours: "月間8時間",
-    price: "200,000",
-    priceNote: "円（税抜）",
-    includes: ["AI研修（オンライン or 対面）", "業務改善伴走"],
-    features: ["研修受講人数無制限", "1ヶ月単位更新可能"],
+    startPrice: "100,000",
+    priceNote: "円〜（税抜）",
+    description: "貴社の課題やレベル感に合わせて、研修内容・時間・回数を柔軟にカスタマイズ。まずはお気軽にご相談ください。",
+    includes: [
+      "社内レベルに合わせた研修内容のカスタマイズ",
+      "AI研修（オンライン or 対面）",
+      "業務改善伴走サポート",
+    ],
+    features: ["研修受講人数無制限", "1ヶ月単位で更新可能", "無料相談OK"],
     subsidy: {
       label: "スマート助成金プラン",
       description: "助成金活用で10時間研修 + 5ヶ月伴走",
