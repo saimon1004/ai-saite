@@ -15,32 +15,32 @@ export default function ChatbotTrigger({ isOpen, onClick }: ChatbotTriggerProps)
       {!isOpen && (
         <div className="chatbot-speech-bounce mb-2 relative">
           <div className="bg-white rounded-full px-4 py-1.5 shadow-lg text-sm font-bold text-gray-700 whitespace-nowrap">
-            質問はここから♪
+            AI研修について聞く♪
           </div>
           <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-white drop-shadow-sm" />
         </div>
       )}
       <button
         onClick={onClick}
-        aria-label={isOpen ? 'チャットを閉じる' : '採用についてのご質問はこちら'}
+        aria-label={isOpen ? 'チャットを閉じる' : 'AI研修についてのご質問はこちら'}
         aria-expanded={isOpen}
         aria-controls="faq-chatbot-window"
         aria-haspopup="dialog"
         className={`
-          ${isOpen ? 'w-14 h-14 md:w-16 md:h-16' : 'w-20 h-20 md:w-24 md:h-24'}
+          ${isOpen ? 'w-14 h-14 md:w-16 md:h-16 border-2 border-white/80' : 'w-20 h-20 md:w-24 md:h-24'}
           rounded-full
           flex items-center justify-center
           transition-all duration-300 ease-out
           hover:scale-105
           focus:outline-none
           overflow-hidden
-          ${hasImage ? 'chatbot-trigger-image-pulse' : 'bg-gradient-to-br from-primary-500 to-ocean shadow-lg hover:shadow-xl'}
+          ${hasImage ? 'chatbot-trigger-image-pulse' : 'bg-gradient-to-br from-red-500 to-red-600 shadow-lg hover:shadow-xl'}
           ${!hasImage && !isOpen ? 'chatbot-trigger-ring-pulse' : ''}
         `}
       >
         {isOpen ? (
           <svg
-            className="w-6 h-6 md:w-7 md:h-7 text-white"
+            className="w-7 h-7 md:w-8 md:h-8 text-white"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -48,7 +48,7 @@ export default function ChatbotTrigger({ isOpen, onClick }: ChatbotTriggerProps)
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2}
+              strokeWidth={2.5}
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
