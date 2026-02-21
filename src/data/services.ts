@@ -68,6 +68,13 @@ export interface CaseStudy {
   steps: { title: string; description: string }[];
   highlights: string[];
   color: string;
+  interview?: {
+    name: string;
+    role: string;
+    company: string;
+    image: string;
+    quote: string;
+  };
 }
 
 export const aiImpactLab = {
@@ -252,6 +259,13 @@ export const aiImpactLab = {
         "CMS導入で非エンジニアでもコンテンツ更新が容易",
       ],
       color: "from-teal to-emerald-600",
+      interview: {
+        name: "田中 美咲",
+        role: "人事部 採用担当",
+        company: "株式会社〇〇",
+        image: "interview-01.png",
+        quote: "エンジニアがいない中で採用サイトのリニューアルを任され、正直途方に暮れていました。でも研修を受けてからは、Claude Codeに日本語で指示するだけでサイトが形になっていくのが衝撃的で。デザインの修正も「ここをもう少し明るく」と伝えるだけ。公開後は応募数が前年比1.8倍に増え、社内でも驚かれました。今では他部署からも「うちのページも作って」と相談が来ています。",
+      },
     },
   ] as CaseStudy[],
 
