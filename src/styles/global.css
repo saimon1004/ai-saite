@@ -146,7 +146,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgb(13 0 132 / 0.08) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgb(13 0 132 / 0.18) 1.5px, transparent 1.5px);
   background-size: 20px 20px;
   pointer-events: none;
   z-index: 0;
@@ -160,7 +160,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgb(255 255 255 / 0.10) 1.5px, transparent 1.5px);
   background-size: 20px 20px;
   pointer-events: none;
   z-index: 0;
@@ -175,19 +175,19 @@ body {
 
 /* --- Section micro-gradients --- */
 #about {
-  background: linear-gradient(180deg, #fff 0%, #f5f5ff 50%, #fff 100%);
+  background: linear-gradient(180deg, #fff 0%, #ededff 50%, #fff 100%);
 }
 
 #solution {
-  background: radial-gradient(ellipse at 50% 0%, rgb(49 185 181 / 0.03) 0%, transparent 60%), var(--color-surface-dim);
+  background: radial-gradient(ellipse at 50% 0%, rgb(49 185 181 / 0.06) 0%, transparent 60%), var(--color-surface-dim);
 }
 
 #team {
-  background: radial-gradient(ellipse at 50% 100%, rgb(49 185 181 / 0.04) 0%, transparent 60%), var(--color-surface-dim);
+  background: radial-gradient(ellipse at 50% 100%, rgb(49 185 181 / 0.07) 0%, transparent 60%), var(--color-surface-dim);
 }
 
 #company {
-  background: radial-gradient(ellipse at 50% 100%, rgb(13 0 132 / 0.03) 0%, transparent 60%), var(--color-surface);
+  background: radial-gradient(ellipse at 50% 100%, rgb(13 0 132 / 0.06) 0%, transparent 60%), var(--color-surface);
 }
 
 #contact {
@@ -207,7 +207,7 @@ body {
   right: -120px;
   width: 400px;
   height: 400px;
-  background: rgb(49 185 181 / 0.04);
+  background: rgb(49 185 181 / 0.08);
   border-radius: 50%;
   filter: blur(80px);
   pointer-events: none;
@@ -221,7 +221,7 @@ body {
   left: -100px;
   width: 350px;
   height: 350px;
-  background: rgb(13 0 132 / 0.04);
+  background: rgb(13 0 132 / 0.08);
   border-radius: 50%;
   filter: blur(80px);
   pointer-events: none;
