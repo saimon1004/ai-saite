@@ -57,6 +57,8 @@ export interface Pillar {
   subtitle: string;
   points: { metric: string; description: string }[];
   outcome: string;
+  image: string;
+  overlayColor: string;
 }
 
 export interface CaseStudy {
@@ -93,6 +95,8 @@ export const aiImpactLab = {
         { metric: "2025年の崖 回避", description: "IT/AIリテラシーがモダナイゼーションの鍵" },
       ],
       outcome: "収益構造の抜本的改善",
+      image: "pillar-genba.jpg",
+      overlayColor: "rgba(13, 0, 132, 0.72)",
     },
     {
       title: "採用ブランディング",
@@ -103,6 +107,8 @@ export const aiImpactLab = {
         { metric: "離職リスク抑制", description: "デジタルフリクション低減で世代間ギャップ解消（Gartner）" },
       ],
       outcome: "イノベーション源泉の確保",
+      image: "pillar-recruit.jpg",
+      overlayColor: "rgba(5, 102, 68, 0.72)",
     },
   ] as Pillar[],
 

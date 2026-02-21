@@ -41,36 +41,62 @@ const statBarWidths = ["96%", "94%", "94%", "84%"];
         AIリテラシーの向上は、現場力の強化と採用ブランディングの両方に寄与します。
       </p>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {pillars.map((pillar, pIdx) => (
-          <div class="bg-surface rounded-2xl border border-border overflow-hidden">
-            <div class:list={[
-              "px-6 sm:px-8 py-5",
-              pIdx === 0 ? "bg-navy text-white" : "bg-teal text-white",
-            ]}>
-              <p class="text-xs tracking-wider uppercase font-heading font-bold opacity-70">{pillar.subtitle}</p>
-              <h4 class="text-xl sm:text-2xl font-black mt-1">{pillar.title}</h4>
-            </div>
-            <div class="px-6 sm:px-8 py-6 space-y-5">
-              {pillar.points.map((point) => (
-                <div class="flex items-start gap-3">
-                  <svg class:list={["w-5 h-5 shrink-0 mt-0.5", pIdx === 0 ? "text-navy" : "text-teal"]} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                  </svg>
-                  <div>
-                    <p class="text-sm font-bold text-text-primary">{point.metric}</p>
-                    <p class="text-xs text-text-secondary mt-0.5">{point.description}</p>
-                  </div>
+        {pillars.map((pillar, pIdx) => {
+          const accentLight = pillar.overlayColor.replace(/[\d.]+\)$/, '0.15)');
+          return (
+            <div class="relative rounded-2xl overflow-hidden hover:shadow-card-hover transition-shadow duration-300 group">
+              {/* 背景画像 */}
+              <img
+                src={`${base}${pillar.image}`}
+                alt=""
+                aria-hidden="true"
+                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-110"
+                loading="lazy"
+              />
+
+              {/* 白系オーバーレイ */}
+              <div
+                class="absolute inset-0"
+                style={`background: linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.95));`}
+                aria-hidden="true"
+              />
+
+              {/* テーマカラーのアクセント帯（上部） */}
+              <div
+                class="absolute inset-x-0 top-0 h-1.5 rounded-t-2xl"
+                style={`background: ${pillar.overlayColor};`}
+                aria-hidden="true"
+              />
+
+              {/* コンテンツ */}
+              <div class="relative z-10 p-6 sm:p-8">
+                <p class="text-xs tracking-wider uppercase font-heading font-bold text-gray-500">{pillar.subtitle}</p>
+                <h4 class="text-xl sm:text-2xl font-black text-gray-900 mt-1 mb-5">{pillar.title}</h4>
+
+                <div class="space-y-5">
+                  {pillar.points.map((point) => (
+                    <div class="flex items-start gap-3">
+                      <svg class:list={["w-5 h-5 shrink-0 mt-0.5", pIdx === 0 ? "text-navy" : "text-teal"]} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                      </svg>
+                      <div>
+                        <p class="text-sm font-bold text-gray-900">{point.metric}</p>
+                        <p class="text-xs text-gray-600 mt-0.5">{point.description}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+
+                <div class:list={[
+                  "mt-6 px-4 py-3 rounded-lg text-center text-sm font-bold",
+                  pIdx === 0 ? "bg-navy/8 text-navy" : "bg-teal/8 text-teal",
+                ]}>
+                  {pillar.outcome}
+                </div>
+              </div>
             </div>
-            <div class:list={[
-              "mx-6 sm:mx-8 mb-6 px-4 py-3 rounded-lg text-center text-sm font-bold",
-              pIdx === 0 ? "bg-navy/5 text-navy" : "bg-teal/5 text-teal",
-            ]}>
-              {pillar.outcome}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
 
