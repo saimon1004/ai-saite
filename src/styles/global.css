@@ -150,7 +150,7 @@ body {
   background-size: 20px 20px;
   pointer-events: none;
   z-index: 0;
-  animation: dot-drift 30s ease-in-out infinite;
+  animation: dot-drift 18s ease-in-out infinite;
 }
 
 /* Dot pattern — dark sections */
@@ -165,18 +165,18 @@ body {
   background-size: 20px 20px;
   pointer-events: none;
   z-index: 0;
-  animation: dot-drift 34s ease-in-out infinite;
+  animation: dot-drift 22s ease-in-out infinite;
 }
 
 /* Dot drift animation — irregular organic movement */
 @keyframes dot-drift {
-  0%   { background-position:  0px    0px;  }
-  15%  { background-position:  6px   -4px;  }
-  30%  { background-position: -3px   -9px;  }
-  50%  { background-position:  8px   -2px;  }
-  65%  { background-position: -5px    7px;  }
-  80%  { background-position:  3px   -6px;  }
-  100% { background-position:  0px    0px;  }
+  0%   { background-position:   0px    0px;  }
+  12%  { background-position:  18px  -12px;  }
+  28%  { background-position:  -8px  -28px;  }
+  45%  { background-position:  25px   -5px;  }
+  62%  { background-position: -15px   22px;  }
+  78%  { background-position:  10px  -18px;  }
+  100% { background-position:   0px    0px;  }
 }
 
 /* Content above dot pattern */
