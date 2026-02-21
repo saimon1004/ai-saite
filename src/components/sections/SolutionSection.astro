@@ -257,7 +257,7 @@ const statBarWidths = ["96%", "94%", "94%", "84%"];
                       <div class="sm:text-center">
                         <p class="text-sm font-bold text-text-primary">{cs.interview.name}</p>
                         <p class="text-[11px] text-text-secondary leading-tight mt-0.5">{cs.interview.company}</p>
-                        <p class="text-[11px] text-text-secondary leading-tight">{cs.interview.role}</p>
+                        {cs.interview.role && <p class="text-[11px] text-text-secondary leading-tight">{cs.interview.role}</p>}
                       </div>
                     </div>
 
