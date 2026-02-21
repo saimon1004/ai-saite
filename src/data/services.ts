@@ -220,11 +220,12 @@ export const aiImpactLab = {
   },
 
   steps: [
-    { number: 1, title: "ご検討", description: "貴社内にて提案内容をご検討ください。" },
-    { number: 2, title: "ご契約", description: "ご契約書を作成し、締結いたします。" },
-    { number: 3, title: "研修内容協議", description: "貴社の状況やレベル感に合わせて研修内容を協議。" },
-    { number: 4, title: "研修実施", description: "オンラインまたは対面にて、研修を実施します。" },
-    { number: 5, title: "伴走サポート", description: "継続的なサポートを実施します。" },
+    { number: 1, title: "無料相談", description: "まずはお気軽にお問い合わせください。" },
+    { number: 2, title: "研修内容協議", description: "貴社の状況やレベル感に合わせて研修内容を協議。" },
+    { number: 3, title: "ご検討", description: "貴社内にて提案内容をご検討ください。" },
+    { number: 4, title: "ご契約", description: "ご契約書を作成し、締結いたします。" },
+    { number: 5, title: "研修実施", description: "オンラインまたは対面にて、研修を実施します。" },
+    { number: 6, title: "伴走サポート", description: "継続的なサポートを実施します。" },
   ] as Step[],
 
   caseStudies: [
