@@ -81,8 +81,8 @@ export const aiImpactLab = {
       title: "現場力の強化",
       subtitle: "経済的利益の源泉（価値創出）",
       points: [
-        { metric: "18.6万時間/年 削減", description: "パナソニック コネクト — 全社員1.2万人にAI展開" },
-        { metric: "営業効率 68% 向上", description: "日清食品 — AIをコンサルとして活用" },
+        { metric: "18.6万時間/年 削減", description: "大手製造業 — 全社員1.2万人にAI展開した事例" },
+        { metric: "営業効率 68% 向上", description: "大手食品メーカー — AIをコンサルとして活用した事例" },
         { metric: "2025年の崖 回避", description: "IT/AIリテラシーがモダナイゼーションの鍵" },
       ],
       outcome: "収益構造の抜本的改善",
