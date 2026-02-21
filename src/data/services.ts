@@ -72,9 +72,9 @@ export interface CaseStudy {
 
 export const aiImpactLab = {
   nameEn: "AI IMPACT LAB",
-  tagline: "人が育つ会社に、人は集まる。",
+  tagline: "「つくりたい」を、現場の手で。",
   description:
-    "AIリテラシーは「企業の生存戦略」そのもの。全社的AIリスキリングで現場力の強化と採用ブランディングの両方を実現します。",
+    "スピード不足、ミスコミュニケーション——思い描いた成果物が形にならないもどかしさ。現場が自らつくれる力を持つことが、最も確実な解決策だと私たちは考えます。その信念から生まれた研修プログラムです。",
 
   pillars: [
     {
