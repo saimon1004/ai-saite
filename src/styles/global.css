@@ -85,6 +85,15 @@ body {
   }
 }
 
+/* Code scroll animation for case study background */
+@keyframes code-scroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+.animate-code-scroll {
+  animation: code-scroll 30s linear infinite;
+}
+
 /* Focus styles */
 :focus-visible {
   outline: 2px solid var(--color-teal);
