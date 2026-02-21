@@ -37,47 +37,10 @@ const { title, description, ogImage, canonicalUrl, jsonLd } = Astro.props;
 
   <Footer />
 
-  <!-- Scroll to Top Button -->
-  <button
-    id="scroll-to-top"
-    class="fixed bottom-8 right-8 z-40 w-12 h-12 bg-navy text-white rounded-full shadow-lg flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 hover:bg-navy-light hover:scale-110 focus:outline-none focus:ring-2 focus:ring-teal focus:ring-offset-2"
-    aria-label="ページトップへ戻る"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="w-5 h-5"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      stroke-width="2.5"
-    >
-      <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-    </svg>
-  </button>
-
   <!-- Scripts -->
   <script src="../scripts/active-nav.ts"></script>
   <script src="../scripts/smooth-scroll.ts"></script>
   <script src="../scripts/counter.ts"></script>
   <script src="../scripts/scroll-animations.ts"></script>
   <script src="../scripts/particles.ts"></script>
-
-  <script>
-    const scrollToTopBtn = document.getElementById("scroll-to-top");
-    if (scrollToTopBtn) {
-      window.addEventListener("scroll", () => {
-        if (window.scrollY > 600) {
-          scrollToTopBtn.classList.remove("opacity-0", "pointer-events-none");
-          scrollToTopBtn.classList.add("opacity-100", "pointer-events-auto");
-        } else {
-          scrollToTopBtn.classList.remove("opacity-100", "pointer-events-auto");
-          scrollToTopBtn.classList.add("opacity-0", "pointer-events-none");
-        }
-      });
-
-      scrollToTopBtn.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-    }
-  </script>
 </BaseLayout>
