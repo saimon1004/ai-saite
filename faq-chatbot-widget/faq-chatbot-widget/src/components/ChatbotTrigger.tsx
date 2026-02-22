@@ -15,7 +15,7 @@ export default function ChatbotTrigger({ isOpen, onClick }: ChatbotTriggerProps)
       {!isOpen && (
         <div className="chatbot-speech-bounce mb-2 relative">
           <div className="bg-white rounded-full px-4 py-1.5 shadow-lg text-sm font-bold text-gray-700 whitespace-nowrap">
-            AI研修について聞く♪
+            ちょっと押してみて♪
           </div>
           <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-white drop-shadow-sm" />
         </div>
