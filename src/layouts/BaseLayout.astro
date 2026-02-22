@@ -125,6 +125,15 @@ const resolvedCanonical = canonicalUrl || Astro.url.href;
         videos: [
           { id: 'greeting', videoUrl: 'greeting.mp4', duration: 25, isPlaceholder: false },
         ],
+        config: {
+          subtitles: [
+            { start: 0, end: 3, text: 'やっぱり押しちゃいますよね' },
+            { start: 3, end: 8, text: 'この動画チャットボット' },
+            { start: 8, end: 13, text: '実は研修で作れるようになります' },
+            { start: 13, end: 18, text: '御社のサイトにも実装できます' },
+            { start: 18, end: 25, text: 'まずは無料でご相談ください' },
+          ],
+        },
       };
       var _s = document.createElement('script');
       _s.src = basePath + 'faq-chatbot.js';

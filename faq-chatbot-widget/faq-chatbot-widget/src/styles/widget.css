@@ -159,6 +159,20 @@
     }
   }
 
+  /* チャットボット - 音声ヒントフェードアウト */
+  .chatbot-sound-hint {
+    animation: soundHintFade 3s ease-in-out forwards;
+  }
+
+  @keyframes soundHintFade {
+    0%, 60% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
   /* チャットボット - 動画終了後の背景ブラー */
   .video-blur {
     filter: blur(4px);
