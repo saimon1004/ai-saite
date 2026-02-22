@@ -6,7 +6,7 @@ export const DEFAULT_VIDEOS: FAQVideo[] = [
   {
     id: 'greeting',
     videoUrl: 'greeting.mp4',
-    duration: 25,
+    duration: 16,
     isPlaceholder: false,
   },
 ]
@@ -14,11 +14,11 @@ export const DEFAULT_VIDEOS: FAQVideo[] = [
 export const DEFAULT_FAQS: FAQWithVideo[] = []
 
 export const DEFAULT_SUBTITLES: Subtitle[] = [
-  { start: 0, end: 3, text: 'やっぱり押しちゃいますよね' },
-  { start: 3, end: 8, text: '実はこのチャットボットも\n研修の中で作れるようになります' },
-  { start: 8, end: 14, text: 'FAQの自動応答や\nサービスのアピールとしても活用できるので' },
-  { start: 14, end: 19, text: '御社のサイトにも\nぜひ取り入れてみてください' },
-  { start: 19, end: 25, text: '気になった方は\nお気軽に無料相談へどうぞ！' },
+  { start: 0, end: 2, text: 'やっぱり押しちゃいますよね' },
+  { start: 2, end: 5.5, text: '実はこのチャットボットも\n研修の中で作れるようになります' },
+  { start: 5.5, end: 9.5, text: 'FAQの自動応答や\nサービスのアピールとしても活用できるので' },
+  { start: 9.5, end: 12.5, text: '御社のサイトにも\nぜひ取り入れてみてください' },
+  { start: 12.5, end: 16, text: '気になった方は\nお気軽に無料相談へどうぞ！' },
 ]
 
 export const DEFAULT_CONFIG: ChatbotConfig = {
