@@ -261,8 +261,13 @@ export default function ChatbotWindow({
             {/* 字幕オーバーレイ */}
             {currentSubtitle && !isVideoLoading && (
               <div className="absolute left-0 right-0 bottom-20 flex justify-center z-10 pointer-events-none px-4">
-                <span className="bg-black/70 text-white text-sm font-medium px-4 py-2 rounded-lg text-center max-w-[90%]">
-                  {currentSubtitle}
+                <span className="bg-black/70 text-white text-sm font-medium px-4 py-2 rounded-lg text-center max-w-[90%] leading-relaxed">
+                  {currentSubtitle.split('\n').map((line, i) => (
+                    <>
+                      {i > 0 && <br />}
+                      {line}
+                    </>
+                  ))}
                 </span>
               </div>
             )}

@@ -15,10 +15,10 @@ export const DEFAULT_FAQS: FAQWithVideo[] = []
 
 export const DEFAULT_SUBTITLES: Subtitle[] = [
   { start: 0, end: 3, text: 'やっぱり押しちゃいますよね' },
-  { start: 3, end: 8, text: 'この動画チャットボット' },
-  { start: 8, end: 13, text: '実は研修で作れるようになります' },
-  { start: 13, end: 18, text: '御社のサイトにも実装できます' },
-  { start: 18, end: 25, text: 'まずは無料でご相談ください' },
+  { start: 3, end: 8, text: '実はこのチャットボットも\n研修の中で作れるようになります' },
+  { start: 8, end: 14, text: 'FAQの自動応答や\nサービスのアピールとしても活用できるので' },
+  { start: 14, end: 19, text: '御社のサイトにも\nぜひ取り入れてみてください' },
+  { start: 19, end: 25, text: '気になった方は\nお気軽に無料相談へどうぞ！' },
 ]
 
 export const DEFAULT_CONFIG: ChatbotConfig = {
