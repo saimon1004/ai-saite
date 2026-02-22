@@ -3,7 +3,7 @@ import ChatbotTrigger from './ChatbotTrigger'
 import ChatbotWindow from './ChatbotWindow'
 import type { FAQCategory, FAQWithVideo } from './types'
 
-type ViewState = 'greeting' | 'categories' | 'questions' | 'answer'
+type ViewState = 'greeting' | 'categories' | 'questions' | 'answer' | 'contact'
 
 export default function FAQChatbot() {
   const [isOpen, setIsOpen] = useState(false)
@@ -47,6 +47,14 @@ export default function FAQChatbot() {
     setCurrentView('categories')
   }, [])
 
+  const handleOpenContact = useCallback(() => {
+    setCurrentView('contact')
+  }, [])
+
+  const handleBackToGreeting = useCallback(() => {
+    setCurrentView('greeting')
+  }, [])
+
   return (
     <>
       <ChatbotTrigger isOpen={isOpen} onClick={handleToggle} />
@@ -61,6 +69,8 @@ export default function FAQChatbot() {
         onSelectQuestion={handleSelectQuestion}
         onAnswerEnd={handleAnswerEnd}
         onBackToCategories={handleBackToCategories}
+        onOpenContact={handleOpenContact}
+        onBackToGreeting={handleBackToGreeting}
       />
     </>
   )

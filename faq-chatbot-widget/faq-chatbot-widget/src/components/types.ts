@@ -52,7 +52,7 @@ export interface ChatMessageData {
 // チャットボットの状態
 export interface ChatbotState {
   isOpen: boolean
-  currentView: 'greeting' | 'categories' | 'questions' | 'answer'
+  currentView: 'greeting' | 'categories' | 'questions' | 'answer' | 'contact'
   selectedCategory: string | null
   selectedFAQ: FAQWithVideo | null
   chatHistory: ChatMessageData[]

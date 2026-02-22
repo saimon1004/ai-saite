@@ -3,12 +3,13 @@ import ChatbotHeader from './ChatbotHeader'
 import VideoPlayer from './VideoPlayer'
 import CategoryList from './CategoryList'
 import QuestionList from './QuestionList'
+import ContactForm from './ContactForm'
 import type { FAQCategory, FAQWithVideo } from './types'
 import { useChatbotConfig } from '../config/context'
 
 interface ChatbotWindowProps {
   isOpen: boolean
-  currentView: 'greeting' | 'categories' | 'questions' | 'answer'
+  currentView: 'greeting' | 'categories' | 'questions' | 'answer' | 'contact'
   selectedCategory: FAQCategory | null
   selectedFAQ: FAQWithVideo | null
   onClose: () => void
@@ -17,6 +18,8 @@ interface ChatbotWindowProps {
   onSelectQuestion: (faq: FAQWithVideo) => void
   onAnswerEnd: () => void
   onBackToCategories: () => void
+  onOpenContact: () => void
+  onBackToGreeting: () => void
 }
 
 export default function ChatbotWindow({
@@ -30,6 +33,8 @@ export default function ChatbotWindow({
   onSelectQuestion,
   onAnswerEnd,
   onBackToCategories,
+  onOpenContact,
+  onBackToGreeting,
 }: ChatbotWindowProps) {
   const windowRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -133,13 +138,17 @@ export default function ChatbotWindow({
         return selectedCategory?.name || '質問を選択'
       case 'answer':
         return '回答'
+      case 'contact':
+        return 'お問い合わせ'
     }
   }
 
-  const showBackButton = currentView === 'questions' || currentView === 'answer'
+  const showBackButton = currentView === 'questions' || currentView === 'answer' || currentView === 'contact'
 
   const handleBack = () => {
-    if (currentView === 'answer') {
+    if (currentView === 'contact') {
+      onBackToGreeting()
+    } else if (currentView === 'answer') {
       onBackToCategories()
     } else if (currentView === 'questions') {
       onBackToCategories()
@@ -275,13 +284,12 @@ export default function ChatbotWindow({
             )}
 
             <div className="absolute bottom-0 left-0 right-0 p-4 pb-5 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
-              <a
-                href="#contact"
-                onClick={(e) => { onClose(); }}
+              <button
+                onClick={onOpenContact}
                 className="chatbot-cta-pulse block w-full py-4 px-4 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white rounded-xl text-base font-black text-center transition-all shadow-[0_4px_20px_rgba(239,68,68,0.5)] hover:shadow-[0_6px_28px_rgba(239,68,68,0.7)] hover:scale-[1.02] tracking-wide"
               >
                 まずは無料で相談する →
-              </a>
+              </button>
             </div>
           </div>
         )}
@@ -298,6 +306,11 @@ export default function ChatbotWindow({
             onSelectQuestion={onSelectQuestion}
             onBack={onBackToCategories}
           />
+        )}
+
+        {/* お問い合わせビュー */}
+        {currentView === 'contact' && (
+          <ContactForm onClose={onClose} onBackToGreeting={onBackToGreeting} />
         )}
 
         {/* 回答ビュー */}
