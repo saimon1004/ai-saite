@@ -143,6 +143,22 @@
     }
   }
 
+  /* チャットボット - CTA ボタンパルス */
+  .chatbot-cta-pulse {
+    animation: ctaPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes ctaPulse {
+    0%, 100% {
+      box-shadow: 0 4px 20px rgba(239, 68, 68, 0.5);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 6px 30px rgba(239, 68, 68, 0.7), 0 0 0 6px rgba(239, 68, 68, 0.15);
+      transform: scale(1.03);
+    }
+  }
+
   /* チャットボット - 動画終了後の背景ブラー */
   .video-blur {
     filter: blur(4px);

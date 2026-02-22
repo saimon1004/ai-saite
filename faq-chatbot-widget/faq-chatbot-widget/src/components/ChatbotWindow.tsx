@@ -198,13 +198,13 @@ export default function ChatbotWindow({
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`}
             />
 
-            <div className="absolute bottom-0 left-0 right-0 p-3 pb-4 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
+            <div className="absolute bottom-0 left-0 right-0 p-4 pb-5 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
               <a
                 href="#contact"
                 onClick={(e) => { onClose(); }}
-                className="block w-full py-3 px-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg text-sm font-bold text-center transition-all shadow-lg"
+                className="chatbot-cta-pulse block w-full py-4 px-4 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white rounded-xl text-base font-black text-center transition-all shadow-[0_4px_20px_rgba(239,68,68,0.5)] hover:shadow-[0_6px_28px_rgba(239,68,68,0.7)] hover:scale-[1.02] tracking-wide"
               >
-                無料で相談する →
+                🔥 無料で相談する
               </a>
             </div>
           </div>
