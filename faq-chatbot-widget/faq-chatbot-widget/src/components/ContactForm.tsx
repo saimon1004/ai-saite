@@ -188,7 +188,12 @@ export default function ContactForm({ onClose }: ContactFormProps) {
         <button
           type="submit"
           disabled={status === 'submitting' || !privacyAgree}
-          className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 shadow-[0_4px_20px_rgba(239,68,68,0.4)] hover:shadow-[0_6px_28px_rgba(239,68,68,0.6)] disabled:from-gray-300 disabled:to-gray-300 disabled:shadow-none disabled:cursor-not-allowed"
+          style={{
+            background: status === 'submitting' || !privacyAgree
+              ? '#d1d5db'
+              : 'linear-gradient(to right, #ef4444, #f97316)',
+          }}
+          className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all shadow-[0_4px_20px_rgba(239,68,68,0.4)] disabled:shadow-none disabled:cursor-not-allowed"
         >
           {status === 'submitting' ? '送信中...' : '送信する'}
         </button>
