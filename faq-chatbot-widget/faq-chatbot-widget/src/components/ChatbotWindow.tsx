@@ -204,7 +204,7 @@ export default function ChatbotWindow({
                 onClick={(e) => { onClose(); }}
                 className="chatbot-cta-pulse block w-full py-4 px-4 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white rounded-xl text-base font-black text-center transition-all shadow-[0_4px_20px_rgba(239,68,68,0.5)] hover:shadow-[0_6px_28px_rgba(239,68,68,0.7)] hover:scale-[1.02] tracking-wide"
               >
-                🔥 無料で相談する
+                まずは無料で相談する →
               </a>
             </div>
           </div>
