@@ -94,8 +94,9 @@ export default function ContactForm({ onClose }: ContactFormProps) {
 
   // フォーム表示
   return (
-    <div className="flex-1 overflow-y-auto">
-      <form onSubmit={handleSubmit} className="p-4 space-y-3">
+    <form onSubmit={handleSubmit} className="absolute inset-0 flex flex-col">
+      {/* スクロール領域 */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {/* 会社名 */}
         <div>
           <label className="block text-xs font-bold text-gray-600 mb-1">
@@ -180,8 +181,10 @@ export default function ContactForm({ onClose }: ContactFormProps) {
 
         {/* honeypot（スパム対策） */}
         <input type="text" name="_honey" style={{ display: 'none' }} tabIndex={-1} />
+      </div>
 
-        {/* 送信ボタン */}
+      {/* 送信ボタン（固定フッター） */}
+      <div className="shrink-0 p-4 pt-2 bg-white border-t border-gray-100">
         <button
           type="submit"
           disabled={status === 'submitting' || !privacyAgree}
@@ -193,7 +196,7 @@ export default function ContactForm({ onClose }: ContactFormProps) {
         >
           {status === 'submitting' ? '送信中...' : '送信する'}
         </button>
-      </form>
-    </div>
+      </div>
+    </form>
   )
 }
