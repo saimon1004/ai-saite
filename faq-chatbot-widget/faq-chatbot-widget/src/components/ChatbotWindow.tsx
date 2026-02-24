@@ -240,45 +240,45 @@ export default function ChatbotWindow({
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`}
             />
 
-            {/* 字幕 + ミュートボタン（CTAの上にまとめて配置） */}
+            {/* ミュートボタン（左上に配置、閉じるボタンは右上なので十分距離あり） */}
             {!isVideoLoading && (
-              <div className="absolute left-0 right-0 bottom-[4.5rem] z-20 px-4">
-                {/* 字幕テキスト */}
-                {currentSubtitle && (
-                  <div className="flex justify-center pointer-events-none mb-2">
-                    <span className="bg-black/70 text-white text-sm font-medium px-4 py-2 rounded-lg text-center max-w-[90%] leading-relaxed">
-                      {currentSubtitle.split('\n').map((line, i) => (
-                        <>
-                          {i > 0 && <br />}
-                          {line}
-                        </>
-                      ))}
-                    </span>
-                  </div>
-                )}
-                {/* ミュートボタン行 */}
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={toggleMute}
-                    aria-label={isMuted ? '音声をオンにする' : '音声をオフにする'}
-                    className="p-2 rounded-full bg-black/50 hover:bg-black/70 text-white transition-colors"
-                  >
-                    {isMuted ? (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                      </svg>
-                    ) : (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                      </svg>
-                    )}
-                  </button>
-                  {showSoundHint && isMuted && (
-                    <span className="text-white text-xs bg-black/50 rounded-full px-3 py-1 chatbot-sound-hint">
-                      🔊 タップで音声ON
-                    </span>
+              <div className="absolute top-3 left-3 z-20 flex items-center gap-2">
+                <button
+                  onClick={toggleMute}
+                  aria-label={isMuted ? '音声をオンにする' : '音声をオフにする'}
+                  className="p-2.5 rounded-full bg-black/50 hover:bg-black/70 text-white transition-colors"
+                >
+                  {isMuted ? (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
                   )}
+                </button>
+                {showSoundHint && isMuted && (
+                  <span className="text-white text-xs bg-black/50 rounded-full px-3 py-1 chatbot-sound-hint">
+                    🔊 タップで音声ON
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* 字幕（CTAの上に配置） */}
+            {!isVideoLoading && currentSubtitle && (
+              <div className="absolute left-0 right-0 bottom-[4.5rem] z-20 px-4">
+                <div className="flex justify-center pointer-events-none">
+                  <span className="bg-black/70 text-white text-sm font-medium px-4 py-2 rounded-lg text-center max-w-[90%] leading-relaxed">
+                    {currentSubtitle.split('\n').map((line, i) => (
+                      <>
+                        {i > 0 && <br />}
+                        {line}
+                      </>
+                    ))}
+                  </span>
                 </div>
               </div>
             )}
