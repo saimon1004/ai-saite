@@ -6,8 +6,8 @@ interface ChatbotTriggerProps {
 }
 
 export default function ChatbotTrigger({ isOpen, onClick }: ChatbotTriggerProps) {
-  const { triggerImageUrl } = useChatbotConfig()
-  const hasImage = triggerImageUrl && !isOpen
+  const { triggerVideoUrl } = useChatbotConfig()
+  const hasVideo = triggerVideoUrl && !isOpen
 
   return (
     <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex flex-col items-center">
@@ -34,8 +34,8 @@ export default function ChatbotTrigger({ isOpen, onClick }: ChatbotTriggerProps)
           hover:scale-105
           focus:outline-none
           overflow-hidden
-          ${hasImage ? 'chatbot-trigger-image-pulse' : 'bg-gradient-to-br from-red-500 to-red-600 shadow-lg hover:shadow-xl'}
-          ${!hasImage && !isOpen ? 'chatbot-trigger-ring-pulse' : ''}
+          ${hasVideo ? 'chatbot-trigger-image-pulse' : 'bg-gradient-to-br from-red-500 to-red-600 shadow-lg hover:shadow-xl'}
+          ${!hasVideo && !isOpen ? 'chatbot-trigger-ring-pulse' : ''}
         `}
       >
         {isOpen ? (
@@ -52,10 +52,13 @@ export default function ChatbotTrigger({ isOpen, onClick }: ChatbotTriggerProps)
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
-        ) : triggerImageUrl ? (
-          <img
-            src={triggerImageUrl}
-            alt="チャットボット"
+        ) : triggerVideoUrl ? (
+          <video
+            src={triggerVideoUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
             className="w-full h-full object-cover"
           />
         ) : (
