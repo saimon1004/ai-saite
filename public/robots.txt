@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://saimon1004.github.io/ai-saite/sitemap-index.xml
+Sitemap: https://sai-mon.co.jp/sitemap-index.xml

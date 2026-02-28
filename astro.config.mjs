@@ -3,8 +3,8 @@ import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  site: "https://saimon1004.github.io",
-  base: "/ai-saite/",
+  site: "https://sai-mon.co.jp",
+  base: "/",
   output: "static",
   vite: {
     plugins: [tailwindcss()],

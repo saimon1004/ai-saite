@@ -1,0 +1,34 @@
+name: Rollback Xserver Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'ロールバックするには "rollback" と入力してください'
+        required: true
+
+jobs:
+  rollback:
+    if: github.event.inputs.confirm == 'rollback'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.XSERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${{ secrets.XSERVER_PORT }} ${{ secrets.XSERVER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Rollback to latest backup
+        run: |
+          ssh -p ${{ secrets.XSERVER_PORT }} ${{ secrets.XSERVER_USER }}@${{ secrets.XSERVER_HOST }} '
+            LATEST_BACKUP=$(ls -dt ~/sai-mon.co.jp/backup_* 2>/dev/null | head -1)
+            if [ -n "$LATEST_BACKUP" ]; then
+              rm -rf ~/sai-mon.co.jp/public_html
+              cp -a "$LATEST_BACKUP" ~/sai-mon.co.jp/public_html
+              echo "ロールバック完了: $LATEST_BACKUP"
+            else
+              echo "バックアップが見つかりません"
+              exit 1
+            fi
+          '

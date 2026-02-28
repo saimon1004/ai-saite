@@ -168,7 +168,7 @@ export default function ContactForm({ onClose }: ContactFormProps) {
           />
           <label htmlFor="chatbot-privacy" className="text-xs text-gray-600 leading-relaxed">
             <a
-              href="/ai-saite/privacy-policy/"
+              href="/privacy-policy/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 underline hover:text-blue-600"
