@@ -66,6 +66,7 @@ export interface CaseStudy {
   titleEn: string;
   titleJa: string;
   description: string;
+  url?: string;
   tools: string[];
   steps: { title: string; description: string }[];
   highlights: string[];
@@ -241,6 +242,7 @@ export const aiImpactLab = {
       titleJa: "採用サイトの制作",
       description:
         "AIがPC内のファイルを直接操作し、React/Next.jsの本格的な採用サイトを環境構築から公開まで一貫して制作。エンジニアがいなくても、プロ品質のWebサイトを現場主導で完成させられます。",
+      url: "https://recruit.nash-holdings.com",
       tools: ["Claude Code", "VS Code", "React / Next.js", "Git", "XServer"],
       steps: [
         {
