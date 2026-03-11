@@ -6,6 +6,7 @@ import { company } from "../data/company";
 
 const base = import.meta.env.BASE_URL;
 
+// === コース1: AI業務活用コース ===
 const goals = [
   {
     icon: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>`,
@@ -22,13 +23,6 @@ const goals = [
     title: "企業理解の深化と組織結束力の強化",
     description: "全社的な取り組みを通じて、組織の結束力を高めます。",
   },
-];
-
-const overview = [
-  { label: "研修時間", value: "計11時間 / 3日間", detail: "3.5h + 3.5h + 4h" },
-  { label: "形式", value: "オンライン（Zoom）or 対面" },
-  { label: "比率", value: "講義30% : 実習70%" },
-  { label: "料金", value: "¥400,000 /人", detail: "税抜" },
 ];
 
 const tools = ["ChatGPT", "Claude", "Gemini", "NotebookLM", "Manus", "Make"];
@@ -95,6 +89,98 @@ const days = [
     ],
   },
 ];
+
+// === コース2: HP制作の内製化コース ===
+const goals2 = [
+  {
+    icon: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>`,
+    title: "HP制作の内製化スキル習得",
+    description: "Claude Codeを活用し、自社でHP制作・更新ができる体制を構築します。",
+  },
+  {
+    icon: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>`,
+    title: "AI共創開発人材の育成",
+    description: "AIと協働してWebサイトを構築できるリーダー人材を育成します。",
+  },
+  {
+    icon: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`,
+    title: "運用・保守体制の確立",
+    description: "CMS連携とデプロイ手法を習得し、継続的な運用体制を確立します。",
+  },
+];
+
+const tools2 = ["Claude Code", "VS Code", "React / Next.js", "MicroCMS", "Git", "XServer"];
+
+const days2 = [
+  {
+    day: "DAY 1",
+    title: "Claude Code基礎と環境構築",
+    time: "13:00 - 16:30（3.5時間）",
+    color: "bg-blue-50 border-blue-200",
+    accentColor: "text-blue-600",
+    objectives: [
+      "Claude Codeの仕組みと操作方法を理解する",
+      "AI共創開発の基本概念を習得する",
+      "開発環境のセットアップを完了する",
+    ],
+    schedule: [
+      { time: "13:00 - 13:30", content: "オリエンテーション・ゴール設定" },
+      { time: "13:30 - 14:30", content: "Claude Code概論（AI共創開発の考え方・役割分担）" },
+      { time: "14:30 - 14:45", content: "休憩" },
+      { time: "14:45 - 15:30", content: "環境構築実習（VS Code・Claude Code・Git導入）" },
+      { time: "15:30 - 16:30", content: "Claude Code基本操作（Planモード・権限設定・プロジェクト初期化）" },
+    ],
+  },
+  {
+    day: "DAY 2",
+    title: "サイト設計・構築実践",
+    time: "13:00 - 16:30（3.5時間）",
+    color: "bg-green-50 border-green-200",
+    accentColor: "text-green-600",
+    objectives: [
+      "要件定義からサイト構築までの流れを体験する",
+      "React/Next.jsでのサイト構築をAIと実践する",
+      "デザイン修正・機能実装の手法を習得する",
+    ],
+    schedule: [
+      { time: "13:00 - 13:15", content: "振り返り・体験共有" },
+      { time: "13:15 - 14:15", content: "要件定義と技術選定（参考サイト分析・プロンプト設計）" },
+      { time: "14:15 - 14:30", content: "休憩" },
+      { time: "14:30 - 15:30", content: "サイト構築ハンズオン（React/Next.jsプロジェクト作成）" },
+      { time: "15:30 - 16:30", content: "デザイン修正・機能追加（CTA・レスポンシブ対応）" },
+    ],
+  },
+  {
+    day: "DAY 3",
+    title: "デプロイ・運用と実践ワークショップ",
+    time: "13:00 - 17:00（4時間）",
+    color: "bg-purple-50 border-purple-200",
+    accentColor: "text-purple-600",
+    subtitle: "自社HPのプロトタイプ制作",
+    objectives: [
+      "CMS連携による運用体制を構築する",
+      "サーバーデプロイの手順を習得する",
+      "自社HP制作のアクションプランを策定する",
+    ],
+    schedule: [
+      { time: "13:00 - 13:30", content: "イントロダクション・DAY2の復習" },
+      { time: "13:30 - 14:15", content: "CMS導入（MicroCMS連携・動的コンテンツ管理）" },
+      { time: "14:15 - 14:30", content: "休憩" },
+      { time: "14:30 - 15:15", content: "デプロイ実践（サーバー設定・ドメイン設定）" },
+      { time: "15:15 - 16:15", content: "実践ワークショップ（自社HPのプロトタイプ制作）" },
+      { time: "16:15 - 16:30", content: "プレゼンテーション・まとめ" },
+      { time: "16:30 - 17:00", content: "Q&A・アクションプラン策定" },
+    ],
+  },
+];
+
+// === 共通データ ===
+const overview = [
+  { label: "研修時間", value: "計11時間 / 3日間", detail: "3.5h + 3.5h + 4h" },
+  { label: "形式", value: "オンライン（Zoom）or 対面" },
+  { label: "比率", value: "講義30% : 実習70%" },
+  { label: "料金", value: "¥400,000 /人", detail: "税抜" },
+];
 ---
 
 <BaseLayout
@@ -114,14 +200,51 @@ const days = [
     </div>
   </section>
 
+  <!-- Course Tab Selector -->
+  <section class="bg-surface border-b border-border">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-center gap-2 py-6">
+        <button
+          data-tab-btn="1"
+          class="px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 bg-navy text-white"
+        >
+          AI業務活用コース
+        </button>
+        <button
+          data-tab-btn="2"
+          class="px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 bg-navy/5 text-navy hover:bg-navy/10"
+        >
+          HP制作の内製化コース
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- Goals -->
   <section class="py-20 sm:py-24 bg-surface">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="font-heading text-xs tracking-wider text-teal uppercase font-bold mb-2 text-center">OBJECTIVES</h2>
       <p class="text-center text-2xl sm:text-3xl font-black text-text-primary mb-12">研修の目的</p>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- コース1: AI業務活用 -->
+      <div data-tab-content="1" class="grid grid-cols-1 md:grid-cols-3 gap-6">
         {goals.map((goal, idx) => (
+          <div class="bg-surface-dim rounded-2xl p-8 text-center">
+            <div class="w-14 h-14 rounded-2xl bg-navy/5 flex items-center justify-center text-navy mx-auto mb-5">
+              <Fragment set:html={goal.icon} />
+            </div>
+            <span class="font-heading text-4xl font-black text-navy/10 leading-none" aria-hidden="true">
+              {String(idx + 1).padStart(2, "0")}
+            </span>
+            <h3 class="text-lg font-bold text-text-primary mt-2">{goal.title}</h3>
+            <p class="text-sm text-text-secondary mt-2 leading-relaxed">{goal.description}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- コース2: HP制作の内製化 -->
+      <div data-tab-content="2" class="grid grid-cols-1 md:grid-cols-3 gap-6 hidden">
+        {goals2.map((goal, idx) => (
           <div class="bg-surface-dim rounded-2xl p-8 text-center">
             <div class="w-14 h-14 rounded-2xl bg-navy/5 flex items-center justify-center text-navy mx-auto mb-5">
               <Fragment set:html={goal.icon} />
@@ -153,11 +276,21 @@ const days = [
         ))}
       </div>
 
-      <!-- Tools -->
-      <div class="bg-surface rounded-2xl border border-border p-6 sm:p-8">
+      <!-- Tools: コース1 -->
+      <div data-tab-content="1" class="bg-surface rounded-2xl border border-border p-6 sm:p-8">
         <p class="text-sm font-bold text-text-primary mb-4 text-center">使用ツール</p>
         <div class="flex flex-wrap justify-center gap-3">
           {tools.map((tool) => (
+            <span class="text-sm font-medium bg-navy/5 text-navy px-4 py-2 rounded-full">{tool}</span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Tools: コース2 -->
+      <div data-tab-content="2" class="bg-surface rounded-2xl border border-border p-6 sm:p-8 hidden">
+        <p class="text-sm font-bold text-text-primary mb-4 text-center">使用ツール</p>
+        <div class="flex flex-wrap justify-center gap-3">
+          {tools2.map((tool) => (
             <span class="text-sm font-medium bg-navy/5 text-navy px-4 py-2 rounded-full">{tool}</span>
           ))}
         </div>
@@ -171,8 +304,61 @@ const days = [
       <h2 class="font-heading text-xs tracking-wider text-teal uppercase font-bold mb-2 text-center">CURRICULUM</h2>
       <p class="text-center text-2xl sm:text-3xl font-black text-text-primary mb-12">カリキュラム</p>
 
-      <div class="space-y-8">
+      <!-- コース1: AI業務活用 -->
+      <div data-tab-content="1" class="space-y-8">
         {days.map((day) => (
+          <div class:list={["rounded-2xl border overflow-hidden", day.color]}>
+            <!-- Day header -->
+            <div class="px-6 sm:px-8 py-5 border-b border-inherit">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div>
+                  <span class:list={["font-heading text-xs tracking-wider uppercase font-bold", day.accentColor]}>{day.day}</span>
+                  <h3 class="text-xl sm:text-2xl font-black text-text-primary mt-1">{day.title}</h3>
+                  {day.subtitle && <p class="text-sm text-text-secondary mt-1">{day.subtitle}</p>}
+                </div>
+                <span class="text-sm font-medium text-text-secondary whitespace-nowrap">{day.time}</span>
+              </div>
+            </div>
+
+            <div class="px-6 sm:px-8 py-6 grid grid-cols-1 lg:grid-cols-5 gap-6">
+              <!-- Learning objectives -->
+              <div class="lg:col-span-2">
+                <p class="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3">学習目標</p>
+                <div class="space-y-2">
+                  {day.objectives.map((obj) => (
+                    <div class="flex items-start gap-2">
+                      <svg class="w-4 h-4 text-teal shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span class="text-sm text-text-primary">{obj}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <!-- Schedule -->
+              <div class="lg:col-span-3">
+                <p class="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3">タイムスケジュール</p>
+                <div class="space-y-2">
+                  {day.schedule.map((s) => (
+                    <div class:list={[
+                      "flex items-start gap-3 text-sm",
+                      s.content === "休憩" ? "opacity-50" : "",
+                    ]}>
+                      <span class="font-mono text-xs text-text-secondary whitespace-nowrap pt-0.5 w-28 shrink-0">{s.time}</span>
+                      <span class="text-text-primary">{s.content}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- コース2: HP制作の内製化 -->
+      <div data-tab-content="2" class="space-y-8 hidden">
+        {days2.map((day) => (
           <div class:list={["rounded-2xl border overflow-hidden", day.color]}>
             <!-- Day header -->
             <div class="px-6 sm:px-8 py-5 border-b border-inherit">
@@ -327,3 +513,31 @@ const days = [
 
   <Footer />
 </BaseLayout>
+
+<script>
+  document.querySelectorAll('[data-tab-btn]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tab = (btn as HTMLElement).dataset.tabBtn;
+
+      // Update button styles
+      document.querySelectorAll('[data-tab-btn]').forEach((b) => {
+        const el = b as HTMLElement;
+        if (el.dataset.tabBtn === tab) {
+          el.className = 'px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 bg-navy text-white';
+        } else {
+          el.className = 'px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 bg-navy/5 text-navy hover:bg-navy/10';
+        }
+      });
+
+      // Toggle content visibility
+      document.querySelectorAll('[data-tab-content]').forEach((el) => {
+        const content = el as HTMLElement;
+        if (content.dataset.tabContent === tab) {
+          content.classList.remove('hidden');
+        } else {
+          content.classList.add('hidden');
+        }
+      });
+    });
+  });
+</script>
