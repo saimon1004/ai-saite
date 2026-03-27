@@ -1,0 +1,705 @@
+---
+title: "暗号という鎧"
+subtitle: "暗号化・ハッシュ・HTTPSでデータを守る"
+description: "暗号化・ハッシュ・HTTPSでデータを守る。Encryption Basics・Hashing・HTTPS/TLS・Key Managementを実践的なストーリーで学ぶチャプター「暗号という鎧」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-14
+chapter: 14
+arc: "crisis"
+arcName: "危機編"
+skills:
+  - { category: "security", name: "Encryption Basics", level: "intro" }
+  - { category: "security", name: "Hashing", level: "intro" }
+  - { category: "security", name: "HTTPS/TLS", level: "intro" }
+  - { category: "security", name: "Key Management", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["13-sql-injection"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+XSSとSQLインジェクションの穴は塞いだ。しかし、Yukiは厳しい顔をしていた。
+
+---
+
+**Yuki:** 「攻撃経路は封じた。でも、最も深刻な問題がまだ残ってる。」
+
+Yukiがデータベースのusersテーブルを画面に映す。
+
+```
+id | email                  | password
+1  | mika@example.com       | cafe2024
+2  | tanaka@example.com     | tanaka123
+3  | yamada@example.com     | password1
+```
+
+**あなた:** 「...パスワードがそのまま入ってる。」
+
+**Yuki:** 「平文（ひらぶん）保存。最悪のパターンだ。Shadowがデータベースから抜き取ったデータには、このパスワードがそのまま含まれていた。」
+
+**あなた:** 「つまり、Shadowはユーザーのメールアドレスとパスワードの組み合わせを持ってるってこと？」
+
+**Yuki:** 「そう。しかも多くの人はパスワードを使い回してる。ShimaLinkから漏れたパスワードで、そのユーザーの他のサービス——メール、SNS、銀行——にもログインできる可能性がある。」
+
+**Mika:** 「そんな...うちのお客さんたちが...」
+
+**あなた:** 「Yukiさん、どうすれば防げたんですか？」
+
+**Yuki:** 「パスワードを"ハッシュ化"して保存すべきだった。仮にデータベースが丸ごと盗まれても、元のパスワードがわからない形で保存する技術がある。」
+
+---
+
+Yukiがホワイトボードに書く。
+
+```
+平文保存:      cafe2024  →  cafe2024（そのまま読める）
+ハッシュ化:    cafe2024  →  $2b$12$LJ3m1... （元に戻せない）
+```
+
+**Yuki:** 「暗号化とハッシュは、データの"鎧"だ。今日はこの鎧を完全に身につける。もう二度と、データが裸で保存されることがないように。」
+
+Shadowに盗まれたデータは取り戻せない。だが、未来の被害は防げる。
+
+暗号化の世界に踏み込もう。
+
+</StoryPanel>
+
+## 対称暗号と非対称暗号
+
+暗号化にはデータを「読めない形」に変換する2つの主要な方式があります。
+
+> **Yuki:** 「暗号化は"金庫"みたいなもの。対称暗号は"1つの鍵"で開け閉めする金庫、非対称暗号は"2つの鍵"を使う特殊な金庫だよ。」
+
+## 暗号化の基本概念
+
+```
+平文（Plaintext）  →  [暗号化]  →  暗号文（Ciphertext）  →  [復号]  →  平文
+  "Hello"            鍵を使う      "x7#kP9"               鍵を使う     "Hello"
+```
+
+暗号化されたデータは、正しい鍵がなければ元に戻せません。
+
+## 対称暗号（Symmetric Encryption）
+
+暗号化と復号に**同じ鍵**を使う方式です。
+
+```
+送信者: "Hello" + 鍵A → [暗号化] → "x7#kP9"
+                                      ↓
+受信者: "x7#kP9" + 鍵A → [復号] → "Hello"
+```
+
+| 項目 | 詳細 |
+|------|------|
+| **鍵の数** | 1つ（共有鍵） |
+| **速度** | 高速 |
+| **代表的なアルゴリズム** | AES-256, ChaCha20 |
+| **用途** | データの暗号化、ファイル暗号化 |
+| **課題** | 鍵の受け渡しが難しい |
+
+```javascript
+const crypto = require('crypto');
+
+// AES-256-GCMで暗号化
+function encrypt(text, key) {
+  const iv = crypto.randomBytes(16); // 初期化ベクトル
+  const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+  let encrypted = cipher.update(text, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  const tag = cipher.getAuthTag();
+  return { encrypted, iv: iv.toString('hex'), tag: tag.toString('hex') };
+}
+
+// 復号
+function decrypt(encryptedData, key) {
+  const decipher = crypto.createDecipheriv(
+    'aes-256-gcm',
+    key,
+    Buffer.from(encryptedData.iv, 'hex')
+  );
+  decipher.setAuthTag(Buffer.from(encryptedData.tag, 'hex'));
+  let decrypted = decipher.update(encryptedData.encrypted, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
+}
+```
+
+## 非対称暗号（Asymmetric Encryption）
+
+暗号化と復号に**別々の鍵**を使う方式です。公開鍵と秘密鍵のペアを使います。
+
+```
+送信者: "Hello" + 受信者の公開鍵 → [暗号化] → "x7#kP9"
+                                                  ↓
+受信者: "x7#kP9" + 受信者の秘密鍵 → [復号] → "Hello"
+```
+
+| 項目 | 詳細 |
+|------|------|
+| **鍵の数** | 2つ（公開鍵 + 秘密鍵） |
+| **速度** | 低速 |
+| **代表的なアルゴリズム** | RSA, ECDSA, Ed25519 |
+| **用途** | 鍵交換、デジタル署名、TLS |
+| **課題** | 処理が重い |
+
+> **Yuki:** 「公開鍵は"ポストの投入口"。誰でも手紙を入れられる。秘密鍵は"ポストの鍵"。持っている人だけが中身を読める。」
+
+## 対称 vs 非対称の使い分け
+
+| | 対称暗号 | 非対称暗号 |
+|---|---------|-----------|
+| **速度** | 高速 | 低速（約1000倍遅い） |
+| **鍵の管理** | 共有鍵の受け渡しが課題 | 公開鍵は配布可能 |
+| **大量データ** | 向いている | 向いていない |
+| **鍵交換** | 向いていない | 向いている |
+
+**実際には両方を組み合わせます。** TLS（HTTPS）がまさにこのパターンです。
+
+```
+1. 非対称暗号で安全に「共有鍵」を交換
+2. 以降の通信は対称暗号（共有鍵）で高速に暗号化
+```
+
+## ShimaLinkでの用途
+
+| 用途 | 暗号方式 |
+|------|---------|
+| ユーザーデータの保存時暗号化 | AES-256（対称暗号） |
+| HTTPS通信 | TLS（非対称 + 対称のハイブリッド） |
+| APIキーの署名 | ECDSA（非対称暗号） |
+| パスワード保存 | ハッシュ化（次のレッスン） |
+
+## ポイント
+
+- 対称暗号は1つの鍵で高速、非対称暗号は2つの鍵で安全な鍵交換
+- 実際にはハイブリッド方式（非対称で鍵交換→対称で通信）が使われる
+- パスワードの保存は暗号化ではなくハッシュ化を使う（次のレッスン）
+- AES-256が現在最も広く使われている対称暗号アルゴリズム
+
+## ハッシュ化 — パスワードを安全に保存する
+
+パスワードの保存には暗号化ではなく**ハッシュ化**を使います。ハッシュ化は「一方向」の変換で、元に戻すことができません。
+
+> **Yuki:** 「暗号化は"鍵で開けられる金庫"。ハッシュ化は"肉をミンチにする機械"。ミンチから元の肉の形には戻せないでしょ？」
+
+## 暗号化 vs ハッシュ化
+
+| | 暗号化 | ハッシュ化 |
+|---|--------|-----------|
+| **方向性** | 双方向（復号可能） | 一方向（復号不可能） |
+| **鍵の有無** | 必要 | 不要 |
+| **用途** | データの保護 | パスワード保存、整合性検証 |
+| **出力長** | 入力に依存 | 固定長 |
+
+パスワードをハッシュ化すると、データベースが漏洩しても元のパスワードがわかりません。
+
+## なぜ普通のハッシュではダメなのか
+
+SHA-256のような汎用ハッシュ関数は、パスワード保存には不適切です。
+
+```
+SHA-256("password123") → ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f
+
+問題1: レインボーテーブル攻撃
+  → よく使われるパスワードのハッシュ値リストで逆引き
+
+問題2: 高速すぎる
+  → GPUで毎秒数十億回の計算が可能
+  → 総当たりが現実的な時間で完了してしまう
+```
+
+## パスワード用ハッシュ関数
+
+パスワード保存専用に設計されたハッシュ関数は、意図的に**遅く**作られています。
+
+| アルゴリズム | 特徴 | 推奨度 |
+|-------------|------|--------|
+| **bcrypt** | 実績豊富、広く使われている | 推奨 |
+| **Argon2** | 最新、メモリハード | 最も推奨 |
+| **scrypt** | メモリハード | 推奨 |
+| **PBKDF2** | 古いが互換性が高い | 許容 |
+| SHA-256 | パスワード用ではない | 非推奨 |
+| MD5 | 脆弱性あり | 使用禁止 |
+
+## bcryptの使い方
+
+```javascript
+const bcrypt = require('bcrypt');
+
+// パスワードのハッシュ化（新規登録時）
+async function hashPassword(password) {
+  const saltRounds = 12; // コストファクター（高いほど遅い=安全）
+  const hash = await bcrypt.hash(password, saltRounds);
+  return hash;
+  // → "$2b$12$LJ3m1kGv8sXxPqRt5Yw9OeKj7z..."
+}
+
+// パスワードの検証（ログイン時）
+async function verifyPassword(password, hash) {
+  const isMatch = await bcrypt.compare(password, hash);
+  return isMatch; // true or false
+}
+
+// 使用例
+const hash = await hashPassword('cafe2024');
+// DB保存: $2b$12$LJ3m1kGv8sXxPqRt5Yw9Oe...
+
+const isValid = await verifyPassword('cafe2024', hash);
+// → true
+
+const isInvalid = await verifyPassword('wrong_password', hash);
+// → false
+```
+
+## ソルト（Salt）とは
+
+bcryptは自動的に**ソルト**（ランダムな値）を生成してハッシュに含めます。
+
+```
+ソルトなし:
+  "password123" → 常に同じハッシュ値
+  → 複数ユーザーが同じパスワードなら同じハッシュ → パターン分析可能
+
+ソルトあり（bcrypt）:
+  "password123" + ソルトA → ハッシュA
+  "password123" + ソルトB → ハッシュB
+  → 同じパスワードでも異なるハッシュ → パターン分析不可能
+```
+
+bcryptのハッシュ値にはソルトが埋め込まれているため、別途保存する必要はありません。
+
+```
+$2b$12$LJ3m1kGv8sXxPqRt5Yw9OeKj7zRt2B...
+ ↑   ↑  ↑─────────────────────↑↑──────↑
+ │   │  ソルト(22文字)          ハッシュ
+ │   コストファクター(12)
+ アルゴリズム(2b = bcrypt)
+```
+
+## コストファクターの選び方
+
+```javascript
+// コストファクターが高いほど安全だが、処理が遅くなる
+// 目安: ハッシュ計算に0.25〜0.5秒かかる値を選ぶ
+
+const bcrypt = require('bcrypt');
+
+// ベンチマーク
+async function benchmark() {
+  const password = 'test_password';
+  for (let cost = 10; cost <= 14; cost++) {
+    const start = Date.now();
+    await bcrypt.hash(password, cost);
+    const time = Date.now() - start;
+    console.log(`Cost ${cost}: ${time}ms`);
+  }
+}
+// Cost 10: 65ms
+// Cost 11: 130ms
+// Cost 12: 260ms  ← 推奨
+// Cost 13: 520ms
+// Cost 14: 1040ms
+```
+
+## ShimaLinkのパスワード保存を修正
+
+```javascript
+// Before: 平文保存（危険）
+app.post('/api/register', async (req, res) => {
+  const { email, password } = req.body;
+  await db.execute(
+    'INSERT INTO users (email, password) VALUES (?, ?)',
+    [email, password] // パスワードがそのまま保存される
+  );
+});
+
+// After: bcryptハッシュ化（安全）
+const bcrypt = require('bcrypt');
+
+app.post('/api/register', async (req, res) => {
+  const { email, password } = req.body;
+
+  // パスワード強度チェック
+  if (password.length < 8) {
+    return res.status(400).json({ error: 'パスワードは8文字以上です' });
+  }
+
+  // ハッシュ化して保存
+  const hash = await bcrypt.hash(password, 12);
+  await db.execute(
+    'INSERT INTO users (email, password) VALUES (?, ?)',
+    [email, hash]
+  );
+});
+```
+
+## ポイント
+
+- パスワードは暗号化ではなくハッシュ化で保存する
+- bcryptまたはArgon2を使う（SHA-256やMD5は使わない）
+- ソルトにより同じパスワードでも異なるハッシュ値になる
+- コストファクターは0.25〜0.5秒を目安に設定する
+
+## TLS/HTTPS — 通信を暗号化する
+
+保存データを暗号化しても、通信中にデータが盗み見されては意味がありません。**HTTPS**はTLSプロトコルで通信を暗号化します。
+
+> **Yuki:** 「HTTPはハガキ。配達中に誰でも読める。HTTPSは封筒。中身を見るには開封が必要。」
+
+## HTTPとHTTPSの違い
+
+```
+HTTP:
+ブラウザ ──────[パスワード: cafe2024]──────→ サーバー
+                    ↑
+              盗聴者が読める
+
+HTTPS:
+ブラウザ ──────[x7#kP9&2mL...]──────→ サーバー
+                    ↑
+              盗聴者には解読不能
+```
+
+| | HTTP | HTTPS |
+|---|------|-------|
+| **通信** | 平文 | 暗号化 |
+| **ポート** | 80 | 443 |
+| **URL** | http:// | https:// |
+| **証明書** | 不要 | 必要 |
+| **セキュリティ** | なし | 暗号化 + 認証 + 整合性 |
+
+## TLSハンドシェイクの仕組み
+
+HTTPS接続が確立される過程を**TLSハンドシェイク**と呼びます。
+
+```
+1. Client Hello
+   ブラウザ → サーバー: 「暗号化で通信したいです。対応してる方式はこれです。」
+
+2. Server Hello + 証明書
+   サーバー → ブラウザ: 「この方式で行きましょう。私の証明書はこれです。」
+
+3. 証明書の検証
+   ブラウザ: 「証明書を認証局に確認...OK、本物のshimalink.comだ。」
+
+4. 鍵交換
+   ブラウザとサーバーが安全に共有鍵を生成（非対称暗号を使用）
+
+5. 暗号化通信開始
+   以降の通信はすべて共有鍵（対称暗号）で暗号化
+```
+
+## SSL/TLS証明書
+
+SSL/TLS証明書は「このサーバーは本物ですよ」という身分証明書です。
+
+| 証明書の種類 | 検証内容 | 費用 | 用途 |
+|-------------|---------|------|------|
+| **DV（Domain Validation）** | ドメイン所有者 | 無料〜 | 個人・小規模 |
+| **OV（Organization Validation）** | 組織の実在 | 有料 | 企業 |
+| **EV（Extended Validation）** | 厳格な組織検証 | 高額 | 金融・大企業 |
+
+**Let's Encrypt**を使えば、DV証明書を無料で取得できます。
+
+## Node.js/ExpressでのHTTPS設定
+
+```javascript
+// 開発環境
+const https = require('https');
+const fs = require('fs');
+const express = require('express');
+const app = express();
+
+const options = {
+  key: fs.readFileSync('server.key'),
+  cert: fs.readFileSync('server.cert')
+};
+
+https.createServer(options, app).listen(443);
+```
+
+本番環境ではNginxなどのリバースプロキシでTLS終端するのが一般的です。
+
+```nginx
+# Nginx設定例
+server {
+    listen 443 ssl;
+    server_name shimalink.com;
+
+    ssl_certificate     /etc/letsencrypt/live/shimalink.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/shimalink.com/privkey.pem;
+
+    # 推奨設定
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+
+    location / {
+        proxy_pass http://localhost:3000;
+    }
+}
+
+# HTTPからHTTPSへリダイレクト
+server {
+    listen 80;
+    server_name shimalink.com;
+    return 301 https://$server_name$request_uri;
+}
+```
+
+## HSTS（HTTP Strict Transport Security）
+
+ブラウザに「このサイトは常にHTTPSで接続してね」と伝えるヘッダーです。
+
+```javascript
+// Express + helmet
+const helmet = require('helmet');
+app.use(helmet.hsts({
+  maxAge: 31536000,     // 1年間
+  includeSubDomains: true,
+  preload: true
+}));
+
+// レスポンスヘッダー:
+// Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+```
+
+HSTSにより、ユーザーが `http://shimalink.com` とタイプしても、ブラウザが自動的に `https://` に変換します。
+
+## Let's Encryptの導入
+
+```bash
+# certbotのインストール（Ubuntu/Debian）
+sudo apt install certbot python3-certbot-nginx
+
+# 証明書の取得（Nginx用）
+sudo certbot --nginx -d shimalink.com -d www.shimalink.com
+
+# 自動更新の確認
+sudo certbot renew --dry-run
+```
+
+Let's Encryptの証明書は90日で期限切れになるため、自動更新の設定が重要です。
+
+## ポイント
+
+- HTTPSはTLSプロトコルで通信を暗号化する
+- TLSハンドシェイクで非対称暗号による鍵交換→対称暗号で高速通信
+- Let's Encryptで無料のTLS証明書を取得できる
+- HSTSでHTTPS接続を強制する
+- 本番環境ではNginxでTLS終端するのが一般的
+
+## 鍵管理の基本
+
+暗号化の強さは、アルゴリズムではなく**鍵の管理**で決まります。
+
+> **Yuki:** 「世界最高の金庫も、鍵を玄関マットの下に隠してたら意味がない。鍵の管理こそが暗号化の本質だ。」
+
+## 鍵管理の原則
+
+### 1. 鍵をコードに直接書かない
+
+```javascript
+// 絶対にダメ
+const SECRET_KEY = 'my-super-secret-key-2024';
+const DB_PASSWORD = 'shimalink_db_pass';
+// → Gitにpushしたら全世界に公開される
+
+// 環境変数を使う
+const SECRET_KEY = process.env.SECRET_KEY;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+```
+
+### 2. .envファイルと.gitignore
+
+```bash
+# .env ファイル（ローカル環境用）
+SECRET_KEY=a1b2c3d4e5f6g7h8i9j0
+DB_PASSWORD=strong_random_password
+JWT_SECRET=another_random_string
+```
+
+```bash
+# .gitignore（必ず設定する）
+.env
+.env.local
+.env.production
+*.key
+*.pem
+```
+
+> **Yuki:** 「.envファイルをGitにコミットするのは、鍵を複製して全員に配るのと同じ。Chapter 1で教えた.gitignoreが、ここで活きてくる。」
+
+### 3. 秘密鍵の安全な保管
+
+| 環境 | 推奨される保管場所 |
+|------|-------------------|
+| **開発環境** | .envファイル |
+| **本番環境** | 環境変数、シークレットマネージャー |
+| **クラウド** | AWS Secrets Manager, GCP Secret Manager |
+| **チーム共有** | HashiCorp Vault, 1Password |
+
+```javascript
+// AWS Secrets Managerの例
+const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
+
+async function getSecret(secretName) {
+  const client = new SecretsManagerClient({ region: 'ap-northeast-1' });
+  const response = await client.send(
+    new GetSecretValueCommand({ SecretId: secretName })
+  );
+  return JSON.parse(response.SecretString);
+}
+
+// 使用
+const secrets = await getSecret('shimalink/production');
+const dbPassword = secrets.DB_PASSWORD;
+```
+
+## 鍵のローテーション
+
+鍵は定期的に変更（ローテーション）すべきです。
+
+```
+なぜ鍵を変更するのか:
+1. 鍵が漏洩した場合の被害を限定する
+2. 長期間同じ鍵を使うと解読リスクが上がる
+3. 退職した社員が持つ鍵を無効化する
+```
+
+```javascript
+// JWTの鍵ローテーション例
+const keys = {
+  current: process.env.JWT_SECRET_V2,  // 新しい鍵（署名に使用）
+  previous: process.env.JWT_SECRET_V1  // 旧い鍵（検証のみ）
+};
+
+// 新しいトークンは現在の鍵で署名
+function signToken(payload) {
+  return jwt.sign(payload, keys.current);
+}
+
+// 検証は両方の鍵を試す（移行期間中）
+function verifyToken(token) {
+  try {
+    return jwt.verify(token, keys.current);
+  } catch {
+    return jwt.verify(token, keys.previous);
+  }
+}
+```
+
+## 機密データの保存時暗号化
+
+パスワード以外の機密データ（メールアドレス、電話番号等）はハッシュ化ではなく暗号化で保護します。
+
+```javascript
+const crypto = require('crypto');
+
+const ENCRYPTION_KEY = Buffer.from(process.env.ENCRYPTION_KEY, 'hex'); // 32バイト
+const ALGORITHM = 'aes-256-gcm';
+
+// 暗号化
+function encryptField(text) {
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv(ALGORITHM, ENCRYPTION_KEY, iv);
+  let encrypted = cipher.update(text, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  const tag = cipher.getAuthTag().toString('hex');
+  return `${iv.toString('hex')}:${tag}:${encrypted}`;
+}
+
+// 復号
+function decryptField(encryptedText) {
+  const [ivHex, tagHex, encrypted] = encryptedText.split(':');
+  const decipher = crypto.createDecipheriv(
+    ALGORITHM, ENCRYPTION_KEY, Buffer.from(ivHex, 'hex')
+  );
+  decipher.setAuthTag(Buffer.from(tagHex, 'hex'));
+  let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
+}
+
+// 使用例
+const encrypted = encryptField('090-1234-5678');
+// → "a1b2c3...:d4e5f6...:g7h8i9..."
+
+const original = decryptField(encrypted);
+// → "090-1234-5678"
+```
+
+## チェックリスト
+
+```markdown
+鍵管理チェックリスト:
+- [ ] コードに秘密鍵・パスワードが直接書かれていないか
+- [ ] .envファイルが.gitignoreに含まれているか
+- [ ] 本番環境でシークレットマネージャーを使っているか
+- [ ] 鍵のローテーション計画があるか
+- [ ] チームで鍵を安全に共有しているか
+- [ ] バックアップに鍵が含まれていないか
+```
+
+## ポイント
+
+- 暗号化の強さは鍵の管理で決まる
+- 鍵をコードに書かない。環境変数やシークレットマネージャーを使う
+- .envファイルは必ず.gitignoreに入れる
+- 鍵は定期的にローテーションする
+- 機密データはAES-256-GCMで暗号化して保存する
+
+<StoryPanel variant="conclusion">
+
+すべてのパスワードがbcryptでハッシュ化され、通信はHTTPSで暗号化された。機密データは保存時も暗号化される。
+
+```
+[Before]
+id | email                | password
+1  | mika@example.com     | cafe2024
+
+[After]
+id | email                | password
+1  | mika@example.com     | $2b$12$LJ3m1kGv8sXxPq...
+```
+
+---
+
+**あなた:** 「すべてのユーザーにパスワードリセットを完了しました。新しいパスワードはbcryptでハッシュ化されています。」
+
+**Yuki:** 「TLS証明書も確認した。すべての通信が暗号化されている。」
+
+**あなた:** 「これでもう安全だよな...？」
+
+**Yuki:** 「XSSを封じた。SQLインジェクションを防いだ。パスワードをハッシュ化した。通信を暗号化した。——でも、本当にすべてを見落としていないか、確認する方法がある。」
+
+**あなた:** 「セキュリティ監査、ですか？」
+
+**Yuki:** 「そう。自分たちの目だけでは限界がある。外部の専門家に"攻撃者の視点"でShimaLinkを評価してもらうんだ。」
+
+Yukiがスマホを取り出す。
+
+**Yuki:** 「実は、知り合いのセキュリティコンサルタントに連絡を取ってある。来週、ShimaLinkのセキュリティ監査をしてもらう。」
+
+**あなた:** 「プロのハッカーに攻撃してもらうってこと？」
+
+**Yuki:** 「正確には"エシカルハッカー"だね。合法的に、許可を得て攻撃を試みて、脆弱性を報告してくれる。」
+
+---
+
+鎧を身にまとったShimaLink。しかし、その鎧に隙間はないか。
+
+最後の検証——セキュリティ監査が始まる。
+
+> **次のチャプター**: *Chapter 15: セキュリティ監査* — OWASP Top 10に基づく体系的なセキュリティチェックと、Shadowの正体に迫る手がかり。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="14-encryption-shield" />
+
+<ChapterFaq chapterId="14-encryption-shield" />
+
+<SeriesNav current={14} />

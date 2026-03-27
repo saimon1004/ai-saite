@@ -1,0 +1,90 @@
+[
+  {
+    "id": "ch22-q01",
+    "question": "テストピラミッドで最も数が多いべきテストの種類は？",
+    "choices": ["E2Eテスト", "統合テスト", "ユニットテスト", "パフォーマンステスト"],
+    "correctIndex": 2,
+    "explanation": "テストピラミッドの土台はユニットテストです。最も速く、最も安価で、最も多く書くべきテストです。E2Eテストはピラミッドの頂点で、数は最も少なくします。",
+    "storyContext": "Yukiがホワイトボードに描いたピラミッドの一番下の部分だね。",
+    "skill": { "category": "testing", "name": "Testing", "level": "intermediate" }
+  },
+  {
+    "id": "ch22-q02",
+    "question": "AAAパターンの3つのステップの正しい順序は？",
+    "choices": [
+      "Act → Arrange → Assert",
+      "Assert → Act → Arrange",
+      "Arrange → Act → Assert",
+      "Arrange → Assert → Act"
+    ],
+    "correctIndex": 2,
+    "explanation": "AAAパターンは Arrange（準備） → Act（実行） → Assert（検証）の順です。テストデータを用意し、対象を実行し、結果を検証します。",
+    "storyContext": "テストを書くときの基本構造として学んだ、3つのAのパターンだよ。",
+    "skill": { "category": "testing", "name": "Unit Testing", "level": "intro" }
+  },
+  {
+    "id": "ch22-q03",
+    "question": "ユニットテストで外部依存（DB、APIなど）を置き換えるために使うものは？",
+    "choices": ["スタブ", "モック", "フィクスチャ", "モックとスタブの両方"],
+    "correctIndex": 3,
+    "explanation": "モック（動作の検証）とスタブ（固定値の返却）の両方がテストダブルとして使われます。Jestではjest.mock()やjest.fn()で作成できます。",
+    "storyContext": "メール送信をテストする時、実際にメールを送らずにモックで置き換えた場面を思い出そう。",
+    "skill": { "category": "testing", "name": "Unit Testing", "level": "intro" }
+  },
+  {
+    "id": "ch22-q04",
+    "question": "統合テストの主な目的は？",
+    "choices": [
+      "個々の関数が正しく動くことを確認する",
+      "複数のコンポーネントが連携して正しく動くことを確認する",
+      "UIがデザイン通りに表示されることを確認する",
+      "パフォーマンスが要件を満たすことを確認する"
+    ],
+    "correctIndex": 1,
+    "explanation": "統合テストは、複数のコンポーネント（API、データベース、サービスなど）が組み合わさった時に正しく動作するかを検証します。",
+    "storyContext": "予約APIがデータベースと正しく連携するかをテストした、あの実践だよ。",
+    "skill": { "category": "testing", "name": "Testing", "level": "intermediate" }
+  },
+  {
+    "id": "ch22-q05",
+    "question": "TDD（テスト駆動開発）の正しいサイクルは？",
+    "choices": [
+      "コードを書く → テストを書く → リファクタリング",
+      "テストを書く(Red) → コードを書く(Green) → リファクタリング(Refactor)",
+      "設計する → コードを書く → テストを書く",
+      "リファクタリング → テストを書く → コードを書く"
+    ],
+    "correctIndex": 1,
+    "explanation": "TDDはRed（失敗するテストを書く）→ Green（テストが通る最小限のコードを書く）→ Refactor（コードをきれいにする）のサイクルを繰り返します。",
+    "storyContext": "クーポン割引機能をTDDで実装した時の、あのRed-Green-Refactorの流れだよ。",
+    "skill": { "category": "testing", "name": "TDD", "level": "intro" }
+  },
+  {
+    "id": "ch22-q06",
+    "question": "Jestで expect(value).toBe(expected) の toBe() はどんな比較をする？",
+    "choices": [
+      "深い等価比較（オブジェクトの中身まで比較）",
+      "厳密等価比較（=== と同じ）",
+      "緩い等価比較（== と同じ）",
+      "型だけの比較"
+    ],
+    "correctIndex": 1,
+    "explanation": "toBe()はJavaScriptの===（厳密等価）と同じ比較をします。オブジェクトの中身まで比較したい場合はtoEqual()を使います。",
+    "storyContext": "料金計算のテストで、期待値と実際の値を比較するために使ったマッチャーだね。",
+    "skill": { "category": "testing", "name": "Unit Testing", "level": "intro" }
+  },
+  {
+    "id": "ch22-q07",
+    "question": "E2Eテストの特徴として正しくないものは？",
+    "choices": [
+      "実際のブラウザを使ってテストする",
+      "ユーザーと同じ操作をシミュレートする",
+      "実行速度が最も速い",
+      "テストピラミッドの頂点に位置する"
+    ],
+    "correctIndex": 2,
+    "explanation": "E2Eテストは実際のブラウザを操作するため、実行速度は最も遅いです。そのため、重要なユーザーフローに絞って書くのがベストプラクティスです。",
+    "storyContext": "Playwrightで予約フローをテストした時、ユニットテストに比べてかなり時間がかかったよね。",
+    "skill": { "category": "testing", "name": "Testing", "level": "intermediate" }
+  }
+]

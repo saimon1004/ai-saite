@@ -1,0 +1,65 @@
+[
+  {
+    "id": "ch06-help-01",
+    "question": "配列のmap()とforEach()の違いが分からない",
+    "answer": "**最大の違いは「戻り値があるかどうか」です。**\n\n- `map()`: 新しい配列を**返す**（変換用）\n- `forEach()`: 何も返さない（副作用用）\n\n```javascript\nconst nums = [1, 2, 3];\n\n// map: 新しい配列を作る\nconst doubled = nums.map(n => n * 2);\n// doubled = [2, 4, 6]\n\n// forEach: 各要素に対して処理を実行するだけ\nnums.forEach(n => console.log(n));\n// 1, 2, 3 と表示される（戻り値はundefined）\n```\n\n**使い分け**: データを変換したいなら`map()`、画面に表示するなど副作用がある処理なら`forEach()`。",
+    "tags": ["javascript", "array", "map", "forEach"],
+    "category": "concept"
+  },
+  {
+    "id": "ch06-help-02",
+    "question": "アロー関数で{}を使うときとreturnが必要なとき",
+    "answer": "**ルールはシンプルです：**\n\n```javascript\n// {} なし → 自動的にreturnされる（暗黙のreturn）\nconst double = n => n * 2;\n\n// {} あり → returnが必要\nconst double = n => {\n  return n * 2;\n};\n\n// {} ありでreturn忘れ → undefinedになる！\nconst double = n => {\n  n * 2; // returnがないのでundefined\n};\n```\n\n**注意**: オブジェクトを返す場合は () で囲む\n```javascript\nconst makeObj = name => ({ name: name });\n// ({}) がないと {} がブロックと解釈される\n```",
+    "tags": ["javascript", "arrow-function", "es6"],
+    "category": "syntax"
+  },
+  {
+    "id": "ch06-help-03",
+    "question": "fetchで「CORS エラー」が出る",
+    "answer": "CORSエラーは、**異なるドメイン（オリジン）へのリクエストがブラウザにブロックされている**ことを意味します。\n\n**原因**: ブラウザのセキュリティ機能で、`localhost:3000`から`api.example.com`へのリクエストが制限されている。\n\n**解決方法**:\n1. **サーバー側**: APIサーバーにCORSヘッダーを追加する\n2. **開発中**: プロキシサーバーを使う\n3. **一時的**: ブラウザの開発者ツールで確認\n\n```\nAccess-Control-Allow-Origin: *\n```\n\n**注意**: このエラーはブラウザ側の制限なので、ターミナルからcurlで同じAPIを叩くとエラーは出ません。",
+    "tags": ["javascript", "fetch", "cors", "error"],
+    "category": "environment"
+  },
+  {
+    "id": "ch06-help-04",
+    "question": "async/awaitを使ったのに値がPromise {<pending>}と表示される",
+    "answer": "**awaitをつけ忘れている**か、**async関数の外でawaitを使おうとしている**可能性があります。\n\n```javascript\n// NG: awaitがないのでPromiseオブジェクトが返る\nconst data = fetch('/api/clients');\nconsole.log(data); // Promise {<pending>}\n\n// OK: awaitをつける\nconst response = await fetch('/api/clients');\nconst data = await response.json();\nconsole.log(data); // 実際のデータ\n```\n\n**重要**: `await` は `async` 関数の中でしか使えません。\n```javascript\n// OK\nasync function load() {\n  const data = await fetchData();\n}\n\n// NG（async関数の外）\nconst data = await fetchData(); // トップレベルでは一部環境のみ\n```",
+    "tags": ["javascript", "async", "await", "promise"],
+    "category": "syntax"
+  },
+  {
+    "id": "ch06-help-05",
+    "question": "constなのに配列やオブジェクトの中身を変更できるのはなぜ？",
+    "answer": "**constが禁止するのは「再代入」であり、「中身の変更」ではありません。**\n\n```javascript\nconst arr = [1, 2, 3];\narr.push(4);      // OK（中身の変更）\narr[0] = 10;      // OK（中身の変更）\narr = [5, 6, 7];  // エラー！（再代入）\n\nconst obj = { name: \"Mika\" };\nobj.age = 30;     // OK（プロパティ追加）\nobj = {};         // エラー！（再代入）\n```\n\n**イメージ**: constは「箱のラベルを固定する」だけ。箱の中身は入れ替えられる。箱自体を別の箱に取り替えることはできない。",
+    "tags": ["javascript", "const", "variable"],
+    "category": "concept"
+  },
+  {
+    "id": "ch06-help-06",
+    "question": "reduce()の使い方がよく分からない",
+    "answer": "`reduce()`は配列を**1つの値に集約**するメソッドです。\n\n```javascript\n// 構文: array.reduce((累積値, 現在の要素) => 処理, 初期値)\n\nconst numbers = [10, 20, 30];\n\n// 合計を計算\nconst sum = numbers.reduce((acc, num) => acc + num, 0);\n// ステップ1: acc=0, num=10 → 10\n// ステップ2: acc=10, num=20 → 30\n// ステップ3: acc=30, num=30 → 60\n// 結果: 60\n```\n\n**よくある使い方**:\n- 合計値の計算\n- 最大値・最小値の算出\n- オブジェクトのグループ化\n\n**コツ**: まずは`forEach`で書いてみて、それを`reduce`に書き換えると理解しやすいです。",
+    "tags": ["javascript", "reduce", "array"],
+    "category": "concept"
+  },
+  {
+    "id": "ch06-help-07",
+    "question": "スプレッド構文（...）で配列をコピーしたのに元配列も変わる",
+    "answer": "スプレッド構文は**浅いコピー（shallow copy）**です。ネストしたオブジェクトは参照がコピーされます。\n\n```javascript\n// プリミティブ値の配列 → 安全\nconst a = [1, 2, 3];\nconst b = [...a];\nb.push(4);\nconsole.log(a); // [1, 2, 3]（影響なし）\n\n// オブジェクトの配列 → 注意！\nconst clients = [{ name: \"Mika\" }];\nconst copy = [...clients];\ncopy[0].name = \"Yuki\";\nconsole.log(clients[0].name); // \"Yuki\"（元も変わる！）\n```\n\n**解決策**: 深いコピーが必要な場合\n```javascript\nconst deepCopy = JSON.parse(JSON.stringify(original));\n// または\nconst deepCopy = structuredClone(original);\n```",
+    "tags": ["javascript", "spread", "copy", "shallow"],
+    "category": "concept"
+  },
+  {
+    "id": "ch06-help-08",
+    "question": "for...ofとfor...inの違いは？",
+    "answer": "**全然違うものです。混同注意！**\n\n| | for...of | for...in |\n|---|---|---|\n| 対象 | 配列の**値** | オブジェクトの**キー** |\n| 使いどころ | 配列のループ | オブジェクトのループ |\n\n```javascript\n// for...of → 値を取得\nconst arr = [\"a\", \"b\", \"c\"];\nfor (const item of arr) {\n  console.log(item); // \"a\", \"b\", \"c\"\n}\n\n// for...in → キー（インデックス）を取得\nfor (const index in arr) {\n  console.log(index); // \"0\", \"1\", \"2\"（文字列！）\n}\n\n// オブジェクトにはfor...in\nconst obj = { name: \"Mika\", age: 30 };\nfor (const key in obj) {\n  console.log(`${key}: ${obj[key]}`);\n}\n```\n\n**覚え方**: of = 「値の（of）中身」、in = 「キーの（in）中身」",
+    "tags": ["javascript", "loop", "for-of", "for-in"],
+    "category": "syntax"
+  },
+  {
+    "id": "ch06-help-09",
+    "question": "fetch()でPOSTリクエストを送る方法は？",
+    "answer": "fetchの第2引数にオプションオブジェクトを渡します。\n\n```javascript\nconst newClient = {\n  name: \"やんばるキッチン\",\n  category: \"飲食\"\n};\n\nconst response = await fetch(\"https://api.shimalink.com/clients\", {\n  method: \"POST\",\n  headers: {\n    \"Content-Type\": \"application/json\"\n  },\n  body: JSON.stringify(newClient)\n});\n\nconst result = await response.json();\nconsole.log(result);\n```\n\n**ポイント**:\n- `method`: HTTPメソッドを指定（デフォルトはGET）\n- `headers`: Content-Typeを指定\n- `body`: 送信するデータ（JSON.stringifyで文字列に変換）",
+    "tags": ["javascript", "fetch", "post", "api"],
+    "category": "syntax"
+  }
+]

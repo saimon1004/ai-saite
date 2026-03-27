@@ -1,0 +1,93 @@
+---
+import { getCollection } from "astro:content";
+import { getArcByChapter } from "../../data/blog-meta";
+
+interface Props {
+  current: number;
+}
+
+const { current } = Astro.props;
+const allPosts = await getCollection("blog");
+const sorted = allPosts.sort((a, b) => a.data.chapter - b.data.chapter);
+const currentIndex = sorted.findIndex((p) => p.data.chapter === current);
+const prev = currentIndex > 0 ? sorted[currentIndex - 1] : null;
+const next = currentIndex < sorted.length - 1 ? sorted[currentIndex + 1] : null;
+const arc = getArcByChapter(current);
+const positionInArc = arc ? arc.chapters.indexOf(current) + 1 : 0;
+const arcTotal = arc ? arc.chapters.length : 0;
+---
+
+<nav class="series-nav mt-12 pt-8 border-t border-border" aria-label="シリーズナビゲーション">
+  {arc && (
+    <div class="flex items-center justify-center gap-2 mb-6">
+      <span class="text-sm font-bold text-navy">{arc.emoji} {arc.name}</span>
+      <div class="flex gap-1">
+        {arc.chapters.map((ch) => (
+          <div
+            class:list={[
+              "w-2 h-2 rounded-full",
+              ch === current ? "bg-teal" : ch < current ? "bg-navy/30" : "bg-border",
+            ]}
+          />
+        ))}
+      </div>
+      <span class="text-xs text-text-secondary">{positionInArc}/{arcTotal}</span>
+    </div>
+  )}
+
+  <!-- Next chapter CTA (primary) -->
+  {next && (
+    <a
+      href={`/blog/${next.id}/`}
+      class="group flex items-center justify-between p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-navy to-navy-light text-white hover:shadow-lg hover:shadow-navy/20 transition-all mb-4"
+    >
+      <div>
+        <span class="text-sm font-bold tracking-wide block mb-1" style="color: rgba(255,255,255,0.9) !important;">次の章へ進む</span>
+        <span class="text-xl sm:text-2xl font-heading font-black" style="color: white !important;">
+          Ch.{next.data.chapter} {next.data.title}
+        </span>
+      </div>
+      <span class="shrink-0 ml-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/15 group-hover:bg-white/25 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </span>
+    </a>
+  )}
+
+  <!-- Secondary nav row -->
+  <div class="flex gap-3">
+    {prev && (
+      <a
+        href={`/blog/${prev.id}/`}
+        class="flex-1 group flex items-center gap-3 p-4 rounded-xl border border-border hover:border-navy/20 hover:bg-surface-dim transition-all"
+      >
+        <span class="shrink-0 w-8 h-8 flex items-center justify-center rounded-full border border-border group-hover:border-navy/20 transition-colors">
+          <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </span>
+        <div>
+          <span class="text-xs text-text-secondary block">前の章</span>
+          <span class="text-sm font-medium text-text-primary group-hover:text-navy transition-colors">
+            Ch.{prev.data.chapter} {prev.data.title}
+          </span>
+        </div>
+      </a>
+    )}
+
+    <a
+      href="/blog/"
+      class:list={[
+        "group flex items-center gap-2 px-5 py-4 rounded-xl border border-border hover:border-navy/20 hover:bg-surface-dim transition-all",
+        !prev && "flex-1 justify-center",
+        prev && "shrink-0",
+      ]}
+    >
+      <svg class="w-4 h-4 text-text-secondary group-hover:text-navy transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+      </svg>
+      <span class="text-sm text-text-secondary group-hover:text-navy transition-colors">講座一覧に戻る</span>
+    </a>
+  </div>
+</nav>

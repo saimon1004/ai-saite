@@ -1,0 +1,109 @@
+[
+  {
+    "id": "ch14-q01",
+    "question": "パスワードの保存に最も適切な方法は？",
+    "choices": ["AES暗号化", "Base64エンコード", "bcryptハッシュ化", "SHA-256ハッシュ化"],
+    "correctIndex": 2,
+    "explanation": "bcryptはパスワード保存専用に設計されたハッシュ関数で、意図的に計算が遅く、ソルトを自動生成します。AES暗号化は復号可能なので漏洩時に危険、Base64は暗号化ではない、SHA-256はパスワード用には高速すぎます。",
+    "storyContext": "ShimaLinkのパスワードが平文保存されていた問題を解決するために導入したのがbcryptだ。",
+    "skill": { "category": "security", "name": "Hashing", "level": "intro" }
+  },
+  {
+    "id": "ch14-q02",
+    "question": "対称暗号と非対称暗号の主な違いは？",
+    "choices": [
+      "対称暗号は安全だが、非対称暗号は安全でない",
+      "対称暗号は1つの鍵、非対称暗号は2つの鍵（公開鍵と秘密鍵）を使う",
+      "非対称暗号の方が常に高速",
+      "対称暗号はWebでは使えない"
+    ],
+    "correctIndex": 1,
+    "explanation": "対称暗号は暗号化と復号に同じ鍵を使い、高速です。非対称暗号は公開鍵と秘密鍵のペアを使い、安全な鍵交換が可能ですが低速です。TLS/HTTPSでは両方を組み合わせて使います。",
+    "storyContext": "Yukiが「1つの鍵の金庫」と「2つの鍵の特殊な金庫」に例えた話。",
+    "skill": { "category": "security", "name": "Encryption Basics", "level": "intro" }
+  },
+  {
+    "id": "ch14-q03",
+    "question": "TLSハンドシェイクで最初に行われるのは？",
+    "choices": [
+      "データの送信",
+      "共有鍵による暗号化",
+      "クライアントとサーバーの暗号方式の合意と証明書の交換",
+      "パスワードの検証"
+    ],
+    "correctIndex": 2,
+    "explanation": "TLSハンドシェイクではまずClient HelloとServer Helloで暗号方式を合意し、サーバーが証明書を提示します。その後、非対称暗号で共有鍵を安全に交換し、以降の通信を対称暗号で暗号化します。",
+    "storyContext": "HTTPSの仕組みの話。非対称暗号で鍵交換→対称暗号で通信というハイブリッド方式だ。",
+    "skill": { "category": "security", "name": "HTTPS/TLS", "level": "intro" }
+  },
+  {
+    "id": "ch14-q04",
+    "question": "bcryptのソルトの役割は？",
+    "choices": [
+      "パスワードの文字数を増やす",
+      "同じパスワードでも異なるハッシュ値を生成し、パターン分析を防ぐ",
+      "ハッシュ計算を高速化する",
+      "パスワードを平文に戻す"
+    ],
+    "correctIndex": 1,
+    "explanation": "ソルトはランダムな値で、ハッシュ計算時にパスワードに付加されます。これにより、同じパスワードでもユーザーごとに異なるハッシュ値が生成され、レインボーテーブル攻撃やパターン分析を防ぎます。",
+    "storyContext": "同じパスワードのユーザーがいても、ソルトのおかげでハッシュ値が異なる。",
+    "skill": { "category": "security", "name": "Hashing", "level": "intro" }
+  },
+  {
+    "id": "ch14-q05",
+    "question": "秘密鍵の保管場所として最も適切なのは？",
+    "choices": [
+      "ソースコードに直接記述する",
+      "GitHubのREADMEに記載する",
+      "環境変数やシークレットマネージャー",
+      "コメントとしてコードに残す"
+    ],
+    "correctIndex": 2,
+    "explanation": "秘密鍵は環境変数(.envファイル)やAWS Secrets Managerなどのシークレットマネージャーで管理すべきです。ソースコードに直接書くとGitリポジトリを通じて漏洩するリスクがあります。",
+    "storyContext": "Yukiが「鍵を玄関マットの下に隠すようなもの」と警告した話。",
+    "skill": { "category": "security", "name": "Key Management", "level": "intro" }
+  },
+  {
+    "id": "ch14-q06",
+    "question": "HSTSの役割は？",
+    "choices": [
+      "パスワードを暗号化する",
+      "ブラウザに常にHTTPSで接続するよう指示する",
+      "データベースを暗号化する",
+      "ファイアウォールを設定する"
+    ],
+    "correctIndex": 1,
+    "explanation": "HSTS（HTTP Strict Transport Security）は、ブラウザに「このサイトは常にHTTPSで接続してください」と指示するHTTPヘッダーです。ユーザーがhttp://でアクセスしても、ブラウザが自動的にhttps://に変換します。",
+    "storyContext": "helmetライブラリで設定したセキュリティヘッダーの一つだ。",
+    "skill": { "category": "security", "name": "HTTPS/TLS", "level": "intro" }
+  },
+  {
+    "id": "ch14-q07",
+    "question": "鍵のローテーションが重要な理由は？",
+    "choices": [
+      "暗号化の速度が向上するから",
+      "鍵が漏洩した場合の被害を限定し、長期使用による解読リスクを下げるから",
+      "ユーザー数が増えるから",
+      "法律で義務付けられているから"
+    ],
+    "correctIndex": 1,
+    "explanation": "鍵のローテーション（定期変更）により、鍵が漏洩した場合の被害範囲を限定でき、長期間同じ鍵を使うことによる解読リスクも低減できます。退職者が持つ鍵の無効化にも有効です。",
+    "storyContext": "JWTの鍵ローテーション例で、新旧2つの鍵を使う移行期間の話があった。",
+    "skill": { "category": "security", "name": "Key Management", "level": "intro" }
+  },
+  {
+    "id": "ch14-q08",
+    "question": ".envファイルについて正しいのは？",
+    "choices": [
+      "Gitにコミットして共有すべき",
+      ".gitignoreに含めてGitで追跡しないようにすべき",
+      "本番サーバーに置く必要はない",
+      "平文のパスワードを書いても問題ない"
+    ],
+    "correctIndex": 1,
+    "explanation": ".envファイルには秘密鍵やパスワードが含まれるため、必ず.gitignoreに追加してGitの追跡対象から外します。Gitにコミットすると、リポジトリにアクセスできる全員に秘密情報が公開されてしまいます。",
+    "storyContext": "Chapter 1でYukiが「.envは絶対にGitに入れちゃダメ」と言っていた教訓が、ここで本当に重要だとわかる。",
+    "skill": { "category": "security", "name": "Key Management", "level": "intro" }
+  }
+]

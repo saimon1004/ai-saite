@@ -1,0 +1,65 @@
+[
+  {
+    "id": "ch10-help-01",
+    "question": "JWTとセッションCookieのどちらを使うべき？",
+    "answer": "**プロジェクトの要件によります。**\n\n| 特徴 | JWT | セッションCookie |\n|------|-----|------------------|\n| スケール | サーバー増設が容易 | セッション共有が必要 |\n| ログアウト | 即座の無効化が困難 | サーバー側で削除可能 |\n| ストレージ | クライアント側 | サーバー側 |\n| CSRF対策 | 不要 | 必要 |\n\n**ShimaLinkの場合**: 小規模なので、どちらでもOK。学習のためにJWTを使っていますが、セキュリティ要件が厳しい場合はセッションCookieの方が制御しやすいです。\n\n**ベストプラクティス**: 短い有効期限のアクセストークン（JWT）+ リフレッシュトークン（Cookie）の組み合わせ。",
+    "tags": ["jwt", "session", "cookie", "auth"],
+    "category": "concept"
+  },
+  {
+    "id": "ch10-help-02",
+    "question": "「401 Unauthorized」と「403 Forbidden」の違い",
+    "answer": "**401 Unauthorized**: 認証されていない（ログインしていない）\n**403 Forbidden**: 認証済みだが権限がない\n\n```\n未ログインでダッシュボードにアクセス\n→ 401 Unauthorized（まずログインしてください）\n\nstaffロールでユーザー管理画面にアクセス\n→ 403 Forbidden（この画面にはadmin権限が必要です）\n```\n\n**認証（Authentication）の問題 → 401**\n**認可（Authorization）の問題 → 403**\n\n```typescript\n// 認証チェック\nif (!token) return new Response(null, { status: 401 });\n\n// 認可チェック\nif (user.role !== \"admin\") return new Response(null, { status: 403 });\n```",
+    "tags": ["http", "status-code", "auth", "error"],
+    "category": "concept"
+  },
+  {
+    "id": "ch10-help-03",
+    "question": "bcryptのインストールでエラーが出る",
+    "answer": "bcryptはネイティブモジュールなので、ビルド環境が必要です。\n\n**対処法1**: 純粋なJavaScript実装を使う\n```bash\n# bcryptの代わりにbcryptjsを使う（ネイティブ依存なし）\nnpm install bcryptjs\nnpm install -D @types/bcryptjs\n```\n\n```typescript\n// インポートだけ変更すればOK\nimport bcrypt from \"bcryptjs\";\n// 使い方はbcryptと同じ\n```\n\n**対処法2**: ネイティブビルド環境を整える\n```bash\n# Mac\nxcode-select --install\n\n# Windows\nnpm install -g windows-build-tools\n```\n\n**bcryptjs**はbcryptの完全互換で、追加の環境構築が不要なのでおすすめです。",
+    "tags": ["bcrypt", "install", "error", "npm"],
+    "category": "environment"
+  },
+  {
+    "id": "ch10-help-04",
+    "question": "JWTの秘密鍵（SECRET）はどう管理する？",
+    "answer": "**絶対にコードに直書きしない！**環境変数で管理します。\n\n```typescript\n// NG: コードに直書き\nconst SECRET = \"my-super-secret-key\";\n\n// OK: 環境変数から読み取り\nconst SECRET = process.env.JWT_SECRET;\nif (!SECRET) throw new Error(\"JWT_SECRET is not set\");\n```\n\n**環境変数の設定方法**:\n\n```bash\n# .envファイルに記述\nJWT_SECRET=your-very-long-random-secret-key-here\n\n# .envファイルを.gitignoreに追加！\necho '.env' >> .gitignore\n```\n\n**秘密鍵の生成**:\n```bash\n# ランダムな文字列を生成\nnode -e \"console.log(require('crypto').randomBytes(64).toString('hex'))\"\n```\n\n**重要**: .envファイルはGitにコミットしない。本番環境ではホスティングサービスの環境変数設定を使う。",
+    "tags": ["jwt", "secret", "env", "security"],
+    "category": "environment"
+  },
+  {
+    "id": "ch10-help-05",
+    "question": "localStorageにトークンを保存するのは安全？",
+    "answer": "**完全に安全とは言えません。**XSS（クロスサイトスクリプティング）攻撃に対して脆弱です。\n\n```\nXSS攻撃:\n悪意のあるスクリプトが実行される\n→ localStorage.getItem(\"token\") でトークンを盗まれる\n→ 攻撃者がなりすましログイン\n```\n\n**より安全な方法**:\n\n```\n1. HttpOnly Cookie（推奨）\n   → JavaScriptからアクセスできない\n   → Set-Cookie: token=xxx; HttpOnly; Secure; SameSite=Strict\n\n2. メモリ上に保持\n   → ページリロードでは消える\n   → リフレッシュトークンで再取得\n```\n\n**学習段階ではlocalStorageでOK**ですが、本番環境ではHttpOnly Cookieを推奨します。",
+    "tags": ["security", "localstorage", "xss", "token"],
+    "category": "concept"
+  },
+  {
+    "id": "ch10-help-06",
+    "question": "パスワードの強度チェックはどうすればいい？",
+    "answer": "**最低限のルールを設定**しましょう。\n\n```typescript\nfunction validatePassword(password: string): string[] {\n  const errors: string[] = [];\n  \n  if (password.length < 8) {\n    errors.push(\"8文字以上必要です\");\n  }\n  if (!/[A-Z]/.test(password)) {\n    errors.push(\"大文字を1つ以上含めてください\");\n  }\n  if (!/[a-z]/.test(password)) {\n    errors.push(\"小文字を1つ以上含めてください\");\n  }\n  if (!/[0-9]/.test(password)) {\n    errors.push(\"数字を1つ以上含めてください\");\n  }\n  \n  return errors;\n}\n```\n\n**注意**: 複雑すぎるルールはユーザーの使いやすさを損ないます。長さ（12文字以上）を重視する方がセキュリティ上は効果的です。",
+    "tags": ["password", "validation", "security"],
+    "category": "concept"
+  },
+  {
+    "id": "ch10-help-07",
+    "question": "「TokenExpiredError: jwt expired」というエラー",
+    "answer": "**JWTの有効期限が切れています。**\n\n```typescript\n// トークン生成時に設定した有効期限\njwt.sign(payload, SECRET, { expiresIn: \"24h\" });\n// → 24時間経過すると TokenExpiredError\n```\n\n**対処法**:\n\n1. **再ログイン**: ユーザーをログインページにリダイレクト\n```typescript\nif (error.name === \"TokenExpiredError\") {\n  localStorage.removeItem(\"token\");\n  window.location.href = \"/login\";\n}\n```\n\n2. **リフレッシュトークン**: 自動的に新しいトークンを取得\n```typescript\nasync function refreshAccessToken() {\n  const response = await fetch(\"/api/refresh\", {\n    method: \"POST\",\n    credentials: \"include\" // Cookieを送信\n  });\n  const { token } = await response.json();\n  localStorage.setItem(\"token\", token);\n}\n```",
+    "tags": ["jwt", "expired", "error", "token"],
+    "category": "syntax"
+  },
+  {
+    "id": "ch10-help-08",
+    "question": "CSRF攻撃とは？JWT使用時に対策は必要？",
+    "answer": "**CSRF（Cross-Site Request Forgery）**は、ユーザーが意図しないリクエストを強制的に送信させる攻撃です。\n\n```\n攻撃の流れ:\n1. ユーザーがShimaLinkにログイン中\n2. 悪意のあるサイトを閲覧\n3. そのサイトがShimaLinkのAPIにリクエストを送信\n4. Cookieが自動送信され、認証済みリクエストとして処理される\n```\n\n**JWTをAuthorizationヘッダーで送る場合**:\n→ CSRF対策は**不要**。ヘッダーは自動送信されないため。\n\n**JWTをCookieで送る場合**:\n→ CSRF対策が**必要**。\n\n```\n対策:\n- SameSite=Strict属性をCookieに設定\n- CSRFトークンを使う\n- Originヘッダーを検証する\n```",
+    "tags": ["csrf", "security", "cookie", "jwt"],
+    "category": "concept"
+  },
+  {
+    "id": "ch10-help-09",
+    "question": "OAuth（Googleでログインなど）は自分で実装する？",
+    "answer": "**自分で一から実装するのは非推奨。**ライブラリやサービスを使いましょう。\n\n**おすすめのアプローチ**:\n\n1. **認証サービスを使う**（最も簡単）\n   - Firebase Authentication\n   - Auth0\n   - Supabase Auth\n   - Clerk\n\n2. **ライブラリを使う**\n   - NextAuth.js（Next.js向け）\n   - Passport.js（Node.js向け）\n\n**OAuthの基本的な流れ**:\n```\n1. 「Googleでログイン」ボタンをクリック\n2. Googleのログイン画面にリダイレクト\n3. ユーザーが許可\n4. Googleから認証コードがコールバック\n5. サーバーがコードでアクセストークンを取得\n6. ユーザー情報を取得してログイン完了\n```\n\n**ShimaLinkの段階**: まずはメール/パスワード認証を理解してから、OAuth（Googleログインなど）を追加するのがおすすめです。",
+    "tags": ["oauth", "google", "auth", "library"],
+    "category": "concept"
+  }
+]

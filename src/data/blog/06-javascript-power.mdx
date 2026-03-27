@@ -1,0 +1,597 @@
+---
+title: "JavaScriptの真髄"
+subtitle: "動的なWebアプリを構築する"
+description: "動的なWebアプリを構築する。JavaScript・ES6+・Async Programmingを実践的なストーリーで学ぶチャプター「JavaScriptの真髄」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-06
+chapter: 6
+arc: "growth"
+arcName: "成長編"
+skills:
+  - { category: "programming", name: "JavaScript", level: "intermediate" }
+  - { category: "programming", name: "ES6+", level: "intro" }
+  - { category: "programming", name: "Async Programming", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["05-going-live"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+海風テラスのWebサイトが公開されてから2週間。Mikaから嬉しい連絡があった。「お客さんが増えました！」。ShimaLinkの評判は口コミで広がり、新しいクライアントからの問い合わせが3件も入っている。
+
+しかし、問題も見えてきた。
+
+---
+
+**あなた:** 「ねえ、クライアントごとにアクセス数とか予約状況を確認できるダッシュボードが欲しいって言われてるんだけど...」
+
+**あなた:** 「ダッシュボード？HTMLとCSSだけで作れるかな...」
+
+**Yuki:** 「静的なページじゃ無理だね。データを取得して、リアルタイムに画面を更新する。それにはJavaScriptの本格的な力が必要になる。」
+
+**あなた:** 「JavaScriptなら前にちょっと触ったよ。`alert('Hello')` みたいな。」
+
+**Yuki:** 「それは序の口。今日から学ぶのは、配列やオブジェクトでデータを管理し、ループで繰り返し処理をし、非同期通信でサーバーからデータを取ってくる方法。これができると、Webアプリの世界が一気に広がるよ。」
+
+---
+
+**Yuki:** 「まずはShimaLinkのダッシュボードに表示するクライアントデータを扱うところから始めよう。配列とオブジェクト——これがJavaScriptのデータ構造の基礎だよ。」
+
+あなたはエディタを開き、新しいJavaScriptファイルを作成した。静的なHTMLの世界から、動的なWebアプリの世界への第一歩が始まる。
+
+</StoryPanel>
+
+## 配列とオブジェクト — データの器
+
+ShimaLinkのダッシュボードを作るには、複数のクライアント情報を管理する必要がある。そのための基本が**配列（Array）**と**オブジェクト（Object）**だ。
+
+> 「変数が"箱"だとしたら、配列は"棚"、オブジェクトは"引き出し付きの棚"だよ。」——Yuki
+
+## 配列（Array）
+
+配列は、複数の値を順番に並べて管理するデータ構造です。
+
+```javascript
+// ShimaLinkのクライアント名リスト
+const clients = ["海風テラス", "首里そば太郎", "美ら花フラワー"];
+
+// 要素へのアクセス（0から始まる）
+console.log(clients[0]); // "海風テラス"
+console.log(clients.length); // 3
+```
+
+### よく使う配列メソッド
+
+| メソッド | 説明 | 例 |
+|---------|------|-----|
+| `push()` | 末尾に追加 | `clients.push("島豆腐屋")` |
+| `pop()` | 末尾を削除 | `clients.pop()` |
+| `includes()` | 含むか判定 | `clients.includes("海風テラス")` → `true` |
+| `indexOf()` | 位置を検索 | `clients.indexOf("海風テラス")` → `0` |
+| `slice()` | 部分配列を取得 | `clients.slice(0, 2)` → 最初の2つ |
+
+```javascript
+// 新しいクライアントを追加
+clients.push("やんばるキッチン");
+console.log(clients.length); // 4
+```
+
+## オブジェクト（Object）
+
+オブジェクトは、**キーと値のペア**でデータを管理します。
+
+```javascript
+// クライアント情報をオブジェクトで管理
+const client = {
+  name: "海風テラス",
+  owner: "Mika",
+  category: "カフェ",
+  monthlyVisits: 1250,
+  isActive: true
+};
+
+// プロパティへのアクセス
+console.log(client.name);       // "海風テラス"
+console.log(client["owner"]);   // "Mika"（ブラケット記法）
+```
+
+### オブジェクトの操作
+
+```javascript
+// プロパティの追加・更新
+client.phone = "098-XXX-XXXX";
+client.monthlyVisits = 1380;
+
+// プロパティの削除
+delete client.phone;
+
+// キーの一覧を取得
+const keys = Object.keys(client);
+// ["name", "owner", "category", "monthlyVisits", "isActive"]
+```
+
+## 配列 + オブジェクト = 実践的データ
+
+実際のアプリでは、オブジェクトの配列を扱うことが非常に多いです。
+
+```javascript
+// ShimaLinkのクライアント一覧
+const clients = [
+  { name: "海風テラス", category: "カフェ", visits: 1250 },
+  { name: "首里そば太郎", category: "飲食", visits: 890 },
+  { name: "美ら花フラワー", category: "花屋", visits: 420 }
+];
+
+// 全クライアントの名前を表示
+clients.forEach(client => {
+  console.log(client.name);
+});
+```
+
+## 分割代入（Destructuring）
+
+オブジェクトや配列から、必要な値だけを取り出せます。
+
+```javascript
+// オブジェクトの分割代入
+const { name, category, visits } = clients[0];
+console.log(name); // "海風テラス"
+
+// 配列の分割代入
+const [first, second] = clients;
+console.log(first.name); // "海風テラス"
+```
+
+> **ポイント**: 配列は「順番のあるリスト」、オブジェクトは「ラベル付きデータ」。この2つを組み合わせることで、あらゆるデータを表現できます。
+
+## ループとイテレーション — 繰り返しの力
+
+ダッシュボードには複数のクライアントを表示する必要がある。一つひとつ手書きするわけにはいかない。ここで**ループ（繰り返し処理）**の出番だ。
+
+> 「プログラミングの本質は"繰り返し"にある。人間が100回やることを、コードなら1行で書ける。」——Yuki
+
+## for ループ
+
+もっとも基本的な繰り返し構文です。
+
+```javascript
+const clients = ["海風テラス", "首里そば太郎", "美ら花フラワー"];
+
+for (let i = 0; i < clients.length; i++) {
+  console.log(`${i + 1}. ${clients[i]}`);
+}
+// 1. 海風テラス
+// 2. 首里そば太郎
+// 3. 美ら花フラワー
+```
+
+## for...of ループ
+
+配列の要素を直接取り出すシンプルな書き方です。
+
+```javascript
+for (const client of clients) {
+  console.log(client);
+}
+```
+
+## 配列の高階メソッド
+
+モダンなJavaScriptでは、**高階メソッド**を使った繰り返しが主流です。
+
+### forEach — 各要素に処理を実行
+
+```javascript
+clients.forEach((client, index) => {
+  console.log(`${index + 1}. ${client}`);
+});
+```
+
+### map — 変換して新しい配列を作る
+
+```javascript
+const clientData = [
+  { name: "海風テラス", visits: 1250 },
+  { name: "首里そば太郎", visits: 890 },
+  { name: "美ら花フラワー", visits: 420 }
+];
+
+// 名前だけの配列を作る
+const names = clientData.map(c => c.name);
+// ["海風テラス", "首里そば太郎", "美ら花フラワー"]
+```
+
+### filter — 条件に合う要素だけ抽出
+
+```javascript
+// 訪問数1000以上のクライアント
+const popular = clientData.filter(c => c.visits >= 1000);
+// [{ name: "海風テラス", visits: 1250 }]
+```
+
+### find — 条件に合う最初の1件
+
+```javascript
+const mika = clientData.find(c => c.name === "海風テラス");
+// { name: "海風テラス", visits: 1250 }
+```
+
+### reduce — 集計する
+
+```javascript
+// 全クライアントの合計訪問数
+const totalVisits = clientData.reduce((sum, c) => sum + c.visits, 0);
+// 2560
+```
+
+## メソッドチェーン
+
+高階メソッドは連鎖（チェーン）させることができます。
+
+```javascript
+// アクティブなクライアントの名前を、訪問数順に取得
+const result = clientData
+  .filter(c => c.visits > 500)
+  .sort((a, b) => b.visits - a.visits)
+  .map(c => c.name);
+// ["海風テラス", "首里そば太郎"]
+```
+
+## 比較表
+
+| 方法 | 用途 | 新配列を返す？ |
+|------|------|--------------|
+| `for` | 汎用ループ | いいえ |
+| `for...of` | 配列の要素を順に処理 | いいえ |
+| `forEach` | 各要素に副作用のある処理 | いいえ |
+| `map` | 変換して新しい配列を作る | はい |
+| `filter` | 条件で絞り込む | はい |
+| `reduce` | 集計・畳み込み | 値を返す |
+
+> **ポイント**: `map` と `filter` は元の配列を変更しない（非破壊的）。これが安全なコードを書く上で非常に重要です。
+
+## アロー関数とES6+ — モダンJavaScript
+
+前のレッスンで `=>` という記号が何度か登場した。これは**アロー関数**と呼ばれるES6（ECMAScript 2015）の新しい書き方だ。
+
+> 「ES6は"JavaScriptの大改革"だったんだ。書き方がぐっとシンプルになった。」——Yuki
+
+## アロー関数
+
+従来の `function` キーワードの代わりに `=>` を使う書き方です。
+
+```javascript
+// 従来の関数
+function greet(name) {
+  return `こんにちは、${name}さん！`;
+}
+
+// アロー関数
+const greet = (name) => {
+  return `こんにちは、${name}さん！`;
+};
+
+// 省略形（1行の場合、{} と return を省略できる）
+const greet = (name) => `こんにちは、${name}さん！`;
+
+// 引数が1つの場合、() も省略できる
+const greet = name => `こんにちは、${name}さん！`;
+```
+
+### コールバックで真価を発揮
+
+```javascript
+const clients = ["海風テラス", "首里そば太郎", "美ら花フラワー"];
+
+// 従来の書き方
+clients.map(function(name) {
+  return name + "様";
+});
+
+// アロー関数（圧倒的に読みやすい）
+clients.map(name => name + "様");
+```
+
+## テンプレートリテラル
+
+バッククォート（`` ` ``）で囲むと、文字列の中に変数を埋め込めます。
+
+```javascript
+const clientName = "海風テラス";
+const visits = 1250;
+
+// 従来の文字列結合
+const msg = clientName + "の今月のアクセス数は" + visits + "です。";
+
+// テンプレートリテラル（読みやすい！）
+const msg = `${clientName}の今月のアクセス数は${visits}です。`;
+
+// 複数行もそのまま書ける
+const html = `
+  <div class="client-card">
+    <h2>${clientName}</h2>
+    <p>アクセス数: ${visits}</p>
+  </div>
+`;
+```
+
+## const / let（var はもう使わない）
+
+```javascript
+// const: 再代入できない（基本はこれを使う）
+const API_URL = "https://api.shimalink.com";
+
+// let: 再代入が必要な場合に使う
+let currentPage = 1;
+currentPage = 2; // OK
+
+// var: 使わない（スコープの問題がある）
+```
+
+## スプレッド構文（...）
+
+配列やオブジェクトを展開できます。
+
+```javascript
+// 配列のコピー・結合
+const oldClients = ["海風テラス", "首里そば太郎"];
+const newClients = [...oldClients, "美ら花フラワー"];
+// ["海風テラス", "首里そば太郎", "美ら花フラワー"]
+
+// オブジェクトのコピー・マージ
+const client = { name: "海風テラス", visits: 1250 };
+const updated = { ...client, visits: 1380 };
+// { name: "海風テラス", visits: 1380 }
+```
+
+## オプショナルチェーン（?.）
+
+深くネストしたプロパティに安全にアクセスできます。
+
+```javascript
+const client = {
+  name: "海風テラス",
+  contact: {
+    email: "mika@example.com"
+  }
+};
+
+// 従来（エラーになる可能性がある）
+// const phone = client.contact.phone.number; // Error!
+
+// オプショナルチェーン（安全にundefinedを返す）
+const phone = client.contact?.phone?.number; // undefined
+```
+
+## Null合体演算子（??）
+
+```javascript
+const displayName = client.nickname ?? client.name;
+// nicknameがnull/undefinedならnameを使う
+```
+
+## まとめ
+
+| 機能 | 従来 | ES6+ |
+|------|------|------|
+| 関数定義 | `function(x) {}` | `(x) => {}` / `x => x` |
+| 文字列結合 | `"Hello " + name` | `` `Hello ${name}` `` |
+| 変数宣言 | `var` | `const` / `let` |
+| コピー | `Object.assign()` | `{ ...obj }` |
+| 安全アクセス | `if (a && a.b)` | `a?.b` |
+
+> **ポイント**: ES6+の機能は「短く書ける」だけでなく、「意図が明確になる」ことが最大のメリット。チームで開発するShimaLinkではこれが重要です。
+
+## Promiseとfetch API — 非同期の世界
+
+ダッシュボードに表示するデータは、サーバーから取得する必要がある。しかし、ネットワーク通信には時間がかかる。その間、画面が固まっていたらユーザーは困る。ここで登場するのが**非同期処理**だ。
+
+> 「レストランで注文したら、料理ができるまで席で待つでしょ？その間に飲み物を飲んだりスマホを見たりできる。非同期処理も同じ。結果を待つ間に他の処理を進められるんだ。」——Yuki
+
+## 同期 vs 非同期
+
+```javascript
+// 同期処理（上から順に実行、完了を待つ）
+console.log("1. データ取得開始");
+// ← ここで3秒待つ（画面が固まる）
+console.log("2. データ取得完了");
+console.log("3. 画面を更新");
+
+// 非同期処理（待っている間に他の処理を進める）
+console.log("1. データ取得開始");
+// ← データ取得はバックグラウンドで進行
+console.log("2. 他の処理を実行");
+// ← データが届いたら処理する
+```
+
+## Promise
+
+Promiseは「未来の結果」を表すオブジェクトです。
+
+```javascript
+// Promiseの3つの状態
+// pending   : まだ結果が出ていない
+// fulfilled : 成功した（resolve）
+// rejected  : 失敗した（reject）
+
+const myPromise = new Promise((resolve, reject) => {
+  const success = true;
+  if (success) {
+    resolve("成功しました！");
+  } else {
+    reject("エラーが発生しました");
+  }
+});
+
+// .then() で成功時、.catch() で失敗時の処理
+myPromise
+  .then(result => console.log(result))
+  .catch(error => console.error(error));
+```
+
+## fetch API
+
+`fetch` はサーバーにHTTPリクエストを送る組み込み関数です。Promiseを返します。
+
+```javascript
+// 基本的なfetchの使い方
+fetch("https://api.shimalink.com/clients")
+  .then(response => response.json())  // JSONとしてパース
+  .then(data => {
+    console.log(data);
+    // [{ name: "海風テラス", ... }, ...]
+  })
+  .catch(error => {
+    console.error("通信エラー:", error);
+  });
+```
+
+### レスポンスの確認
+
+```javascript
+fetch("https://api.shimalink.com/clients")
+  .then(response => {
+    console.log(response.status);  // 200
+    console.log(response.ok);      // true（200-299の場合）
+
+    if (!response.ok) {
+      throw new Error(`HTTPエラー: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => console.log(data))
+  .catch(error => console.error(error));
+```
+
+## async / await
+
+Promiseチェーンをさらに読みやすくする書き方です。
+
+```javascript
+// Promiseチェーン版
+function loadClients() {
+  return fetch("https://api.shimalink.com/clients")
+    .then(response => response.json())
+    .then(data => data.filter(c => c.isActive));
+}
+
+// async/await版（同じ処理をより読みやすく）
+async function loadClients() {
+  const response = await fetch("https://api.shimalink.com/clients");
+  const data = await response.json();
+  return data.filter(c => c.isActive);
+}
+```
+
+### エラーハンドリング
+
+```javascript
+async function loadClients() {
+  try {
+    const response = await fetch("https://api.shimalink.com/clients");
+
+    if (!response.ok) {
+      throw new Error(`HTTPエラー: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("クライアント一覧の取得に失敗:", error);
+    return []; // エラー時は空配列を返す
+  }
+}
+```
+
+## ダッシュボードへの応用
+
+学んだことを組み合わせて、ShimaLinkダッシュボードのデータ取得を実装してみよう。
+
+```javascript
+// ダッシュボードのデータ読み込み
+async function renderDashboard() {
+  const clients = await loadClients();
+
+  // アクティブなクライアントを訪問数順にソート
+  const sorted = clients
+    .filter(c => c.isActive)
+    .sort((a, b) => b.visits - a.visits);
+
+  // HTML生成
+  const html = sorted
+    .map(c => `
+      <div class="client-card">
+        <h3>${c.name}</h3>
+        <p>カテゴリ: ${c.category}</p>
+        <p>今月のアクセス: ${c.visits.toLocaleString()}回</p>
+      </div>
+    `)
+    .join("");
+
+  document.getElementById("client-list").innerHTML = html;
+}
+
+// ページ読み込み時に実行
+renderDashboard();
+```
+
+## まとめ
+
+| 概念 | 説明 | 使いどころ |
+|------|------|-----------|
+| Promise | 未来の結果を表す | 非同期処理全般 |
+| fetch | HTTPリクエスト送信 | API通信 |
+| .then/.catch | Promiseの結果を処理 | チェーン形式の処理 |
+| async/await | Promiseを同期的に書く | 読みやすい非同期コード |
+| try/catch | エラーを捕捉する | async/awaitのエラー処理 |
+
+> **ポイント**: 現代のWebアプリはほぼすべてが非同期処理。`async/await` を使いこなせば、複雑なデータの流れもスッキリ書けます。
+
+<StoryPanel variant="conclusion">
+
+ダッシュボードの画面に、クライアントごとのアクセス数がリアルタイムで表示されている。fetch APIで取得したデータが、配列のメソッドで整形され、DOMに描画される。
+
+```javascript
+// ShimaLink ダッシュボード - クライアント一覧
+const clients = await fetchClients();
+const activeClients = clients.filter(c => c.isActive);
+console.log(`アクティブクライアント: ${activeClients.length}件`);
+```
+
+---
+
+**Mika:** 「すごい！うちの予約状況がリアルタイムで見えるんですね。」
+
+**あなた:** 「他のクライアントのデータも一覧で見えるし、これで管理がめっちゃ楽になる！」
+
+**Yuki:** 「JavaScriptでデータを自在に操れるようになったね。でも、ひとつ気になることがある。」
+
+**あなた:** 「何ですか？」
+
+**Yuki:** 「あなたが書いたコード、ちょっと見せてもらっていい？」
+
+Yukiがあなたのコードを画面に映す。変数名が曖昧で、関数の引数に何が入るのか分からない箇所がいくつもあった。
+
+**あなた:** 「えっ、動いてるからいいんじゃないの？」
+
+**Yuki:** 「今は3人だからいいけど、チームが増えたら？クライアントが10件、50件になったら？バグの原因を探すのに何時間もかかるようになるよ。」
+
+**あなた:** 「どうすれば防げるんですか？」
+
+**Yuki:** 「"型"という概念を使う。TypeScriptっていうJavaScriptの拡張を導入するんだ。」
+
+---
+
+> **次のチャプター**: *Chapter 7: 型という盾* — あなたのバグが増え始め、Yukiが"型安全"という武器を授ける。TypeScriptの世界へ。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="06-javascript-power" />
+
+<ChapterFaq chapterId="06-javascript-power" />
+
+<SeriesNav current={6} />

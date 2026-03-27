@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch21-help-01",
+    "question": "python3コマンドが見つからない",
+    "answer": "**Macの場合:**\n```bash\n# Homebrewでインストール\nbrew install python3\n\n# 確認\npython3 --version\n```\n\n**Windowsの場合:**\n1. [python.org](https://python.org) からインストーラーをダウンロード\n2. インストール時に「Add Python to PATH」にチェック\n3. ターミナルを再起動\n\n`python` と `python3` の違い: Macでは `python` がPython 2を指すことがあるので、必ず `python3` を使いましょう。",
+    "tags": ["python", "install", "setup"],
+    "lessonSlug": "01-python-basics",
+    "category": "environment"
+  },
+  {
+    "id": "ch21-help-02",
+    "question": "IndentationError: unexpected indent が出る",
+    "answer": "Pythonでは**インデント（字下げ）がコードの構造を決めます**。\n\n**よくある原因:**\n- タブとスペースが混在している\n- インデントの深さが不統一（2スペースと4スペースが混在）\n\n```python\n# NG: インデントが不統一\ndef hello():\n    print(\"A\")  # 4スペース\n  print(\"B\")    # 2スペース → エラー!\n\n# OK: 統一されたインデント\ndef hello():\n    print(\"A\")  # 4スペース\n    print(\"B\")  # 4スペース\n```\n\n**VS Codeの設定:** 「Insert Spaces」をON、Tab Size を 4 に設定しましょう。",
+    "tags": ["python", "indent", "error"],
+    "lessonSlug": "01-python-basics",
+    "category": "syntax"
+  },
+  {
+    "id": "ch21-help-03",
+    "question": "pip install でPermissionErrorが出る",
+    "answer": "**仮想環境（venv）を使いましょう:**\n\n```bash\n# 仮想環境を作成\npython3 -m venv myenv\n\n# 有効化（Mac/Linux）\nsource myenv/bin/activate\n\n# 有効化（Windows）\nmyenv\\Scripts\\activate\n\n# これでpip installできる\npip install requests\n\n# 無効化\ndeactivate\n```\n\n`sudo pip install` は**使わないでください**。システムのPythonを壊す可能性があります。",
+    "tags": ["python", "pip", "venv", "error"],
+    "lessonSlug": "01-python-basics",
+    "category": "environment"
+  },
+  {
+    "id": "ch21-help-04",
+    "question": "CSVファイルを読み込むと文字化けする",
+    "answer": "**encoding を明示的に指定**してください:\n\n```python\n# UTF-8で読み込む\nwith open(\"data.csv\", \"r\", encoding=\"utf-8\") as f:\n    reader = csv.reader(f)\n\n# Excelで作ったCSVはShift-JISの場合がある\nwith open(\"data.csv\", \"r\", encoding=\"cp932\") as f:\n    reader = csv.reader(f)\n```\n\n**エンコーディングの確認方法:**\n```bash\nfile -I data.csv\n# → data.csv: text/csv; charset=utf-8\n```",
+    "tags": ["python", "csv", "encoding"],
+    "lessonSlug": "02-file-operations",
+    "category": "syntax"
+  },
+  {
+    "id": "ch21-help-05",
+    "question": "requestsでConnectionErrorが出る",
+    "answer": "**ネットワーク接続を確認**してください:\n\n```python\nimport requests\n\ntry:\n    response = requests.get(\"https://example.com\", timeout=10)\n    print(f\"Status: {response.status_code}\")\nexcept requests.ConnectionError:\n    print(\"ネットワークに接続できません\")\nexcept requests.Timeout:\n    print(\"タイムアウトしました\")\n```\n\n**チェックリスト:**\n- インターネット接続があるか\n- URLが正しいか（httpsのtypoなど）\n- ファイアウォールやプロキシがブロックしていないか\n- `timeout` パラメータを設定しているか",
+    "tags": ["python", "requests", "network", "error"],
+    "lessonSlug": "03-web-scraping",
+    "category": "terminal"
+  },
+  {
+    "id": "ch21-help-06",
+    "question": "BeautifulSoupでfind()がNoneを返す",
+    "answer": "指定した要素がページに**存在しない**可能性があります:\n\n```python\nfrom bs4 import BeautifulSoup\n\n# まずHTMLの中身を確認\nprint(soup.prettify()[:500])\n\n# Noneチェックを入れる\nelement = soup.find(\"div\", class_=\"shop-card\")\nif element:\n    print(element.text)\nelse:\n    print(\"要素が見つかりません\")\n```\n\n**よくある原因:**\n- クラス名やタグ名の**スペルミス**\n- JavaScriptで動的に生成されるコンテンツ（BeautifulSoupでは取得不可）\n- `class_` のアンダースコア忘れ（Pythonの予約語と被るため）",
+    "tags": ["python", "beautifulsoup", "scraping"],
+    "lessonSlug": "03-web-scraping",
+    "category": "syntax"
+  },
+  {
+    "id": "ch21-help-07",
+    "question": "cronジョブが動かない",
+    "answer": "**よくある原因と対策:**\n\n1. **Pythonのパスが通っていない**\n```bash\n# フルパスで指定する\n0 9 * * * /usr/local/bin/python3 /home/user/script.py\n\n# パスを確認\nwhich python3\n```\n\n2. **作業ディレクトリの問題**\n```bash\n# スクリプト内で明示的に設定\n0 9 * * * cd /home/user/project && /usr/bin/python3 script.py\n```\n\n3. **ログを取って原因を特定**\n```bash\n0 9 * * * /usr/bin/python3 /home/user/script.py >> /tmp/cron.log 2>&1\n```\n\n4. **crontabの確認**\n```bash\ncrontab -l  # 現在のジョブを一覧表示\n```",
+    "tags": ["cron", "automation", "schedule"],
+    "lessonSlug": "04-automation-scripts",
+    "category": "terminal"
+  },
+  {
+    "id": "ch21-help-08",
+    "question": "Pythonの辞書とリストの違いがわからない",
+    "answer": "**リスト**は順番に並んだデータ、**辞書**は名前付きのデータです。\n\n| | リスト (list) | 辞書 (dict) |\n|---|---|---|\n| 書き方 | `[1, 2, 3]` | `{\"key\": \"value\"}` |\n| アクセス | `data[0]` (番号) | `data[\"key\"]` (名前) |\n| 用途 | 一覧データ | 構造化データ |\n| JSでの相当 | `Array` | `Object` |\n\n```python\n# リスト: お店の名前一覧\nshops = [\"海風テラス\", \"首里城カフェ\"]\nprint(shops[0])  # → 海風テラス\n\n# 辞書: お店の詳細情報\nshop = {\"name\": \"海風テラス\", \"rating\": 4.8}\nprint(shop[\"name\"])  # → 海風テラス\n```",
+    "tags": ["python", "list", "dict", "concept"],
+    "lessonSlug": "01-python-basics",
+    "category": "concept"
+  },
+  {
+    "id": "ch21-help-09",
+    "question": "スクレイピングとAPIの違いは？",
+    "answer": "| | スクレイピング | API |\n|---|---|---|\n| データ取得先 | HTMLページ | 構造化されたエンドポイント |\n| 安定性 | ページ変更で壊れやすい | 仕様が公開されている |\n| 速度 | HTMLパース分遅い | 直接データを取得 |\n| 許可 | 要確認（グレーゾーン） | 提供者が許可している |\n\n**結論:** APIがあれば必ずAPIを使う。スクレイピングは最終手段です。\n\n```python\n# API（推奨）\nresponse = requests.get(\"https://api.example.com/shops\")\ndata = response.json()\n\n# スクレイピング（APIがない場合のみ）\nresponse = requests.get(\"https://example.com/shops\")\nsoup = BeautifulSoup(response.text, \"html.parser\")\n```",
+    "tags": ["api", "scraping", "concept"],
+    "lessonSlug": "03-web-scraping",
+    "category": "concept"
+  },
+  {
+    "id": "ch21-help-10",
+    "question": "仮想環境(venv)って何？なぜ必要？",
+    "answer": "**プロジェクトごとにPythonの環境を分離する仕組み**です。\n\nマンションの部屋のように、プロジェクトAとBで異なるバージョンのライブラリを使えます。\n\n```bash\n# 作成\npython3 -m venv myenv\n\n# 有効化\nsource myenv/bin/activate  # Mac/Linux\n\n# パッケージインストール\npip install requests beautifulsoup4\n\n# 依存関係を記録\npip freeze > requirements.txt\n\n# 別の環境で復元\npip install -r requirements.txt\n\n# 無効化\ndeactivate\n```\n\n**なぜ必要？** システムのPythonにライブラリを入れると、他のプロジェクトと衝突する可能性があるからです。",
+    "tags": ["python", "venv", "environment"],
+    "lessonSlug": "01-python-basics",
+    "category": "environment"
+  }
+]

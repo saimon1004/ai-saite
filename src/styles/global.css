@@ -211,3 +211,187 @@ body {
   pointer-events: none;
   z-index: 0;
 }
+
+/* ===================================
+   Blog Prose Styles
+   =================================== */
+.prose-blog h2 {
+  font-family: var(--font-heading);
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--color-navy);
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  scroll-margin-top: 6rem;
+}
+
+.prose-blog h3 {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  scroll-margin-top: 6rem;
+}
+
+.prose-blog h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-blog p {
+  line-height: 1.85;
+  margin-bottom: 1.25rem;
+  color: var(--color-text-primary);
+}
+
+.prose-blog a {
+  color: var(--color-navy);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose-blog a:hover {
+  color: var(--color-teal-dark);
+}
+
+/* Code blocks */
+.prose-blog pre {
+  border-radius: var(--radius-card);
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  border: 1px solid var(--color-border);
+}
+
+.prose-blog :not(pre) > code {
+  background-color: var(--color-surface-dim);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  color: var(--color-navy);
+  border: 1px solid var(--color-border);
+}
+
+/* Tables */
+.prose-blog table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.prose-blog th {
+  background-color: var(--color-navy);
+  color: white;
+  padding: 0.65rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.prose-blog td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.prose-blog tbody tr:hover {
+  background-color: var(--color-surface-dim);
+}
+
+/* Blockquotes (character dialogue) */
+.prose-blog blockquote {
+  border-left: 4px solid var(--color-teal);
+  padding: 0.75rem 1.25rem;
+  margin: 1.25rem 0;
+  background-color: rgb(49 185 181 / 0.06);
+  border-radius: 0 var(--radius-card) var(--radius-card) 0;
+}
+
+.prose-blog blockquote p {
+  margin-bottom: 0.5rem;
+  font-style: italic;
+}
+
+.prose-blog blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.prose-blog blockquote strong {
+  color: var(--color-navy);
+  font-style: normal;
+}
+
+/* Lists */
+.prose-blog ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose-blog ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose-blog li {
+  margin-bottom: 0.4rem;
+  line-height: 1.75;
+}
+
+.prose-blog li > ul,
+.prose-blog li > ol {
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+}
+
+/* Horizontal rules */
+.prose-blog hr {
+  border: none;
+  height: 1px;
+  background: var(--color-border);
+  margin: 2rem 0;
+}
+
+/* Strong / em */
+.prose-blog strong {
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+/* Images */
+.prose-blog img {
+  border-radius: var(--radius-card);
+  margin: 1.5rem 0;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Story panel content styles */
+.story-panel .story-content p {
+  line-height: 1.85;
+  margin-bottom: 1rem;
+}
+
+.story-panel .story-content strong {
+  color: var(--color-navy);
+}
+
+.story-panel .story-content hr {
+  border: none;
+  height: 1px;
+  background: rgb(0 0 0 / 0.1);
+  margin: 1.5rem 0;
+}

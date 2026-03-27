@@ -1,0 +1,796 @@
+---
+title: "速さの追求"
+subtitle: "パフォーマンス最適化でユーザー体験を磨く"
+description: "パフォーマンス最適化でユーザー体験を磨く。Performance・Optimization・Cachingを実践的なストーリーで学ぶチャプター「速さの追求」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-23
+chapter: 23
+arc: "beyond"
+arcName: "飛躍編"
+skills:
+  - { category: "performance", name: "Performance", level: "intro" }
+  - { category: "performance", name: "Optimization", level: "intro" }
+  - { category: "performance", name: "Caching", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["22-testing-mastery"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+お昼の12時。ShimaLinkのアクセスがピークを迎える時間帯。Mikaのスマホが鳴り続けていた。
+
+---
+
+**Mika:** 「また...『ページが開かない』って3件目のクレームが来た。お昼時に毎回こうなる。」
+
+**あなた:** 「サーバーは落ちてないんだけど...なんか遅いんだよな。トップページの表示に8秒かかってる。」
+
+**あなた:** 「8秒！？ さすがにそれはユーザー離れるよね。」
+
+**あなた:** 「でもどこがボトルネックなのかわからない。コード全体を見直すの？」
+
+---
+
+Yukiが自分のノートPCを開いて、ブラウザの開発者ツールを見せた。
+
+**Yuki:** 「当てずっぽうで最適化するのは最悪のアプローチ。まず**計測**。どこが遅いかを数値で把握して、そこだけを直す。」
+
+**あなた:** 「どうやって計測するんですか？」
+
+**Yuki:** 「Googleが提唱する**Core Web Vitals**って知ってる？ページの速さを測る3つの指標があるんだ。」
+
+Yukiがホワイトボードに書いた。
+
+```
+LCP (Largest Contentful Paint) — 表示速度
+FID (First Input Delay)        — 応答速度
+CLS (Cumulative Layout Shift)  — 視覚的安定性
+```
+
+**あなた:** 「略語多いな...」
+
+**Yuki:** 「簡単に言うと、"見えるまで何秒？"、"触れるまで何秒？"、"画面がガタガタしない？"の3つ。これを改善すれば、ユーザーは快適に感じる。」
+
+**Mika:** 「お店のオーナーさんからも、もっとサクサク動いてほしいって要望は多いんだよね。」
+
+**Yuki:** 「よし、ShimaLinkの速度を"体感できるレベル"まで改善しよう。フロントエンド、バックエンド、データベース——全方位から攻めるよ。」
+
+---
+
+ShimaLinkのパフォーマンスチューニングが始まる。目標は「どのページも2秒以内に表示」。
+
+</StoryPanel>
+
+## パフォーマンス指標 — Core Web Vitals
+
+パフォーマンス改善の第一歩は「計測」。推測ではなく、数値に基づいて最適化する。
+
+> **Yuki:** 「"推測するな、計測せよ"。これがパフォーマンスチューニングの鉄則だよ。」
+
+## Core Web Vitals とは？
+
+Googleが定義した、ユーザー体験を測る3つの主要指標です。
+
+| 指標 | 意味 | 良い | 要改善 | 悪い |
+|------|------|------|--------|------|
+| **LCP** | 最大コンテンツの表示時間 | ≤ 2.5s | ≤ 4.0s | > 4.0s |
+| **FID** | 最初の入力の遅延時間 | ≤ 100ms | ≤ 300ms | > 300ms |
+| **CLS** | レイアウトのずれ度合い | ≤ 0.1 | ≤ 0.25 | > 0.25 |
+
+### LCP（Largest Contentful Paint）
+
+ページの最大要素（メイン画像やテキストブロック）が表示されるまでの時間。
+
+```
+ユーザーの感覚:
+< 1秒   → 「速い！」
+1-2.5秒 → 「普通」
+> 4秒   → 「遅い...閉じよう」
+```
+
+### FID（First Input Delay） / INP
+
+ユーザーが最初にクリックやタップした時、反応するまでの時間。
+
+> **注意:** FIDは2024年3月にINP（Interaction to Next Paint）に置き換えられました。INPはすべてのインタラクションの応答性を測定します。
+
+### CLS（Cumulative Layout Shift）
+
+ページの読み込み中に要素が「ガタガタ」と動く度合い。
+
+```
+悪い例: 広告が後から読み込まれて、記事のテキストが下にズレる
+良い例: 画像のサイズが予約されていて、レイアウトが安定している
+```
+
+## 計測ツール
+
+### Lighthouse（ブラウザ内蔵）
+
+```
+1. Chrome DevToolsを開く（F12）
+2. 「Lighthouse」タブを選択
+3. 「Analyze page load」をクリック
+4. スコアと改善提案が表示される
+```
+
+### PageSpeed Insights（Web版）
+
+```
+https://pagespeed.web.dev/
+→ URLを入力するだけで、実際のユーザーデータも含めたレポートが見られる
+```
+
+### コマンドラインで実行
+
+```bash
+# Lighthouse CLIのインストール
+npm install -g lighthouse
+
+# レポートを生成
+lighthouse https://shimalink.example.com --output html --output-path report.html
+
+# モバイルとデスクトップ両方
+lighthouse https://shimalink.example.com --preset=desktop
+```
+
+## Chrome DevToolsで計測する
+
+### Performanceタブ
+
+```
+1. DevToolsを開く（F12）
+2. Performanceタブを選択
+3. ⚫ 録画ボタンを押す
+4. ページをリロード
+5. 録画を止めて、タイムラインを確認
+```
+
+### Networkタブ
+
+```
+1. Networkタブを開く
+2. ページをリロード
+3. 「Waterfall」で各リクエストの時間を確認
+4. 大きなファイルや遅いリクエストを特定
+```
+
+| 確認項目 | 見るべきこと |
+|---------|------------|
+| リクエスト数 | 多すぎないか？（目安: 50以下） |
+| 転送量 | 大きすぎないか？（目安: 1MB以下） |
+| TTFB | サーバーの応答が遅くないか？ |
+| 画像サイズ | 最適化されているか？ |
+
+## パフォーマンスバジェット
+
+チームで「これ以上遅くしない」というルールを決めましょう。
+
+```json
+{
+  "budgets": [
+    {
+      "resourceType": "total",
+      "budget": 500
+    },
+    {
+      "resourceType": "script",
+      "budget": 200
+    },
+    {
+      "resourceType": "image",
+      "budget": 200
+    },
+    {
+      "metric": "largest-contentful-paint",
+      "budget": 2500
+    }
+  ]
+}
+```
+
+| 指標 | バジェット例 |
+|------|------------|
+| ページサイズ合計 | ≤ 500KB |
+| JavaScript | ≤ 200KB |
+| 画像 | ≤ 200KB |
+| LCP | ≤ 2.5s |
+| TTI | ≤ 3.0s |
+
+## ポイント
+
+- パフォーマンス改善は「計測 → 分析 → 改善 → 再計測」のサイクル
+- Core Web Vitals（LCP, FID/INP, CLS）がユーザー体験の指標
+- Lighthouse, DevTools, PageSpeed Insightsで計測
+- パフォーマンスバジェットでチームのルールを明確にする
+- 推測ではなく、データに基づいて最適化する
+
+## フロントエンド最適化 — 表示速度を極める
+
+計測で問題箇所が判明した。まずはフロントエンドから最適化しよう。
+
+> **Yuki:** 「フロントエンドの最適化は、ユーザーが最も直接体感する改善。1秒速くなるだけで離脱率が大きく減るよ。」
+
+## 画像の最適化
+
+画像はページサイズの大部分を占めることが多い。
+
+### 適切なフォーマットの選択
+
+| フォーマット | 用途 | 特徴 |
+|------------|------|------|
+| **WebP** | 写真全般 | JPEGより30%小さい |
+| **AVIF** | 写真（最新） | WebPよりさらに小さい |
+| **SVG** | アイコン、ロゴ | ベクター画像、拡大しても劣化しない |
+| **PNG** | 透過が必要な画像 | ファイルサイズが大きくなりがち |
+
+### レスポンシブ画像
+
+```html
+<!-- 画面サイズに応じて適切なサイズを読み込む -->
+<img
+  src="shop-800w.webp"
+  srcset="
+    shop-400w.webp 400w,
+    shop-800w.webp 800w,
+    shop-1200w.webp 1200w
+  "
+  sizes="(max-width: 600px) 400px, (max-width: 1024px) 800px, 1200px"
+  alt="海風テラスの外観"
+  width="800"
+  height="600"
+  loading="lazy"
+/>
+```
+
+### 遅延読み込み（Lazy Loading）
+
+```html
+<!-- ファーストビュー以外の画像はlazyで読み込む -->
+<img src="photo.webp" loading="lazy" alt="店舗写真" />
+
+<!-- ファーストビューの画像はeagerで優先読み込み -->
+<img src="hero.webp" loading="eager" fetchpriority="high" alt="メインビジュアル" />
+```
+
+## CSSの最適化
+
+### クリティカルCSSのインライン化
+
+```html
+<head>
+  <!-- ファーストビューに必要なCSSだけインラインで -->
+  <style>
+    .hero { background: #0077b6; color: white; padding: 2rem; }
+    .nav { display: flex; gap: 1rem; }
+  </style>
+
+  <!-- 残りのCSSは非同期で読み込む -->
+  <link rel="preload" href="styles.css" as="style" onload="this.rel='stylesheet'">
+</head>
+```
+
+### 不要なCSSの削除
+
+```bash
+# PurgeCSSで未使用CSSを除去
+npx purgecss --css styles.css --content index.html --output cleaned.css
+```
+
+## JavaScriptの最適化
+
+### コード分割（Code Splitting）
+
+```javascript
+// 悪い例: すべてを一括インポート
+import { HeavyChart } from "./HeavyChart";
+
+// 良い例: 必要な時だけ読み込む（動的インポート）
+const HeavyChart = React.lazy(() => import("./HeavyChart"));
+
+function Dashboard() {
+  return (
+    <Suspense fallback={<div>読み込み中...</div>}>
+      <HeavyChart />
+    </Suspense>
+  );
+}
+```
+
+### バンドルサイズの分析
+
+```bash
+# webpack-bundle-analyzerでバンドルの中身を可視化
+npx webpack --profile --json > stats.json
+npx webpack-bundle-analyzer stats.json
+
+# Viteの場合
+npx vite-bundle-visualizer
+```
+
+### Tree Shaking
+
+```javascript
+// 悪い例: ライブラリ全体をインポート
+import _ from "lodash";          // 72KB
+_.debounce(handler, 300);
+
+// 良い例: 必要な関数だけインポート
+import debounce from "lodash/debounce";  // 4KB
+debounce(handler, 300);
+```
+
+## CLSの改善
+
+### 画像のサイズを予約
+
+```html
+<!-- 悪い例: サイズ未指定（レイアウトシフトが起きる） -->
+<img src="photo.webp" alt="写真" />
+
+<!-- 良い例: width/heightを指定 -->
+<img src="photo.webp" alt="写真" width="800" height="600" />
+
+<!-- CSSでアスペクト比を保つ -->
+<style>
+  .shop-image {
+    aspect-ratio: 4 / 3;
+    width: 100%;
+    object-fit: cover;
+  }
+</style>
+```
+
+### Webフォントの最適化
+
+```html
+<!-- フォントの先読み -->
+<link rel="preload" href="/fonts/NotoSansJP.woff2" as="font" type="font/woff2" crossorigin>
+
+<!-- フォント読み込み中のちらつきを防ぐ -->
+<style>
+  @font-face {
+    font-family: 'Noto Sans JP';
+    src: url('/fonts/NotoSansJP.woff2') format('woff2');
+    font-display: swap; /* フォントが読み込まれるまでシステムフォントを表示 */
+  }
+</style>
+```
+
+## 最適化チェックリスト
+
+```
+□ 画像をWebP/AVIFフォーマットに変換
+□ 画像にwidth/heightを指定（CLS対策）
+□ ファーストビュー外の画像にloading="lazy"
+□ JavaScriptをコード分割（動的インポート）
+□ バンドルサイズを分析して不要なライブラリを削除
+□ クリティカルCSSをインライン化
+□ Webフォントにfont-display: swapを設定
+□ リソースの先読み（preload/prefetch）
+```
+
+## ポイント
+
+- 画像最適化（WebP、lazy loading、srcset）が最も効果が大きい
+- JavaScriptのコード分割とTree Shakingでバンドルサイズを削減
+- CLS対策には画像のサイズ予約とfont-display: swap
+- クリティカルCSSのインライン化でファーストビューを高速化
+- 最適化前後で必ず計測して効果を確認する
+
+## バックエンド最適化 & キャッシュ戦略
+
+フロントエンドを改善しても、サーバーの応答が遅ければ意味がない。
+
+> **Yuki:** 「最速のリクエストは、そもそも発生しないリクエスト。キャッシュはパフォーマンスの最強の武器だよ。」
+
+## キャッシュの基本概念
+
+キャッシュとは、一度取得したデータを保存しておき、次回はそのデータを返すことです。
+
+```
+1回目: クライアント → サーバー → DB (200ms)
+2回目: クライアント → キャッシュ (5ms) ← 40倍速い!
+```
+
+### キャッシュの層
+
+| 層 | 場所 | TTL目安 | 例 |
+|---|------|---------|-----|
+| ブラウザキャッシュ | クライアント | 分〜日 | 静的ファイル |
+| CDNキャッシュ | エッジサーバー | 分〜時間 | HTML、画像 |
+| アプリキャッシュ | サーバーメモリ | 秒〜分 | APIレスポンス |
+| DBキャッシュ | Redis等 | 秒〜分 | クエリ結果 |
+
+## HTTPキャッシュヘッダー
+
+```typescript
+// Express.js での設定例
+
+// 静的ファイル: 1年キャッシュ（ファイル名にハッシュ含む場合）
+app.use("/static", express.static("public", {
+  maxAge: "1y",
+  immutable: true
+}));
+
+// API: 5分キャッシュ
+app.get("/api/shops", (req, res) => {
+  res.set("Cache-Control", "public, max-age=300");
+  res.json(shops);
+});
+
+// ユーザー固有データ: キャッシュしない
+app.get("/api/profile", (req, res) => {
+  res.set("Cache-Control", "private, no-cache");
+  res.json(profile);
+});
+```
+
+### Cache-Controlの主な値
+
+| 値 | 意味 |
+|---|------|
+| `public` | CDN・共有キャッシュOK |
+| `private` | ブラウザのみキャッシュOK |
+| `max-age=300` | 300秒間キャッシュ |
+| `no-cache` | 毎回サーバーに確認 |
+| `no-store` | キャッシュ禁止 |
+| `immutable` | 変更されない（ハッシュ付きファイル向け） |
+
+## Redisによるアプリケーションキャッシュ
+
+```bash
+# Redisのインストール（Docker）
+docker run -d --name redis -p 6379:6379 redis
+```
+
+```typescript
+import Redis from "ioredis";
+
+const redis = new Redis();
+
+// キャッシュ付きデータ取得
+async function getShopsWithCache() {
+  const cacheKey = "shops:all";
+
+  // 1. キャッシュをチェック
+  const cached = await redis.get(cacheKey);
+  if (cached) {
+    console.log("Cache HIT");
+    return JSON.parse(cached);
+  }
+
+  // 2. キャッシュミス: DBから取得
+  console.log("Cache MISS");
+  const shops = await db.query("SELECT * FROM shops WHERE active = true");
+
+  // 3. キャッシュに保存（5分間）
+  await redis.setex(cacheKey, 300, JSON.stringify(shops));
+
+  return shops;
+}
+
+// キャッシュの無効化（データ更新時）
+async function updateShop(id: string, data: any) {
+  await db.query("UPDATE shops SET ... WHERE id = $1", [id]);
+
+  // 関連するキャッシュを削除
+  await redis.del("shops:all");
+  await redis.del(`shops:${id}`);
+}
+```
+
+## レスポンスの圧縮
+
+```typescript
+import compression from "compression";
+
+// gzip/brotli圧縮を有効化
+app.use(compression());
+
+// 効果: JSONレスポンスが70-80%小さくなる
+// 100KB → 20KB
+```
+
+## N+1問題の解決
+
+データベースへの無駄なクエリを減らす。
+
+```typescript
+// 悪い例: N+1問題（店舗ごとにクエリが発生）
+const shops = await db.query("SELECT * FROM shops");
+for (const shop of shops) {
+  // 各店舗のレビューを個別に取得（100店舗 → 101クエリ!）
+  shop.reviews = await db.query(
+    "SELECT * FROM reviews WHERE shop_id = $1", [shop.id]
+  );
+}
+
+// 良い例: JOINまたはIN句で一括取得（2クエリで完了）
+const shops = await db.query("SELECT * FROM shops");
+const shopIds = shops.map(s => s.id);
+const reviews = await db.query(
+  "SELECT * FROM reviews WHERE shop_id = ANY($1)", [shopIds]
+);
+
+// メモリ上で結合
+const reviewsByShop = reviews.reduce((acc, r) => {
+  (acc[r.shop_id] = acc[r.shop_id] || []).push(r);
+  return acc;
+}, {});
+
+shops.forEach(shop => {
+  shop.reviews = reviewsByShop[shop.id] || [];
+});
+```
+
+## API レスポンスの最適化
+
+```typescript
+// 悪い例: 不要なデータまで返す
+app.get("/api/shops", async (req, res) => {
+  const shops = await db.query("SELECT * FROM shops"); // 全カラム
+  res.json(shops);
+});
+
+// 良い例: 必要なフィールドだけ返す
+app.get("/api/shops", async (req, res) => {
+  const shops = await db.query(
+    "SELECT id, name, category, rating, thumbnail_url FROM shops WHERE active = true"
+  );
+  res.json(shops);
+});
+
+// ページネーション
+app.get("/api/shops", async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+  const offset = (page - 1) * limit;
+
+  const shops = await db.query(
+    "SELECT id, name, category, rating FROM shops LIMIT $1 OFFSET $2",
+    [limit, offset]
+  );
+
+  res.json({ data: shops, page, limit });
+});
+```
+
+## ポイント
+
+- キャッシュは多層で適用: ブラウザ → CDN → アプリ → DB
+- Cache-Controlヘッダーでブラウザキャッシュを制御
+- Redisでアプリケーションレベルのキャッシュを実装
+- レスポンス圧縮（gzip/brotli）で転送量を80%削減
+- N+1問題を解決してDBクエリ数を削減
+- 必要なデータだけ返し、ページネーションを実装する
+
+## データベース最適化 — クエリを高速化する
+
+バックエンドのボトルネックの多くは、データベースにある。
+
+> **Yuki:** 「インデックスを1つ追加するだけで、クエリが100倍速くなることもある。データベースの最適化は費用対効果が最高だよ。」
+
+## クエリのプロファイリング
+
+まずは遅いクエリを特定しよう。
+
+### EXPLAIN ANALYZE
+
+```sql
+-- クエリの実行計画を確認
+EXPLAIN ANALYZE
+SELECT * FROM shops WHERE category = 'カフェ' AND rating >= 4.0;
+
+-- 出力例:
+-- Seq Scan on shops  (cost=0.00..2.50 rows=5 width=128)
+--   Filter: ((category = 'カフェ') AND (rating >= 4.0))
+--   Rows Removed by Filter: 95
+--   Planning Time: 0.08 ms
+--   Execution Time: 0.25 ms
+```
+
+| 注目すべき点 | 意味 |
+|------------|------|
+| **Seq Scan** | 全行スキャン（遅い可能性） |
+| **Index Scan** | インデックス使用（速い） |
+| **Rows Removed** | フィルタで除外された行数 |
+| **Execution Time** | 実際の実行時間 |
+
+## インデックス — 最も効果的な最適化
+
+インデックスは「本の索引」のようなもの。全ページめくらなくても目的の内容にすぐ辿り着ける。
+
+### インデックスの作成
+
+```sql
+-- 基本的なインデックス
+CREATE INDEX idx_shops_category ON shops(category);
+
+-- 複合インデックス（よく一緒に検索されるカラム）
+CREATE INDEX idx_shops_category_rating ON shops(category, rating);
+
+-- 部分インデックス（条件付き）
+CREATE INDEX idx_active_shops ON shops(category)
+WHERE active = true;
+```
+
+### Before / After
+
+```sql
+-- Before: インデックスなし
+EXPLAIN ANALYZE SELECT * FROM shops WHERE category = 'カフェ';
+-- Seq Scan: 15.2ms（全100,000行をスキャン）
+
+-- After: インデックスあり
+CREATE INDEX idx_shops_category ON shops(category);
+EXPLAIN ANALYZE SELECT * FROM shops WHERE category = 'カフェ';
+-- Index Scan: 0.15ms（100倍速い!）
+```
+
+### インデックスの注意点
+
+| すべきこと | 避けるべきこと |
+|-----------|--------------|
+| WHERE句で頻繁に使うカラム | 更新が頻繁なカラムへの過剰なインデックス |
+| JOINのキーカラム | 小さなテーブル（数百行以下） |
+| ORDER BYで使うカラム | 選択性が低いカラム（true/falseなど） |
+
+## クエリの書き方を改善
+
+### SELECTの最適化
+
+```sql
+-- 悪い例: 全カラム取得
+SELECT * FROM shops;
+
+-- 良い例: 必要なカラムだけ
+SELECT id, name, category, rating FROM shops;
+```
+
+### JOINの最適化
+
+```sql
+-- 悪い例: サブクエリの連発
+SELECT s.*,
+  (SELECT COUNT(*) FROM reviews WHERE shop_id = s.id) as review_count,
+  (SELECT AVG(rating) FROM reviews WHERE shop_id = s.id) as avg_rating
+FROM shops s;
+
+-- 良い例: JOINで一括取得
+SELECT
+  s.id, s.name, s.category,
+  COUNT(r.id) as review_count,
+  AVG(r.rating) as avg_rating
+FROM shops s
+LEFT JOIN reviews r ON r.shop_id = s.id
+GROUP BY s.id, s.name, s.category;
+```
+
+### LIMITとOFFSETの最適化
+
+```sql
+-- 遅い例: 大きなオフセット（10万行スキップ）
+SELECT * FROM shops ORDER BY created_at LIMIT 20 OFFSET 100000;
+
+-- 速い例: カーソルベースのページネーション
+SELECT * FROM shops
+WHERE created_at < '2025-03-01T00:00:00Z'
+ORDER BY created_at DESC
+LIMIT 20;
+```
+
+## コネクションプーリング
+
+データベース接続は高コスト。接続プールで使い回す。
+
+```typescript
+import { Pool } from "pg";
+
+// コネクションプール設定
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  database: "shimalink",
+  max: 20,              // 最大接続数
+  idleTimeoutMillis: 30000,  // アイドルタイムアウト
+  connectionTimeoutMillis: 2000  // 接続タイムアウト
+});
+
+// プールを使ったクエリ
+async function getShops(category: string) {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      "SELECT id, name, rating FROM shops WHERE category = $1 ORDER BY rating DESC",
+      [category]
+    );
+    return result.rows;
+  } finally {
+    client.release(); // 必ず接続をプールに返す
+  }
+}
+```
+
+## スロークエリログ
+
+```sql
+-- PostgreSQLのスロークエリログを有効化
+ALTER SYSTEM SET log_min_duration_statement = 100;  -- 100ms以上を記録
+SELECT pg_reload_conf();
+
+-- 確認
+SHOW log_min_duration_statement;
+```
+
+```bash
+# ログの確認
+tail -f /var/log/postgresql/postgresql.log | grep duration
+```
+
+## 最適化の優先順位
+
+```
+1. [最優先] インデックスの追加        → 効果大、リスク小
+2. [高]     クエリの書き直し          → 効果大、作業中
+3. [中]     コネクションプール設定    → 安定性向上
+4. [中]     SELECT *の排除           → 転送量削減
+5. [低]     テーブル設計の見直し      → 効果大だが影響範囲大
+```
+
+## ポイント
+
+- EXPLAIN ANALYZEで遅いクエリを特定する
+- インデックスは最も費用対効果の高い最適化手段
+- SELECT * を避け、必要なカラムだけ取得する
+- N+1問題をJOINやIN句で解決する
+- コネクションプーリングでDB接続を効率化する
+- スロークエリログで継続的にパフォーマンスを監視する
+
+<StoryPanel variant="conclusion">
+
+最適化から1週間後。お昼のピーク時間。
+
+```
+Lighthouse Score: 95/100
+LCP: 1.2s (Good ✓)
+FID: 45ms  (Good ✓)
+CLS: 0.02  (Good ✓)
+
+Page Load: 1.8s (target: <2s ✓)
+```
+
+---
+
+**あなた:** 「8秒が1.8秒...4倍以上速くなった！しかもピーク時でも安定してる。」
+
+**あなた:** 「キャッシュが効いてるね。2回目のアクセスは0.5秒で表示される。」
+
+**Mika:** 「お店のオーナーさんから『最近サクサク動くね！』ってメッセージ来た！クレームはゼロ！」
+
+**Yuki:** 「パフォーマンスの改善は、ユーザーが一番体感しやすい改善なんだ。機能を増やさなくても、速くするだけで満足度が上がる。」
+
+**あなた:** 「一番効果があったのはデータベースのインデックスだったな。1つ追加しただけでAPIレスポンスが10倍速くなった。」
+
+**Yuki:** 「"推測するな、計測せよ"。この原則を忘れなければ、パフォーマンスは必ず改善できる。ところでさ...最近、あなたが面白いこと言ってなかった？」
+
+**あなた:** 「あ、そうだ！AIを使ってお店の紹介文を自動生成できたら、オーナーさんの負担が減ると思うんだけど...」
+
+**Mika:** 「AIチャットボットでお客さんの質問に自動で答えられたら、私の対応時間もすごく減る！」
+
+**Yuki:** 「時代の流れに乗るのは大事だね。次はAIとの共創を学ぼう。」
+
+---
+
+> **次のチャプター**: *Chapter 24: AIとの共創* — ShimaLinkにAI機能を導入。紹介文の自動生成、チャットボット、プロンプトエンジニアリングを学ぶ。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="23-performance-tuning" />
+
+<ChapterFaq chapterId="23-performance-tuning" />
+
+<SeriesNav current={23} />

@@ -1,0 +1,637 @@
+---
+title: "型という盾"
+subtitle: "TypeScriptで安全なコードを書く"
+description: "TypeScriptで安全なコードを書く。TypeScript・Type Safety・Interfacesを実践的なストーリーで学ぶチャプター「型という盾」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-07
+chapter: 7
+arc: "growth"
+arcName: "成長編"
+skills:
+  - { category: "programming", name: "TypeScript", level: "intro" }
+  - { category: "programming", name: "Type Safety", level: "intro" }
+  - { category: "programming", name: "Interfaces", level: "intro" }
+estimatedMinutes: 50
+prerequisites: ["06-javascript-power"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+ShimaLinkのダッシュボードは動き出した。しかし、ある朝、Yukiから焦ったメッセージが届いた。
+
+---
+
+**あなた:** 「やばい、ダッシュボードが真っ白になった...昨日の夜、ちょっとコード直しただけなのに。」
+
+**あなた:** 「エラーメッセージは？」
+
+**あなた:** 「"Cannot read properties of undefined (reading 'name')"って。意味分からん...」
+
+Yukiが画面を覗き込み、すぐに原因を見つけた。
+
+**Yuki:** 「ここ。`client.name` を参照してるけど、clientがundefinedになってる。APIのレスポンス形式が変わったのに、コード側が追随してない。」
+
+**あなた:** 「でも、前は動いてたんだよ！」
+
+**Yuki:** 「JavaScriptは"自由"な言語だから、間違った型のデータが来てもコードを書いてる時点では教えてくれない。実行するまでバグが分からないんだ。」
+
+**あなた:** 「じゃあ、どうすれば防げるんですか？」
+
+**Yuki:** 「TypeScript。JavaScriptに"型"という盾を加えた言語だよ。コードを書いている時点でミスを教えてくれる。」
+
+---
+
+**Yuki:** 「TypeScriptは"JavaScriptのスーパーセット"——つまり、今書いてるJavaScriptのコードはそのまま動く。そこに型の情報を足していくだけ。怖がることはないよ。」
+
+Yukiはターミナルを開き、TypeScriptのセットアップを始めた。ShimaLinkのコードをより安全にする旅が始まる。
+
+</StoryPanel>
+
+## なぜTypeScriptなのか
+
+あなたのバグは、JavaScriptの「自由さ」が裏目に出た典型例だ。TypeScriptはその自由に「型」という秩序をもたらす。
+
+> 「TypeScriptは交通ルールみたいなもの。なくても走れるけど、あった方が事故が減る。」——Yuki
+
+## JavaScriptの問題点
+
+```javascript
+// JavaScriptでは何でも代入できる
+let clientName = "海風テラス";
+clientName = 42;        // エラーにならない！
+clientName = { x: 1 };  // これもOK...
+
+// 関数の引数に何が入るか分からない
+function getClientInfo(client) {
+  return client.name; // clientの形が保証されない
+}
+
+getClientInfo("文字列");  // 実行時エラー
+getClientInfo(null);      // 実行時エラー
+```
+
+## TypeScriptが解決すること
+
+```typescript
+// TypeScriptでは型を明示する
+let clientName: string = "海風テラス";
+clientName = 42; // コンパイルエラー！「型'number'を型'string'に割り当てることはできません」
+
+// 関数の引数と戻り値の型を宣言
+function getClientInfo(client: { name: string }): string {
+  return client.name;
+}
+
+getClientInfo("文字列"); // コンパイルエラー！
+getClientInfo(null);     // コンパイルエラー！
+```
+
+## TypeScriptのセットアップ
+
+```bash
+# プロジェクトにTypeScriptを追加
+npm install -D typescript
+
+# 設定ファイルを生成
+npx tsc --init
+
+# .tsファイルをコンパイル
+npx tsc
+```
+
+### tsconfig.json の基本設定
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "strict": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*"]
+}
+```
+
+## TypeScript = JavaScript + 型
+
+| 特徴 | JavaScript | TypeScript |
+|------|-----------|------------|
+| 拡張子 | `.js` | `.ts` |
+| 型チェック | なし（実行時） | あり（コンパイル時） |
+| エラー発見 | 実行時 | コード記述時 |
+| 学習コスト | 低い | やや高い |
+| 既存JSコード | そのまま | そのまま動く |
+
+> **ポイント**: TypeScriptはJavaScriptのスーパーセット。既存のJSファイルの拡張子を`.ts`に変えるだけで始められます。型は段階的に追加できるので、一気に全部書き換える必要はありません。
+
+## 基本の型とアノテーション
+
+TypeScriptの核心は「この変数にはどんな値が入るか」を宣言すること。これを**型アノテーション**と呼ぶ。
+
+> 「型アノテーションは設計図の寸法。書いておけば、合わない部品を使おうとした瞬間に教えてくれる。」——Yuki
+
+## プリミティブ型
+
+```typescript
+// 文字列
+const clientName: string = "海風テラス";
+
+// 数値
+const monthlyVisits: number = 1250;
+
+// 真偽値
+const isActive: boolean = true;
+
+// null と undefined
+const deletedAt: null = null;
+let memo: undefined = undefined;
+```
+
+## 型推論 — 書かなくても分かる場合
+
+TypeScriptは代入された値から型を推論できます。
+
+```typescript
+// 型推論が働くので、型アノテーションは省略可能
+const name = "海風テラス";      // string と推論
+const visits = 1250;            // number と推論
+const active = true;            // boolean と推論
+
+// ただし、関数の引数には明示するのがベスト
+function greet(name: string): string {
+  return `こんにちは、${name}さん！`;
+}
+```
+
+## 配列の型
+
+```typescript
+// 書き方1: 型[]
+const clients: string[] = ["海風テラス", "首里そば太郎"];
+
+// 書き方2: Array<型>
+const visits: Array<number> = [1250, 890, 420];
+
+// オブジェクトの配列
+const clientData: { name: string; visits: number }[] = [
+  { name: "海風テラス", visits: 1250 },
+  { name: "首里そば太郎", visits: 890 }
+];
+```
+
+## オブジェクトの型
+
+```typescript
+// インラインで型を定義
+const client: {
+  name: string;
+  category: string;
+  visits: number;
+  isActive: boolean;
+} = {
+  name: "海風テラス",
+  category: "カフェ",
+  visits: 1250,
+  isActive: true
+};
+```
+
+## 関数の型
+
+```typescript
+// 引数と戻り値に型をつける
+function calculateTotal(prices: number[]): number {
+  return prices.reduce((sum, price) => sum + price, 0);
+}
+
+// アロー関数
+const formatClient = (name: string, visits: number): string => {
+  return `${name}: ${visits}回`;
+};
+
+// 戻り値がない関数は void
+function logMessage(message: string): void {
+  console.log(message);
+}
+```
+
+## Union型 — 複数の型を許容
+
+```typescript
+// string または number を受け付ける
+let id: string | number;
+id = "abc123";  // OK
+id = 42;        // OK
+id = true;      // エラー！
+
+// null許容型
+let phone: string | null = null;
+phone = "098-XXX-XXXX"; // OK
+```
+
+## リテラル型 — 特定の値のみ許容
+
+```typescript
+// 特定の文字列だけ許可
+type Category = "カフェ" | "飲食" | "花屋" | "雑貨";
+
+const clientCategory: Category = "カフェ";    // OK
+const invalid: Category = "レストラン";        // エラー！
+```
+
+## any と unknown
+
+```typescript
+// any: 型チェックを無効にする（非推奨）
+let data: any = "hello";
+data = 42;
+data.foo.bar; // エラーにならない（危険！）
+
+// unknown: anyの安全版（型チェックが必要）
+let input: unknown = "hello";
+// input.toUpperCase(); // エラー！型チェックが必要
+if (typeof input === "string") {
+  input.toUpperCase(); // OK（型が確認された）
+}
+```
+
+## まとめ
+
+| 型 | 説明 | 例 |
+|----|------|-----|
+| `string` | 文字列 | `"海風テラス"` |
+| `number` | 数値 | `1250` |
+| `boolean` | 真偽値 | `true` |
+| `string[]` | 文字列の配列 | `["a", "b"]` |
+| `A \| B` | Union型 | `string \| number` |
+| `void` | 戻り値なし | 関数の戻り値 |
+| `unknown` | 安全な不明型 | 外部データ |
+
+> **ポイント**: まずは関数の引数と戻り値に型をつけることから始めよう。それだけでバグの大半を防げます。
+
+## インターフェースと型エイリアス
+
+毎回オブジェクトの型をインラインで書くのは大変だ。TypeScriptには、型に名前をつけて再利用する方法が2つある。
+
+> 「interfaceはデータの"設計図"。チーム全員が同じ設計図を共有すれば、齟齬がなくなる。」——Yuki
+
+## interface — オブジェクトの設計図
+
+```typescript
+// ShimaLinkのクライアント型を定義
+interface Client {
+  name: string;
+  category: string;
+  monthlyVisits: number;
+  isActive: boolean;
+}
+
+// 使用する
+const mika: Client = {
+  name: "海風テラス",
+  category: "カフェ",
+  monthlyVisits: 1250,
+  isActive: true
+};
+
+// 必須プロパティが欠けるとエラー
+const invalid: Client = {
+  name: "テスト",
+  // エラー！ category, monthlyVisits, isActive が不足
+};
+```
+
+## オプショナルプロパティ（?）
+
+```typescript
+interface Client {
+  name: string;
+  category: string;
+  monthlyVisits: number;
+  isActive: boolean;
+  phone?: string;       // あってもなくてもOK
+  website?: string;     // あってもなくてもOK
+}
+
+const client: Client = {
+  name: "海風テラス",
+  category: "カフェ",
+  monthlyVisits: 1250,
+  isActive: true
+  // phone, website は省略可能
+};
+```
+
+## 読み取り専用（readonly）
+
+```typescript
+interface Client {
+  readonly id: string;  // 作成後は変更不可
+  name: string;
+  category: string;
+}
+
+const client: Client = {
+  id: "client-001",
+  name: "海風テラス",
+  category: "カフェ"
+};
+
+client.name = "新しい名前"; // OK
+client.id = "changed";     // エラー！readonlyプロパティは変更不可
+```
+
+## type エイリアス
+
+`type` キーワードでも型に名前をつけられます。
+
+```typescript
+// type エイリアス
+type ClientCategory = "カフェ" | "飲食" | "花屋" | "雑貨";
+
+type Client = {
+  name: string;
+  category: ClientCategory;
+  monthlyVisits: number;
+  isActive: boolean;
+};
+```
+
+## interface vs type
+
+| 特徴 | interface | type |
+|------|-----------|------|
+| オブジェクト型 | 得意 | 可能 |
+| Union型 | 不可 | `"a" \| "b"` |
+| 拡張 | `extends` | `&` |
+| 宣言マージ | 可能 | 不可 |
+| プリミティブの別名 | 不可 | 可能 |
+
+```typescript
+// interface の拡張（extends）
+interface BaseClient {
+  name: string;
+  category: string;
+}
+
+interface PremiumClient extends BaseClient {
+  monthlyFee: number;
+  supportLevel: "standard" | "priority";
+}
+
+// type の交差型（&）
+type BaseClient = {
+  name: string;
+  category: string;
+};
+
+type PremiumClient = BaseClient & {
+  monthlyFee: number;
+  supportLevel: "standard" | "priority";
+};
+```
+
+## 実践: ShimaLinkの型定義
+
+```typescript
+// types.ts — ShimaLinkの型定義ファイル
+interface Client {
+  readonly id: string;
+  name: string;
+  owner: string;
+  category: ClientCategory;
+  monthlyVisits: number;
+  isActive: boolean;
+  createdAt: string;
+  phone?: string;
+  website?: string;
+}
+
+type ClientCategory = "カフェ" | "飲食" | "花屋" | "雑貨" | "その他";
+
+// APIレスポンスの型
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+
+// 使用例
+async function fetchClients(): Promise<ApiResponse<Client[]>> {
+  const response = await fetch("/api/clients");
+  return response.json();
+}
+```
+
+## 関数の型定義
+
+```typescript
+// 関数の型をinterfaceで定義
+interface FormatFunction {
+  (client: Client): string;
+}
+
+const formatClient: FormatFunction = (client) => {
+  return `${client.name}（${client.category}）`;
+};
+```
+
+> **ポイント**: 迷ったら `interface` を使おう。オブジェクトの形を定義するのに最適で、チーム開発では「データの契約書」として機能します。Union型が必要なときだけ `type` を使いましょう。
+
+## ジェネリクスの基礎 — 汎用的な型
+
+APIレスポンスの型を定義するとき、データの中身はクライアント一覧だったり、予約一覧だったりする。毎回別の型を作るのは非効率だ。ここで**ジェネリクス**が登場する。
+
+> 「ジェネリクスは"型の変数"。中身は後から決めるけど、外側の構造は保証する。宅配ボックスみたいなものだね。」——Yuki
+
+## ジェネリクスとは
+
+型を引数として受け取る仕組みです。`<T>` のように書きます。
+
+```typescript
+// ジェネリクスなし → 型ごとに関数を作る必要がある
+function getFirstClient(arr: Client[]): Client {
+  return arr[0];
+}
+
+function getFirstNumber(arr: number[]): number {
+  return arr[0];
+}
+
+// ジェネリクスあり → 1つの関数でOK
+function getFirst<T>(arr: T[]): T {
+  return arr[0];
+}
+
+const firstClient = getFirst<Client>(clients);  // Client型
+const firstNumber = getFirst<number>([1, 2, 3]); // number型
+const firstString = getFirst(["a", "b"]);         // string型（推論）
+```
+
+## APIレスポンスで活用
+
+ShimaLinkのAPIは、どのエンドポイントも同じ形式でレスポンスを返す。中身だけが異なる。
+
+```typescript
+// ジェネリクスなAPIレスポンス型
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+  timestamp: string;
+}
+
+// クライアント一覧の取得
+async function fetchClients(): Promise<ApiResponse<Client[]>> {
+  const response = await fetch("/api/clients");
+  return response.json();
+}
+
+// 単一クライアントの取得
+async function fetchClient(id: string): Promise<ApiResponse<Client>> {
+  const response = await fetch(`/api/clients/${id}`);
+  return response.json();
+}
+
+// 予約一覧の取得
+interface Reservation {
+  id: string;
+  clientId: string;
+  date: string;
+  guestName: string;
+}
+
+async function fetchReservations(): Promise<ApiResponse<Reservation[]>> {
+  const response = await fetch("/api/reservations");
+  return response.json();
+}
+```
+
+## 制約つきジェネリクス（extends）
+
+ジェネリクスに制約を加えて、受け付ける型を限定できます。
+
+```typescript
+// T は必ず name プロパティを持つ
+function getName<T extends { name: string }>(item: T): string {
+  return item.name;
+}
+
+getName({ name: "海風テラス", visits: 1250 }); // OK
+getName({ title: "テスト" }); // エラー！nameプロパティがない
+```
+
+## よく使うユーティリティ型
+
+TypeScriptには便利な組み込みジェネリクス型があります。
+
+```typescript
+interface Client {
+  id: string;
+  name: string;
+  category: string;
+  visits: number;
+}
+
+// Partial<T> — すべてのプロパティをオプショナルに
+type ClientUpdate = Partial<Client>;
+// { id?: string; name?: string; category?: string; visits?: number }
+
+// Required<T> — すべてのプロパティを必須に
+type StrictClient = Required<Client>;
+
+// Pick<T, K> — 特定のプロパティだけ取り出す
+type ClientSummary = Pick<Client, "id" | "name">;
+// { id: string; name: string }
+
+// Omit<T, K> — 特定のプロパティを除外
+type NewClient = Omit<Client, "id">;
+// { name: string; category: string; visits: number }
+```
+
+### 実践的な使い方
+
+```typescript
+// 新規作成時はidが不要
+type CreateClientInput = Omit<Client, "id">;
+
+// 更新時は部分的な変更でOK
+type UpdateClientInput = Partial<Omit<Client, "id">>;
+
+async function createClient(input: CreateClientInput): Promise<Client> {
+  const response = await fetch("/api/clients", {
+    method: "POST",
+    body: JSON.stringify(input)
+  });
+  return response.json();
+}
+
+async function updateClient(
+  id: string,
+  input: UpdateClientInput
+): Promise<Client> {
+  const response = await fetch(`/api/clients/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(input)
+  });
+  return response.json();
+}
+```
+
+## まとめ
+
+| 概念 | 説明 | 例 |
+|------|------|-----|
+| `<T>` | 型の引数 | `function fn<T>(x: T): T` |
+| `extends` | 型の制約 | `<T extends { id: string }>` |
+| `Partial<T>` | 全プロパティをオプショナルに | 更新処理 |
+| `Pick<T, K>` | 特定のプロパティだけ抽出 | 一覧表示 |
+| `Omit<T, K>` | 特定のプロパティを除外 | 新規作成 |
+
+> **ポイント**: ジェネリクスは最初は難しく感じるかもしれないが、`ApiResponse<T>` のように「外枠は同じで中身が変わる」パターンでまず慣れよう。
+
+<StoryPanel variant="conclusion">
+
+ShimaLinkのコードベースにTypeScriptを導入してから1週間。あなたがコードを書いていると、VSCodeが赤い波線でエラーを教えてくれるようになった。
+
+```typescript
+// TypeScriptが事前に教えてくれる
+const client: Client = await fetchClient(id);
+client.nmae; // ← 赤い波線！「プロパティ'nmae'は型'Client'に存在しません。'name'ですか？」
+```
+
+---
+
+**あなた:** 「すげえ、タイポまで見つけてくれるの？前みたいに実行して初めて気づくんじゃなくて。」
+
+**Yuki:** 「でしょ？型があると、コードを書きながらバグを防げる。チームで開発するなら必須だよ。」
+
+**あなた:** 「interfaceでデータの形を定義すると、APIから返ってくるデータの構造も保証できるんですね。」
+
+**Yuki:** 「そう。でもね、今はまだフロントエンドの話だけ。クライアントが増えてきて、そろそろバックエンドが必要になる。」
+
+**あなた:** 「バックエンド？」
+
+**Yuki:** 「今、クライアントごとのデータは1つのJSONファイルに全部入ってる。でも、Mikaのカフェのデータと他のクライアントのデータを分けて管理する必要があるよね。それにはAPIが必要なんだ。」
+
+**あなた:** 「API...聞いたことはあるけど、実際に作るとなると。」
+
+**Yuki:** 「大丈夫。fetchで外部APIを使う方法はもう知ってる。今度は自分でAPIを作る側に回るだけだよ。」
+
+---
+
+> **次のチャプター**: *Chapter 8: APIという架け橋* — クライアントが増え、データの分離が必要に。RESTful APIの設計と構築を学ぶ。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="07-typescript-safety" />
+
+<ChapterFaq chapterId="07-typescript-safety" />
+
+<SeriesNav current={7} />

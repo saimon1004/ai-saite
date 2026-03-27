@@ -1,0 +1,58 @@
+[
+  {
+    "id": "ch07-help-01",
+    "question": "TypeScriptのファイルをブラウザで直接実行できない",
+    "answer": "ブラウザはTypeScript（`.ts`）を直接実行できません。JavaScriptに**コンパイル（変換）**する必要があります。\n\n```bash\n# TypeScriptコンパイラでJSに変換\nnpx tsc\n\n# 特定のファイルだけ変換\nnpx tsc src/app.ts\n\n# 監視モード（ファイル変更時に自動コンパイル）\nnpx tsc --watch\n```\n\n変換されたJSファイルは`outDir`（通常`dist/`）に出力されます。HTMLからは変換後の`.js`ファイルを読み込みます。\n\n**代替手段**: ViteやNext.jsなどのビルドツールを使えば、自動的にTSをコンパイルしてくれます。",
+    "tags": ["typescript", "compile", "browser"],
+    "category": "environment"
+  },
+  {
+    "id": "ch07-help-02",
+    "question": "「Type 'X' is not assignable to type 'Y'」エラーの意味",
+    "answer": "**型の不一致**を示すエラーです。TypeScriptが最も多く出すエラーの一つです。\n\n```typescript\n// 例: string型にnumber型を代入しようとした\nlet name: string = 42;\n// Error: Type 'number' is not assignable to type 'string'\n```\n\n**対処法**:\n1. 値の型を修正する\n2. 変数の型定義を見直す\n3. Union型で複数の型を許容する: `string | number`\n\n**よくあるケース**:\n- APIレスポンスの型が実際のデータと合っていない\n- null/undefinedが考慮されていない\n- オブジェクトのプロパティが足りない",
+    "tags": ["typescript", "error", "type-mismatch"],
+    "category": "syntax"
+  },
+  {
+    "id": "ch07-help-03",
+    "question": "interfaceとtypeのどちらを使えばいい？",
+    "answer": "**基本方針**: オブジェクトの形を定義するなら`interface`、それ以外は`type`。\n\n```typescript\n// interface: オブジェクトの形\ninterface Client {\n  name: string;\n  visits: number;\n}\n\n// type: Union型、プリミティブの別名\ntype Category = \"カフェ\" | \"飲食\" | \"花屋\";\ntype ID = string;\n```\n\n**interfaceが有利な場面**:\n- クラスのimplements\n- 宣言マージ（後から拡張可能）\n- エラーメッセージが読みやすい\n\n**typeが有利な場面**:\n- Union型やIntersection型\n- タプル型\n- 関数型の定義",
+    "tags": ["typescript", "interface", "type"],
+    "category": "concept"
+  },
+  {
+    "id": "ch07-help-04",
+    "question": "「Property 'X' does not exist on type 'Y'」の対処法",
+    "answer": "型定義に存在しないプロパティにアクセスしようとしています。\n\n```typescript\ninterface Client {\n  name: string;\n}\n\nconst client: Client = { name: \"海風テラス\" };\nclient.phone; // Error! Clientにphoneは定義されていない\n```\n\n**対処法**:\n1. **型定義にプロパティを追加する**\n```typescript\ninterface Client {\n  name: string;\n  phone?: string; // オプショナルで追加\n}\n```\n\n2. **タイポを修正する**（VSCodeが候補を表示してくれます）\n\n3. **型ガードを使う**（unknownからアクセスする場合）",
+    "tags": ["typescript", "error", "property"],
+    "category": "syntax"
+  },
+  {
+    "id": "ch07-help-05",
+    "question": "ジェネリクスの<T>が何を意味するのか分からない",
+    "answer": "`<T>`は**型の変数**（プレースホルダー）です。\n\n普通の変数が「値」を受け取るように、ジェネリクスは「型」を受け取ります。\n\n```typescript\n// 普通の関数: 値を受け取る\nfunction echo(value: string): string {\n  return value;\n}\n\n// ジェネリクス関数: 型も受け取る\nfunction echo<T>(value: T): T {\n  return value;\n}\n\n// 使うとき\necho<string>(\"hello\");   // T = string\necho<number>(42);         // T = number\necho(\"auto\");             // T = string（推論）\n```\n\n**例え**: 宅配ボックスの形は決まっているけど、中に何を入れるかは後から決める。`T`は「中身の種類」を後から指定する仕組みです。",
+    "tags": ["typescript", "generics"],
+    "category": "concept"
+  },
+  {
+    "id": "ch07-help-06",
+    "question": "strictモードを有効にしたらエラーが大量に出た",
+    "answer": "`strict: true`は複数の厳格チェックを一括で有効にします。段階的に対応しましょう。\n\n**strictに含まれるチェック**:\n- `strictNullChecks`: null/undefinedの厳格チェック\n- `noImplicitAny`: 暗黙のany禁止\n- `strictFunctionTypes`: 関数型の厳格チェック\n\n**段階的な対応方法**:\n```json\n// tsconfig.json で個別に有効化\n{\n  \"compilerOptions\": {\n    \"strict\": false,\n    \"strictNullChecks\": true,\n    \"noImplicitAny\": true\n  }\n}\n```\n\nまず`noImplicitAny`から始めて、慣れたら`strictNullChecks`を追加するのがおすすめです。",
+    "tags": ["typescript", "strict", "config"],
+    "category": "environment"
+  },
+  {
+    "id": "ch07-help-07",
+    "question": "既存のJavaScriptプロジェクトにTypeScriptを導入するには？",
+    "answer": "一気に全部書き換える必要はありません。段階的に導入できます。\n\n**ステップ1**: TypeScriptをインストール\n```bash\nnpm install -D typescript\nnpx tsc --init\n```\n\n**ステップ2**: `allowJs: true` を設定\n```json\n{\n  \"compilerOptions\": {\n    \"allowJs\": true,\n    \"checkJs\": false\n  }\n}\n```\n\n**ステップ3**: 1ファイルずつ`.js`を`.ts`にリネーム\n\n**ステップ4**: 型アノテーションを追加\n\n**コツ**: 新しく作るファイルは最初から`.ts`で作り、既存ファイルは時間があるときに順次変換する。",
+    "tags": ["typescript", "migration", "javascript"],
+    "category": "environment"
+  },
+  {
+    "id": "ch07-help-08",
+    "question": "Union型のnarrowingとは？",
+    "answer": "**Narrowing（型の絞り込み）**は、Union型から特定の型を確定する処理です。\n\n```typescript\nfunction display(value: string | number) {\n  // ここでは value は string | number\n  \n  if (typeof value === \"string\") {\n    // ここでは value は string と確定\n    console.log(value.toUpperCase());\n  } else {\n    // ここでは value は number と確定\n    console.log(value.toFixed(2));\n  }\n}\n```\n\n**narrowingの方法**:\n- `typeof`: プリミティブ型の判定\n- `instanceof`: クラスの判定\n- `in`: プロパティの存在チェック\n- `===`: リテラル型の判定\n\nTypeScriptは条件分岐の中で自動的に型を絞り込んでくれます。",
+    "tags": ["typescript", "union", "narrowing"],
+    "category": "concept"
+  }
+]

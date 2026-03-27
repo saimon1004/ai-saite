@@ -1,0 +1,605 @@
+---
+title: "コンテナの世界"
+subtitle: "環境の違いに振り回されない開発を手に入れる"
+description: "環境の違いに振り回されない開発を手に入れる。Docker・コンテナ化・Docker Composeを実践的なストーリーで学ぶチャプター「コンテナの世界」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-16
+chapter: 16
+arc: "scale"
+arcName: "拡大編"
+skills:
+  - { category: "devops", name: "Docker", level: "intro" }
+  - { category: "devops", name: "コンテナ化", level: "intro" }
+  - { category: "devops", name: "Docker Compose", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["15-security-audit"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+セキュリティ監査を乗り越えたShimaLinkは、今や沖縄県内で50を超えるクライアントを抱える成長中のプラットフォームになっていた。
+
+しかし、成長は新しい問題を連れてくる。
+
+---
+
+**Mika:** 「あの、予約フォームの日付がおかしくて...昨日まで動いてたんですけど。」
+
+**あなた:** 「え？こっちのPCでは普通に動いてるよ？」
+
+あなたは自分のマシンで確認する。確かに正常に動いている。しかし、本番環境にデプロイしたバージョンではバグが発生していた。
+
+**あなた:** 「ローカルでは動くのに、本番では動かない...何が違うんだろう？」
+
+**あなた:** 「Node.jsのバージョンが違うみたいだ。本番は14で、うちのPCは18だった。」
+
+---
+
+**Yuki:** 「出たね、"It works on my machine" 問題。開発者なら誰もが経験する古典的な悩みだよ。」
+
+**あなた:** 「全員の環境を揃えるのって、そんなに大変なんですか？」
+
+**Yuki:** 「OSのバージョン、ライブラリのバージョン、環境変数...全部揃えるのは現実的じゃない。だから、"環境ごとアプリに同梱する" という発想が生まれたんだ。」
+
+**あなた:** 「環境ごと同梱？」
+
+**Yuki:** 「そう。**Docker（ドッカー）** というツールを使えば、アプリと動作環境をまるごとパッケージにできる。どのマシンで動かしても、まったく同じ結果が得られるんだ。」
+
+---
+
+「引っ越しの荷物みたいなものだよ」とYukiは続けた。「家具をバラバラに送ると組み立て方を忘れるけど、部屋ごと運べたら完璧でしょ？Dockerはそれをソフトウェアでやるんだ。」
+
+ShimaLinkの"環境問題"を解決する旅が始まる。
+
+</StoryPanel>
+
+## なぜコンテナが必要なのか
+
+> 「"自分のマシンでは動くんですけど..."は、エンジニア界の定番言い訳だよ。」 ——Yuki
+
+## 「環境の違い」という悪夢
+
+開発者のPCと本番サーバーでは、さまざまな違いがあります。
+
+| 項目 | 開発環境 | 本番環境 |
+|------|---------|---------|
+| OS | macOS 14 | Ubuntu 22.04 |
+| Node.js | v18.17.0 | v14.21.0 |
+| データベース | SQLite | PostgreSQL |
+| 環境変数 | `.env`ファイル | サーバー設定 |
+
+これらの違いが、予期しないバグの原因になります。
+
+## 従来の解決策とその限界
+
+### 仮想マシン（VM）
+
+仮想マシンは、OS全体をエミュレーションする技術です。
+
+```
+┌─────────────────────────────┐
+│  アプリケーション              │
+│  ライブラリ・依存関係           │
+│  ゲストOS（Ubuntu等）          │
+│  ハイパーバイザー              │
+│  ホストOS（macOS等）           │
+│  ハードウェア                  │
+└─────────────────────────────┘
+```
+
+- 起動に数分かかる
+- ディスク容量を大量に消費（数GB〜数十GB）
+- リソースのオーバーヘッドが大きい
+
+### コンテナ
+
+コンテナは、OSのカーネルを共有し、アプリの実行環境だけを隔離します。
+
+```
+┌────────┐ ┌────────┐ ┌────────┐
+│ アプリA │ │ アプリB │ │ アプリC │
+│ 依存関係│ │ 依存関係│ │ 依存関係│
+├────────┴─┴────────┴─┴────────┤
+│     コンテナランタイム（Docker）   │
+│     ホストOS                    │
+│     ハードウェア                  │
+└─────────────────────────────────┘
+```
+
+- 起動は数秒
+- 軽量（数十MB〜数百MB）
+- 高速でリソース効率が良い
+
+## コンテナの3つのメリット
+
+### 1. 環境の再現性
+同じコンテナイメージを使えば、どのマシンでもまったく同じ環境が再現されます。
+
+### 2. 分離性
+コンテナ同士は隔離されているため、あるアプリの問題が他に波及しません。
+
+### 3. ポータビリティ
+「一度作れば、どこでも動く」——ローカルPC、テストサーバー、本番環境、クラウド、すべてで同じコンテナが動きます。
+
+## ShimaLinkでの活用シーン
+
+```
+開発者のPC   →  テスト環境  →  本番環境
+     │              │             │
+  同じDockerイメージを使用
+     │              │             │
+  結果が同じ！    結果が同じ！   結果が同じ！
+```
+
+> **Yuki:** 「引っ越しの荷物を考えてみて。家具をバラバラに送ると配置がズレるでしょ？でも部屋ごとコンテナ船で運べたら、配置は完璧。Dockerは、ソフトウェアの"コンテナ船"なんだよ。」
+
+## ポイント
+
+- 「自分のマシンでは動く」問題はコンテナで解決できる
+- コンテナは仮想マシンより軽量で高速
+- 環境の再現性・分離性・ポータビリティが3大メリット
+- 開発・テスト・本番の環境差異をなくすことが目的
+
+## Docker の基本 — イメージ、コンテナ、Dockerfile
+
+> 「Docker には3つの重要な概念がある。レシピ、料理、キッチンだよ。」 ——Yuki
+
+## Docker の3つの基本概念
+
+| 概念 | 比喩 | 説明 |
+|------|------|------|
+| **Dockerfile** | レシピ | イメージの作り方を書いた設計図 |
+| **イメージ** | 料理の完成品 | 実行に必要なすべてが入ったパッケージ |
+| **コンテナ** | 実際に食べる一皿 | イメージから起動した実行インスタンス |
+
+## Dockerfile を書いてみよう
+
+ShimaLinkのWebアプリ用Dockerfileを作成します。
+
+```dockerfile
+# ベースイメージ — Node.js 18のAlpine Linux版（軽量）
+FROM node:18-alpine
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# 依存関係ファイルを先にコピー（キャッシュ活用）
+COPY package.json package-lock.json ./
+
+# 依存関係をインストール
+RUN npm ci
+
+# アプリケーションコードをコピー
+COPY . .
+
+# アプリが使うポートを宣言
+EXPOSE 3000
+
+# アプリを起動するコマンド
+CMD ["npm", "start"]
+```
+
+### 各命令の意味
+
+| 命令 | 役割 |
+|------|------|
+| `FROM` | ベースとなるイメージを指定する |
+| `WORKDIR` | コンテナ内の作業ディレクトリを設定する |
+| `COPY` | ホストのファイルをコンテナにコピーする |
+| `RUN` | ビルド時にコマンドを実行する |
+| `EXPOSE` | コンテナが使用するポートを宣言する |
+| `CMD` | コンテナ起動時に実行するコマンドを指定する |
+
+## イメージをビルドする
+
+```bash
+# Dockerfileからイメージをビルド
+docker build -t shimalink-web:1.0 .
+
+# -t : タグ（名前:バージョン）を付ける
+# .  : Dockerfileがあるディレクトリ（カレント）
+```
+
+ビルドの流れ:
+```
+Dockerfile → docker build → イメージ（shimalink-web:1.0）
+```
+
+## コンテナを起動する
+
+```bash
+# イメージからコンテナを起動
+docker run -d -p 3000:3000 --name shimalink shimalink-web:1.0
+
+# -d     : バックグラウンドで実行（デタッチモード）
+# -p     : ホストの3000番ポートをコンテナの3000番に接続
+# --name : コンテナに名前をつける
+```
+
+## よく使う Docker コマンド
+
+```bash
+# 実行中のコンテナ一覧
+docker ps
+
+# すべてのコンテナ一覧（停止中も含む）
+docker ps -a
+
+# コンテナのログを表示
+docker logs shimalink
+
+# コンテナを停止
+docker stop shimalink
+
+# コンテナを削除
+docker rm shimalink
+
+# イメージの一覧
+docker images
+
+# イメージを削除
+docker rmi shimalink-web:1.0
+```
+
+## .dockerignore で不要ファイルを除外する
+
+`.gitignore` と同様に、コンテナに含めたくないファイルを指定します。
+
+```
+node_modules
+.git
+.env
+*.log
+.DS_Store
+```
+
+> **Yuki:** 「`node_modules` をコンテナに入れちゃうと、イメージが巨大になるし、OS依存のバイナリが混入する可能性がある。コンテナ内で `npm ci` し直すのが正解だよ。」
+
+## ポイント
+
+- Dockerfileはイメージの設計図、イメージはパッケージ、コンテナは実行インスタンス
+- `FROM` でベースイメージを選び、`COPY` と `RUN` で環境を構築する
+- `docker build` でイメージを作り、`docker run` でコンテナを起動する
+- `.dockerignore` で不要なファイルをコンテナから除外する
+
+## Docker Compose — 複数コンテナのオーケストレーション
+
+> 「コンテナ1つじゃ足りない。Web、API、DBをまとめて管理するのがComposeだよ。」 ——Yuki
+
+## なぜ Docker Compose が必要？
+
+ShimaLinkは複数のサービスで構成されています。
+
+```
+┌──────────┐   ┌──────────┐   ┌──────────┐
+│  Web      │──→│  API     │──→│  DB      │
+│ (React)   │   │ (Node)   │   │(Postgres)│
+│ Port:3000 │   │ Port:4000│   │ Port:5432│
+└──────────┘   └──────────┘   └──────────┘
+```
+
+これらを個別に `docker run` するのは面倒でミスも起きやすい。Docker Composeなら、1つのファイルですべてを定義・管理できます。
+
+## docker-compose.yml を書く
+
+```yaml
+version: "3.8"
+
+services:
+  # データベース
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: shimalink
+      POSTGRES_USER: shimalink_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # APIサーバー
+  api:
+    build: ./api
+    environment:
+      DATABASE_URL: postgres://shimalink_user:${DB_PASSWORD}@db:5432/shimalink
+      NODE_ENV: production
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+
+  # Webフロントエンド
+  web:
+    build: ./web
+    environment:
+      REACT_APP_API_URL: http://api:4000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  db-data:
+```
+
+### 各セクションの解説
+
+| セクション | 役割 |
+|-----------|------|
+| `services` | 各コンテナ（サービス）の定義 |
+| `image` | Docker Hubの既存イメージを使う |
+| `build` | Dockerfileからビルドする |
+| `environment` | 環境変数を設定する |
+| `volumes` | データの永続化（コンテナを消してもデータが残る） |
+| `ports` | ホスト:コンテナのポートマッピング |
+| `depends_on` | 起動順序の依存関係を指定する |
+
+## Docker Compose の基本コマンド
+
+```bash
+# すべてのサービスをビルドして起動
+docker compose up -d
+
+# サービスの状態を確認
+docker compose ps
+
+# ログを表示（全サービス）
+docker compose logs
+
+# 特定サービスのログを表示
+docker compose logs api
+
+# サービスを停止
+docker compose down
+
+# ボリュームも含めて完全削除
+docker compose down -v
+```
+
+## サービス間の通信
+
+Docker Composeでは、**サービス名がそのままホスト名**として使えます。
+
+```javascript
+// api/src/db.js
+// "db" はComposeのサービス名
+const connectionString = "postgres://user:pass@db:5432/shimalink";
+//                                            ^^
+//                               サービス名がホスト名になる
+```
+
+これにより、IPアドレスをハードコードする必要がなくなります。
+
+## 開発用の設定を追加する
+
+開発時にはホットリロードが欲しいので、ボリュームマウントを使います。
+
+```yaml
+# docker-compose.override.yml（開発用の上書き設定）
+services:
+  api:
+    volumes:
+      - ./api/src:/app/src    # コード変更を即反映
+    environment:
+      NODE_ENV: development
+    command: npm run dev       # 開発用コマンドに変更
+
+  web:
+    volumes:
+      - ./web/src:/app/src
+    environment:
+      NODE_ENV: development
+```
+
+> **Yuki:** 「`docker-compose.override.yml` は自動的に読み込まれるから、開発と本番で設定を分けられるんだ。」
+
+## ポイント
+
+- Docker Composeは複数コンテナをまとめて管理するツール
+- `docker-compose.yml` に全サービスの定義を書く
+- サービス名がコンテナ間のホスト名として使える
+- `depends_on` で起動順序を制御する
+- `volumes` でデータを永続化する
+- `docker compose up -d` ですべて起動、`docker compose down` で停止
+
+## コンテナのベストプラクティス
+
+> 「動くDockerfileを書くのは簡単。良いDockerfileを書くのは技術だよ。」 ——Yuki
+
+## 1. イメージを軽量に保つ
+
+### Alpine ベースイメージを使う
+
+```dockerfile
+# 悪い例: フルイメージ（約900MB）
+FROM node:18
+
+# 良い例: Alpineイメージ（約120MB）
+FROM node:18-alpine
+```
+
+| ベースイメージ | サイズ |
+|-------------|--------|
+| `node:18` | ~900MB |
+| `node:18-slim` | ~200MB |
+| `node:18-alpine` | ~120MB |
+
+### マルチステージビルド
+
+ビルドに必要なツールを最終イメージに含めないテクニックです。
+
+```dockerfile
+# ステージ1: ビルド
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# ステージ2: 本番用（ビルド結果だけをコピー）
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY package.json ./
+EXPOSE 3000
+CMD ["node", "dist/server.js"]
+```
+
+この手法でイメージサイズを大幅に削減できます。
+
+## 2. レイヤーキャッシュを活用する
+
+Dockerは各命令をレイヤーとしてキャッシュします。**変更頻度の低いものを先に書く**のがコツです。
+
+```dockerfile
+# 良い例: 依存関係を先にインストール
+COPY package.json package-lock.json ./
+RUN npm ci
+# ↑ package.jsonが変わらなければキャッシュが使われる
+
+COPY . .
+# ↑ ソースコードの変更はここだけ再実行される
+```
+
+```dockerfile
+# 悪い例: すべてを一度にコピー
+COPY . .
+RUN npm ci
+# ↑ ソースコードが1行変わっただけで npm ci も再実行される
+```
+
+## 3. セキュリティを意識する
+
+### root ユーザーで実行しない
+
+```dockerfile
+# ユーザーを作成して切り替える
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+```
+
+### 機密情報をイメージに含めない
+
+```dockerfile
+# 悪い例: パスワードをDockerfileに書く
+ENV DB_PASSWORD=mysecretpassword
+
+# 良い例: 実行時に環境変数で渡す
+# docker run -e DB_PASSWORD=xxx shimalink-web
+```
+
+### 最新のベースイメージを使う
+
+```dockerfile
+# バージョンを明示する（latestは避ける）
+FROM node:18.19-alpine
+```
+
+## 4. ヘルスチェックを設定する
+
+コンテナが正常に動いているか自動チェックする仕組みです。
+
+```dockerfile
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+  CMD wget -qO- http://localhost:3000/health || exit 1
+```
+
+```yaml
+# docker-compose.yml での設定
+services:
+  api:
+    build: ./api
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+```
+
+## 5. ログは標準出力に出す
+
+```javascript
+// 悪い例: ファイルに書く
+fs.writeFileSync('/var/log/app.log', message);
+
+// 良い例: 標準出力に出す
+console.log(message);
+```
+
+Dockerはコンテナの標準出力を自動収集するため、`docker logs` で確認できます。
+
+## ShimaLink の最終的な構成
+
+```
+shimalink/
+├── web/
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   └── src/
+├── api/
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   └── src/
+├── docker-compose.yml
+├── docker-compose.override.yml
+└── .env
+```
+
+> **Yuki:** 「ベストプラクティスを最初から完璧にする必要はない。まず動かして、少しずつ改善していけばいいんだよ。」
+
+## ポイント
+
+- Alpineベースイメージとマルチステージビルドでイメージを軽量化する
+- Dockerfileの命令順を工夫してレイヤーキャッシュを活用する
+- rootユーザーを避け、機密情報をイメージに含めない
+- ヘルスチェックでコンテナの死活監視を行う
+- ログは標準出力に出してDockerに収集させる
+
+<StoryPanel variant="conclusion">
+
+ShimaLinkの全サービスがDockerコンテナ化された。開発環境、テスト環境、本番環境——すべてが同じDockerイメージから起動される。
+
+```bash
+$ docker compose up
+[+] Running 3/3
+ ✔ Container shimalink-db       Started
+ ✔ Container shimalink-api      Started
+ ✔ Container shimalink-web      Started
+```
+
+---
+
+**あなた:** 「これ、新しいメンバーが入ってきても `docker compose up` するだけで開発始められるってこと？」
+
+**Yuki:** 「そう。README に手順をダラダラ書く必要もない。環境構築に丸一日かかる時代は終わったんだよ。」
+
+**Mika:** 「あの予約フォームのバグ、もう起きなくなりましたね！」
+
+**あなた:** 「環境の違いという変数が消えたから、コードの問題だけに集中できるようになりました。」
+
+---
+
+**Yuki:** 「コンテナ化は最初のステップ。でもまだ課題がある。今は手動でビルドして手動でデプロイしてるよね？」
+
+**あなた:** 「うん...正直めんどくさい。デプロイのたびにヒヤヒヤするし。」
+
+**Yuki:** 「だったら次は、コードをプッシュしたら自動でテストしてデプロイする仕組みを作ろう。CI/CDパイプラインっていうんだけど——」
+
+---
+
+> **次のチャプター**: *Chapter 17: 自動化の流れ* — 手動デプロイの恐怖から解放される。GitHub Actionsで自動テスト・自動デプロイのパイプラインを構築する。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="16-container-world" />
+
+<ChapterFaq chapterId="16-container-world" />
+
+<SeriesNav current={16} />

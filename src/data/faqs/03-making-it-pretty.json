@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch03-help-01",
+    "question": "Flexboxで子要素が横並びにならない",
+    "answer": "`display: flex` が**親要素**に指定されているか確認してください：\n\n```css\n/* 間違い：子要素に指定している */\n.item { display: flex; }\n\n/* 正しい：親要素に指定 */\n.container { display: flex; }\n```\n\nその他のチェックポイント：\n- 子要素の `width: 100%` が原因で1行に1つしか入らないことがある\n- `flex-direction: column` が指定されていると縦並びになる\n- 開発者ツールで親要素を選択すると、Flexboxのガイドが表示される",
+    "tags": ["flexbox", "layout", "display"],
+    "lessonSlug": "01-flexbox",
+    "category": "display"
+  },
+  {
+    "id": "ch03-help-02",
+    "question": "FlexboxとGridのどちらを使えばいいかわからない",
+    "answer": "シンプルな判断基準：\n\n| 状況 | 選択 |\n|------|------|\n| 要素を**一方向**に並べる | Flexbox |\n| **行と列**の両方を制御する | Grid |\n| ナビゲーション | Flexbox |\n| カードの一覧表示 | Grid |\n| ヘッダー内のレイアウト | Flexbox |\n| ページ全体の骨組み | Grid |\n\n**迷ったら**: 「行だけ？」→ Flex、「行と列？」→ Grid\n\n実際のプロジェクトでは、両方を組み合わせて使います。ページ全体はGrid、コンポーネント内部はFlexbox、という使い分けが多いです。",
+    "tags": ["flexbox", "grid", "layout"],
+    "lessonSlug": "02-css-grid",
+    "category": "concept"
+  },
+  {
+    "id": "ch03-help-03",
+    "question": "CSS Gridの列数が期待通りにならない",
+    "answer": "よくある原因：\n\n**1. コンテナの幅が足りない**\n```css\n/* minmax の最小値より幅が狭いと1列になる */\ngrid-template-columns: repeat(auto-fit, minmax(280px, 1fr));\n/* コンテナが560px未満なら2列にならない */\n```\n\n**2. auto-fill と auto-fit の違い**\n```css\n/* auto-fill: 空のカラムも確保される */\n/* auto-fit: コンテンツがある分だけ伸びる */\nrepeat(auto-fit, minmax(280px, 1fr))  /* 通常はこちらを使う */\n```\n\n**3. 子要素に幅が指定されている**\n```css\n/* Grid の子要素には width を指定しない */\n.card { width: 300px; }  /* これが邪魔している可能性 */\n```\n\n開発者ツールでGrid コンテナを選択すると、グリッドラインが可視化されます。",
+    "tags": ["grid", "layout", "columns"],
+    "lessonSlug": "02-css-grid",
+    "category": "display"
+  },
+  {
+    "id": "ch03-help-04",
+    "question": "hoverエフェクトが動かない",
+    "answer": "以下を確認してください：\n\n**1. `:hover` の書き方**\n```css\n/* 正しい */\n.card:hover { transform: translateY(-4px); }\n\n/* 間違い（スペースがある） */\n.card :hover { ... }  /* 子要素のhoverになってしまう */\n```\n\n**2. transition が元の状態に書いてあるか**\n```css\n/* 元の状態に transition を書く */\n.card {\n  transform: translateY(0);\n  transition: transform 0.2s ease;  /* ← ここ */\n}\n\n/* hover 状態 */\n.card:hover {\n  transform: translateY(-4px);\n}\n```\n\n**3. スマホではhoverが効かない**\nタッチデバイスには `:hover` は不安定です。重要な情報はhoverに依存させないようにしましょう。",
+    "tags": ["css", "hover", "transition", "animation"],
+    "lessonSlug": "04-component-design",
+    "category": "display"
+  },
+  {
+    "id": "ch03-help-05",
+    "question": "CSS変数が反映されない",
+    "answer": "CSS変数（カスタムプロパティ）のチェックポイント：\n\n**1. `:root` で定義しているか**\n```css\n:root {\n  --color-primary: #1a5276;\n}\n```\n\n**2. `var()` で参照しているか**\n```css\n/* 正しい */\ncolor: var(--color-primary);\n\n/* 間違い */\ncolor: --color-primary;\n```\n\n**3. ハイフン2つで始まっているか**\n```css\n/* 正しい */\n--color-primary: #1a5276;\n\n/* 間違い（ハイフン1つ） */\n-color-primary: #1a5276;\n```\n\n**4. フォールバック値を設定できる**\n```css\ncolor: var(--color-primary, #333);\n/* 変数が未定義なら #333 が使われる */\n```",
+    "tags": ["css", "variables", "custom-properties"],
+    "lessonSlug": "03-typography-color",
+    "category": "syntax"
+  },
+  {
+    "id": "ch03-help-06",
+    "question": "背景画像が表示されない",
+    "answer": "よくある原因と解決方法：\n\n**1. パスが間違っている**\n```css\n/* HTMLファイルからの相対パス */\nbackground-image: url('images/cafe-hero.jpg');\n\n/* CSSファイルからの相対パス */\nbackground-image: url('../images/cafe-hero.jpg');\n```\n\n**2. 要素に高さがない**\n```css\n.hero {\n  background-image: url('hero.jpg');\n  /* 中身がないと高さが0になる */\n  height: 400px;  /* 高さを指定 */\n}\n```\n\n**3. background-size が未設定**\n```css\n.hero {\n  background-image: url('hero.jpg');\n  background-size: cover;    /* 全体を覆う */\n  background-position: center; /* 中心を表示 */\n}\n```\n\n**4. ファイル名の大文字小文字が違う**\n`Hero.jpg` と `hero.jpg` は別のファイルとして扱われます。",
+    "tags": ["css", "background", "image"],
+    "lessonSlug": "04-component-design",
+    "category": "display"
+  },
+  {
+    "id": "ch03-help-07",
+    "question": "flexの値（flex: 1 1 300px）の意味がわからない",
+    "answer": "`flex` は3つの値のショートハンドです：\n\n```css\nflex: [flex-grow] [flex-shrink] [flex-basis];\n```\n\n| 値 | 意味 | 例 |\n|---|---|---|\n| `flex-grow` | 余白があるとき伸びる比率 | `1` = 伸びる、`0` = 伸びない |\n| `flex-shrink` | 足りないとき縮む比率 | `1` = 縮む、`0` = 縮まない |\n| `flex-basis` | 基準サイズ | `300px`, `auto` |\n\n**よく使うパターン**:\n```css\nflex: 1;          /* 均等に伸縮 */\nflex: 0 1 300px;  /* 伸びない、縮む、基準300px */\nflex: 1 1 0;      /* 均等分割（basisを0に） */\n```",
+    "tags": ["flexbox", "flex", "layout"],
+    "lessonSlug": "01-flexbox",
+    "category": "syntax"
+  },
+  {
+    "id": "ch03-help-08",
+    "question": "フォントが反映されない（Google Fontsの使い方）",
+    "answer": "Google Fontsを使うには2ステップ必要です：\n\n**Step 1: HTMLの`<head>`に読み込みリンクを追加**\n```html\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link href=\"https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap\" rel=\"stylesheet\">\n```\n\n**Step 2: CSSで指定**\n```css\nbody {\n  font-family: 'Noto Sans JP', sans-serif;\n}\n```\n\n**注意点**:\n- `<link>` タグは自分の `style.css` より**前**に記述する\n- フォント名のスペルが完全に一致しているか確認\n- `wght@400;700` で必要なウェイトだけ読み込む（全部入れると重い）",
+    "tags": ["css", "fonts", "google-fonts"],
+    "lessonSlug": "03-typography-color",
+    "category": "display"
+  },
+  {
+    "id": "ch03-help-09",
+    "question": "box-shadowの書き方がわからない",
+    "answer": "`box-shadow` の構文：\n\n```css\nbox-shadow: [水平] [垂直] [ぼかし] [広がり] [色];\n```\n\n| 値 | 意味 |\n|---|---|\n| 水平オフセット | 正=右、負=左 |\n| 垂直オフセット | 正=下、負=上 |\n| ぼかし半径 | 大きいほどぼやける |\n| 広がり | 影のサイズ調整（省略可） |\n\n**よく使うパターン**:\n```css\n/* 軽い影（カード） */\nbox-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n\n/* ホバー時のやや強い影 */\nbox-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);\n\n/* 内側の影 */\nbox-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);\n```\n\n`rgba` の最後の値（0.1 や 0.15）が透明度です。小さいほど薄い影になります。",
+    "tags": ["css", "shadow", "design"],
+    "lessonSlug": "04-component-design",
+    "category": "syntax"
+  },
+  {
+    "id": "ch03-help-10",
+    "question": "object-fit: cover って何？",
+    "answer": "画像を指定サイズに収める方法を制御するプロパティです：\n\n| 値 | 動作 |\n|---|---|\n| `cover` | アスペクト比を保ちつつ、領域を完全に覆う（はみ出る部分は切れる） |\n| `contain` | アスペクト比を保ちつつ、領域に収まるように縮小 |\n| `fill` | 引き伸ばして領域を埋める（歪む可能性あり） |\n\n```css\n.card-image {\n  width: 100%;\n  height: 200px;\n  object-fit: cover;  /* 高さ200pxに切り抜かれる */\n}\n```\n\n**よくある使い方**: カードの画像を統一の高さで表示したいとき。元画像のサイズがバラバラでも、`cover` なら綺麗に揃います。",
+    "tags": ["css", "image", "object-fit"],
+    "lessonSlug": "04-component-design",
+    "category": "syntax"
+  }
+]

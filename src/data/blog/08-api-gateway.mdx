@@ -1,0 +1,664 @@
+---
+title: "APIという架け橋"
+subtitle: "フロントエンドとバックエンドをつなぐ"
+description: "フロントエンドとバックエンドをつなぐ。REST API・JSON・HTTP Methods・API Designを実践的なストーリーで学ぶチャプター「APIという架け橋」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-08
+chapter: 8
+arc: "growth"
+arcName: "成長編"
+skills:
+  - { category: "web-fundamentals", name: "REST API", level: "intro" }
+  - { category: "web-fundamentals", name: "JSON", level: "intro" }
+  - { category: "web-fundamentals", name: "HTTP Methods", level: "intro" }
+  - { category: "programming", name: "API Design", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["07-typescript-safety"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+ShimaLinkのクライアントが5件に増えた。嬉しい悲鳴だが、新たな問題が浮上した。
+
+---
+
+**あなた:** 「ヤバい...Mikaさんのデータを編集してたら、他のクライアントのデータも一緒に壊れちゃった。」
+
+**あなた:** 「え？全部同じJSONファイルに入ってるから？」
+
+**あなた:** 「そう...1つのファイルに全クライアントのデータが入ってて、うっかり構造を崩しちゃって。」
+
+Yukiがため息をつく。
+
+**Yuki:** 「これはもう限界だね。フロントエンドから直接JSONファイルを読み書きする方式じゃ、クライアントが増えるほどリスクが上がる。」
+
+**あなた:** 「じゃあ、どうするんですか？」
+
+**Yuki:** 「APIを作る。フロントエンドとデータの間に"架け橋"を置くんだ。この架け橋がルールに従ってデータを出し入れしてくれる。」
+
+---
+
+**Yuki:** 「レストランで例えると、お客さんがキッチンに直接入って料理を作るのは危険でしょ？ウェイター（API）を通じて注文し、料理を受け取る。それと同じ。」
+
+**あなた:** 「APIっていうと、天気予報とかのAPIを使ったことはあるけど...自分で作るってこと？」
+
+**Yuki:** 「そう。まずはAPIとは何か、HTTPメソッド、そしてJSON形式について理解しよう。それから実際にShimaLink用のAPIを設計する。」
+
+あなたはノートを開いた。WebアプリのバックエンドとフロントエンドをつなぐAPI——その仕組みを学ぶ時間だ。
+
+</StoryPanel>
+
+## APIとは何か
+
+APIは "Application Programming Interface" の略。ソフトウェア同士が会話するための「窓口」だ。
+
+> 「APIはレストランのウェイター。お客さん（フロントエンド）が注文（リクエスト）を出し、キッチン（サーバー）から料理（レスポンス）を受け取る。直接キッチンに入る必要はない。」——Yuki
+
+## なぜAPIが必要か
+
+ShimaLinkの現状の問題を整理しよう。
+
+```
+【Before: APIなし】
+フロントエンド → 直接JSONファイルを読み書き
+問題: 同時アクセスで壊れる、データ形式がバラバラ、セキュリティなし
+
+【After: APIあり】
+フロントエンド → API → データ保存
+利点: ルールが統一、データの整合性、セキュリティ
+```
+
+## Web APIの基本構造
+
+```
+クライアント                    サーバー
+(ブラウザ)                    (バックエンド)
+    |                            |
+    |   HTTPリクエスト            |
+    | =========================> |
+    |   GET /api/clients         |
+    |                            |
+    |   HTTPレスポンス            |
+    | <========================= |
+    |   { "data": [...] }        |
+    |                            |
+```
+
+## REST API
+
+REST（Representational State Transfer）は、Web APIの設計スタイルの一つです。
+
+### RESTの原則
+
+| 原則 | 説明 | ShimaLinkでの例 |
+|------|------|----------------|
+| リソース指向 | URLはリソース（データ）を表す | `/api/clients` |
+| HTTPメソッド | 操作の種類をメソッドで表す | GET, POST, PUT, DELETE |
+| ステートレス | 各リクエストは独立 | 認証情報も毎回送る |
+| 統一インターフェース | 一貫したURL設計 | `/api/clients/:id` |
+
+### URLの設計例
+
+```
+# リソース: クライアント
+/api/clients              → クライアント全体
+/api/clients/1            → ID=1のクライアント
+/api/clients/1/reservations → ID=1の予約一覧
+
+# リソース: 予約
+/api/reservations         → 予約全体
+/api/reservations/42      → ID=42の予約
+```
+
+## APIの種類
+
+| 種類 | 説明 | 例 |
+|------|------|-----|
+| REST API | URL + HTTPメソッドでCRUD操作 | ShimaLink API |
+| GraphQL | クエリ言語でデータ取得 | GitHub API v4 |
+| WebSocket | 双方向リアルタイム通信 | チャットアプリ |
+
+> **ポイント**: REST APIが最も広く使われている形式。まずはRESTをしっかり理解しよう。ShimaLinkのAPIもREST形式で作ります。
+
+## HTTPメソッド — GET / POST / PUT / DELETE
+
+REST APIでは、**HTTPメソッド**でデータに対する操作の種類を表す。これはCRUD（作成・読み取り・更新・削除）と対応している。
+
+> 「HTTPメソッドは"動詞"。URLが"名詞"。この2つで何をしたいかが分かる。」——Yuki
+
+## 4つの基本メソッド
+
+| メソッド | CRUD | 説明 | リクエスト例 |
+|---------|------|------|-------------|
+| `GET` | Read | データの取得 | `GET /api/clients` |
+| `POST` | Create | 新規データの作成 | `POST /api/clients` |
+| `PUT` | Update | データの更新（全体） | `PUT /api/clients/1` |
+| `DELETE` | Delete | データの削除 | `DELETE /api/clients/1` |
+
+## GET — データを取得する
+
+```
+GET /api/clients HTTP/1.1
+Host: api.shimalink.com
+
+---
+レスポンス:
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  { "id": 1, "name": "海風テラス", "category": "カフェ" },
+  { "id": 2, "name": "首里そば太郎", "category": "飲食" }
+]
+```
+
+```typescript
+// fetchでGETリクエスト（デフォルトはGET）
+const response = await fetch("/api/clients");
+const clients = await response.json();
+```
+
+## POST — 新規作成
+
+```
+POST /api/clients HTTP/1.1
+Content-Type: application/json
+
+{ "name": "やんばるキッチン", "category": "飲食" }
+
+---
+レスポンス:
+HTTP/1.1 201 Created
+
+{ "id": 6, "name": "やんばるキッチン", "category": "飲食" }
+```
+
+```typescript
+const newClient = { name: "やんばるキッチン", category: "飲食" };
+
+const response = await fetch("/api/clients", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(newClient)
+});
+
+const created = await response.json();
+console.log(created.id); // サーバーが割り当てたID
+```
+
+## PUT — データを更新
+
+```
+PUT /api/clients/1 HTTP/1.1
+Content-Type: application/json
+
+{ "name": "海風テラス", "category": "カフェ", "visits": 1500 }
+
+---
+レスポンス:
+HTTP/1.1 200 OK
+
+{ "id": 1, "name": "海風テラス", "category": "カフェ", "visits": 1500 }
+```
+
+```typescript
+const updated = {
+  name: "海風テラス",
+  category: "カフェ",
+  visits: 1500
+};
+
+const response = await fetch("/api/clients/1", {
+  method: "PUT",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(updated)
+});
+```
+
+## DELETE — データを削除
+
+```
+DELETE /api/clients/3 HTTP/1.1
+
+---
+レスポンス:
+HTTP/1.1 204 No Content
+```
+
+```typescript
+const response = await fetch("/api/clients/3", {
+  method: "DELETE"
+});
+
+if (response.ok) {
+  console.log("削除成功");
+}
+```
+
+## ステータスコード
+
+| コード | 意味 | 使いどころ |
+|--------|------|-----------|
+| `200` | OK | GET/PUT成功 |
+| `201` | Created | POST成功 |
+| `204` | No Content | DELETE成功 |
+| `400` | Bad Request | リクエスト不正 |
+| `404` | Not Found | リソースが見つからない |
+| `500` | Internal Server Error | サーバー側エラー |
+
+## メソッドの特性
+
+| 特性 | GET | POST | PUT | DELETE |
+|------|-----|------|-----|--------|
+| ボディあり | なし | あり | あり | なし |
+| 冪等性 | あり | なし | あり | あり |
+| 安全 | はい | いいえ | いいえ | いいえ |
+
+> 「**冪等（べきとう）**」とは、同じリクエストを何度送っても結果が同じという意味。GETは何度取得しても同じデータ。PUTは何度更新しても同じ状態。POSTは送るたびに新しいデータが作られる。
+
+> **ポイント**: URLは「何に対して」、HTTPメソッドは「何をするか」を表す。`DELETE /api/clients/3` は「ID 3のクライアントを削除する」と読める。
+
+## JSON — データの共通言語
+
+APIでやり取りするデータのフォーマットには、**JSON（JavaScript Object Notation）** が使われる。
+
+> 「JSONは"データの共通言語"。JavaScript出身だけど、今やどんな言語でも読み書きできる。」——Yuki
+
+## JSONとは
+
+JSON はテキストベースのデータ形式で、人間にも機械にも読みやすい。
+
+```json
+{
+  "name": "海風テラス",
+  "owner": "Mika",
+  "category": "カフェ",
+  "monthlyVisits": 1250,
+  "isActive": true,
+  "tags": ["オーシャンビュー", "テラス席", "ペットOK"],
+  "address": {
+    "prefecture": "沖縄県",
+    "city": "北谷町",
+    "detail": "美浜1-2-3"
+  }
+}
+```
+
+## JSONのルール
+
+| ルール | 正しい例 | 間違い例 |
+|--------|---------|---------|
+| キーは**ダブルクォート**必須 | `"name"` | `'name'` や `name` |
+| 文字列は**ダブルクォート** | `"hello"` | `'hello'` |
+| 末尾カンマ禁止 | `{"a": 1}` | `{"a": 1,}` |
+| コメント不可 | — | `// コメント` |
+
+## JSONで使えるデータ型
+
+```json
+{
+  "string": "文字列",
+  "number": 42,
+  "float": 3.14,
+  "boolean": true,
+  "null": null,
+  "array": [1, 2, 3],
+  "object": { "key": "value" }
+}
+```
+
+> **注意**: 関数、undefined、Date オブジェクトなどはJSONに含められません。
+
+## JavaScriptでのJSON操作
+
+```typescript
+// オブジェクト → JSON文字列
+const client = { name: "海風テラス", visits: 1250 };
+const jsonString = JSON.stringify(client);
+// '{"name":"海風テラス","visits":1250}'
+
+// JSON文字列 → オブジェクト
+const parsed = JSON.parse(jsonString);
+// { name: "海風テラス", visits: 1250 }
+
+// 整形出力（デバッグ用）
+const pretty = JSON.stringify(client, null, 2);
+// {
+//   "name": "海風テラス",
+//   "visits": 1250
+// }
+```
+
+## APIでの使い方
+
+### リクエスト（送信側）
+
+```typescript
+// POSTでJSONデータを送信
+const response = await fetch("/api/clients", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"  // JSONであることを宣言
+  },
+  body: JSON.stringify({                // オブジェクトをJSON文字列に変換
+    name: "やんばるキッチン",
+    category: "飲食"
+  })
+});
+```
+
+### レスポンス（受信側）
+
+```typescript
+// レスポンスのJSONをパース
+const response = await fetch("/api/clients");
+const data = await response.json();  // JSON → オブジェクト
+
+// TypeScriptで型をつける
+interface Client {
+  id: number;
+  name: string;
+  category: string;
+}
+
+const clients: Client[] = await response.json();
+```
+
+## ShimaLink APIのレスポンス設計
+
+統一されたレスポンス形式を定義しよう。
+
+```typescript
+// 成功レスポンス
+interface ApiSuccess<T> {
+  success: true;
+  data: T;
+}
+
+// エラーレスポンス
+interface ApiError {
+  success: false;
+  error: {
+    code: string;
+    message: string;
+  };
+}
+
+type ApiResponse<T> = ApiSuccess<T> | ApiError;
+```
+
+```json
+// 成功時
+{
+  "success": true,
+  "data": [
+    { "id": 1, "name": "海風テラス", "category": "カフェ" }
+  ]
+}
+
+// エラー時
+{
+  "success": false,
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "クライアントが見つかりません"
+  }
+}
+```
+
+> **ポイント**: APIのレスポンス形式を統一することで、フロントエンド側のエラーハンドリングがシンプルになります。`success` フラグで成功/失敗を判定する設計は非常に一般的です。
+
+## シンプルなAPIを構築する
+
+学んだ知識を統合して、ShimaLink用のAPIを設計・実装してみよう。ここではfetch APIを使ってフロントエンドからAPIを呼び出す実装に焦点を当てる。
+
+> 「まずはAPIの"使い方"を完璧にしよう。作る側は次のステップだ。」——Yuki
+
+## ShimaLink APIの設計
+
+まず、必要なエンドポイントを洗い出す。
+
+```
+ShimaLink API エンドポイント一覧
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GET    /api/clients           クライアント一覧取得
+GET    /api/clients/:id       特定のクライアント取得
+POST   /api/clients           新規クライアント登録
+PUT    /api/clients/:id       クライアント情報更新
+DELETE /api/clients/:id       クライアント削除
+
+GET    /api/clients/:id/reservations  予約一覧取得
+POST   /api/clients/:id/reservations  予約追加
+```
+
+## 型定義
+
+```typescript
+// types.ts
+interface Client {
+  id: number;
+  name: string;
+  owner: string;
+  category: "カフェ" | "飲食" | "花屋" | "雑貨" | "その他";
+  monthlyVisits: number;
+  isActive: boolean;
+  createdAt: string;
+}
+
+interface Reservation {
+  id: number;
+  clientId: number;
+  guestName: string;
+  date: string;
+  partySize: number;
+  status: "confirmed" | "pending" | "cancelled";
+}
+
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+```
+
+## APIクライアント関数の実装
+
+```typescript
+// api.ts — ShimaLink APIクライアント
+
+const BASE_URL = "/api";
+
+// 共通のfetch関数
+async function apiRequest<T>(
+  endpoint: string,
+  options?: RequestInit
+): Promise<ApiResponse<T>> {
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    ...options,
+  });
+
+  if (!response.ok) {
+    throw new Error(`API Error: ${response.status}`);
+  }
+
+  return response.json();
+}
+```
+
+## CRUD操作の実装
+
+```typescript
+// READ: クライアント一覧を取得
+async function getClients(): Promise<Client[]> {
+  const result = await apiRequest<Client[]>("/clients");
+  return result.data;
+}
+
+// READ: 特定のクライアントを取得
+async function getClient(id: number): Promise<Client> {
+  const result = await apiRequest<Client>(`/clients/${id}`);
+  return result.data;
+}
+
+// CREATE: 新規クライアント登録
+async function createClient(
+  client: Omit<Client, "id" | "createdAt">
+): Promise<Client> {
+  const result = await apiRequest<Client>("/clients", {
+    method: "POST",
+    body: JSON.stringify(client),
+  });
+  return result.data;
+}
+
+// UPDATE: クライアント情報更新
+async function updateClient(
+  id: number,
+  updates: Partial<Client>
+): Promise<Client> {
+  const result = await apiRequest<Client>(`/clients/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(updates),
+  });
+  return result.data;
+}
+
+// DELETE: クライアント削除
+async function deleteClient(id: number): Promise<void> {
+  await apiRequest<void>(`/clients/${id}`, {
+    method: "DELETE",
+  });
+}
+```
+
+## ダッシュボードでの使用例
+
+```typescript
+// dashboard.ts — ダッシュボードの表示ロジック
+
+async function renderDashboard() {
+  try {
+    // クライアント一覧を取得
+    const clients = await getClients();
+
+    // アクティブなクライアントだけ表示
+    const activeClients = clients.filter(c => c.isActive);
+
+    // HTML生成
+    const container = document.getElementById("client-list");
+    if (!container) return;
+
+    container.innerHTML = activeClients
+      .map(client => `
+        <div class="client-card" data-id="${client.id}">
+          <h3>${client.name}</h3>
+          <p>${client.category} | ${client.owner}</p>
+          <p>月間アクセス: ${client.monthlyVisits.toLocaleString()}</p>
+          <button onclick="handleEdit(${client.id})">編集</button>
+          <button onclick="handleDelete(${client.id})">削除</button>
+        </div>
+      `)
+      .join("");
+
+  } catch (error) {
+    console.error("ダッシュボードの読み込みに失敗:", error);
+    showErrorMessage("データの取得に失敗しました。再度お試しください。");
+  }
+}
+
+// 新規クライアント追加フォームの処理
+async function handleCreateClient(form: HTMLFormElement) {
+  const formData = new FormData(form);
+
+  const newClient = {
+    name: formData.get("name") as string,
+    owner: formData.get("owner") as string,
+    category: formData.get("category") as Client["category"],
+    monthlyVisits: 0,
+    isActive: true,
+  };
+
+  try {
+    await createClient(newClient);
+    await renderDashboard(); // 一覧を再描画
+    form.reset();
+  } catch (error) {
+    console.error("クライアント登録に失敗:", error);
+  }
+}
+```
+
+## エラーハンドリングのパターン
+
+```typescript
+async function safeApiCall<T>(
+  apiCall: () => Promise<T>,
+  fallback: T
+): Promise<T> {
+  try {
+    return await apiCall();
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`API Error: ${error.message}`);
+    }
+    return fallback;
+  }
+}
+
+// 使用例: エラー時は空配列を返す
+const clients = await safeApiCall(
+  () => getClients(),
+  []
+);
+```
+
+> **ポイント**: API呼び出しは必ず失敗する可能性がある（ネットワーク障害、サーバーエラーなど）。try/catchで適切にエラーを処理し、ユーザーにフィードバックを返すことが重要です。
+
+<StoryPanel variant="conclusion">
+
+ShimaLinkのAPI設計が完成した。各クライアントのデータにはエンドポイントを通じてのみアクセスでき、不用意なデータ破壊のリスクが大幅に減った。
+
+```
+GET    /api/clients          → クライアント一覧
+GET    /api/clients/:id      → 特定のクライアント
+POST   /api/clients          → 新規クライアント登録
+PUT    /api/clients/:id      → クライアント情報更新
+DELETE /api/clients/:id      → クライアント削除
+```
+
+---
+
+**あなた:** 「おお、フロントエンドから直接JSONファイルをいじらなくていいのか。安心感が違う！」
+
+**Mika:** 「そういえば、予約データって毎回入力し直してますよね？前に入れたデータが消えちゃうことがあるんですけど...」
+
+**あなた:** 「確かに。サーバーを再起動するとデータがリセットされますよね。」
+
+**Yuki:** 「いいところに気づいたね。今のAPIは、データをメモリ上に持っているだけ。サーバーが止まればデータは消える。これを永続化するには——」
+
+**あなた:** 「データベース！」
+
+**Yuki:** 「正解。データを安全に保管し、高速に検索し、確実に取り出せる"住処"が必要だ。」
+
+**あなた:** 「データベースって、SQLとかですよね？」
+
+**Yuki:** 「次のステップはまさにそこ。APIの裏側にデータベースを接続して、データを永続化する方法を学ぼう。」
+
+---
+
+> **次のチャプター**: *Chapter 9: データの住処* — サーバー再起動でデータが消える問題を解決。データベースとSQLの基礎を学ぶ。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="08-api-gateway" />
+
+<ChapterFaq chapterId="08-api-gateway" />
+
+<SeriesNav current={8} />

@@ -1,0 +1,104 @@
+[
+  {
+    "id": "ch11-q01",
+    "question": "セキュリティの3本柱「CIA」のCは何を表す？",
+    "choices": ["Consistency（一貫性）", "Confidentiality（機密性）", "Compliance（準拠性）", "Continuity（継続性）"],
+    "correctIndex": 1,
+    "explanation": "CIAはConfidentiality（機密性）、Integrity（完全性）、Availability（可用性）の頭文字です。機密性は「許可された人だけがデータにアクセスできる」ことを意味します。",
+    "storyContext": "Shadowの攻撃で最初に破られたのが機密性だった。ユーザーのメールアドレスが流出した。",
+    "skill": { "category": "security", "name": "Security Fundamentals", "level": "intro" }
+  },
+  {
+    "id": "ch11-q02",
+    "question": "脅威モデリングのSTRIDEモデルで「S」が表すのは？",
+    "choices": ["Security（セキュリティ）", "Spoofing（なりすまし）", "Scripting（スクリプティング）", "Scanning（スキャニング）"],
+    "correctIndex": 1,
+    "explanation": "STRIDEのSはSpoofing（なりすまし）です。他人のふりをして不正アクセスする脅威を指します。STRIDE全体は、Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilegeです。",
+    "storyContext": "Yukiが脅威を分類するために紹介してくれたフレームワークだ。",
+    "skill": { "category": "security", "name": "Threat Modeling", "level": "intro" }
+  },
+  {
+    "id": "ch11-q03",
+    "question": "「最小権限の原則」の意味として正しいのは？",
+    "choices": [
+      "すべてのユーザーに管理者権限を付与する",
+      "必要最小限の権限だけを与える",
+      "セキュリティのために全機能を無効化する",
+      "開発者だけがアクセスできるようにする"
+    ],
+    "correctIndex": 1,
+    "explanation": "最小権限の原則（Principle of Least Privilege）は、ユーザーやプログラムに対して、業務に必要な最小限の権限だけを付与するという考え方です。万が一アカウントが侵害されても、被害を最小限に抑えられます。",
+    "storyContext": "ShimaLinkではすべてのユーザーが同じ権限を持っていた。これが攻撃の被害を拡大させた。",
+    "skill": { "category": "security", "name": "Security Fundamentals", "level": "intro" }
+  },
+  {
+    "id": "ch11-q04",
+    "question": "「攻撃面（Attack Surface）」とは何を指す？",
+    "choices": [
+      "攻撃者が使用するツールの一覧",
+      "攻撃者がシステムに侵入できる可能性のあるすべての接点",
+      "Webページの表示領域",
+      "ファイアウォールの設定画面"
+    ],
+    "correctIndex": 1,
+    "explanation": "攻撃面（Attack Surface）とは、攻撃者がシステムに侵入したり悪用したりできる可能性のあるすべての接点を指します。ユーザー入力、API、ファイルアップロードなどが含まれます。攻撃面が小さいほどセキュリティリスクは低くなります。",
+    "storyContext": "Yukiがホワイトボードに書いたShimaLinkの攻撃面マップを思い出そう。",
+    "skill": { "category": "security", "name": "Threat Modeling", "level": "intro" }
+  },
+  {
+    "id": "ch11-q05",
+    "question": "「多層防御（Defense in Depth）」の考え方として正しいのは？",
+    "choices": [
+      "最強の1つの防御手段を使えば十分",
+      "複数の防御層を設け、1つが突破されても次の層で防ぐ",
+      "攻撃を受けてから対策を考える",
+      "セキュリティソフトだけに頼る"
+    ],
+    "correctIndex": 1,
+    "explanation": "多層防御は、ファイアウォール、入力検証、認証、暗号化など複数の防御層を重ねることで、1つの層が突破されても残りの層で保護する戦略です。お城の堀・城壁・門のイメージです。",
+    "storyContext": "Yukiが「お城の防御」に例えた考え方。ShimaLinkには認証しかなく、他の層がなかった。",
+    "skill": { "category": "security", "name": "Security Fundamentals", "level": "intro" }
+  },
+  {
+    "id": "ch11-q06",
+    "question": "フェイルセキュア（Fail Secure）の原則では、エラー時にどうすべき？",
+    "choices": [
+      "エラーを無視してアクセスを許可する",
+      "安全な側に倒してアクセスを拒否する",
+      "管理者にメールで通知だけする",
+      "エラーメッセージを詳細に表示する"
+    ],
+    "correctIndex": 1,
+    "explanation": "フェイルセキュアは、エラーや例外が発生したとき安全な側に倒す（アクセスを拒否する）原則です。エラー時にアクセスを許可すると、認証を迂回される可能性があります。",
+    "storyContext": "Yukiが見せた「良い例」のコードを思い出そう。catchブロックでfalseを返していた。",
+    "skill": { "category": "security", "name": "Security Fundamentals", "level": "intro" }
+  },
+  {
+    "id": "ch11-q07",
+    "question": "DDoS攻撃の目的は何？",
+    "choices": [
+      "データを盗む",
+      "サービスを利用不能にする",
+      "パスワードを解読する",
+      "マルウェアをインストールする"
+    ],
+    "correctIndex": 1,
+    "explanation": "DDoS（Distributed Denial of Service）攻撃は、大量のリクエストを送りつけてサービスを過負荷にし、正常なユーザーが利用できない状態にすることが目的です。CIAの「可用性（Availability）」を破壊する攻撃です。",
+    "storyContext": "Yukiが「100万人が同時にお店に押しかける」と例えた攻撃だ。",
+    "skill": { "category": "security", "name": "Attack Vectors", "level": "intro" }
+  },
+  {
+    "id": "ch11-q08",
+    "question": "セキュリティ対策として最も重要な考え方は？",
+    "choices": [
+      "完成後にセキュリティ機能を追加する",
+      "開発の最初からセキュリティを組み込む",
+      "攻撃を受けてから対策する",
+      "セキュリティは専門家に任せて開発者は気にしない"
+    ],
+    "correctIndex": 1,
+    "explanation": "セキュリティは後付けの機能ではなく、設計段階から組み込むべき基盤です。後から穴を塞ぐより、最初から穴を作らない方がはるかに効率的でコストも低く抑えられます。",
+    "storyContext": "Shadowのメッセージにもあった。「Security is not a feature. It's a foundation.」",
+    "skill": { "category": "security", "name": "Security Fundamentals", "level": "intro" }
+  }
+]

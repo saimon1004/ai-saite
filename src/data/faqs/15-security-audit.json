@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch15-help-01",
+    "question": "OWASP ZAPのインストールと使い方は？",
+    "answer": "OWASP ZAP（Zed Attack Proxy）は無料のWebアプリ脆弱性スキャナーです。\n\n**インストール：**\n1. [zaproxy.org](https://www.zaproxy.org/) からダウンロード\n2. macOS: `brew install --cask owasp-zap`\n\n**基本的な使い方：**\n1. ZAPを起動\n2. 「Automated Scan」を選択\n3. URLを入力（例: http://localhost:3000）\n4. 「Attack」をクリック\n5. 結果を確認（High/Medium/Low/Informational）\n\n**重要**: 自分の開発環境でのみ使用してください。他人のサイトへのスキャンは不正アクセスとなります。",
+    "tags": ["owasp-zap", "scanning", "tool"],
+    "lessonSlug": "03-penetration-testing",
+    "category": "environment"
+  },
+  {
+    "id": "ch15-help-02",
+    "question": "セキュリティヘッダーが正しく設定されているか確認する方法は？",
+    "answer": "以下の方法で確認できます：\n\n**1. curlコマンド：**\n```bash\ncurl -I https://shimalink.com\n# レスポンスヘッダーを確認\n```\n\n**2. ブラウザのDevTools：**\n- F12 → Network → リクエストを選択 → Headers\n\n**3. オンラインツール：**\n- SecurityHeaders.com: URLを入力するだけでA〜Fで評価\n- Mozilla Observatory: 総合的なセキュリティ評価\n\n**確認すべきヘッダー：**\n```\nContent-Security-Policy: ...\nStrict-Transport-Security: max-age=31536000\nX-Content-Type-Options: nosniff\nX-Frame-Options: DENY\nReferrer-Policy: strict-origin-when-cross-origin\n```",
+    "tags": ["headers", "verification", "tools"],
+    "lessonSlug": "02-security-checklist",
+    "category": "terminal"
+  },
+  {
+    "id": "ch15-help-03",
+    "question": "レート制限の実装方法は？",
+    "answer": "express-rate-limitパッケージを使います。\n\n```bash\nnpm install express-rate-limit\n```\n\n```javascript\nconst rateLimit = require('express-rate-limit');\n\n// 一般的なAPI制限\nconst apiLimiter = rateLimit({\n  windowMs: 15 * 60 * 1000, // 15分\n  max: 100, // 15分あたり100リクエスト\n  message: 'リクエスト回数が上限に達しました'\n});\napp.use('/api/', apiLimiter);\n\n// ログイン用の厳しい制限\nconst loginLimiter = rateLimit({\n  windowMs: 15 * 60 * 1000,\n  max: 5, // 15分あたり5回まで\n  message: 'ログイン試行回数が上限に達しました'\n});\napp.use('/api/login', loginLimiter);\n```\n\n佐久間さんが指摘した「レート制限の欠如」はこれで解決できます。",
+    "tags": ["rate-limit", "express", "brute-force"],
+    "lessonSlug": "02-security-checklist",
+    "category": "syntax"
+  },
+  {
+    "id": "ch15-help-04",
+    "question": "CORSの正しい設定方法がわからない",
+    "answer": "CORS（Cross-Origin Resource Sharing）は「どのオリジンからのアクセスを許可するか」を制御します。\n\n```bash\nnpm install cors\n```\n\n```javascript\nconst cors = require('cors');\n\n// 悪い例: 全開放\napp.use(cors()); // すべてのオリジンからアクセス可能\n\n// 良い例: ホワイトリスト\nconst corsOptions = {\n  origin: [\n    'https://shimalink.com',\n    'https://www.shimalink.com'\n  ],\n  methods: ['GET', 'POST', 'PUT', 'DELETE'],\n  allowedHeaders: ['Content-Type', 'Authorization'],\n  credentials: true,\n  maxAge: 86400 // preflight結果を24時間キャッシュ\n};\napp.use(cors(corsOptions));\n```\n\n開発環境ではlocalhostも追加します：\n```javascript\nif (process.env.NODE_ENV === 'development') {\n  corsOptions.origin.push('http://localhost:3000');\n}\n```",
+    "tags": ["cors", "configuration", "api"],
+    "lessonSlug": "02-security-checklist",
+    "category": "syntax"
+  },
+  {
+    "id": "ch15-help-05",
+    "question": "CSRF対策のCSRFトークンとは？",
+    "answer": "CSRFトークンは、リクエストが正規のフォームから送信されたことを検証するランダムな文字列です。\n\n**仕組み：**\n```\n1. サーバーがフォーム表示時にランダムなトークンを生成\n2. フォームの隠しフィールドにトークンを埋め込み\n3. フォーム送信時にトークンも一緒に送信\n4. サーバーがトークンを検証 → 一致すれば正規のリクエスト\n```\n\n```javascript\n// Express + csurf\nconst csrf = require('csurf');\nconst csrfProtection = csrf({ cookie: true });\n\napp.get('/form', csrfProtection, (req, res) => {\n  res.send(`<form action=\"/submit\" method=\"POST\">\n    <input type=\"hidden\" name=\"_csrf\" value=\"${req.csrfToken()}\">\n    <button>送信</button>\n  </form>`);\n});\n\napp.post('/submit', csrfProtection, (req, res) => {\n  res.send('トークン検証OK');\n});\n```",
+    "tags": ["csrf", "token", "security"],
+    "lessonSlug": "02-security-checklist",
+    "category": "concept"
+  },
+  {
+    "id": "ch15-help-06",
+    "question": "個人情報漏洩時に報告義務はある？",
+    "answer": "日本では**個人情報保護法**に基づく報告義務があります。\n\n**報告が必要なケース：**\n- 要配慮個人情報の漏洩\n- 財産的被害が生じるおそれのある漏洩\n- 不正な目的をもって行われた漏洩\n- 1,000人を超える漏洩\n\n**報告先と期限：**\n- **個人情報保護委員会**: 速報（事態を知った日から3〜5日以内）＋確報（30日以内）\n- **本人への通知**: 速やかに\n\n**ShimaLinkの場合：**\nメールアドレス142件の漏洩は報告対象です。不正アクセスによる漏洩のため、件数に関わらず報告義務があります。\n\n**注意**: 具体的な対応は弁護士に相談してください。",
+    "tags": ["legal", "data-breach", "notification"],
+    "lessonSlug": "04-incident-response",
+    "category": "concept"
+  },
+  {
+    "id": "ch15-help-07",
+    "question": "セキュリティ監査は自分たちでもできる？",
+    "answer": "基本的なチェックは自分たちでも可能です。\n\n**自分たちでできること：**\n- セキュリティチェックリストに基づくレビュー\n- npm auditによる依存関係チェック\n- OWASP ZAPによる自動スキャン\n- コードレビューでのセキュリティ観点チェック\n- セキュリティヘッダーの確認\n\n**専門家に依頼すべきこと：**\n- 本格的なペネトレーションテスト\n- ビジネスロジックの脆弱性評価\n- ソースコード監査\n- コンプライアンス評価\n\n**おすすめアプローチ：**\n1. まず自分たちで基本チェックリストを実施\n2. 自動ツールでスキャン\n3. 重要なマイルストーンで専門家に依頼",
+    "tags": ["audit", "self-assessment", "process"],
+    "lessonSlug": "03-penetration-testing",
+    "category": "concept"
+  },
+  {
+    "id": "ch15-help-08",
+    "question": "依存ライブラリの自動脆弱性チェックを設定するには？",
+    "answer": "CI/CDパイプラインに組み込むか、GitHub/GitLabの機能を使います。\n\n**GitHub Dependabot：**\n```yaml\n# .github/dependabot.yml\nversion: 2\nupdates:\n  - package-ecosystem: \"npm\"\n    directory: \"/\"\n    schedule:\n      interval: \"weekly\"\n    open-pull-requests-limit: 10\n```\n\n**GitHub Actions：**\n```yaml\n# .github/workflows/security.yml\nname: Security Audit\non:\n  schedule:\n    - cron: '0 9 * * 1'  # 毎週月曜9時\n  push:\n    branches: [main]\njobs:\n  audit:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: npm ci\n      - run: npm audit --audit-level=high\n```\n\nこれにより脆弱性が見つかるとPull Requestやアラートが自動生成されます。",
+    "tags": ["dependabot", "ci-cd", "automation"],
+    "lessonSlug": "01-owasp-top-10",
+    "category": "environment"
+  },
+  {
+    "id": "ch15-help-09",
+    "question": "IDORの防止方法は？",
+    "answer": "IDOR（Insecure Direct Object Reference）は認可チェックで防ぎます。\n\n```javascript\n// 脆弱: IDだけでアクセス\napp.get('/api/shops/:id', async (req, res) => {\n  const shop = await prisma.shop.findUnique({\n    where: { id: parseInt(req.params.id) }\n  });\n  res.json(shop);\n});\n\n// 安全: 所有者チェック付き\napp.get('/api/shops/:id', authMiddleware, async (req, res) => {\n  const shop = await prisma.shop.findFirst({\n    where: {\n      id: parseInt(req.params.id),\n      ownerId: req.user.id  // ← 所有者チェック\n    }\n  });\n\n  if (!shop) {\n    return res.status(404).json({ error: '見つかりません' });\n  }\n  res.json(shop);\n});\n```\n\n**ポイント**: 404を返す（403だと「データは存在するが権限がない」と情報漏洩になる）",
+    "tags": ["idor", "authorization", "api"],
+    "lessonSlug": "01-owasp-top-10",
+    "category": "syntax"
+  },
+  {
+    "id": "ch15-help-10",
+    "question": "Shadowの正体のヒントはある？",
+    "answer": "Chapter 15の時点で分かっていること：\n\n- 攻撃は計画的だが、致命的な被害を意図的に避けている\n- データベースの全削除やサービス停止が可能だったのにしなかった\n- 佐久間さんは「教育的」と評した\n- 攻撃の手口は体系的で、セキュリティの教科書に沿っている\n- Yukiが何か心当たりがある様子\n\n**佐久間さんの分析:**\n「これは破壊目的の攻撃じゃない。誰かがShimaLinkチームにセキュリティの重要性を教えようとしているように見える。」\n\nShadowの正体は今後のチャプターで明らかになります。",
+    "tags": ["story", "shadow", "mystery"],
+    "lessonSlug": "03-penetration-testing",
+    "category": "concept"
+  }
+]

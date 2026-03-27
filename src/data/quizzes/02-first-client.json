@@ -1,0 +1,94 @@
+[
+  {
+    "id": "ch02-q01",
+    "question": "HTMLでページのメインコンテンツを囲むセマンティックタグはどれ？",
+    "choices": ["<div>", "<section>", "<main>", "<content>"],
+    "correctIndex": 2,
+    "explanation": "<main> はページの主要なコンテンツを囲むセマンティックタグで、1ページに1つだけ使います。<div> は意味を持たない汎用タグ、<section> はテーマごとのまとまり、<content> は存在しないタグです。",
+    "storyContext": "海風テラスのサイトで、メニューやアクセス情報を囲んだタグだよ。",
+    "skill": { "category": "web-fundamentals", "name": "HTML構造", "level": "intermediate" }
+  },
+  {
+    "id": "ch02-q02",
+    "question": "CSSで class=\"menu-item\" を持つ要素を選択するセレクタはどれ？",
+    "choices": ["menu-item", "#menu-item", ".menu-item", "*menu-item"],
+    "correctIndex": 2,
+    "explanation": "クラスセレクタはドット（.）で始まります。#はIDセレクタ、*は全称セレクタです。クラスは同じスタイルを複数の要素に適用できる再利用性の高い方法です。",
+    "storyContext": "カフェのメニューカードに共通のスタイルを当てるときに使ったセレクタだ。",
+    "skill": { "category": "programming", "name": "CSS基礎", "level": "intro" }
+  },
+  {
+    "id": "ch02-q03",
+    "question": "ボックスモデルで、コンテンツと境界線（border）の間にある余白はどれ？",
+    "choices": ["margin", "padding", "gap", "spacing"],
+    "correctIndex": 1,
+    "explanation": "padding はコンテンツとborderの間の内側の余白です。margin は要素の外側の余白、gap はFlexbox/Gridで使う間隔です。spacingというCSSプロパティはありません。",
+    "storyContext": "Yukiが「段ボール箱の緩衝材」に例えていた部分だね。",
+    "skill": { "category": "programming", "name": "CSS基礎", "level": "intro" }
+  },
+  {
+    "id": "ch02-q04",
+    "question": "box-sizing: border-box; を指定した場合、width: 300px の要素の実際の表示幅は？",
+    "choices": [
+      "300px + padding + border",
+      "300px（padding と border を含む）",
+      "300px - margin",
+      "ブラウザに依存する"
+    ],
+    "correctIndex": 1,
+    "explanation": "border-box では、width に padding と border が含まれます。つまり width: 300px なら、表示される幅はぴったり300pxになります。デフォルトの content-box では、padding と border の分だけ大きくなります。",
+    "storyContext": "メニューカードのレイアウトが崩れた原因を、Yukiが box-sizing で解決してくれたよね。",
+    "skill": { "category": "programming", "name": "CSS基礎", "level": "intro" }
+  },
+  {
+    "id": "ch02-q05",
+    "question": "モバイルファーストで設計するとき、メディアクエリに使うのはどれ？",
+    "choices": ["max-width", "min-width", "device-width", "screen-width"],
+    "correctIndex": 1,
+    "explanation": "モバイルファーストでは min-width を使います。まずスマホ用のベーススタイルを書き、画面が大きくなるにつれてスタイルを追加していくアプローチです。max-width はデスクトップファーストで使います。",
+    "storyContext": "Mikaのカフェサイトをスマホでもきれいに見せるために選んだアプローチだ。",
+    "skill": { "category": "web-fundamentals", "name": "レスポンシブデザイン", "level": "intro" }
+  },
+  {
+    "id": "ch02-q06",
+    "question": "viewport メタタグがないと何が起きる？",
+    "choices": [
+      "CSSが読み込まれなくなる",
+      "スマホでPC用レイアウトが縮小表示される",
+      "ページの読み込み速度が遅くなる",
+      "画像が表示されなくなる"
+    ],
+    "correctIndex": 1,
+    "explanation": "viewport メタタグがないと、スマホのブラウザはPC用の幅（通常980px）でレンダリングし、それを画面に収めるために縮小表示します。メディアクエリも正しく動作しません。",
+    "storyContext": "スマホ対応で最初にやるべきこととして、Yukiが「これは絶対に入れよう」と強調していたね。",
+    "skill": { "category": "web-fundamentals", "name": "レスポンシブデザイン", "level": "intro" }
+  },
+  {
+    "id": "ch02-q07",
+    "question": "<nav> タグの正しい使い方はどれ？",
+    "choices": [
+      "ページ内のすべてのリンクを囲む",
+      "主要なナビゲーションリンクのまとまりを囲む",
+      "サイトの著作権情報を囲む",
+      "画像ギャラリーを囲む"
+    ],
+    "correctIndex": 1,
+    "explanation": "<nav> は主要なナビゲーションリンクのまとまりを示すセマンティックタグです。ページ内のすべてのリンクではなく、メインメニューやフッターナビなどの重要なナビゲーションに使います。",
+    "storyContext": "海風テラスのヘッダーに、メニュー・アクセス・営業時間へのリンクを入れた部分だ。",
+    "skill": { "category": "web-fundamentals", "name": "HTML構造", "level": "intermediate" }
+  },
+  {
+    "id": "ch02-q08",
+    "question": "CSS で margin: 10px 20px; と書いたとき、上下と左右の値はそれぞれ？",
+    "choices": [
+      "上下 20px、左右 10px",
+      "上下 10px、左右 20px",
+      "すべて 10px",
+      "すべて 20px"
+    ],
+    "correctIndex": 1,
+    "explanation": "値が2つの場合、1つ目が上下、2つ目が左右に適用されます。margin: 10px 20px; は、上下に10px、左右に20pxの余白を指定しています。",
+    "storyContext": "メニューカードの余白を調整するときに使ったショートハンド記法だね。",
+    "skill": { "category": "programming", "name": "CSS基礎", "level": "intro" }
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch19-help-01",
+    "question": "Terraformのインストール方法がわからない",
+    "answer": "OS別のインストール手順です。\n\n**macOSの場合：**\n```bash\n# Homebrewでインストール\nbrew tap hashicorp/tap\nbrew install hashicorp/tap/terraform\n\n# 確認\nterraform --version\n```\n\n**初回セットアップ：**\n```bash\ncd shimalink-infra\n\n# プロバイダーをダウンロード\nterraform init\n```\n\n`terraform init` はプロジェクトごとに1回（またはプロバイダー変更時に）実行します。",
+    "tags": ["terraform", "install", "setup"],
+    "lessonSlug": "02-terraform-basics",
+    "category": "environment"
+  },
+  {
+    "id": "ch19-help-02",
+    "question": "terraform planで「Error: No credentials」と表示される",
+    "answer": "クラウドプロバイダーの認証が設定されていません。\n\n**GCPの場合：**\n```bash\n# ブラウザでログイン\ngcloud auth application-default login\n\n# または、サービスアカウントキーを使う\nexport GOOGLE_APPLICATION_CREDENTIALS=\"/path/to/key.json\"\n```\n\n**AWSの場合：**\n```bash\n# AWS CLIで認証設定\naws configure\n# Access Key, Secret Key, Regionを入力\n\n# または環境変数で設定\nexport AWS_ACCESS_KEY_ID=\"...\"\nexport AWS_SECRET_ACCESS_KEY=\"...\"\n```",
+    "tags": ["terraform", "auth", "credentials", "error"],
+    "lessonSlug": "02-terraform-basics",
+    "category": "environment"
+  },
+  {
+    "id": "ch19-help-03",
+    "question": "terraform applyで予期しないリソースが削除される",
+    "answer": "**まず `terraform plan` で変更内容を確認**してください。\n\n`-` が付いたリソースは削除されます。\n\n```\n# terraform plan の出力例\n- google_cloud_run_v2_service.web  # ← 削除される！\n+ google_cloud_run_v2_service.new  # ← 新規作成\n~ google_sql_database.db           # ← 変更される\n```\n\n**よくある原因：**\n- リソース名を変更した（Terraformは削除→再作成と認識する）\n- 別のワークスペース/ステートを参照している\n- 手動変更がステートと矛盾している\n\n**対策：**\n```bash\n# 削除したくない場合は lifecycle で保護\nresource \"google_sql_database_instance\" \"db\" {\n  lifecycle {\n    prevent_destroy = true\n  }\n}\n```",
+    "tags": ["terraform", "apply", "destroy", "safety"],
+    "lessonSlug": "02-terraform-basics",
+    "category": "terminal"
+  },
+  {
+    "id": "ch19-help-04",
+    "question": "HCLの書き方がわからない。参考になるドキュメントは？",
+    "answer": "**公式ドキュメント：**\n- [Terraform Language](https://developer.hashicorp.com/terraform/language)\n- [Provider ドキュメント](https://registry.terraform.io/)\n\n**基本構文のチートシート：**\n\n```hcl\n# 文字列\nname = \"shimalink\"\n\n# 数値\ncount = 3\n\n# 真偽値\nenabled = true\n\n# リスト\ntags = [\"web\", \"production\"]\n\n# マップ\nlabels = {\n  env  = \"prod\"\n  team = \"shimalink\"\n}\n\n# 条件式\ntier = var.env == \"prod\" ? \"db-g1-small\" : \"db-f1-micro\"\n\n# 参照\nurl = google_cloud_run_v2_service.web.uri\n```\n\n**VS Code拡張機能:** 「HashiCorp Terraform」をインストールすると補完が効きます。",
+    "tags": ["hcl", "syntax", "reference"],
+    "lessonSlug": "02-terraform-basics",
+    "category": "syntax"
+  },
+  {
+    "id": "ch19-help-05",
+    "question": "ステートファイルが壊れた/紛失したらどうなる？",
+    "answer": "Terraformは管理しているリソースを「忘れて」しまいます。\n\n**影響：**\n- `terraform plan` が全リソースを「新規作成」と認識する\n- 既存リソースとの紐づけが切れる\n\n**復旧方法：**\n\n1. **バックアップから復元**\n```bash\n# .tfstate.backup がある場合\ncp terraform.tfstate.backup terraform.tfstate\n```\n\n2. **terraform import で再取り込み**\n```bash\nterraform import google_cloud_run_v2_service.web \\\n  projects/shimalink/locations/asia-northeast1/services/shimalink-web\n```\n\n**予防策：**\n- リモートバックエンド（GCS/S3）でバージョニング有効化\n- 定期的なバックアップ",
+    "tags": ["terraform", "state", "recovery"],
+    "lessonSlug": "04-state-management",
+    "category": "terminal"
+  },
+  {
+    "id": "ch19-help-06",
+    "question": "Terraformのモジュールとは何？",
+    "answer": "モジュールは再利用可能なTerraformコードのパッケージです。関数のようなものだと考えてください。\n\n**モジュールの構造：**\n```\nmodules/web-service/\n├── main.tf       # リソース定義\n├── variables.tf  # 入力パラメータ\n└── outputs.tf    # 出力値\n```\n\n**使い方：**\n```hcl\nmodule \"web_prod\" {\n  source = \"./modules/web-service\"\n  \n  environment = \"prod\"\n  cpu         = \"2\"\n  memory      = \"1Gi\"\n}\n\nmodule \"web_dev\" {\n  source = \"./modules/web-service\"\n  \n  environment = \"dev\"\n  cpu         = \"1\"\n  memory      = \"512Mi\"\n}\n```\n\n同じモジュールを異なるパラメータで何度も使えます。",
+    "tags": ["terraform", "module", "concept"],
+    "lessonSlug": "03-managing-environments",
+    "category": "concept"
+  },
+  {
+    "id": "ch19-help-07",
+    "question": "terraform destroyが怖い。安全に使うには？",
+    "answer": "`terraform destroy` は管理下の全リソースを削除する強力なコマンドです。\n\n**安全対策：**\n\n1. **重要リソースに保護を設定**\n```hcl\nresource \"google_sql_database_instance\" \"db\" {\n  deletion_protection = true\n  lifecycle {\n    prevent_destroy = true\n  }\n}\n```\n\n2. **特定リソースだけ削除**\n```bash\nterraform destroy -target=google_cloud_run_v2_service.web\n```\n\n3. **必ずplanを確認**\n```bash\nterraform plan -destroy  # 何が削除されるか確認\n```\n\n4. **本番環境では権限を制限**\n- destroy権限を持つIAMロールを限定する",
+    "tags": ["terraform", "destroy", "safety"],
+    "lessonSlug": "02-terraform-basics",
+    "category": "terminal"
+  },
+  {
+    "id": "ch19-help-08",
+    "question": "IaCとCI/CDの組み合わせ方は？",
+    "answer": "Terraformの変更もCI/CDパイプラインで自動化できます。\n\n```yaml\n# .github/workflows/terraform.yml\nname: Terraform\n\non:\n  pull_request:\n    paths: [\"infra/**\"]\n\njobs:\n  plan:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: hashicorp/setup-terraform@v3\n      - run: terraform init\n      - run: terraform plan\n        # PRにplanの結果をコメントとして投稿\n```\n\n**推奨ワークフロー：**\n1. PRを作成 → 自動で `terraform plan` 実行\n2. チームメンバーがplan結果をレビュー\n3. PRをマージ → 自動で `terraform apply` 実行\n\nこれにより、インフラ変更もコードレビューの対象になります。",
+    "tags": ["terraform", "ci-cd", "github-actions"],
+    "lessonSlug": "03-managing-environments",
+    "category": "concept"
+  },
+  {
+    "id": "ch19-help-09",
+    "question": "宣言的（declarative）と命令的（imperative）の違いは？",
+    "answer": "IaCを理解する上で重要な概念です。\n\n**命令的（Imperative）:** 「どうやるか」を手順で書く\n```bash\n# シェルスクリプトの例\ngcloud sql instances create shimalink-db ...\ngcloud run deploy shimalink-web ...\n```\n\n**宣言的（Declarative）:** 「どうなるべきか」を状態で書く\n```hcl\n# Terraformの例\nresource \"google_sql_database_instance\" \"db\" {\n  name = \"shimalink-db\"\n  # 「このDBが存在するべき」と宣言するだけ\n}\n```\n\n**宣言的のメリット：**\n- 現在の状態に関係なく、望む状態に収束する\n- 冪等性がある（何回実行しても同じ結果）\n- Terraformが差分を計算してくれる\n\nTerraformは宣言的アプローチです。",
+    "tags": ["iac", "declarative", "imperative", "concept"],
+    "lessonSlug": "01-why-iac",
+    "category": "concept"
+  },
+  {
+    "id": "ch19-help-10",
+    "question": "既存のクラウドリソースをTerraform管理に移行したい",
+    "answer": "`terraform import` を使って既存リソースをステートに取り込みます。\n\n**手順：**\n\n1. **コードを書く**（リソース定義）\n```hcl\nresource \"google_sql_database_instance\" \"existing_db\" {\n  name = \"shimalink-db\"\n  # ... 現在の設定を記述\n}\n```\n\n2. **importを実行**\n```bash\nterraform import google_sql_database_instance.existing_db shimalink-db\n```\n\n3. **planで差分を確認**\n```bash\nterraform plan\n# → 差分がゼロになるようにコードを調整\n```\n\n4. **コードを調整して差分をゼロに**\n\n**注意:** importはステートに追加するだけで、コードは自動生成されません。自分でコードを書く必要があります。",
+    "tags": ["terraform", "import", "migration"],
+    "lessonSlug": "04-state-management",
+    "category": "terminal"
+  }
+]

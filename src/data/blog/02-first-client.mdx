@@ -1,0 +1,716 @@
+---
+title: "最初のクライアント"
+subtitle: "Mikaのカフェ「海風テラス」のサイトを構築する"
+description: "Mikaのカフェ「海風テラス」のサイトを構築する。HTML構造・CSS基礎・レスポンシブデザインを実践的なストーリーで学ぶチャプター「最初のクライアント」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-02
+chapter: 2
+arc: "founding"
+arcName: "創業編"
+skills:
+  - { category: "web-fundamentals", name: "HTML構造", level: "intermediate" }
+  - { category: "programming", name: "CSS基礎", level: "intro" }
+  - { category: "web-fundamentals", name: "レスポンシブデザイン", level: "intro" }
+estimatedMinutes: 50
+prerequisites: ["01-the-spark"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+朝9時、ShimaLinkのオフィス代わりに使っているコワーキングスペース。窓の外には国際通りの賑わいが見える。
+
+今日はMikaと初めての打ち合わせだ。あなたは緊張しながらノートPCを開いた。
+
+---
+
+**あなた:** 「おはよう！Mikaさん、もうすぐ来るって。あ、これ名刺代わりに作ったShimaLinkのロゴ入りステッカー。」
+
+**Yuki:** 「打ち合わせの前に、ひとつ大事なことを話しておくね。クライアントワークは自分のプロジェクトとは全然違う。"何を作るか"じゃなくて、"相手が何を必要としているか"から始まるんだ。」
+
+ドアが開き、カフェオーナーのMikaが笑顔で入ってきた。
+
+**Mika:** 「はじめまして！海風テラスのMikaです。友人の紹介で連絡しました。うちのカフェ、ずっとSNSだけでやってきたんですけど、やっぱりちゃんとしたWebサイトが欲しくて。」
+
+**あなた:** 「ありがとうございます！具体的にはどんな情報を載せたいですか？」
+
+**Mika:** 「メニュー、お店の場所、営業時間、あとお店の雰囲気が伝わる写真ですね。スマホで見る人が多いと思うので、スマホでもきれいに見えるといいなと思ってます。」
+
+**Yuki:** 「いい要件整理だね。じゃあ、まずはHTMLでしっかりした構造を作って、CSSでデザインを整えていこう。スマホ対応もやるよ。」
+
+---
+
+Mikaが帰った後、Yukiがホワイトボードにサイトの構成を描き始めた。
+
+**Yuki:** 「Chapter 1ではHTMLの基本を学んだよね。でも実際のWebサイトを作るには、もっと"意味のある"HTMLを書く必要がある。セマンティックHTMLって言うんだけど、これがプロのWebサイトの第一歩だよ。」
+
+**あなた:** 「セマンティック...意味がある、ということですか？」
+
+**Yuki:** 「そう。`<div>` だけで組み立てるのと、`<header>` `<nav>` `<main>` を使い分けるのでは、サイトの品質がまるで違うんだ。さあ、海風テラスのサイトを一緒に作ろう！」
+
+</StoryPanel>
+
+## セマンティックHTML — 意味のあるマークアップ
+
+Chapter 1では `<h1>` や `<p>` を使って簡単なページを作った。でもプロのWebサイトを作るには、HTMLの「意味」をもっと深く理解する必要がある。
+
+> **Yuki:** 「HTMLタグには"意味"がある。`<div>` は"ただの箱"だけど、`<nav>` は"ナビゲーション"、`<article>` は"記事"という意味を持つ。検索エンジンもスクリーンリーダーも、この意味を読み取っているんだよ。」
+
+## セマンティックタグ一覧
+
+| タグ | 意味 | 使いどころ |
+|------|------|-----------|
+| `<header>` | ページやセクションのヘッダー | サイト名、ロゴ、ナビゲーション |
+| `<nav>` | ナビゲーション | メニューリンク |
+| `<main>` | メインコンテンツ | ページの中心的な内容（1ページに1つ） |
+| `<section>` | テーマ的にまとまったセクション | 「メニュー」「アクセス」などの区分 |
+| `<article>` | 独立したコンテンツ | ブログ記事、ニュース |
+| `<aside>` | 補足情報 | サイドバー、関連リンク |
+| `<footer>` | フッター | 著作権、連絡先 |
+
+## 海風テラスのページ構造
+
+Mikaのカフェサイトをセマンティックに構造化してみよう：
+
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>海風テラス — 沖縄のオーシャンビューカフェ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>海風テラス</h1>
+    <p>沖縄の海を眺めながら、ゆったりとした時間を</p>
+    <nav>
+      <ul>
+        <li><a href="#menu">メニュー</a></li>
+        <li><a href="#access">アクセス</a></li>
+        <li><a href="#hours">営業時間</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="menu">
+      <h2>メニュー</h2>
+      <!-- メニュー内容 -->
+    </section>
+
+    <section id="access">
+      <h2>アクセス</h2>
+      <!-- 地図・住所 -->
+    </section>
+
+    <section id="hours">
+      <h2>営業時間</h2>
+      <!-- 営業時間情報 -->
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 海風テラス. All rights reserved.</p>
+  </footer>
+</body>
+</html>
+```
+
+## `<div>` と何が違うの？
+
+機能的には `<div>` で同じレイアウトを作れる。でもセマンティックタグを使うメリットは大きい：
+
+1. **アクセシビリティ**: スクリーンリーダーが `<nav>` を「ナビゲーション」と読み上げてくれる
+2. **SEO**: 検索エンジンがページの構造を正確に理解できる
+3. **メンテナンス性**: 他の開発者がコードを読んだとき、意図がすぐわかる
+
+```html
+<!-- 悪い例：div地獄 -->
+<div class="header">
+  <div class="nav">...</div>
+</div>
+
+<!-- 良い例：セマンティック -->
+<header>
+  <nav>...</nav>
+</header>
+```
+
+## meta タグの重要性
+
+`<head>` の中にある `<meta>` タグも見逃せない。特にこの2つは必須だ：
+
+```html
+<!-- 文字化けを防ぐ -->
+<meta charset="UTF-8">
+
+<!-- スマホでの表示を正しくする（超重要！） -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+```
+
+`viewport` メタタグがないと、スマホでもPC用のレイアウトが縮小表示されてしまう。Mikaが「スマホで見る人が多い」と言っていたから、これは絶対に入れよう。
+
+## ポイント
+
+- HTMLは「意味」を伝える言語。見た目はCSSの仕事
+- `<header>`, `<nav>`, `<main>`, `<footer>` はほぼすべてのWebサイトで使う
+- `<main>` は1ページに1つだけ
+- `viewport` メタタグはスマホ対応の第一歩
+
+## CSSセレクタとプロパティ — スタイルの基本
+
+HTMLで構造を作ったら、次はCSSで見た目を整えよう。CSSは「どの要素に」「どんなスタイルを」適用するかを指定する言語だ。
+
+> **Yuki:** 「HTMLが骨格なら、CSSは服やメイクみたいなもの。同じ骨格でも、CSSを変えるだけで印象がガラッと変わるよ。」
+
+## CSSの書き方
+
+CSSは3つの要素で構成される：
+
+```css
+セレクタ {
+  プロパティ: 値;
+}
+```
+
+```css
+/* 例：すべてのh1を青くして中央揃え */
+h1 {
+  color: blue;
+  text-align: center;
+}
+```
+
+## セレクタの種類
+
+| セレクタ | 書き方 | 何を選ぶか |
+|---------|--------|-----------|
+| 要素セレクタ | `h1` | すべての `<h1>` タグ |
+| クラスセレクタ | `.menu-item` | `class="menu-item"` を持つ要素 |
+| IDセレクタ | `#header` | `id="header"` を持つ要素 |
+| 子孫セレクタ | `nav a` | `<nav>` の中にある `<a>` タグ |
+| 複数セレクタ | `h1, h2` | `<h1>` と `<h2>` の両方 |
+
+## クラスとIDの使い分け
+
+```html
+<!-- クラス：同じスタイルを複数の要素に適用 -->
+<div class="menu-item">沖縄そば</div>
+<div class="menu-item">タコライス</div>
+
+<!-- ID：ページ内で一つだけの要素 -->
+<header id="site-header">...</header>
+```
+
+```css
+/* クラスはドット(.) */
+.menu-item {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* IDはシャープ(#) */
+#site-header {
+  background-color: #1a5276;
+  color: white;
+}
+```
+
+> **Yuki:** 「基本的にはクラスを使おう。IDはページ内リンク（`#menu`へジャンプ）や、JavaScriptで特定の要素を取得するときに使うことが多いよ。」
+
+## よく使うCSSプロパティ
+
+海風テラスのサイトで実際に使うプロパティを見てみよう：
+
+### テキスト関連
+
+```css
+h1 {
+  font-size: 32px;       /* 文字サイズ */
+  font-weight: bold;     /* 太さ */
+  color: #333;           /* 文字色 */
+  text-align: center;    /* 揃え位置 */
+  line-height: 1.6;      /* 行間 */
+}
+```
+
+### 背景・色
+
+```css
+header {
+  background-color: #f8f9fa;  /* 背景色 */
+  background-image: url('hero.jpg');  /* 背景画像 */
+}
+```
+
+### サイズ
+
+```css
+.container {
+  width: 100%;        /* 幅（親要素に対して） */
+  max-width: 960px;   /* 最大幅 */
+  margin: 0 auto;     /* 中央揃え */
+}
+```
+
+## CSSの適用方法
+
+CSSをHTMLに適用する方法は3つあるが、**外部ファイル**が推奨：
+
+```html
+<!-- 推奨：外部CSSファイル -->
+<link rel="stylesheet" href="style.css">
+
+<!-- 非推奨：styleタグ（小規模なら可） -->
+<style>
+  h1 { color: blue; }
+</style>
+
+<!-- 非推奨：インラインスタイル -->
+<h1 style="color: blue;">見出し</h1>
+```
+
+## 海風テラスに適用してみよう
+
+```css
+/* style.css */
+body {
+  font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+  margin: 0;
+  color: #333;
+  line-height: 1.8;
+}
+
+header {
+  background-color: #1a5276;
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 15px;
+}
+
+section {
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+footer {
+  background-color: #333;
+  color: #aaa;
+  text-align: center;
+  padding: 20px;
+}
+```
+
+## ポイント
+
+- CSSは「セレクタ」で対象を選び、「プロパティ」でスタイルを指定する
+- クラス（`.`）は再利用性が高い。ID（`#`）はページ内で1つだけ
+- 外部CSSファイルを使って、HTMLとスタイルを分離する
+- `margin: 0 auto;` は中央揃えの定番テクニック
+
+## ボックスモデル — CSSレイアウトの土台
+
+Webページ上のすべての要素は「箱（ボックス）」として扱われる。この箱の構造を理解することが、CSSレイアウトの第一歩だ。
+
+> **Yuki:** 「ボックスモデルは、段ボール箱を思い浮かべるとわかりやすいよ。中身があって、緩衝材があって、箱の壁があって、箱同士の間隔がある。」
+
+## ボックスモデルの4層構造
+
+```
+┌──────────────── margin（外側の余白）─────────────────┐
+│  ┌──────────── border（境界線）──────────────┐       │
+│  │  ┌──────── padding（内側の余白）────────┐ │       │
+│  │  │                                      │ │       │
+│  │  │          content（コンテンツ）         │ │       │
+│  │  │                                      │ │       │
+│  │  └──────────────────────────────────────┘ │       │
+│  └────────────────────────────────────────────┘       │
+└───────────────────────────────────────────────────────┘
+```
+
+| 層 | 役割 | 段ボールの例 |
+|---|---|---|
+| **content** | 実際のテキストや画像 | 箱の中身 |
+| **padding** | コンテンツと境界線の間の余白 | 緩衝材（プチプチ） |
+| **border** | 要素の境界線 | 段ボールの壁 |
+| **margin** | 要素の外側の余白 | 箱と箱の間隔 |
+
+## 実際に書いてみよう
+
+```css
+.menu-card {
+  /* コンテンツ部分のサイズ */
+  width: 300px;
+
+  /* 内側の余白：コンテンツから境界線までの距離 */
+  padding: 20px;
+
+  /* 境界線 */
+  border: 2px solid #ddd;
+
+  /* 外側の余白：他の要素との距離 */
+  margin: 15px;
+}
+```
+
+## padding と margin の違い
+
+ここが一番混乱しやすいポイントだ：
+
+```css
+/* padding: 背景色が適用される */
+.box-padding {
+  background-color: #e8f4f8;
+  padding: 30px;  /* ← 水色の領域が広がる */
+}
+
+/* margin: 透明な余白 */
+.box-margin {
+  background-color: #e8f4f8;
+  margin: 30px;   /* ← 水色の外側に透明な間隔 */
+}
+```
+
+**覚え方**: padding は「部屋の中のスペース」、margin は「部屋と部屋の間の廊下」。
+
+## ショートハンド記法
+
+余白を指定するとき、省略形が使える：
+
+```css
+/* 上下左右すべて20px */
+padding: 20px;
+
+/* 上下10px、左右20px */
+padding: 10px 20px;
+
+/* 上10px、左右20px、下30px */
+padding: 10px 20px 30px;
+
+/* 上、右、下、左（時計回り） */
+padding: 10px 20px 30px 40px;
+```
+
+## box-sizing: border-box
+
+デフォルトでは `width: 300px` を指定すると、paddingとborderの分だけ実際の表示サイズが大きくなる。これがレイアウト崩れの原因になりやすい。
+
+```css
+/* デフォルト（content-box） */
+.card {
+  width: 300px;
+  padding: 20px;
+  border: 2px solid #ddd;
+  /* → 実際の幅: 300 + 20*2 + 2*2 = 344px */
+}
+
+/* border-box にすると... */
+.card {
+  box-sizing: border-box;
+  width: 300px;
+  padding: 20px;
+  border: 2px solid #ddd;
+  /* → 実際の幅: ぴったり300px！ */
+}
+```
+
+> **Yuki:** 「現場では、全要素に `border-box` を適用するのが常識だよ。こう書くんだ：」
+
+```css
+/* CSSファイルの先頭に書く定番パターン */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+```
+
+## 海風テラスのメニューカードを作ろう
+
+```html
+<section id="menu">
+  <h2>メニュー</h2>
+  <div class="menu-card">
+    <h3>島豆腐チャンプルー</h3>
+    <p>地元の島豆腐と新鮮な野菜を使った定番メニュー</p>
+    <span class="price">¥980</span>
+  </div>
+  <div class="menu-card">
+    <h3>海ぶどうサラダ</h3>
+    <p>プチプチ食感の海ぶどうをたっぷり使ったサラダ</p>
+    <span class="price">¥750</span>
+  </div>
+</section>
+```
+
+```css
+.menu-card {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+  margin: 15px auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;        /* 角を丸くする */
+  background-color: #fff;
+}
+
+.menu-card h3 {
+  margin-top: 0;
+  color: #1a5276;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #e74c3c;
+}
+```
+
+## ポイント
+
+- すべてのHTML要素は「箱」。content → padding → border → margin の4層構造
+- padding は内側、margin は外側の余白
+- `box-sizing: border-box` を全体に適用するのが現場の常識
+- `margin: 0 auto;` で要素を中央揃えできる
+- ブラウザの開発者ツール（F12）でボックスモデルを視覚的に確認できる
+
+## レスポンシブデザイン入門 — どのデバイスでも美しく
+
+Mikaが言っていた「スマホでもきれいに見えるようにしたい」。これを実現するのがレスポンシブデザインだ。
+
+> **Yuki:** 「2026年の今、Webサイトへのアクセスの約7割がスマホからだよ。スマホ対応は"あったらいいな"じゃなくて"必須"なんだ。」
+
+## レスポンシブデザインとは？
+
+画面サイズに応じてレイアウトを自動的に調整するデザイン手法のこと。PC、タブレット、スマホ、どのデバイスでも最適な表示を実現する。
+
+## メディアクエリ — 画面サイズで切り替える
+
+CSSの `@media` を使って、画面幅に応じたスタイルを定義できる：
+
+```css
+/* すべての画面サイズで適用（デフォルト） */
+.menu-card {
+  width: 100%;
+  padding: 20px;
+}
+
+/* 画面幅が768px以上の場合（タブレット・PC） */
+@media (min-width: 768px) {
+  .menu-card {
+    width: 48%;
+  }
+}
+
+/* 画面幅が1024px以上の場合（PC） */
+@media (min-width: 1024px) {
+  .menu-card {
+    width: 30%;
+  }
+}
+```
+
+## モバイルファースト vs デスクトップファースト
+
+| アプローチ | 考え方 | メディアクエリ |
+|-----------|--------|--------------|
+| モバイルファースト | まずスマホ用を書き、大画面用を追加 | `min-width` |
+| デスクトップファースト | まずPC用を書き、小画面用を追加 | `max-width` |
+
+> **Yuki:** 「今はモバイルファーストが主流。小さい画面から設計して広げていく方が、シンプルなCSSになるよ。」
+
+```css
+/* モバイルファーストの例 */
+
+/* ベース：スマホ（1カラム） */
+.container {
+  padding: 15px;
+}
+
+/* タブレット以上：余白を広げる */
+@media (min-width: 768px) {
+  .container {
+    padding: 30px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+}
+
+/* PC以上：さらに広く */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 960px;
+  }
+}
+```
+
+## よく使うブレイクポイント
+
+ブレイクポイントとは、レイアウトが切り替わる画面幅のこと：
+
+| 名称 | 幅 | デバイス例 |
+|------|-----|-----------|
+| Small | ~576px | スマホ（縦向き） |
+| Medium | 577px~768px | スマホ（横向き）、小型タブレット |
+| Large | 769px~1024px | タブレット |
+| X-Large | 1025px~ | PC |
+
+## 柔軟な単位を使おう
+
+固定サイズ（px）だけでなく、相対的な単位を使うとレスポンシブになりやすい：
+
+```css
+/* 固定（レスポンシブに不向き） */
+.hero-image {
+  width: 960px;  /* スマホではみ出す */
+}
+
+/* 相対（レスポンシブ向き） */
+.hero-image {
+  width: 100%;           /* 親要素の幅に合わせる */
+  max-width: 960px;      /* でもPC上では960pxまで */
+}
+
+/* フォントサイズも柔軟に */
+h1 {
+  font-size: 1.5rem;     /* ベース */
+}
+@media (min-width: 768px) {
+  h1 {
+    font-size: 2.5rem;   /* 大画面では大きく */
+  }
+}
+```
+
+| 単位 | 基準 | 用途 |
+|------|------|------|
+| `px` | 固定ピクセル | border幅、小さな固定サイズ |
+| `%` | 親要素のサイズ | 幅の指定 |
+| `rem` | ルートのフォントサイズ | フォントサイズ、余白 |
+| `vw` / `vh` | ビューポートの幅/高さ | ヒーローセクションの高さなど |
+
+## 海風テラスをレスポンシブ対応しよう
+
+```css
+/* ベーススタイル（スマホ） */
+header {
+  padding: 20px 15px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 1.5rem;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+section {
+  padding: 20px 15px;
+}
+
+/* タブレット以上 */
+@media (min-width: 768px) {
+  header {
+    padding: 40px 30px;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+  }
+
+  nav ul {
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  section {
+    padding: 40px 30px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+```
+
+## 画像のレスポンシブ対応
+
+```css
+/* 画像がはみ出さないようにする基本設定 */
+img {
+  max-width: 100%;
+  height: auto;
+}
+```
+
+この2行はほぼすべてのプロジェクトで使う定番パターンだ。
+
+## ポイント
+
+- `viewport` メタタグは必須。これがないとスマホでレスポンシブが効かない
+- モバイルファースト（`min-width`）で書くのが主流
+- `%`, `rem`, `vw` など相対単位を活用する
+- `max-width: 100%` で画像のはみ出しを防ぐ
+- ブラウザの開発者ツール（F12）でスマホ表示をシミュレーションできる
+
+<StoryPanel variant="conclusion">
+
+ブラウザに海風テラスのWebサイトが映し出されている。ヘッダー、ナビゲーション、メニューセクション、フッター。シンプルだけれど、きちんとした構造を持つページだ。
+
+スマホサイズにブラウザを縮めてみると、レイアウトが自然に調整される。
+
+---
+
+**あなた:** 「おお！スマホでもちゃんと見える！Mikaさんに見せたら喜ぶぞ。」
+
+**あなた:** 「CSSって、思ったより論理的なんですね。ボックスモデルの概念がわかってから、レイアウトが理解できるようになりました。」
+
+**Yuki:** 「いい感じ。でもね、Mikaさんが最初に言ってたこと覚えてる？"お店の雰囲気が伝わるサイト"って。今の状態は構造としては正しいけど、デザインがまだ物足りないよね。」
+
+あなたがスマホを見せる。有名なカフェのWebサイトが表示されている。写真が美しく配置され、フォントも洗練されている。
+
+**あなた:** 「こういう感じにしたいんだよな。今のうちのサイト、なんか"教科書っぽい"じゃん。」
+
+**Yuki:** 「それはレイアウトの力だよ。FlexboxやGridを使えば、要素を自由に配置できる。色やフォントの選び方ひとつでサイトの印象は大きく変わるんだ。」
+
+**あなた:** 「レイアウト...次はデザインの話ですか？」
+
+**Yuki:** 「そう。構造がしっかりしてるからこそ、デザインが映えるんだ。次は"見た目の力"を学ぼう。」
+
+---
+
+> **次のチャプター**: *Chapter 3: デザインの力* — FlexboxとCSS Gridでレイアウトを極める。海風テラスのサイトを、プロの仕上がりに近づけていく。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="02-first-client" />
+
+<ChapterFaq chapterId="02-first-client" />
+
+<SeriesNav current={2} />

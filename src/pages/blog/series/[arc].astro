@@ -1,0 +1,67 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Header from "../../../components/common/Header.astro";
+import Footer from "../../../components/common/Footer.astro";
+import BlogCard from "../../../components/blog/BlogCard.astro";
+import { getCollection } from "astro:content";
+import { arcs } from "../../../data/blog-meta";
+
+export function getStaticPaths() {
+  return arcs.map((arc) => ({
+    params: { arc: arc.id },
+    props: { arc },
+  }));
+}
+
+const { arc } = Astro.props;
+const allPosts = await getCollection("blog");
+const arcPosts = allPosts
+  .filter((p) => p.data.arc === arc.id)
+  .sort((a, b) => a.data.chapter - b.data.chapter);
+---
+
+<BaseLayout
+  title={`${arc.name} | CodeQuest 無料研修`}
+  description={arc.description}
+>
+  <Header />
+
+  <main class="min-h-screen">
+    <!-- Hero -->
+    <section class="bg-gradient-to-b from-navy to-navy-light py-16 sm:py-20">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        <a href="/blog/" class="inline-flex items-center gap-1 text-xs text-white/50 hover:text-white/80 transition-colors mb-6">
+          ← 無料研修一覧に戻る
+        </a>
+        <span class="block text-4xl mb-4">{arc.emoji}</span>
+        <h1 class="text-3xl sm:text-4xl font-heading font-black text-white mb-3">
+          {arc.name}
+        </h1>
+        <p class="text-base text-white/60 max-w-lg mx-auto">{arc.description}</p>
+        <p class="text-sm text-white/40 mt-3">{arcPosts.length}章</p>
+      </div>
+    </section>
+
+    <!-- Posts -->
+    <section class="py-12">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        <div class="grid gap-4 sm:gap-6">
+          {arcPosts.map((post) => (
+            <BlogCard
+              id={post.id}
+              title={post.data.title}
+              subtitle={post.data.subtitle}
+              chapter={post.data.chapter}
+              arc={post.data.arc}
+              arcName={post.data.arcName}
+              skills={post.data.skills}
+              estimatedMinutes={post.data.estimatedMinutes}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>

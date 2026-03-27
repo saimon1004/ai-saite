@@ -1,0 +1,753 @@
+---
+title: "動き出すページ"
+subtitle: "JavaScriptでインタラクティブな体験を作る"
+description: "JavaScriptでインタラクティブな体験を作る。JavaScript基礎・DOM操作・イベント処理を実践的なストーリーで学ぶチャプター「動き出すページ」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-04
+chapter: 4
+arc: "founding"
+arcName: "創業編"
+skills:
+  - { category: "programming", name: "JavaScript基礎", level: "intro" }
+  - { category: "programming", name: "DOM操作", level: "intro" }
+  - { category: "programming", name: "イベント処理", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["03-making-it-pretty"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+海風テラスのデザインリニューアルをMikaに見せた日の夜。チーム3人はコワーキングスペースで今後の計画を話し合っていた。
+
+---
+
+**Mika:** 「デザイン、本当に素敵です！ところで、予約フォームってどうなりますか？今、電話とSNSのDMで予約を受けてるんですけど、漏れが多くて...」
+
+**あなた:** 「あと、メニューの"ドリンクだけ見たい"とか"デザートだけ"とか、絞り込めると便利じゃないですか？」
+
+**Mika:** 「それ！お客さんからもよく言われます。あと、ハンバーガーメニューっていうんですか？スマホで三本線をタップしたらメニューが出てくるやつ。あれも欲しいです。」
+
+**あなた:** 「予約フォーム、メニュー絞り込み、ハンバーガーメニュー...これ全部HTMLとCSSだけでは無理ですよね？」
+
+**Yuki:** 「そう、ここからがJavaScriptの出番。HTMLが"何を表示するか"、CSSが"どう見せるか"を担当してたよね。JavaScriptは"どう動くか"を担当する言語だよ。」
+
+---
+
+翌朝、Yukiが小さなデモを用意してきた。ブラウザでボタンを押すと色が変わり、テキストが入れ替わる。
+
+**Yuki:** 「JavaScriptを使えば、ページの要素を自由に操作できる。テキストを変えたり、クラスを追加したり、表示/非表示を切り替えたり。まずは基本的な文法を覚えて、それからDOMの操作とイベント処理を学んでいこう。」
+
+**あなた:** 「DOM...ですか？」
+
+**Yuki:** 「Document Object Model。HTMLをJavaScriptから操作するための仕組みだよ。HTMLの要素をJavaScriptの"オブジェクト"として扱えるようにするんだ。詳しくは順番にやっていこう。」
+
+</StoryPanel>
+
+## JavaScript基礎 — 変数・型・基本文法
+
+JavaScriptはWebページに「動き」を与える言語。ブラウザが直接実行できる唯一のプログラミング言語だ。
+
+> **Yuki:** 「HTMLとCSSが"静止画"なら、JavaScriptは"映画"にする技術。ユーザーの操作に反応して、ページがリアルタイムに変化するんだ。」
+
+## JavaScriptの書き場所
+
+HTMLファイルに `<script>` タグで読み込む：
+
+```html
+<!-- 方法1: 外部ファイル（推奨） -->
+<script src="script.js"></script>
+
+<!-- 方法2: HTML内に直接書く -->
+<script>
+  console.log("Hello, JavaScript!");
+</script>
+```
+
+> **重要**: `<script>` タグは `</body>` の直前に置くのが基本。HTMLの読み込みが終わってからJSを実行するためだ。
+
+## 変数の宣言
+
+JavaScriptで値を保存するには変数を使う：
+
+```javascript
+// const: 変更しない値（定数）
+const cafeName = "海風テラス";
+const maxSeats = 30;
+
+// let: 変更する値
+let currentGuests = 12;
+currentGuests = 15; // OK
+
+// var: 古い書き方（使わない）
+```
+
+> **Yuki:** 「基本は `const` を使って、変更が必要なときだけ `let` にする。`var` は古い書き方だから、新しいコードでは使わないよ。」
+
+## データ型
+
+| 型 | 例 | 用途 |
+|---|---|---|
+| **文字列（String）** | `"海風テラス"`, `'予約完了'` | テキスト |
+| **数値（Number）** | `980`, `3.14` | 金額、計算 |
+| **真偽値（Boolean）** | `true`, `false` | 判定結果 |
+| **配列（Array）** | `["そば", "タコライス"]` | 複数の値のリスト |
+| **オブジェクト（Object）** | `{ name: "Mika", age: 28 }` | 関連するデータの集合 |
+| **null / undefined** | `null`, `undefined` | 値がない状態 |
+
+```javascript
+// 文字列
+const menuItem = "島豆腐チャンプルー";
+
+// 数値
+const price = 980;
+
+// 真偽値
+const isOpen = true;
+
+// 配列
+const categories = ["フード", "ドリンク", "デザート"];
+
+// オブジェクト
+const reservation = {
+  name: "田中太郎",
+  date: "2026-04-01",
+  guests: 3
+};
+```
+
+## テンプレートリテラル
+
+文字列の中に変数を埋め込む便利な方法：
+
+```javascript
+const name = "田中";
+const guests = 3;
+
+// 古い書き方（+で連結）
+const msg1 = name + "様、" + guests + "名でご予約ですね。";
+
+// テンプレートリテラル（バッククォート ``）
+const msg2 = `${name}様、${guests}名でご予約ですね。`;
+// → "田中様、3名でご予約ですね。"
+```
+
+## 条件分岐
+
+```javascript
+const hour = new Date().getHours();
+
+if (hour < 11) {
+  console.log("モーニングメニューです");
+} else if (hour < 15) {
+  console.log("ランチメニューです");
+} else {
+  console.log("ディナーメニューです");
+}
+```
+
+## 配列の操作
+
+```javascript
+const menu = ["沖縄そば", "タコライス", "海ぶどうサラダ"];
+
+// 要素の取得（インデックスは0から）
+console.log(menu[0]); // "沖縄そば"
+
+// 要素の追加
+menu.push("ゴーヤチャンプルー");
+
+// 繰り返し処理
+menu.forEach(item => {
+  console.log(`- ${item}`);
+});
+
+// 条件で絞り込み
+const longNames = menu.filter(item => item.length > 4);
+```
+
+## console.log — デバッグの味方
+
+`console.log()` はブラウザのコンソールに値を出力する。開発中のデバッグに必須：
+
+```javascript
+const price = 980;
+const tax = price * 0.1;
+console.log("税込:", price + tax); // コンソールに "税込: 1078" と表示
+
+const reservation = { name: "田中", guests: 3 };
+console.log(reservation); // オブジェクトの中身が見える
+```
+
+ブラウザの開発者ツール（F12）→ Console タブで確認できる。
+
+## ポイント
+
+- `const` を基本に使い、変更が必要なときだけ `let` を使う
+- テンプレートリテラル（`` ` ``）で文字列に変数を埋め込める
+- 配列は `[]`、オブジェクトは `{}` で作る
+- `console.log()` はデバッグの必須ツール
+- `<script>` タグは `</body>` の直前に置く
+
+## 関数 — 処理をまとめて再利用する
+
+プログラミングで同じ処理を何度も書くのは非効率だ。関数を使えば、処理をまとめて名前をつけ、何度でも呼び出せる。
+
+> **Yuki:** 「関数はレシピみたいなもの。一度書いておけば、材料（引数）を変えるだけで同じ手順を繰り返せるんだ。」
+
+## 関数の基本
+
+```javascript
+// 関数の定義
+function greetCustomer(name) {
+  return `${name}様、いらっしゃいませ！`;
+}
+
+// 関数の呼び出し
+const message = greetCustomer("田中");
+console.log(message); // "田中様、いらっしゃいませ！"
+```
+
+| 用語 | 意味 |
+|------|------|
+| **引数（パラメータ）** | 関数に渡す入力値 |
+| **戻り値（return）** | 関数が返す結果 |
+| **呼び出し** | 関数を実行すること |
+
+## アロー関数
+
+ES6以降で使えるモダンな書き方：
+
+```javascript
+// 従来の関数
+function add(a, b) {
+  return a + b;
+}
+
+// アロー関数
+const add = (a, b) => {
+  return a + b;
+};
+
+// 1行なら {} と return を省略できる
+const add = (a, b) => a + b;
+
+// 引数が1つなら () も省略できる
+const double = n => n * 2;
+```
+
+> **Yuki:** 「現場ではアロー関数をよく使うよ。特にコールバック関数（後で説明する）で大活躍する。」
+
+## 実用的な関数を作ろう
+
+### 税込価格の計算
+
+```javascript
+const calcTaxPrice = (price, taxRate = 0.1) => {
+  return Math.floor(price * (1 + taxRate));
+};
+
+console.log(calcTaxPrice(980));     // 1078
+console.log(calcTaxPrice(980, 0.08)); // 1058
+```
+
+`taxRate = 0.1` はデフォルト引数。値が渡されなければ0.1が使われる。
+
+### メニューの絞り込み
+
+```javascript
+const menuItems = [
+  { name: "沖縄そば", category: "food", price: 850 },
+  { name: "マンゴースムージー", category: "drink", price: 650 },
+  { name: "紅芋タルト", category: "dessert", price: 450 },
+  { name: "タコライス", category: "food", price: 780 },
+  { name: "シークヮーサージュース", category: "drink", price: 400 }
+];
+
+const filterByCategory = (items, category) => {
+  return items.filter(item => item.category === category);
+};
+
+const drinks = filterByCategory(menuItems, "drink");
+console.log(drinks);
+// [{ name: "マンゴースムージー", ... }, { name: "シークヮーサージュース", ... }]
+```
+
+### 予約のバリデーション
+
+```javascript
+const validateReservation = (name, date, guests) => {
+  const errors = [];
+
+  if (!name || name.trim() === "") {
+    errors.push("お名前を入力してください");
+  }
+
+  if (!date) {
+    errors.push("日付を選択してください");
+  }
+
+  if (guests < 1 || guests > 10) {
+    errors.push("人数は1〜10名で指定してください");
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors: errors
+  };
+};
+
+const result = validateReservation("", "2026-04-01", 15);
+console.log(result);
+// { isValid: false, errors: ["お名前を入力してください", "人数は1〜10名で指定してください"] }
+```
+
+## コールバック関数
+
+関数を別の関数に引数として渡すパターン。JavaScriptでは非常によく使う：
+
+```javascript
+// forEach にアロー関数を渡す
+const prices = [850, 650, 450];
+prices.forEach(price => {
+  console.log(`¥${price}`);
+});
+
+// setTimeout: 一定時間後に実行
+setTimeout(() => {
+  console.log("3秒経ちました！");
+}, 3000);
+```
+
+## 配列メソッドと関数の組み合わせ
+
+```javascript
+const menuItems = [
+  { name: "沖縄そば", price: 850 },
+  { name: "タコライス", price: 780 },
+  { name: "マンゴースムージー", price: 650 }
+];
+
+// map: 各要素を変換した新しい配列を作る
+const menuNames = menuItems.map(item => item.name);
+// ["沖縄そば", "タコライス", "マンゴースムージー"]
+
+// filter: 条件に合う要素だけの配列を作る
+const expensive = menuItems.filter(item => item.price >= 800);
+// [{ name: "沖縄そば", price: 850 }]
+
+// find: 条件に合う最初の1つを返す
+const soba = menuItems.find(item => item.name === "沖縄そば");
+// { name: "沖縄そば", price: 850 }
+```
+
+## ポイント
+
+- 関数は処理をまとめて再利用するための仕組み
+- アロー関数（`=>`）がモダンな書き方。コールバックで特に便利
+- デフォルト引数で省略可能なパラメータを作れる
+- `map`, `filter`, `find` は配列操作の三種の神器
+- 関数は「1つの関数に1つの責務」を意識する
+
+## DOM操作 — HTMLをJavaScriptで制御する
+
+DOM（Document Object Model）は、HTMLドキュメントをJavaScriptのオブジェクトとして扱うための仕組み。これを使えば、ページの内容をリアルタイムに書き換えられる。
+
+> **Yuki:** 「DOMを理解すると、HTMLが"静的な書類"から"操り人形"に変わるよ。JavaScriptが糸を引いて、好きなように動かせるんだ。」
+
+## 要素の取得
+
+HTMLの要素をJavaScriptで操作するには、まず「取得」する必要がある：
+
+```javascript
+// IDで取得（1つだけ）
+const header = document.getElementById("site-header");
+
+// CSSセレクタで取得（最初の1つ）
+const firstCard = document.querySelector(".menu-card");
+
+// CSSセレクタで取得（すべて）
+const allCards = document.querySelectorAll(".menu-card");
+```
+
+| メソッド | 戻り値 | 用途 |
+|---------|--------|------|
+| `getElementById("id")` | 要素1つ | IDで特定の要素を取得 |
+| `querySelector("セレクタ")` | 要素1つ（最初のもの） | CSSセレクタで柔軟に取得 |
+| `querySelectorAll("セレクタ")` | 全要素のリスト | 複数要素をまとめて取得 |
+
+> **Yuki:** 「`querySelector` が一番汎用的だよ。CSSのセレクタがそのまま使えるから。」
+
+## テキストの変更
+
+```javascript
+const title = document.querySelector("h1");
+
+// テキスト内容を変更
+title.textContent = "海風テラス — Ocean Breeze";
+
+// HTMLを含む内容を変更
+title.innerHTML = "海風テラス <small>Ocean Breeze</small>";
+```
+
+| プロパティ | 特徴 |
+|-----------|------|
+| `textContent` | テキストのみ（安全） |
+| `innerHTML` | HTMLタグを含められる（XSSに注意） |
+
+## スタイルの変更
+
+```javascript
+const hero = document.querySelector(".hero");
+
+// 直接スタイルを変更
+hero.style.backgroundColor = "#1a5276";
+hero.style.padding = "40px";
+
+// クラスの追加・削除（推奨）
+hero.classList.add("active");
+hero.classList.remove("hidden");
+hero.classList.toggle("open");  // あれば外す、なければ付ける
+```
+
+> **Yuki:** 「スタイルは直接変更するより、クラスを付け替える方が管理しやすいよ。スタイルの定義はCSSに任せるのがベストプラクティス。」
+
+```css
+/* CSSでクラスを定義 */
+.hidden { display: none; }
+.active { background-color: #e67e22; color: white; }
+```
+
+```javascript
+// JavaScriptでクラスを切り替え
+element.classList.toggle("hidden");
+```
+
+## 属性の操作
+
+```javascript
+const img = document.querySelector(".cafe-photo");
+
+// 属性の取得
+const src = img.getAttribute("src");
+
+// 属性の設定
+img.setAttribute("src", "new-photo.jpg");
+img.setAttribute("alt", "リニューアルした店内");
+
+// data属性
+const card = document.querySelector(".menu-card");
+const category = card.dataset.category; // data-category="food" → "food"
+```
+
+## 要素の作成と追加
+
+新しいHTML要素を動的に作れる：
+
+```javascript
+// 新しい要素を作成
+const newCard = document.createElement("div");
+newCard.classList.add("menu-card");
+newCard.innerHTML = `
+  <h3>新メニュー：海ぶどう丼</h3>
+  <p>プチプチ食感が楽しい海ぶどうをたっぷり</p>
+  <span class="price">¥1,100</span>
+`;
+
+// 既存の要素の中に追加
+const menuSection = document.querySelector("#menu");
+menuSection.appendChild(newCard);
+```
+
+## メニュー絞り込みを作ってみよう
+
+海風テラスのメニュー絞り込み機能の基本的な仕組み：
+
+```html
+<div class="filter-buttons">
+  <button class="filter-btn active" data-category="all">すべて</button>
+  <button class="filter-btn" data-category="food">フード</button>
+  <button class="filter-btn" data-category="drink">ドリンク</button>
+  <button class="filter-btn" data-category="dessert">デザート</button>
+</div>
+
+<div class="menu-grid">
+  <div class="menu-card" data-category="food">沖縄そば</div>
+  <div class="menu-card" data-category="drink">マンゴースムージー</div>
+  <div class="menu-card" data-category="dessert">紅芋タルト</div>
+</div>
+```
+
+```javascript
+const filterMenu = (category) => {
+  const cards = document.querySelectorAll(".menu-card");
+
+  cards.forEach(card => {
+    if (category === "all" || card.dataset.category === category) {
+      card.classList.remove("hidden");
+    } else {
+      card.classList.add("hidden");
+    }
+  });
+};
+```
+
+## ポイント
+
+- `querySelector` / `querySelectorAll` で要素を取得する
+- テキスト変更は `textContent`、HTML変更は `innerHTML`
+- スタイル変更は `classList` でクラスを切り替えるのが推奨
+- `data-*` 属性で要素にカスタムデータを持たせられる
+- `createElement` + `appendChild` で動的に要素を追加できる
+
+## イベント処理 — ユーザーの操作に反応する
+
+ユーザーがボタンをクリックした、フォームに入力した、スクロールした——こういった操作を「イベント」と呼ぶ。JavaScriptでイベントを検知し、それに応じた処理を実行するのがイベント処理だ。
+
+> **Yuki:** 「イベント処理は"アクション映画のスタントコーディネーター"みたいなもの。"このボタンが押されたら、こうする"というシナリオを書いておくんだ。」
+
+## addEventListener — イベントリスナーの登録
+
+```javascript
+const button = document.querySelector("#reserve-btn");
+
+button.addEventListener("click", () => {
+  console.log("ボタンがクリックされました！");
+});
+```
+
+`addEventListener` は3つの部分で構成される：
+1. **対象の要素** — どの要素で
+2. **イベント名** — 何が起きたら
+3. **コールバック関数** — 何をするか
+
+## よく使うイベント一覧
+
+| イベント | 発生タイミング | 用途 |
+|---------|--------------|------|
+| `click` | クリック時 | ボタン、リンク |
+| `submit` | フォーム送信時 | 予約フォーム |
+| `input` | 入力内容が変わった時 | リアルタイムバリデーション |
+| `change` | 値が確定した時 | セレクトボックス |
+| `keydown` | キーを押した時 | ショートカットキー |
+| `scroll` | スクロール時 | スクロールアニメーション |
+| `DOMContentLoaded` | HTML読み込み完了時 | 初期化処理 |
+
+## クリックイベントの実例
+
+### ハンバーガーメニュー
+
+```html
+<button class="hamburger" id="menu-toggle">
+  <span></span><span></span><span></span>
+</button>
+<nav id="mobile-nav" class="mobile-nav">
+  <ul>
+    <li><a href="#menu">メニュー</a></li>
+    <li><a href="#access">アクセス</a></li>
+    <li><a href="#hours">営業時間</a></li>
+  </ul>
+</nav>
+```
+
+```javascript
+const menuToggle = document.querySelector("#menu-toggle");
+const mobileNav = document.querySelector("#mobile-nav");
+
+menuToggle.addEventListener("click", () => {
+  mobileNav.classList.toggle("open");
+  menuToggle.classList.toggle("active");
+});
+```
+
+```css
+.mobile-nav {
+  display: none;
+}
+.mobile-nav.open {
+  display: block;
+}
+```
+
+### メニューフィルター
+
+```javascript
+const filterButtons = document.querySelectorAll(".filter-btn");
+
+filterButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    // アクティブなボタンのスタイルを切り替え
+    filterButtons.forEach(btn => btn.classList.remove("active"));
+    button.classList.add("active");
+
+    // メニューを絞り込み
+    const category = button.dataset.category;
+    filterMenu(category);
+  });
+});
+```
+
+## フォームイベント
+
+### 予約フォームの実装
+
+```html
+<form id="reservation-form">
+  <div class="form-group">
+    <label for="name">お名前</label>
+    <input type="text" id="name" name="name" required>
+    <span class="error-msg" id="name-error"></span>
+  </div>
+
+  <div class="form-group">
+    <label for="date">ご予約日</label>
+    <input type="date" id="date" name="date" required>
+  </div>
+
+  <div class="form-group">
+    <label for="guests">人数</label>
+    <input type="number" id="guests" name="guests" min="1" max="10" required>
+  </div>
+
+  <button type="submit" class="btn btn-primary">予約する</button>
+</form>
+
+<div id="result" class="hidden"></div>
+```
+
+```javascript
+const form = document.querySelector("#reservation-form");
+
+form.addEventListener("submit", (event) => {
+  // デフォルトのフォーム送信を停止
+  event.preventDefault();
+
+  // 入力値を取得
+  const name = document.querySelector("#name").value;
+  const date = document.querySelector("#date").value;
+  const guests = document.querySelector("#guests").value;
+
+  // バリデーション
+  const validation = validateReservation(name, date, Number(guests));
+
+  if (!validation.isValid) {
+    alert(validation.errors.join("\n"));
+    return;
+  }
+
+  // 成功時の処理
+  const result = document.querySelector("#result");
+  result.classList.remove("hidden");
+  result.innerHTML = `
+    <h3>ご予約を受け付けました</h3>
+    <p>${name}様 / ${date} / ${guests}名</p>
+  `;
+});
+```
+
+## event.preventDefault() — デフォルト動作の抑止
+
+ブラウザには要素ごとにデフォルトの動作がある：
+
+| 要素 | デフォルト動作 | preventDefault() で |
+|------|--------------|-------------------|
+| `<form>` | ページ遷移してフォーム送信 | JavaScriptで処理する |
+| `<a>` | リンク先に移動 | 独自の処理を実行 |
+
+```javascript
+// フォーム送信をJSで制御
+form.addEventListener("submit", (event) => {
+  event.preventDefault(); // ページ遷移を防ぐ
+  // JavaScriptで送信処理を行う
+});
+```
+
+## リアルタイムバリデーション
+
+`input` イベントで入力中にチェックできる：
+
+```javascript
+const nameInput = document.querySelector("#name");
+const nameError = document.querySelector("#name-error");
+
+nameInput.addEventListener("input", () => {
+  if (nameInput.value.trim() === "") {
+    nameError.textContent = "お名前を入力してください";
+    nameInput.classList.add("input-error");
+  } else {
+    nameError.textContent = "";
+    nameInput.classList.remove("input-error");
+  }
+});
+```
+
+```css
+.input-error {
+  border-color: #e74c3c;
+}
+.error-msg {
+  color: #e74c3c;
+  font-size: 0.85rem;
+}
+```
+
+## DOMContentLoaded — 初期化のタイミング
+
+```javascript
+document.addEventListener("DOMContentLoaded", () => {
+  // HTMLの読み込みが完了してから実行される
+  console.log("ページの準備完了！");
+  initializeMenu();
+  setupEventListeners();
+});
+```
+
+`<script>` タグを `</body>` 直前に置いている場合は不要だが、`<head>` 内に置く場合は `DOMContentLoaded` で囲む必要がある。
+
+## ポイント
+
+- `addEventListener` でイベントリスナーを登録する
+- `click`, `submit`, `input` が最もよく使うイベント
+- `event.preventDefault()` でデフォルト動作を抑止できる
+- フォームの `submit` イベントでバリデーションを行う
+- `classList.toggle()` でクラスの付け外しが簡単にできる
+- 入力中のリアルタイムチェックには `input` イベントを使う
+
+<StoryPanel variant="conclusion">
+
+ブラウザの中で、海風テラスのサイトが「生きている」。
+
+ハンバーガーメニューをタップするとナビゲーションがスライドして現れる。メニューセクションでは「ドリンク」ボタンを押すとドリンクだけが表示される。予約フォームに名前と日時を入力して送信ボタンを押すと、バリデーションが走り、確認メッセージが表示される。
+
+---
+
+**あなた:** 「すげえ...完全にちゃんとしたWebサイトじゃん。これ、本当にうちらが作ったの？」
+
+**Mika:** 「ありがとうございます！これなら予約の管理がずっと楽になります。ところで...このサイト、いつ公開できますか？友人にも紹介したいんです。」
+
+**あなた:** 「公開...？そうか、今は僕のパソコンの中でしか見られないんですよね。」
+
+**Yuki:** 「そう。今は `localhost` で動いてるだけだからね。世界中の人がアクセスできるようにするには、デプロイ（公開）が必要だよ。サーバーにファイルを置いて、ドメインを設定して、HTTPSで安全に接続できるようにする。」
+
+**あなた:** 「ドメインって、"umikaze-terrace.com" みたいなやつ？」
+
+**Yuki:** 「そう。あとGitのブランチ運用も覚えないとね。複数人で開発するとき、メインのコードを壊さないようにする仕組みだよ。」
+
+**あなた:** 「デプロイかぁ。いよいよ世の中に出すんですね。緊張するけど...ワクワクします。」
+
+**Yuki:** 「その気持ちを大事にして。ローンチの瞬間は何度経験しても特別だよ。」
+
+---
+
+> **次のチャプター**: *Chapter 5: 世界に公開* — Git のブランチ運用を学び、海風テラスのサイトをインターネットに公開する。ドメイン、DNS、HTTPSの設定に挑む。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="04-bringing-it-alive" />
+
+<ChapterFaq chapterId="04-bringing-it-alive" />
+
+<SeriesNav current={4} />

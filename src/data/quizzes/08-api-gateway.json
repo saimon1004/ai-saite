@@ -1,0 +1,94 @@
+[
+  {
+    "id": "ch08-q01",
+    "question": "REST APIにおいて、新しいデータを作成するHTTPメソッドは？",
+    "choices": ["GET", "POST", "PUT", "DELETE"],
+    "correctIndex": 1,
+    "explanation": "POSTは新しいリソース（データ）を作成するために使います。GETは取得、PUTは更新、DELETEは削除です。CRUDのCreate（作成）に対応します。",
+    "storyContext": "ShimaLinkに新しいクライアントを登録するとき、POST /api/clientsを使ったのを思い出そう。",
+    "skill": { "category": "web-fundamentals", "name": "HTTP Methods", "level": "intro" }
+  },
+  {
+    "id": "ch08-q02",
+    "question": "JSONで正しい形式はどれ？",
+    "choices": [
+      "{ name: 'Mika' }",
+      "{ \"name\": \"Mika\" }",
+      "{ 'name': 'Mika' }",
+      "{ name: \"Mika\" }"
+    ],
+    "correctIndex": 1,
+    "explanation": "JSONではキーと文字列値の両方にダブルクォート（\"）が必須です。シングルクォートやクォートなしのキーは無効です。",
+    "storyContext": "APIのリクエストボディやレスポンスはすべてJSON形式。ルールを間違えるとパースエラーになるよ。",
+    "skill": { "category": "web-fundamentals", "name": "JSON", "level": "intro" }
+  },
+  {
+    "id": "ch08-q03",
+    "question": "HTTPステータスコード201の意味は？",
+    "choices": ["OK（成功）", "Created（作成成功）", "No Content（内容なし）", "Not Found（未発見）"],
+    "correctIndex": 1,
+    "explanation": "201 Createdは、POSTリクエストでリソースの作成に成功したことを示すステータスコードです。200は一般的な成功、204は成功だが返すデータなし、404はリソース未発見です。",
+    "storyContext": "新規クライアントの登録が成功すると、サーバーは201ステータスと作成されたデータを返す。",
+    "skill": { "category": "web-fundamentals", "name": "REST API", "level": "intro" }
+  },
+  {
+    "id": "ch08-q04",
+    "question": "RESTful APIのURL設計として適切なのはどれ？",
+    "choices": [
+      "/api/getClients",
+      "/api/clients",
+      "/api/client_list",
+      "/api/fetchAllClients"
+    ],
+    "correctIndex": 1,
+    "explanation": "RESTful APIでは、URLにはリソース名（名詞・複数形）を使い、動詞は含めません。操作はHTTPメソッドで表します。/api/clientsに対してGETでは取得、POSTでは作成になります。",
+    "storyContext": "Yukiが「URLは名詞、HTTPメソッドが動詞」と教えてくれた設計原則だ。",
+    "skill": { "category": "programming", "name": "API Design", "level": "intro" }
+  },
+  {
+    "id": "ch08-q05",
+    "question": "fetchでPOSTリクエストを送る際、Content-Typeヘッダーに設定する値は？",
+    "choices": ["text/html", "application/json", "multipart/form-data", "text/plain"],
+    "correctIndex": 1,
+    "explanation": "JSONデータを送信する場合、Content-Typeヘッダーにapplication/jsonを設定します。サーバーはこのヘッダーでリクエストボディの形式を判断します。",
+    "storyContext": "createClient関数でfetchのheadersに設定した値を思い出そう。",
+    "skill": { "category": "web-fundamentals", "name": "REST API", "level": "intro" }
+  },
+  {
+    "id": "ch08-q06",
+    "question": "JSON.stringify()の役割は？",
+    "choices": [
+      "JSON文字列をオブジェクトに変換する",
+      "オブジェクトをJSON文字列に変換する",
+      "JSONの形式を検証する",
+      "JSONを整形して表示する"
+    ],
+    "correctIndex": 1,
+    "explanation": "JSON.stringify()はJavaScriptオブジェクトをJSON文字列に変換します。APIにデータを送信する際、fetchのbodyに渡す前にこの変換が必要です。逆変換はJSON.parse()です。",
+    "storyContext": "fetchのbodyにはオブジェクトをそのまま渡せない。JSON.stringify()で文字列に変換してから送信する。",
+    "skill": { "category": "web-fundamentals", "name": "JSON", "level": "intro" }
+  },
+  {
+    "id": "ch08-q07",
+    "question": "APIの「冪等性（べきとうせい）」とは何？",
+    "choices": [
+      "リクエストが高速に処理されること",
+      "同じリクエストを何度送っても結果が同じこと",
+      "レスポンスのサイズが常に同じこと",
+      "認証なしでアクセスできること"
+    ],
+    "correctIndex": 1,
+    "explanation": "冪等性とは、同じリクエストを何度実行しても結果が変わらない性質です。GET、PUT、DELETEは冪等ですが、POSTは冪等ではありません（送るたびに新しいリソースが作られる）。",
+    "storyContext": "PUTで同じデータを2回送っても同じ結果だけど、POSTを2回送ると2つのクライアントが作られてしまう。",
+    "skill": { "category": "web-fundamentals", "name": "HTTP Methods", "level": "intro" }
+  },
+  {
+    "id": "ch08-q08",
+    "question": "APIのエラーレスポンスとして、クライアント側（リクエスト側）のミスを示すステータスコードの範囲は？",
+    "choices": ["100番台", "200番台", "400番台", "500番台"],
+    "correctIndex": 2,
+    "explanation": "400番台はクライアントエラーを示します。400 Bad Request、401 Unauthorized、404 Not Foundなどが含まれます。500番台はサーバーエラーです。",
+    "storyContext": "存在しないクライアントIDを指定すると404、不正な形式のデータを送ると400が返ってくるよ。",
+    "skill": { "category": "web-fundamentals", "name": "REST API", "level": "intro" }
+  }
+]

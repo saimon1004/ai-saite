@@ -1,0 +1,692 @@
+---
+title: "見守る目"
+subtitle: "サービスの健康状態をリアルタイムで把握する"
+description: "サービスの健康状態をリアルタイムで把握する。モニタリング・ロギング・アラートを実践的なストーリーで学ぶチャプター「見守る目」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-20
+chapter: 20
+arc: "scale"
+arcName: "拡大編"
+skills:
+  - { category: "devops", name: "モニタリング", level: "intro" }
+  - { category: "devops", name: "ロギング", level: "intro" }
+  - { category: "devops", name: "アラート", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["19-infrastructure-code"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+日曜日の朝。あなたのスマホが鳴った。
+
+---
+
+**Mika:** 「すみません、昨日の夜からうちのお店の予約ページが開けないんですけど...」
+
+**あなた:** 「えっ、いつからですか？」
+
+**Mika:** 「お客さんから連絡があったのは昨晩10時くらいです。何人か予約しようとしてダメだったみたいで...」
+
+あなたは慌ててダッシュボードを確認する。確かにAPIサーバーが応答していない。ログを調べると、昨晩9時にデータベースの接続数が上限に達してエラーが出ていた。
+
+---
+
+**あなた:** 「10時間も気づかなかった...」
+
+**あなた:** 「日曜だったから誰もモニタリングしてなかったんだよ。」
+
+**Yuki:** 「これは人間の問題じゃない、仕組みの問題だよ。」
+
+**あなた:** 「仕組み？」
+
+**Yuki:** 「今のShimaLinkには"目"がないんだ。サーバーが悲鳴を上げているのに、誰も気づけない。**モニタリング**と**アラート**の仕組みを作れば、問題が起きた瞬間に通知が来る。ユーザーが気づく前に、あなたたちが先に動けるようになる。」
+
+**あなた:** 「ユーザーよりも先に問題を知る...」
+
+**Yuki:** 「そう。それが信頼性の高いサービスの条件。観測可能性——**オブザーバビリティ**って呼ぶんだけど、ログ、メトリクス、トレースの3本柱でシステムの状態を可視化するんだ。」
+
+---
+
+「お医者さんが患者の心拍数や血圧をモニタリングするように、エンジニアもサービスの"健康状態"を常に見守る必要がある」とYukiは言った。
+
+ShimaLinkに"目"を持たせる。
+
+</StoryPanel>
+
+## なぜモニタリングが重要なのか
+
+> 「計測できないものは改善できない。見えないものは守れない。」 ——Yuki
+
+## モニタリングがない世界
+
+```
+問題発生（夜中3時）
+    ↓ 数時間
+ユーザーが気づく
+    ↓ 問い合わせ
+サポートに連絡が来る
+    ↓ 翌朝
+開発者が知る
+    ↓ 調査開始
+原因を特定
+    ↓ 修正・デプロイ
+復旧
+
+→ 総ダウンタイム: 10時間以上
+```
+
+## モニタリングがある世界
+
+```
+問題発生（夜中3時）
+    ↓ 30秒
+アラート発報（Slack通知）
+    ↓ 5分
+開発者が対応開始
+    ↓ 調査・修正
+復旧
+
+→ 総ダウンタイム: 30分以下
+```
+
+## オブザーバビリティの3本柱
+
+| 柱 | 内容 | 例 |
+|----|------|-----|
+| **ログ** | イベントの詳細記録 | エラーメッセージ、アクセスログ |
+| **メトリクス** | 数値で表す指標 | CPU使用率、レスポンスタイム |
+| **トレース** | リクエストの追跡 | API → DB → 外部APIの流れ |
+
+```
+          オブザーバビリティ
+         ┌────┼────┐
+         │    │    │
+      ログ  メトリクス  トレース
+    「何が起きた」「どのくらい」「どこを通った」
+```
+
+### ログ
+「何が起きたか」を詳細に記録。デバッグに最も役立つ。
+
+```
+[2024-10-15 03:00:12] ERROR: Database connection failed
+  - host: shimalink-db
+  - error: too many connections (max: 50)
+  - current: 50
+```
+
+### メトリクス
+「どのくらいか」を数値で示す。傾向把握やアラートに使う。
+
+```
+cpu_usage:        35%  → 55% → 78% → 95%  ← 上昇傾向！
+response_time:    50ms → 80ms → 200ms → timeout
+db_connections:   10   → 30  → 48  → 50   ← 上限到達！
+```
+
+### トレース
+「リクエストがどこを通ったか」を追跡。ボトルネックの特定に使う。
+
+```
+[ユーザーの予約リクエスト]
+  → API Gateway (2ms)
+    → 認証サービス (15ms)
+      → 予約API (5ms)
+        → データベースクエリ (350ms) ← ボトルネック！
+          → メール送信 (100ms)
+Total: 472ms
+```
+
+## 主要なモニタリングツール
+
+| ツール | 特徴 | 料金 |
+|--------|------|------|
+| **Datadog** | オールインワン、高機能 | 有料 |
+| **Grafana + Prometheus** | OSS、自由度が高い | 無料（自前運用） |
+| **Cloud Monitoring (GCP)** | GCPとネイティブ統合 | 無料枠あり |
+| **CloudWatch (AWS)** | AWSとネイティブ統合 | 無料枠あり |
+| **New Relic** | APM に強い | 無料枠あり |
+
+ShimaLinkでは、まずクラウドプロバイダーのネイティブツールから始めるのが効率的です。
+
+## SLI / SLO / SLA
+
+サービスの信頼性を測る指標です。
+
+| 用語 | 意味 | ShimaLinkの例 |
+|------|------|---------------|
+| **SLI** (Service Level Indicator) | 測定指標 | レスポンスタイム、エラー率 |
+| **SLO** (Service Level Objective) | 目標値 | 99.9% の可用性 |
+| **SLA** (Service Level Agreement) | 契約上の保証 | 稼働率99.5%を保証 |
+
+> **Yuki:** 「モニタリングは"後から入れる"ものじゃない。最初から設計に含めるもの。病気になってから健康診断を始めるのは遅いでしょ？」
+
+## ポイント
+
+- モニタリングなしでは問題の発見が遅れ、ユーザーに先に気づかれる
+- ログ、メトリクス、トレースがオブザーバビリティの3本柱
+- クラウドネイティブのモニタリングツールから始めるのが効率的
+- SLI/SLO/SLAで信頼性の目標を明確にする
+
+## ロギングのベストプラクティス
+
+> 「良いログは、未来の自分へのラブレターだよ。」 ——Yuki
+
+## ログレベル
+
+| レベル | 用途 | 例 |
+|--------|------|-----|
+| **ERROR** | 処理が失敗した | DB接続エラー、API呼び出し失敗 |
+| **WARN** | 問題の兆候 | メモリ使用率80%超え、リトライ発生 |
+| **INFO** | 通常の動作記録 | リクエスト処理完了、ユーザーログイン |
+| **DEBUG** | 開発時の詳細情報 | 変数の値、SQL文の内容 |
+
+```javascript
+// Node.js でのログ出力例
+const logger = require("winston");
+
+// エラー — 即座に対応が必要
+logger.error("Database connection failed", {
+  host: "shimalink-db",
+  error: err.message,
+  retryCount: 3,
+});
+
+// 警告 — 注意が必要
+logger.warn("High memory usage detected", {
+  usage: "85%",
+  threshold: "80%",
+});
+
+// 情報 — 正常な動作の記録
+logger.info("Booking created", {
+  bookingId: "BK-12345",
+  shopId: "SHOP-001",
+  userId: "USER-042",
+});
+
+// デバッグ — 開発時のみ
+logger.debug("SQL query executed", {
+  query: "SELECT * FROM bookings WHERE ...",
+  duration: "12ms",
+});
+```
+
+## 構造化ログ
+
+テキストの羅列ではなく、JSON形式で出力するのがモダンなプラクティスです。
+
+```
+// 悪い例（非構造化ログ）
+2024-10-15 03:00:12 Error: too many connections for user shimalink_user
+
+// 良い例（構造化ログ）
+{
+  "timestamp": "2024-10-15T03:00:12Z",
+  "level": "error",
+  "message": "Database connection failed",
+  "service": "shimalink-api",
+  "host": "shimalink-db",
+  "error": "too many connections",
+  "max_connections": 50,
+  "current_connections": 50,
+  "request_id": "req-abc123"
+}
+```
+
+**構造化ログのメリット:**
+- 検索・フィルタリングが容易
+- ダッシュボードでの可視化が可能
+- アラート条件の設定が正確にできる
+
+## リクエストIDによる追跡
+
+すべてのログにリクエストIDを付与すると、1つのリクエストに関連するログを紐づけられます。
+
+```javascript
+// ミドルウェアでリクエストIDを付与
+app.use((req, res, next) => {
+  req.requestId = req.headers["x-request-id"] || uuid();
+  next();
+});
+
+// すべてのログにリクエストIDを含める
+app.post("/api/bookings", (req, res) => {
+  logger.info("Booking request received", {
+    requestId: req.requestId,
+    shopId: req.body.shopId,
+  });
+
+  // ... 処理 ...
+
+  logger.info("Booking created successfully", {
+    requestId: req.requestId,
+    bookingId: newBooking.id,
+  });
+});
+```
+
+```
+# リクエストIDでフィルタすると、1つの予約の流れが見える
+{"requestId": "req-abc123", "message": "Booking request received"}
+{"requestId": "req-abc123", "message": "Validating booking data"}
+{"requestId": "req-abc123", "message": "Checking availability"}
+{"requestId": "req-abc123", "message": "Booking created successfully"}
+```
+
+## ログの保存と管理
+
+| 項目 | 推奨 |
+|------|------|
+| 保存期間 | 本番ログ: 30日〜90日 |
+| 保存先 | クラウドのログサービス（CloudWatch Logs等） |
+| 容量管理 | ローテーション（古いログを自動削除） |
+| アクセス制御 | 機密情報を含むログは閲覧権限を制限 |
+
+## ログに含めてはいけない情報
+
+```javascript
+// 悪い例 — 機密情報をログに出力
+logger.info("User login", {
+  email: user.email,
+  password: user.password,     // 絶対NG！
+  creditCard: user.cardNumber, // 絶対NG！
+});
+
+// 良い例 — 機密情報をマスク
+logger.info("User login", {
+  userId: user.id,
+  email: maskEmail(user.email), // u***r@example.com
+});
+```
+
+> **Yuki:** 「本番で DEBUG レベルを有効にするとログが爆発するから注意。通常は INFO 以上にして、問題調査時だけ一時的に DEBUG を有効にするんだ。」
+
+## ポイント
+
+- ログレベル（ERROR/WARN/INFO/DEBUG）を適切に使い分ける
+- 構造化ログ（JSON形式）で検索・分析しやすくする
+- リクエストIDで関連するログを紐づけられるようにする
+- パスワードやクレジットカード情報は絶対にログに出力しない
+- 本番では INFO 以上、デバッグ時だけ DEBUG を有効にする
+
+## メトリクスとダッシュボード
+
+> 「数字で語れないものは管理できない。ダッシュボードはチームの共通言語になる。」 ——Yuki
+
+## 監視すべき4大メトリクス（Golden Signals）
+
+Googleが提唱する、サービス監視の4つの黄金シグナルです。
+
+| シグナル | 意味 | ShimaLinkでの例 |
+|---------|------|-----------------|
+| **レイテンシ** | 応答にかかる時間 | APIレスポンスタイム: 95ms |
+| **トラフィック** | リクエストの量 | 毎秒100リクエスト |
+| **エラー率** | 失敗したリクエストの割合 | 5xxエラー: 0.1% |
+| **サチュレーション** | リソースの使用率 | CPU: 60%、メモリ: 75% |
+
+## アプリケーションレベルのメトリクス
+
+```javascript
+// Express.js でメトリクスを収集する例
+const prometheus = require("prom-client");
+
+// レスポンスタイムのヒストグラム
+const httpDuration = new prometheus.Histogram({
+  name: "http_request_duration_seconds",
+  help: "HTTPリクエストの処理時間",
+  labelNames: ["method", "route", "status"],
+  buckets: [0.05, 0.1, 0.3, 0.5, 1, 3],
+});
+
+// リクエスト数のカウンター
+const httpRequests = new prometheus.Counter({
+  name: "http_requests_total",
+  help: "HTTPリクエストの総数",
+  labelNames: ["method", "route", "status"],
+});
+
+// ミドルウェアで計測
+app.use((req, res, next) => {
+  const end = httpDuration.startTimer();
+  res.on("finish", () => {
+    end({
+      method: req.method,
+      route: req.route?.path || "unknown",
+      status: res.statusCode,
+    });
+    httpRequests.inc({
+      method: req.method,
+      route: req.route?.path || "unknown",
+      status: res.statusCode,
+    });
+  });
+  next();
+});
+
+// メトリクスエンドポイント
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", prometheus.register.contentType);
+  res.end(await prometheus.register.metrics());
+});
+```
+
+## インフラレベルのメトリクス
+
+| メトリクス | 正常値 | 警告 | 危険 |
+|-----------|--------|------|------|
+| CPU使用率 | < 60% | 60-80% | > 80% |
+| メモリ使用率 | < 70% | 70-85% | > 85% |
+| ディスク使用率 | < 70% | 70-90% | > 90% |
+| DB接続数 | < 60% | 60-80% | > 80% |
+| レスポンスタイム | < 200ms | 200-500ms | > 500ms |
+| エラー率 | < 0.1% | 0.1-1% | > 1% |
+
+## ダッシュボードの設計
+
+### ShimaLink サービス概要ダッシュボード
+
+```
+┌─────────────────────────────────────────┐
+│  ShimaLink サービス概要                    │
+├──────────┬──────────┬──────────┬─────────┤
+│ 稼働率    │ 応答時間  │ エラー率  │ RPS    │
+│ 99.95%   │ 95ms     │ 0.05%   │ 85     │
+│  ✅      │  ✅      │  ✅     │  ✅    │
+├──────────┴──────────┴──────────┴─────────┤
+│  [レスポンスタイム 24時間グラフ]             │
+│  ░░░▒▒▓▓▓▒▒░░░░▒▓▓▒▒░░░░                │
+├─────────────────────┬───────────────────  │
+│  [CPU使用率]         │ [メモリ使用率]        │
+│  ▓▓▓░░░░░░ 35%     │ ▓▓▓▓▓▓░░░ 60%     │
+├─────────────────────┴───────────────────  │
+│  [エラーログ（直近）]                       │
+│  03:00 WARN - High memory usage           │
+│  02:45 INFO - Auto-scaled to 3 instances  │
+└─────────────────────────────────────────  ┘
+```
+
+### ダッシュボード設計のコツ
+
+| 原則 | 説明 |
+|------|------|
+| **一目で状況がわかる** | 赤/黄/緑の信号で正常・警告・異常を表示 |
+| **トップダウン** | 概要 → 詳細の順に掘り下げられる構成 |
+| **アクション可能** | 異常を見たら次に何をすべきかわかる |
+| **ノイズを減らす** | 重要な情報だけを表示する |
+
+## Grafana でのダッシュボード例
+
+```yaml
+# docker-compose.yml に追加
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+```
+
+```yaml
+# prometheus.yml
+scrape_configs:
+  - job_name: "shimalink-api"
+    scrape_interval: 15s
+    static_configs:
+      - targets: ["api:4000"]
+```
+
+> **Yuki:** 「ダッシュボードは朝一番にチーム全員が見るものにしよう。毎朝の習慣にすれば、異変にすぐ気づけるようになる。」
+
+## ポイント
+
+- Golden Signals（レイテンシ、トラフィック、エラー率、サチュレーション）を監視する
+- アプリケーションとインフラの両方のメトリクスを収集する
+- ダッシュボードは「一目で状況がわかる」設計にする
+- Prometheus + Grafana の組み合わせがOSSの定番
+- チーム全員がダッシュボードを見る習慣を作る
+
+## アラート戦略 — 適切に通知し、適切に対応する
+
+> 「アラートが多すぎると、本当に大事なアラートを見逃す。"アラート疲れ"は最大の敵だよ。」 ——Yuki
+
+## アラートの設計原則
+
+### 良いアラート
+
+| 特性 | 説明 |
+|------|------|
+| **アクション可能** | 受け取った人が具体的な対応ができる |
+| **緊急性が明確** | 今すぐ対応？明日でOK？が一目でわかる |
+| **コンテキスト付き** | 何が起きているかの情報が含まれている |
+| **誤報が少ない** | 本当の問題だけを通知する |
+
+### 悪いアラート
+
+```
+# 悪い例: 曖昧で対応できない
+"CPU usage is high"
+
+# 良い例: 具体的でアクション可能
+"shimalink-api: CPU使用率が90%を超過（閾値: 80%）
+現在の値: 92% / 直近5分の平均: 88%
+影響: レスポンスタイムが300msに増加
+対応: スケールアウトまたはリクエスト制限を検討
+ダッシュボード: https://grafana.shimalink.com/d/cpu"
+```
+
+## アラートの優先度
+
+| 優先度 | 条件 | 通知先 | 対応時間 |
+|--------|------|--------|---------|
+| **P1 (Critical)** | サービス停止 | 電話 + Slack | 即時対応 |
+| **P2 (High)** | 一部機能障害 | Slack (urgent) | 30分以内 |
+| **P3 (Medium)** | 性能低下 | Slack | 数時間以内 |
+| **P4 (Low)** | 警告（将来的問題） | メール | 翌営業日 |
+
+### ShimaLink のアラート例
+
+```
+P1: API が5分間応答なし → 電話通知
+P2: エラー率が5%超過 → Slack urgent チャンネル
+P3: レスポンスタイムが500ms超過 → Slack monitoring チャンネル
+P4: ディスク使用率70%超過 → メール通知
+```
+
+## アラートルールの設定
+
+```yaml
+# Prometheus のアラートルール例
+groups:
+  - name: shimalink-alerts
+    rules:
+      # P1: API ダウン
+      - alert: APIDown
+        expr: up{job="shimalink-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ShimaLink APIが停止しています"
+          description: "2分以上APIが応答していません"
+
+      # P2: 高エラー率
+      - alert: HighErrorRate
+        expr: |
+          rate(http_requests_total{status=~"5.."}[5m])
+          / rate(http_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: high
+        annotations:
+          summary: "エラー率が5%を超過"
+
+      # P3: レスポンスタイム劣化
+      - alert: HighLatency
+        expr: |
+          histogram_quantile(0.95,
+            rate(http_request_duration_seconds_bucket[5m])
+          ) > 0.5
+        for: 10m
+        labels:
+          severity: medium
+        annotations:
+          summary: "95%タイルのレスポンスタイムが500msを超過"
+
+      # P4: ディスク使用率
+      - alert: DiskUsageHigh
+        expr: disk_usage_percent > 70
+        for: 30m
+        labels:
+          severity: low
+        annotations:
+          summary: "ディスク使用率が70%を超過"
+```
+
+## Slack 通知の実装
+
+```javascript
+// アラート通知用の関数
+async function sendAlert(alert) {
+  const color =
+    {
+      critical: "#FF0000",
+      high: "#FF8C00",
+      medium: "#FFD700",
+      low: "#87CEEB",
+    }[alert.severity] || "#808080";
+
+  await fetch(process.env.SLACK_WEBHOOK_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      attachments: [
+        {
+          color: color,
+          title: `[${alert.severity.toUpperCase()}] ${alert.summary}`,
+          text: alert.description,
+          fields: [
+            { title: "サービス", value: alert.service, short: true },
+            { title: "発生時刻", value: alert.timestamp, short: true },
+          ],
+          actions: [
+            {
+              type: "button",
+              text: "ダッシュボードを開く",
+              url: alert.dashboardUrl,
+            },
+          ],
+        },
+      ],
+    }),
+  });
+}
+```
+
+## アラート疲れを防ぐ
+
+| 対策 | 説明 |
+|------|------|
+| **閾値の調整** | 誤報が多い場合は閾値を緩める |
+| **for条件の活用** | 一時的なスパイクでは発報しない（5分以上継続の場合のみ） |
+| **グループ化** | 同じ原因のアラートをまとめる |
+| **抑制ルール** | P1アラート中はP3/P4を抑制する |
+| **定期的な見直し** | 月1回、アラートルールをレビューする |
+
+## インシデント対応フロー
+
+```
+アラート発報
+    ↓
+1. 確認 — ダッシュボードで状況を把握
+    ↓
+2. トリアージ — 優先度と影響範囲を判断
+    ↓
+3. 対応 — 復旧作業（ロールバック、スケールアウト等）
+    ↓
+4. 通知 — 関係者に状況を共有
+    ↓
+5. 振り返り — ポストモーテム（原因分析と再発防止）
+```
+
+> **Yuki:** 「ポストモーテム（振り返り）が一番大事なステップ。"誰が悪い"じゃなくて、"仕組みで防ぐにはどうするか"を考える。同じ障害を2回起こさないことが目標だよ。」
+
+## ポイント
+
+- アラートは「アクション可能」「緊急性が明確」「誤報が少ない」が重要
+- 優先度（P1〜P4）で通知方法と対応速度を使い分ける
+- `for` 条件で一時的なスパイクによる誤報を防ぐ
+- アラート疲れを避けるために、定期的にルールを見直す
+- インシデント後のポストモーテムで再発を防止する
+
+<StoryPanel variant="conclusion">
+
+モニタリングダッシュボードが完成した。ShimaLinkの全サービスの状態がリアルタイムで可視化されている。
+
+```
+ShimaLink ダッシュボード
+━━━━━━━━━━━━━━━━━━━━
+API レスポンスタイム:  95ms  [████████░░] 正常
+エラー率:            0.1%  [█░░░░░░░░░] 正常
+DB 接続数:           12/50 [███░░░░░░░] 正常
+CPU使用率:           35%   [████░░░░░░] 正常
+メモリ使用率:         60%   [██████░░░░] 注意
+```
+
+---
+
+**あなた:** 「これはすごい。一目でシステム全体の状態がわかる。」
+
+**あなた:** 「しかも、DB接続数が上限の80%に達したら自動でSlackに通知が来るように設定しました。もう10時間気づかないなんてことは起きません。」
+
+**Mika:** 「安心ですね。お客さんから問い合わせが来る前に対応してもらえるなんて。」
+
+---
+
+**Yuki:** 「ここまでの旅を振り返ってみよう。」
+
+```
+Chapter 16: Docker でコンテナ化        → 環境の統一
+Chapter 17: CI/CD で自動化             → デプロイの自動化
+Chapter 18: クラウドに移行              → スケーラビリティ
+Chapter 19: Terraform でインフラをコード化 → 再現可能なインフラ
+Chapter 20: モニタリングとアラート        → 観測可能性
+```
+
+**Yuki:** 「手動でやっていたことを、一つずつ自動化して、可視化してきた。これがモダンな開発・運用の基盤——DevOpsの考え方だよ。」
+
+**あなた:** 「最初は "works on my machine" で悩んでたのに、今はクラウドでオートスケールして、問題を自動検知できるまでになった。」
+
+**あなた:** 「ShimaLink、もう"手作りのWebサイト屋さん"じゃないですね。ちゃんとしたプラットフォームになった。」
+
+---
+
+**Yuki:** 「でも、旅はまだ続く。ShimaLinkが本当に信頼されるプラットフォームになるには、チームとしてのスキルも磨かないとね。コードの品質、アーキテクチャの設計、チーム開発のプラクティス...次のアークが楽しみだよ。」
+
+**あなた:** 「どこまで行けるんだろう、ShimaLink。」
+
+**Yuki:** 「行けるところまで、一緒に行こう。」
+
+---
+
+> **拡大編（Scale Arc）完了** — ShimaLinkは、コンテナ化・CI/CD・クラウド・IaC・モニタリングを備えた本格的なプラットフォームに成長した。次のアークでは、コードの品質とチーム開発のプラクティスに踏み込んでいく。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="20-monitoring-alerts" />
+
+<ChapterFaq chapterId="20-monitoring-alerts" />
+
+<SeriesNav current={20} />

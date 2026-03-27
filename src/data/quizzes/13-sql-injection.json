@@ -1,0 +1,114 @@
+[
+  {
+    "id": "ch13-q01",
+    "question": "SQLインジェクションの根本原因は何？",
+    "choices": [
+      "データベースの性能不足",
+      "データと命令が文字列結合で混在すること",
+      "HTTPSを使っていないこと",
+      "パスワードが短いこと"
+    ],
+    "correctIndex": 1,
+    "explanation": "SQLインジェクションは、ユーザーの入力データとSQL命令が文字列結合で混在するために発生します。攻撃者がデータ部分にSQL命令を紛れ込ませることで、意図しないクエリが実行されます。",
+    "storyContext": "ShimaLinkの検索機能で、検索文字列がSQL文にそのまま埋め込まれていたのが原因だった。",
+    "skill": { "category": "security", "name": "SQL Injection Prevention", "level": "intro" }
+  },
+  {
+    "id": "ch13-q02",
+    "question": "パラメータ化クエリが安全な理由は？",
+    "choices": [
+      "クエリを暗号化するから",
+      "SQL文の構造を先に確定し、データを後からバインドするから",
+      "入力文字数を制限するから",
+      "SQLを使わないから"
+    ],
+    "correctIndex": 1,
+    "explanation": "パラメータ化クエリでは、データベースがまずSQL文の構造（骨格）を解析・コンパイルし、その後でプレースホルダーにデータをバインドします。構造が先に確定するため、データが命令として解釈されることは物理的に不可能です。",
+    "storyContext": "Yukiが説明したPREPARE→BIND→EXECUTEの3ステップを思い出そう。",
+    "skill": { "category": "security", "name": "Parameterized Queries", "level": "intro" }
+  },
+  {
+    "id": "ch13-q03",
+    "question": "Node.js（mysql2）でパラメータ化クエリを書く正しい方法は？",
+    "choices": [
+      "db.query(`SELECT * FROM users WHERE id = ${id}`)",
+      "db.query('SELECT * FROM users WHERE id = ' + id)",
+      "db.execute('SELECT * FROM users WHERE id = ?', [id])",
+      "db.query('SELECT * FROM users WHERE id = ' + escape(id))"
+    ],
+    "correctIndex": 2,
+    "explanation": "db.execute()にSQL文とパラメータ配列を分けて渡すのが正しい方法です。?がプレースホルダーで、配列の値が安全にバインドされます。文字列結合やescape関数は不十分で危険です。",
+    "storyContext": "ShimaLinkの検索機能を書き直したときのコードパターンだ。",
+    "skill": { "category": "security", "name": "Parameterized Queries", "level": "intro" }
+  },
+  {
+    "id": "ch13-q04",
+    "question": "ORMを使う際に注意すべきことは？",
+    "choices": [
+      "ORMを使えば100%安全なので何も注意しなくてよい",
+      "rawやliteralなど生SQLを実行する機能で文字列結合を使わない",
+      "ORMは遅いので使わない方がよい",
+      "ORMはSQLインジェクションとは無関係"
+    ],
+    "correctIndex": 1,
+    "explanation": "ORMの通常のメソッドは自動的にパラメータ化されますが、$queryRawUnsafe、sequelize.literal、raw SQLなどの機能で文字列結合を使うとSQLインジェクションが発生します。",
+    "storyContext": "Yukiが「raw、literal、unsafeが付いた機能は要注意」と警告していたね。",
+    "skill": { "category": "security", "name": "ORM Safety", "level": "intro" }
+  },
+  {
+    "id": "ch13-q05",
+    "question": "DBユーザーの最小権限の原則として正しいのは？",
+    "choices": [
+      "rootユーザーでアプリを接続するのが最も便利で安全",
+      "アプリに必要な権限だけを付与し、DROP等は許可しない",
+      "すべてのテーブルにフルアクセスを付与する",
+      "権限設定は性能に影響するので避ける"
+    ],
+    "correctIndex": 1,
+    "explanation": "アプリケーション用のDBユーザーには、必要最小限の権限（SELECT, INSERT, UPDATE）だけを付与します。DROP TABLE権限がなければ、SQLインジェクションが成功してもテーブル削除は実行できません。",
+    "storyContext": "万が一SQLiが成功しても、権限がなければDROPやDELETEは実行されない——多層防御の考え方だ。",
+    "skill": { "category": "security", "name": "SQL Injection Prevention", "level": "intro" }
+  },
+  {
+    "id": "ch13-q06",
+    "question": "SQLエラーメッセージをユーザーに表示してはいけない理由は？",
+    "choices": [
+      "ユーザーが混乱するから",
+      "テーブル名やカラム名などの内部情報が攻撃者に漏れるから",
+      "エラーメッセージのデータ量が大きいから",
+      "法律で禁止されているから"
+    ],
+    "correctIndex": 1,
+    "explanation": "SQLエラーメッセージにはテーブル名、カラム名、データベースの種類やバージョンなどの内部情報が含まれます。これらはエラーベースSQLインジェクションの情報源として悪用されます。ユーザーには一般的なメッセージを返し、詳細はログに記録します。",
+    "storyContext": "エラーハンドリングの改善で、console.errorにログは残しつつ、ユーザーには一般的なメッセージを返すようにした。",
+    "skill": { "category": "security", "name": "SQL Injection Prevention", "level": "intro" }
+  },
+  {
+    "id": "ch13-q07",
+    "question": "UNION攻撃で攻撃者ができることは？",
+    "choices": [
+      "テーブルを結合して別のテーブルのデータを取得する",
+      "データベースの速度を向上させる",
+      "新しいテーブルを作成する",
+      "データベースのバックアップを取る"
+    ],
+    "correctIndex": 0,
+    "explanation": "UNION攻撃は、元のSELECT文にUNION SELECTを追加して、別のテーブルのデータ（例：ユーザーのメールやパスワード）を結果に含ませる手法です。Shadowがユーザー情報を抜き取る際に使った手法です。",
+    "storyContext": "ShadowがUNION SELECT email,password FROM usersで認証情報を抜き取ったログを思い出そう。",
+    "skill": { "category": "security", "name": "SQL Injection Prevention", "level": "intro" }
+  },
+  {
+    "id": "ch13-q08",
+    "question": "入力 ' OR '1'='1 がSQLインジェクションとして機能する理由は？",
+    "choices": [
+      "パスワードを総当たりするから",
+      "条件式を常にtrueにして全レコードを返させるから",
+      "データベースを暗号化するから",
+      "ファイアウォールを無効化するから"
+    ],
+    "correctIndex": 1,
+    "explanation": "'1'='1'は常にtrueを返す条件です。WHERE句に OR '1'='1' が追加されると、条件が常にtrueになり、テーブルの全レコードが返されます。認証バイパスにもよく使われるパターンです。",
+    "storyContext": "Shadowが最初に試した攻撃パターン。全件が返ったことで脆弱性を確認した。",
+    "skill": { "category": "security", "name": "SQL Injection Prevention", "level": "intro" }
+  }
+]

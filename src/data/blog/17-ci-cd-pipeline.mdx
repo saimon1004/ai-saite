@@ -1,0 +1,638 @@
+---
+title: "自動化の流れ"
+subtitle: "コードをプッシュしたら、あとはパイプラインに任せる"
+description: "コードをプッシュしたら、あとはパイプラインに任せる。CI/CD・GitHub Actions・自動テストを実践的なストーリーで学ぶチャプター「自動化の流れ」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-17
+chapter: 17
+arc: "scale"
+arcName: "拡大編"
+skills:
+  - { category: "devops", name: "CI/CD", level: "intro" }
+  - { category: "devops", name: "GitHub Actions", level: "intro" }
+  - { category: "testing", name: "自動テスト", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["16-container-world"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+ShimaLinkのDocker化が完了し、環境差異の問題は解決した。しかし、新たな問題が浮上していた。
+
+---
+
+**あなた:** 「ちょっと待って、今日のデプロイ誰がやった？テストページが本番に出ちゃってるんだけど...」
+
+**あなた:** 「えっ、僕は昨日の夜にデプロイしたけど...あ、テスト用のブランチをそのまま本番にプッシュしちゃったかも。」
+
+**Mika:** 「お客さんから問い合わせが来てます...「"テスト太郎"ってダミーデータが表示される」って。」
+
+**あなた:** 「やばい、すぐ戻そう。えっと、前のバージョンのイメージどれだっけ...」
+
+---
+
+デプロイ作業はいつも深夜。手順書を見ながら、手動でビルドして、テストして、デプロイする。時間はかかるし、ミスも起きる。
+
+**あなた:** 「正直、デプロイの日は胃が痛いです。」
+
+**Yuki:** 「それ、人間がやるべき仕事じゃないんだよ。」
+
+**あなた:** 「え？」
+
+**Yuki:** 「テストの実行、ビルド、デプロイ。これらは全部自動化できる。**CI/CD** ——継続的インテグレーションと継続的デリバリーっていう仕組みがあるんだ。」
+
+**あなた:** 「コードをプッシュしたら、勝手にテストしてデプロイしてくれるってこと？」
+
+**Yuki:** 「その通り。人間はコードを書くことに集中して、あとは機械に任せる。ミスが減るし、スピードも上がる。GitHub Actionsを使って、ShimaLink用のパイプラインを作ってみよう。」
+
+---
+
+手動デプロイの恐怖から解放される日が来た。自動化の流れを作ろう。
+
+</StoryPanel>
+
+## CI/CD とは — 継続的インテグレーションと継続的デリバリー
+
+> 「手動デプロイは"ロシアンルーレット"。いつか大事故が起きる。」 ——Yuki
+
+## CI と CD の違い
+
+| 略語 | フルネーム | 意味 |
+|------|-----------|------|
+| **CI** | Continuous Integration | コード変更を頻繁にマージし、自動テストを実行する |
+| **CD** | Continuous Delivery | テストを通過したコードをいつでもリリースできる状態にする |
+| **CD** | Continuous Deployment | テスト通過後、自動的に本番環境にデプロイする |
+
+## 手動デプロイ vs CI/CD
+
+### 手動デプロイの問題点
+
+```
+開発者がコードを書く
+    ↓ （手動）
+ローカルでテスト実行
+    ↓ （忘れることがある）
+手動でビルド
+    ↓ （手順を間違えることがある）
+手動でサーバーにアップロード
+    ↓ （ファイルを間違えることがある）
+本番環境で動作確認
+    ↓ （問題が見つかっても戻しにくい）
+```
+
+### CI/CD パイプライン
+
+```
+開発者がコードをプッシュ
+    ↓ （自動）
+CI: リンターでコード品質チェック
+    ↓ （自動）
+CI: ユニットテスト実行
+    ↓ （自動）
+CI: インテグレーションテスト実行
+    ↓ （自動）
+CD: Dockerイメージをビルド
+    ↓ （自動）
+CD: ステージング環境にデプロイ
+    ↓ （承認後 or 自動）
+CD: 本番環境にデプロイ
+```
+
+## パイプラインの構成要素
+
+| ステージ | 目的 | 例 |
+|---------|------|-----|
+| **ソース** | コード変更を検知 | git push、Pull Request |
+| **ビルド** | コードをコンパイル・パッケージ化 | npm build、docker build |
+| **テスト** | 品質を自動検証 | jest、cypress |
+| **デプロイ** | 環境にリリース | docker push、ssh deploy |
+
+## CI/CD で得られるもの
+
+### デプロイ頻度の向上
+- 手動: 週1回、深夜に恐る恐る
+- CI/CD: 1日に何度でも、自信を持って
+
+### バグの早期発見
+- テストが自動実行されるため、問題をすぐに検知できる
+- 「金曜の夕方にデプロイして月曜に発覚」がなくなる
+
+### 作業の再現性
+- 同じパイプラインが毎回同じ手順を実行する
+- 「あの人しかデプロイ方法を知らない」問題が消える
+
+> **Yuki:** 「CI/CDは"保険"みたいなもの。普段は地味だけど、事故を未然に防いでくれる。ShimaLinkが50以上のクライアントを抱える今、手動デプロイは無責任だよ。」
+
+## ポイント
+
+- CIはコードの統合と自動テスト、CDは自動リリースの仕組み
+- 手動プロセスを自動化することで、ヒューマンエラーを排除する
+- パイプラインは「ソース → ビルド → テスト → デプロイ」の流れ
+- デプロイ頻度の向上、バグの早期発見、再現性がメリット
+
+## GitHub Actions の基本
+
+> 「GitHubにコードを置いてるなら、CI/CDもGitHubでやるのが一番シンプルだよ。」 ——Yuki
+
+## GitHub Actions とは
+
+GitHub Actions は、GitHub に組み込まれた CI/CD プラットフォームです。リポジトリにYAMLファイルを置くだけで、自動化パイプラインが動き出します。
+
+## 基本構造
+
+```
+.github/
+└── workflows/
+    └── ci.yml    ← ワークフロー定義ファイル
+```
+
+## 最初のワークフローを書こう
+
+```yaml
+# .github/workflows/ci.yml
+name: ShimaLink CI
+
+# いつ実行するか
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+# 何を実行するか
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # リポジトリのコードを取得
+      - uses: actions/checkout@v4
+
+      # Node.js をセットアップ
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      # 依存関係をインストール
+      - run: npm ci
+
+      # リンターを実行
+      - run: npm run lint
+
+      # テストを実行
+      - run: npm test
+```
+
+## 用語の整理
+
+| 用語 | 意味 | ShimaLinkでの例 |
+|------|------|-----------------|
+| **Workflow** | 自動化の全体定義 | `ci.yml` ファイル全体 |
+| **Event** | ワークフローのトリガー | `push`、`pull_request` |
+| **Job** | 実行単位（並列実行可能） | `test`、`build`、`deploy` |
+| **Step** | Job内の個々のタスク | `npm ci`、`npm test` |
+| **Action** | 再利用可能な部品 | `actions/checkout@v4` |
+| **Runner** | 実行環境 | `ubuntu-latest` |
+
+## on: トリガーの設定
+
+```yaml
+on:
+  # mainブランチへのプッシュ時
+  push:
+    branches: [main]
+
+  # Pull Request作成・更新時
+  pull_request:
+    branches: [main]
+
+  # 定期実行（毎日午前9時 UTC）
+  schedule:
+    - cron: "0 9 * * *"
+
+  # 手動実行
+  workflow_dispatch:
+```
+
+## 複数ジョブの定義
+
+```yaml
+jobs:
+  # ジョブ1: テスト
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - run: npm ci
+      - run: npm test
+
+  # ジョブ2: ビルド（テスト成功後に実行）
+  build:
+    needs: test    # testジョブの完了を待つ
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t shimalink-web .
+```
+
+## 環境変数とシークレット
+
+```yaml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: production
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Deploying to $NODE_ENV"
+
+      # シークレットはGitHubの設定画面で登録する
+      - run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+```
+
+シークレットはリポジトリの Settings → Secrets and variables → Actions で登録します。コードにパスワードをハードコードする必要はありません。
+
+> **Yuki:** 「GitHub Actionsの良いところは、コードと同じリポジトリでCI/CD設定を管理できること。設定もバージョン管理されるから、いつ誰が何を変えたか追跡できるんだ。」
+
+## ポイント
+
+- `.github/workflows/` にYAMLファイルを置くだけでCI/CDが動く
+- `on` でトリガー、`jobs` で実行内容、`steps` で個々のタスクを定義する
+- `needs` でジョブ間の依存関係を設定できる
+- シークレットはGitHubの設定画面で安全に管理する
+- コードと一緒にCI/CD設定もバージョン管理される
+
+## パイプラインでの自動テスト
+
+> 「テストのないCI/CDは、安全装置のない銃と同じだよ。」 ——Yuki
+
+## テストの種類とパイプラインでの位置づけ
+
+```
+コードプッシュ
+    ↓
+┌──────────────────────────────────┐
+│  ① リンティング（コード品質）       │  ← 数秒
+│  ② ユニットテスト（個々の関数）     │  ← 数十秒
+│  ③ インテグレーションテスト（連携） │  ← 数分
+│  ④ E2Eテスト（ユーザー視点）       │  ← 数分〜十数分
+└──────────────────────────────────┘
+    ↓
+全部通ったらデプロイへ
+```
+
+| テスト種類 | 対象 | 速度 | 信頼度 |
+|-----------|------|------|--------|
+| リンティング | コードスタイル・構文 | 最速 | 低 |
+| ユニットテスト | 個々の関数・モジュール | 速い | 中 |
+| インテグレーション | コンポーネント間の連携 | 普通 | 高 |
+| E2E | ユーザー操作全体 | 遅い | 最高 |
+
+## ShimaLink のテスト設定
+
+### リンティング
+
+```yaml
+# ワークフローのステップ
+- name: Lint
+  run: npm run lint
+```
+
+```json
+// package.json
+{
+  "scripts": {
+    "lint": "eslint src/ --ext .js,.jsx"
+  }
+}
+```
+
+### ユニットテスト
+
+```yaml
+- name: Unit Tests
+  run: npm test -- --coverage
+```
+
+```javascript
+// __tests__/booking.test.js
+describe("予約バリデーション", () => {
+  test("過去の日付は予約できない", () => {
+    const pastDate = new Date("2020-01-01");
+    expect(validateBookingDate(pastDate)).toBe(false);
+  });
+
+  test("未来の日付は予約できる", () => {
+    const futureDate = new Date("2030-12-31");
+    expect(validateBookingDate(futureDate)).toBe(true);
+  });
+});
+```
+
+### インテグレーションテスト（DB込み）
+
+```yaml
+- name: Integration Tests
+  run: npm run test:integration
+  env:
+    DATABASE_URL: postgres://test:test@localhost:5432/test_db
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    env:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    ports:
+      - 5432:5432
+```
+
+GitHub ActionsではServiceコンテナとしてPostgreSQLなどをジョブ内で起動できます。
+
+## テスト結果の活用
+
+### カバレッジレポート
+
+```yaml
+- name: Upload Coverage
+  uses: actions/upload-artifact@v4
+  with:
+    name: coverage-report
+    path: coverage/
+```
+
+### テスト失敗時の通知
+
+```yaml
+- name: Notify on Failure
+  if: failure()
+  run: |
+    echo "テストが失敗しました！修正してください。"
+```
+
+## Pull Request でのテスト
+
+```yaml
+on:
+  pull_request:
+    branches: [main]
+```
+
+Pull Request作成時にテストが自動実行され、結果がPR画面に表示されます。テストが失敗したらマージできないよう設定（Branch Protection）するのがベストプラクティスです。
+
+```
+✅ CI / test (pull_request) — All checks have passed
+   → Merge可能
+
+❌ CI / test (pull_request) — Some checks were not successful
+   → Merge不可（テストを修正する必要がある）
+```
+
+## マトリクステスト
+
+複数のNode.jsバージョンで同時にテストを実行できます。
+
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm test
+```
+
+> **Yuki:** 「テストを書くのは面倒に感じるかもしれない。でも、自動テストがあるからこそ、安心してコードを変更できるんだ。テストは未来の自分への保険だよ。」
+
+## ポイント
+
+- パイプラインではリント → ユニット → インテグレーション → E2Eの順でテストする
+- GitHub Actionsの `services` でテスト用DBを起動できる
+- Pull Requestでテストを必須にし、失敗時はマージを禁止する
+- マトリクステストで複数環境を同時にテストできる
+- テストが信頼できるからこそ、自動デプロイが成り立つ
+
+## デプロイの自動化
+
+> 「ボタン1つで本番リリース。それがCI/CDの最終目標だよ。」 ——Yuki
+
+## デプロイ戦略
+
+| 戦略 | 説明 | リスク |
+|------|------|--------|
+| **ローリングデプロイ** | 順番に新バージョンに置き換え | 低 |
+| **ブルーグリーン** | 新旧2環境を切り替え | 低 |
+| **カナリアリリース** | 一部ユーザーに先行リリース | 最低 |
+| **直接デプロイ** | 一括で入れ替え | 高 |
+
+ShimaLinkの規模ではまず**ブルーグリーン**から始めるのが現実的です。
+
+## 完全な CI/CD ワークフロー
+
+```yaml
+# .github/workflows/deploy.yml
+name: ShimaLink Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  # ステージ1: テスト
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+
+  # ステージ2: Dockerイメージのビルドとプッシュ
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker Hub にログイン
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+
+      - name: イメージをビルドしてプッシュ
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: |
+            shimalink/web:latest
+            shimalink/web:${{ github.sha }}
+
+  # ステージ3: 本番デプロイ
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production    # 承認フローを設定可能
+    steps:
+      - name: サーバーにデプロイ
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /app/shimalink
+            docker compose pull
+            docker compose up -d
+            docker compose ps
+```
+
+## ワークフローの流れ
+
+```
+main へ push
+    ↓
+[test] リント → ユニットテスト
+    ↓ 成功
+[build] Docker イメージをビルド → レジストリにプッシュ
+    ↓ 成功
+[deploy] 本番サーバーに SSH → 新イメージで更新
+    ↓
+完了！
+```
+
+## Environment と承認フロー
+
+重要な環境へのデプロイには承認を設定できます。
+
+```yaml
+deploy:
+  environment: production    # GitHub側で承認者を設定
+```
+
+GitHub の Settings → Environments → production で：
+- 承認者（Reviewer）を設定
+- デプロイ可能なブランチを制限
+- 環境固有のシークレットを設定
+
+## ロールバック（巻き戻し）
+
+問題が発生した場合、以前のバージョンに素早く戻せるようにします。
+
+```yaml
+# .github/workflows/rollback.yml
+name: Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "ロールバック先のバージョン（コミットSHA）"
+        required: true
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 指定バージョンにロールバック
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /app/shimalink
+            docker compose pull shimalink/web:${{ inputs.version }}
+            docker compose up -d
+```
+
+`workflow_dispatch` を使えば、GitHub画面から手動でロールバックを実行できます。
+
+## デプロイ通知
+
+```yaml
+- name: Slack に通知
+  if: success()
+  uses: slackapi/slack-github-action@v1
+  with:
+    payload: |
+      {
+        "text": "ShimaLink デプロイ完了: ${{ github.sha }}"
+      }
+  env:
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+```
+
+> **Yuki:** 「デプロイの自動化で一番大事なのは、"失敗しても戻せる"という安全ネットだよ。ロールバックの手段を常に確保しておくこと。」
+
+## ポイント
+
+- テスト → ビルド → デプロイの順にジョブを連鎖させる
+- Dockerイメージにコミットハッシュのタグをつけてバージョン管理する
+- Environment機能で本番デプロイに承認フローを設定する
+- ロールバック用のワークフローを事前に用意しておく
+- デプロイ結果をSlack等に通知して全員が把握できるようにする
+
+<StoryPanel variant="conclusion">
+
+GitHub Actionsのパイプラインが稼働した。コードをプッシュすると、テストが自動実行され、すべてパスしたら自動的にデプロイされる。
+
+```
+✓ Lint check passed
+✓ Unit tests passed (47/47)
+✓ Integration tests passed (12/12)
+✓ Docker image built
+✓ Deployed to production
+```
+
+---
+
+**あなた:** 「すごい、プッシュしたら5分でデプロイ完了してる。昨日まで1時間かかってたのに。」
+
+**あなた:** 「しかもテストが通らないとデプロイされないから、テスト用データが本番に出る事故も起きない。」
+
+**Mika:** 「最近、サイトの不具合が減りましたよね。前は週に1回くらいあったのに。」
+
+**Yuki:** 「それがCI/CDの効果だよ。人間のミスをシステムが防いでくれる。」
+
+---
+
+**あなた:** 「ところでさ、クライアントが増えて同時アクセスが増えてきたんだけど、うちのサーバー大丈夫かな？この前の沖縄食品フェアのときは、アクセスが集中してサイトが重くなったし。」
+
+**Yuki:** 「いいところに気づいたね。自前のサーバーには限界がある。次は**クラウド**への移行を考えよう。AWSやGCPを使えば、アクセス量に応じて自動でスケールできるんだ。」
+
+**あなた:** 「クラウド...聞いたことはあるけど、何から始めれば？」
+
+**Yuki:** 「まずはクラウドの基本概念から。ShimaLinkに最適な構成を一緒に考えよう。」
+
+---
+
+> **次のチャプター**: *Chapter 18: クラウドへの旅* — 自前サーバーの限界を超える。クラウドの世界へ足を踏み入れ、スケーラブルなインフラを構築する。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="17-ci-cd-pipeline" />
+
+<ChapterFaq chapterId="17-ci-cd-pipeline" />
+
+<SeriesNav current={17} />

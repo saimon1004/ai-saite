@@ -1,0 +1,812 @@
+---
+title: "デザインの力"
+subtitle: "FlexboxとGridでプロのレイアウトを実現する"
+description: "FlexboxとGridでプロのレイアウトを実現する。CSSレイアウト・Flexbox・デザイン原則を実践的なストーリーで学ぶチャプター「デザインの力」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-03
+chapter: 3
+arc: "founding"
+arcName: "創業編"
+skills:
+  - { category: "programming", name: "CSSレイアウト", level: "intermediate" }
+  - { category: "programming", name: "Flexbox", level: "intro" }
+  - { category: "web-fundamentals", name: "デザイン原則", level: "intro" }
+estimatedMinutes: 50
+prerequisites: ["02-first-client"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+海風テラスのサイトの初版をMikaに見せた翌日。Mikaからのフィードバックが届いた。
+
+---
+
+**あなた:** 「Mikaさんからメール来てるぞ。"構造はバッチリです！でも、もう少しカフェの雰囲気が伝わるデザインにできますか？参考にしたいサイトを3つ添付します"って。」
+
+あなたがスマホを回して、参考サイトを見せてくれる。どれも写真が美しく配置され、メニューがカード形式で並び、余白が心地よいデザインだった。
+
+**あなた:** 「うーん、プロのサイトって全然違いますね...。何が違うんだろう。」
+
+**Yuki:** 「大きく2つ。**レイアウト**と**デザインの一貫性**だよ。今のサイトは要素が縦に並んでるだけでしょ？FlexboxやGridを使えば、要素を横に並べたり、カード形式にしたりできる。」
+
+**あなた:** 「俺、デザインセンスないんだけど大丈夫？」
+
+**Yuki:** 「デザインセンスは半分"知識"だよ。色の選び方、フォントの組み合わせ、余白の取り方——ルールを知れば、誰でもそれなりのデザインが作れる。逆に言えば、ルールを知らないとセンスがあっても崩れやすい。」
+
+---
+
+Yukiがテーブルの上にスケッチブックを広げた。海風テラスのトップページのワイヤーフレーム（設計図）が描かれている。
+
+**Yuki:** 「今日学ぶのは4つ。Flexboxでの要素配置、CSS Gridの基本、タイポグラフィとカラーの原則、そしてコンポーネント思考。これがわかると、"プロっぽい"サイトが作れるようになるよ。」
+
+**あなた:** 「Flexboxって名前だけ聞いたことあります。柔軟に配置できる仕組みですか？」
+
+**Yuki:** 「そう！名前の通りFlexible Box。一次元のレイアウトに最適なんだ。さあ、始めよう。」
+
+</StoryPanel>
+
+## Flexbox — 柔軟なレイアウトの切り札
+
+メニューカードを横に並べたい。ナビゲーションを等間隔に配置したい。要素を上下中央に揃えたい。こういったレイアウトの課題をスマートに解決するのがFlexboxだ。
+
+> **Yuki:** 「Flexboxが登場する前は、float や inline-block で苦しみながらレイアウトを組んでたんだ。Flexboxは革命的だったよ。」
+
+## Flexboxの基本概念
+
+Flexboxは「親要素（コンテナ）」と「子要素（アイテム）」の関係で成り立つ：
+
+```css
+/* 親要素にdisplay: flexを指定するだけ */
+.container {
+  display: flex;
+}
+```
+
+これだけで、子要素が**横並び**になる。
+
+```html
+<div class="container">
+  <div class="item">A</div>
+  <div class="item">B</div>
+  <div class="item">C</div>
+</div>
+```
+
+## 主軸と交差軸
+
+Flexboxには2つの軸がある：
+
+```
+flex-direction: row（デフォルト）の場合
+
+主軸（main axis）→ → → → →
+↓ 交差軸（cross axis）
+↓
+↓
+
+[A] [B] [C]
+```
+
+| プロパティ | 操作する軸 | よく使う値 |
+|-----------|-----------|-----------|
+| `justify-content` | 主軸方向の配置 | `center`, `space-between`, `space-around` |
+| `align-items` | 交差軸方向の配置 | `center`, `flex-start`, `stretch` |
+| `flex-direction` | 主軸の方向 | `row`, `column` |
+
+## justify-content — 主軸方向の配置
+
+```css
+.nav-links {
+  display: flex;
+  justify-content: space-between;
+  /* 両端揃えで、間隔が均等に */
+}
+```
+
+| 値 | 動作 |
+|---|---|
+| `flex-start` | 左揃え（デフォルト） |
+| `center` | 中央揃え |
+| `flex-end` | 右揃え |
+| `space-between` | 両端揃え、間隔均等 |
+| `space-around` | 均等配置（両端に半分の間隔） |
+| `space-evenly` | 完全均等配置 |
+
+## align-items — 交差軸方向の配置
+
+```css
+.hero {
+  display: flex;
+  align-items: center;
+  /* 上下中央揃え */
+  height: 400px;
+}
+```
+
+## flex-wrap — 折り返し
+
+デフォルトでは子要素は1行に収まろうとする。折り返したい場合は：
+
+```css
+.menu-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.menu-card {
+  flex: 1 1 280px;
+  /* 最小280px、余れば伸びる、足りなければ折り返す */
+}
+```
+
+## gap — 子要素間の間隔
+
+```css
+.container {
+  display: flex;
+  gap: 20px;  /* 子要素間にきっちり20pxの間隔 */
+}
+```
+
+> **Yuki:** 「昔は margin で間隔を作ってたけど、gap が使えるようになってすごく楽になった。FlexboxとGridの両方で使えるよ。」
+
+## 海風テラスのナビゲーションをFlexboxで
+
+```css
+/* ヘッダーナビ */
+nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  gap: 30px;
+  justify-content: center;
+}
+
+/* スマホでは縦並びに */
+@media (max-width: 767px) {
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+}
+```
+
+## メニューカードを横並びに
+
+```css
+.menu-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.menu-card {
+  flex: 0 1 300px;    /* 伸びない、縮む、基準幅300px */
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+}
+```
+
+## よく使うパターン集
+
+```css
+/* 上下左右中央揃え（最頻出！） */
+.center-all {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ヘッダー：ロゴ左、ナビ右 */
+.header-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* フッター：均等3列 */
+.footer-cols {
+  display: flex;
+  gap: 40px;
+}
+.footer-cols > div {
+  flex: 1;
+}
+```
+
+## ポイント
+
+- `display: flex` を親要素に指定するだけで、子要素が横並びになる
+- `justify-content` = 主軸方向（横）、`align-items` = 交差軸方向（縦）
+- `flex-wrap: wrap` で折り返し可能に
+- `gap` で子要素間の間隔を簡単に指定
+- Flexboxは**一次元**（行 or 列）のレイアウトに最適
+
+## CSS Grid入門 — 二次元レイアウトの王者
+
+Flexboxが「一次元（行 or 列）」のレイアウトに強いなら、CSS Gridは「二次元（行 と 列）」のレイアウトに最適だ。
+
+> **Yuki:** 「ページ全体の骨組みを作るならGrid、コンポーネント内の配置ならFlexbox。両方使いこなせると最強だよ。」
+
+## Gridの基本
+
+```css
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;  /* 3等分 */
+  gap: 20px;
+}
+```
+
+```html
+<div class="grid-container">
+  <div>カード1</div>
+  <div>カード2</div>
+  <div>カード3</div>
+  <div>カード4</div>
+  <div>カード5</div>
+  <div>カード6</div>
+</div>
+```
+
+これだけで3列のグリッドが完成する。4つ目以降は自動的に次の行に配置される。
+
+## fr単位 — 比率で分割
+
+`fr`（fraction）は、利用可能な空間を比率で分割する単位：
+
+```css
+/* 3等分 */
+grid-template-columns: 1fr 1fr 1fr;
+
+/* サイドバー(250px固定) + メイン(残り全部) */
+grid-template-columns: 250px 1fr;
+
+/* 1:2:1 の比率 */
+grid-template-columns: 1fr 2fr 1fr;
+```
+
+## repeat() — 繰り返し指定
+
+```css
+/* 同じことの省略形 */
+grid-template-columns: 1fr 1fr 1fr 1fr;
+grid-template-columns: repeat(4, 1fr);
+
+/* レスポンシブグリッド（超便利！） */
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+```
+
+`auto-fit` と `minmax` の組み合わせは、メディアクエリなしでレスポンシブなグリッドを実現する魔法のような記法だ。
+
+```css
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+/* 画面幅に応じて1列〜4列に自動調整される！ */
+```
+
+## Grid vs Flexbox — いつどちらを使う？
+
+| 状況 | 選択 | 理由 |
+|------|------|------|
+| ナビゲーションのリンク配置 | Flexbox | 一次元、アイテム数が変動 |
+| メニューカードのグリッド | Grid | 二次元、均等な格子状 |
+| ヘッダーのレイアウト | Flexbox | 一次元、space-between |
+| ページ全体の構成 | Grid | 二次元、行列の制御 |
+| ボタン内のアイコン+テキスト | Flexbox | 一次元、小さなコンポーネント |
+
+> **Yuki:** 「迷ったら、"行だけでいい？"ならFlex、"行と列の両方？"ならGrid、って考えるといいよ。」
+
+## 海風テラスをGridで再構成
+
+```css
+/* メニューセクション */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 20px;
+}
+
+/* ページ全体の構成 */
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  /* ヘッダー、メインコンテンツ、フッター */
+  min-height: 100vh;
+}
+```
+
+## grid-template-areas — 名前付きレイアウト
+
+複雑なページレイアウトを直感的に指定できる：
+
+```css
+.page-layout {
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
+
+header  { grid-area: header; }
+aside   { grid-area: sidebar; }
+main    { grid-area: main; }
+footer  { grid-area: footer; }
+```
+
+将来サイドバーを追加するときに便利な手法だ。
+
+## ポイント
+
+- `display: grid` で二次元レイアウトを実現
+- `fr` 単位で比率ベースの分割ができる
+- `repeat(auto-fit, minmax(280px, 1fr))` はレスポンシブグリッドの定番
+- Flexboxは一次元、Gridは二次元と使い分ける
+- 実務ではFlexboxとGridを組み合わせて使うことが多い
+
+## タイポグラフィとカラー — デザインの基礎原則
+
+レイアウトが整っても、フォントや色の選び方が悪いとサイトは「素人感」が抜けない。デザインの基礎原則を知るだけで、見違えるほど品質が上がる。
+
+> **Yuki:** 「デザイナーじゃなくても、最低限のルールを知っていれば、80点のデザインは作れるよ。100点を目指すのはデザイナーの仕事だけどね。」
+
+## タイポグラフィの基本
+
+### フォントの選び方
+
+```css
+body {
+  /* 日本語サイトの定番 */
+  font-family:
+    'Hiragino Kaku Gothic ProN',  /* Mac */
+    'Meiryo',                      /* Windows */
+    'Noto Sans JP',                /* Google Fonts */
+    sans-serif;                    /* フォールバック */
+}
+```
+
+| カテゴリ | 特徴 | 用途 |
+|---------|------|------|
+| ゴシック体（sans-serif） | すっきり、モダン | 本文、UI |
+| 明朝体（serif） | 上品、伝統的 | 見出し、ブランド |
+| 等幅（monospace） | 文字幅が均一 | コード表示 |
+
+### フォントサイズの階層
+
+一貫したサイズの階層を作ることが大事：
+
+```css
+:root {
+  --text-xs: 0.75rem;    /* 12px — 注釈 */
+  --text-sm: 0.875rem;   /* 14px — 小さなテキスト */
+  --text-base: 1rem;     /* 16px — 本文 */
+  --text-lg: 1.25rem;    /* 20px — 小見出し */
+  --text-xl: 1.5rem;     /* 24px — 中見出し */
+  --text-2xl: 2rem;      /* 32px — 大見出し */
+  --text-3xl: 2.5rem;    /* 40px — ヒーロー */
+}
+
+h1 { font-size: var(--text-3xl); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
+p  { font-size: var(--text-base); }
+```
+
+> **Yuki:** 「CSS変数（`--`で始まるやつ）を使うと、後から一括で変更できるから便利だよ。」
+
+### 行間と文字間
+
+```css
+body {
+  line-height: 1.8;     /* 日本語は1.6〜2.0が読みやすい */
+  letter-spacing: 0.05em; /* 少し空けると読みやすくなる */
+}
+
+h1 {
+  line-height: 1.3;     /* 見出しは詰めてOK */
+  letter-spacing: 0.02em;
+}
+```
+
+## カラーの基本原則
+
+### カラーパレットの作り方
+
+プロのサイトは通常3〜5色で構成される：
+
+| 役割 | 色の例 | 使用割合 |
+|------|--------|---------|
+| **プライマリ** | ブランドカラー（海風テラスなら海の青） | 60% |
+| **セカンダリ** | アクセント（温かみのあるオレンジ） | 30% |
+| **アクセント** | 強調（ボタン、CTA） | 10% |
+| **テキスト** | ダークグレー（真っ黒は避ける） | — |
+| **背景** | 白〜薄いグレー | — |
+
+```css
+:root {
+  /* 海風テラスのカラーパレット */
+  --color-primary: #1a5276;      /* 深い海の青 */
+  --color-secondary: #e67e22;    /* 沖縄の夕日のオレンジ */
+  --color-accent: #27ae60;       /* 予約ボタン用のグリーン */
+  --color-text: #2c3e50;         /* テキスト（真っ黒ではない） */
+  --color-text-light: #7f8c8d;   /* 補足テキスト */
+  --color-bg: #ffffff;           /* 背景 */
+  --color-bg-alt: #f8f9fa;       /* セクション背景（交互） */
+  --color-border: #e0e0e0;       /* 境界線 */
+}
+```
+
+### コントラストの重要性
+
+テキストと背景のコントラスト比が低いと読みにくい：
+
+```css
+/* 悪い例：コントラスト不足 */
+p {
+  color: #cccccc;           /* 薄いグレー */
+  background-color: white;  /* 白背景 */
+  /* → 読みにくい！ */
+}
+
+/* 良い例：十分なコントラスト */
+p {
+  color: #2c3e50;           /* ダークグレー */
+  background-color: white;
+  /* → 読みやすい */
+}
+```
+
+> WCAG（Webアクセシビリティガイドライン）では、本文テキストのコントラスト比は**4.5:1以上**が推奨されている。
+
+## 余白のルール — 8pxグリッド
+
+プロのデザインでは、余白を8の倍数で統一することが多い：
+
+```css
+:root {
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+}
+
+section {
+  padding: var(--space-2xl) var(--space-lg);
+}
+
+.menu-card {
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+```
+
+## 海風テラスにデザインシステムを適用
+
+```css
+:root {
+  /* カラー */
+  --color-primary: #1a5276;
+  --color-secondary: #e67e22;
+  --color-text: #2c3e50;
+  --color-bg-alt: #f8f9fa;
+
+  /* フォント */
+  --font-heading: 'Noto Sans JP', sans-serif;
+  --font-body: 'Noto Sans JP', sans-serif;
+
+  /* スペーシング */
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  line-height: 1.8;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  line-height: 1.3;
+}
+
+/* セクションを交互に色分け */
+section:nth-child(even) {
+  background-color: var(--color-bg-alt);
+}
+```
+
+## ポイント
+
+- フォントは2種類まで。日本語サイトはゴシック体が基本
+- カラーパレットは3〜5色。CSS変数で管理する
+- テキスト色に真っ黒（`#000`）は避け、ダークグレー（`#2c3e50`など）を使う
+- 余白は8の倍数で統一すると整って見える
+- `line-height` は日本語なら1.6〜2.0が読みやすい
+
+## コンポーネント設計 — 再利用できるパーツを作る
+
+プロのWebサイトは、小さなパーツ（コンポーネント）の組み合わせでできている。同じスタイルのカードやボタンを何度も書くのではなく、再利用可能なCSSクラスを作ろう。
+
+> **Yuki:** 「LEGOブロックを思い浮かべて。1つ1つのブロックが小さなコンポーネント。それを組み合わせてページを作るんだ。」
+
+## コンポーネント思考とは
+
+```
+ページ全体
+├── ヘッダーコンポーネント
+│   ├── ロゴ
+│   └── ナビゲーション
+├── ヒーローコンポーネント
+├── メニューセクション
+│   ├── メニューカード ← 再利用
+│   ├── メニューカード ← 再利用
+│   └── メニューカード ← 再利用
+├── アクセスセクション
+└── フッターコンポーネント
+```
+
+## ボタンコンポーネント
+
+サイト内で使うボタンのバリエーションを作ろう：
+
+```css
+/* ベースボタン */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+/* バリエーション */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.btn-accent {
+  background-color: var(--color-secondary);
+  color: white;
+}
+```
+
+```html
+<a href="#reservation" class="btn btn-primary">予約する</a>
+<a href="#menu" class="btn btn-secondary">メニューを見る</a>
+```
+
+## カードコンポーネント
+
+```css
+.card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  margin: 0 0 8px 0;
+  color: var(--color-primary);
+}
+
+.card-text {
+  color: var(--color-text-light);
+  font-size: 0.9rem;
+  margin: 0 0 16px 0;
+}
+```
+
+```html
+<div class="card">
+  <img class="card-image" src="champuru.jpg" alt="島豆腐チャンプルー">
+  <div class="card-body">
+    <h3 class="card-title">島豆腐チャンプルー</h3>
+    <p class="card-text">地元の島豆腐と新鮮な野菜を使った定番メニュー</p>
+    <span class="price">¥980</span>
+  </div>
+</div>
+```
+
+## ヒーローセクション
+
+ページの最初に大きな画像と見出しを配置する、インパクトのあるセクション：
+
+```css
+.hero {
+  position: relative;
+  height: 60vh;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  background-image: url('cafe-hero.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* 画像の上にオーバーレイを重ねて文字を読みやすく */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.hero-content {
+  position: relative;  /* オーバーレイの上に表示 */
+  z-index: 1;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 24px;
+}
+```
+
+## transition — 滑らかな変化
+
+`transition` を使うと、状態変化をアニメーションにできる：
+
+```css
+.btn {
+  background-color: #1a5276;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #2980b9;
+  /* 0.3秒かけて色が変わる */
+}
+
+.card {
+  transform: translateY(0);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  /* 0.2秒かけて少し浮き上がる */
+}
+```
+
+| transitionの値 | 意味 |
+|---------------|------|
+| `0.3s` | アニメーションの時間 |
+| `ease` | 加速→減速（自然な動き） |
+| `linear` | 一定速度 |
+| `ease-in-out` | ゆっくり始まりゆっくり終わる |
+
+## BEM命名規則 — クラス名のルール
+
+コンポーネントが増えると、クラス名の管理が大事になる。BEM（Block Element Modifier）は人気の命名規則：
+
+```css
+/* Block: コンポーネント名 */
+.menu-card { }
+
+/* Element: ブロックの一部（__で接続） */
+.menu-card__title { }
+.menu-card__price { }
+.menu-card__image { }
+
+/* Modifier: バリエーション（--で接続） */
+.menu-card--featured { }
+.menu-card--sold-out { }
+```
+
+```html
+<div class="menu-card menu-card--featured">
+  <img class="menu-card__image" src="special.jpg" alt="特別メニュー">
+  <h3 class="menu-card__title">今週のスペシャル</h3>
+  <span class="menu-card__price">¥1,200</span>
+</div>
+```
+
+## ポイント
+
+- ページをコンポーネント単位で考え、再利用できるCSSクラスを作る
+- ボタン・カード・ヒーローはほぼすべてのサイトで使う汎用コンポーネント
+- `transition` で滑らかなホバーエフェクトを加えるだけで品質が上がる
+- `box-shadow` と `border-radius` でモダンなカードデザインが作れる
+- BEM命名規則でクラス名を整理すると、大規模になっても管理しやすい
+
+<StoryPanel variant="conclusion">
+
+ブラウザをリロードする。海風テラスのサイトが、まるで別人のように生まれ変わっていた。
+
+ヒーローセクションには海の写真が広がり、メニューカードが3列のグリッドで美しく並ぶ。フォントは統一され、色使いもカフェの温かみを感じさせる。スマホでは1列に自然に切り替わる。
+
+---
+
+**あなた:** 「やばい、これめちゃくちゃいいじゃん！Mikaさんに見せよう！」
+
+あなたがすぐにスクリーンショットを撮ってMikaに送る。数分後、返信が来た。
+
+**あなた:** 「Mikaさん、すごく喜んでる！"まさにこういうイメージでした！"って。それと..."予約フォームとメニューの絞り込み機能も付けられますか？"だって。」
+
+**あなた:** 「予約フォーム？メニューの絞り込み？それって...」
+
+**Yuki:** 「HTMLとCSSだけでは難しいね。ここからはJavaScriptの出番だよ。ページに"動き"と"反応"を加えるための言語。」
+
+**あなた:** 「JavaScript...聞いたことはあるけど、難しいの？」
+
+**Yuki:** 「基本はシンプルだよ。"ボタンが押されたら、こうする"——そういうルールを書いていくだけ。HTMLが骨格、CSSが見た目なら、JavaScriptは筋肉と神経系みたいなものかな。」
+
+**あなた:** 「ページが動き出す...なんかワクワクしますね。」
+
+---
+
+> **次のチャプター**: *Chapter 4: 動き出すページ* — JavaScriptの基本を学び、海風テラスに予約フォームとインタラクティブなメニューを実装する。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="03-making-it-pretty" />
+
+<ChapterFaq chapterId="03-making-it-pretty" />
+
+<SeriesNav current={3} />

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch22-help-01",
+    "question": "テストを実行すると「Cannot find module」エラーが出る",
+    "answer": "**パスやモジュール設定の問題**です。\n\n```bash\n# Jestの設定を確認\nnpx jest --showConfig | grep moduleNameMapper\n```\n\n**よくある原因:**\n1. **TypeScriptのパスエイリアス**が未設定\n```json\n// jest.config.js\nmodule.exports = {\n  moduleNameMapper: {\n    \"^@/(.*)$\": \"<rootDir>/src/$1\"\n  }\n}\n```\n\n2. **ts-jest**がインストールされていない\n```bash\nnpm install --save-dev ts-jest @types/jest\n```\n\n3. **jest.config.js**でtransformを設定\n```json\n{ \"transform\": { \"^.+\\\\.tsx?$\": \"ts-jest\" } }\n```",
+    "tags": ["jest", "module", "config", "error"],
+    "lessonSlug": "01-testing-pyramid",
+    "category": "environment"
+  },
+  {
+    "id": "ch22-help-02",
+    "question": "テストが他のテストに依存して失敗する",
+    "answer": "テスト間の**状態共有が原因**です。\n\n**解決策:** `beforeEach` でリセットする\n\n```typescript\ndescribe(\"Shop API\", () => {\n  beforeEach(async () => {\n    // 各テスト前にデータをクリーン\n    await db.query(\"DELETE FROM bookings WHERE id LIKE 'test-%'\");\n    jest.clearAllMocks();\n  });\n\n  test(\"テストA\", () => { /* ... */ });\n  test(\"テストB\", () => { /* ... */ });\n});\n```\n\n**原則:** 各テストは独立して実行できること。順番に依存してはいけません。\n\n`--runInBand` フラグで順番実行にすると問題が見つかりやすくなります。",
+    "tags": ["jest", "test-isolation", "beforeEach"],
+    "lessonSlug": "02-unit-testing",
+    "category": "concept"
+  },
+  {
+    "id": "ch22-help-03",
+    "question": "jest.mock()が効かない・モックが適用されない",
+    "answer": "**モックの位置と書き方を確認**してください。\n\n```typescript\n// ✓ 正しい: ファイルトップレベルでモック\njest.mock(\"./emailService\");\nimport { send } from \"./emailService\";\n\n// ✗ 間違い: describe内でモック\ndescribe(\"test\", () => {\n  jest.mock(\"./emailService\"); // ここでは遅い\n});\n```\n\n**注意点:**\n- `jest.mock()` はファイルの先頭に**巻き上げ（hoist）**される\n- ESモジュールの場合は `jest.unstable_mockModule()` が必要な場合がある\n- モックのリセットは `jest.clearAllMocks()` を `beforeEach` で呼ぶ",
+    "tags": ["jest", "mock", "error"],
+    "lessonSlug": "02-unit-testing",
+    "category": "syntax"
+  },
+  {
+    "id": "ch22-help-04",
+    "question": "非同期テストがタイムアウトする",
+    "answer": "**タイムアウトの延長と非同期処理の確認:**\n\n```typescript\n// タイムアウトを延長（デフォルト5秒）\ntest(\"遅い処理のテスト\", async () => {\n  // テスト内容\n}, 30000); // 30秒\n\n// またはグローバル設定\n// jest.config.js\nmodule.exports = {\n  testTimeout: 10000  // 10秒\n}\n```\n\n**よくある原因:**\n- `await` の付け忘れ\n- Promiseが解決されない（resolve/rejectが呼ばれない）\n- 実際のAPIやDBに接続しようとしている（モックすべき）",
+    "tags": ["jest", "async", "timeout", "error"],
+    "lessonSlug": "03-integration-testing",
+    "category": "syntax"
+  },
+  {
+    "id": "ch22-help-05",
+    "question": "Playwrightのテストでlocatorが要素を見つけられない",
+    "answer": "**要素の特定方法を見直し**ましょう:\n\n```typescript\n// 推奨: data-testidを使う\nawait page.click('[data-testid=\"submit-button\"]');\n\n// テキストで検索\nawait page.click('text=予約する');\n\n// roleで検索\nawait page.getByRole('button', { name: '予約する' });\n\n// デバッグ: 要素が表示されるまで待つ\nawait page.waitForSelector('[data-testid=\"submit-button\"]', {\n  state: 'visible',\n  timeout: 10000\n});\n```\n\n**デバッグ方法:**\n```bash\n# UIモードで視覚的に確認\nnpx playwright test --ui\n\n# デバッグモードでステップ実行\nnpx playwright test --debug\n```",
+    "tags": ["playwright", "e2e", "locator", "error"],
+    "lessonSlug": "04-e2e-and-tdd",
+    "category": "syntax"
+  },
+  {
+    "id": "ch22-help-06",
+    "question": "テストカバレッジの見方がわからない",
+    "answer": "```bash\nnpx jest --coverage\n```\n\n| 指標 | 意味 |\n|------|------|\n| **Stmts** | 実行された文の割合 |\n| **Branch** | if/elseなどの分岐網羅率 |\n| **Funcs** | 呼び出された関数の割合 |\n| **Lines** | 実行された行の割合 |\n\n**目安:**\n- 80%以上: 十分なカバレッジ\n- 100%: 必ずしも目標にしなくてよい\n- 0%: 危険。重要なロジックからテストを書き始めよう\n\n**レポートの確認:**\n```bash\n# HTMLレポートを生成\nopen coverage/lcov-report/index.html\n```\n\n各ファイルの未テスト行が赤くハイライトされます。",
+    "tags": ["jest", "coverage", "testing"],
+    "lessonSlug": "01-testing-pyramid",
+    "category": "concept"
+  },
+  {
+    "id": "ch22-help-07",
+    "question": "TDDで何から始めればいいかわからない",
+    "answer": "**最もシンプルなケースから始めましょう:**\n\n1. **最も単純な入力と出力を考える**\n```typescript\ntest(\"1人の場合の料金計算\", () => {\n  expect(calculate(1000, 1)).toBe(1000);\n});\n```\n\n2. **テストを実行 → 🔴失敗を確認**\n\n3. **最小限のコードで通す**\n```typescript\nfunction calculate(price, guests) {\n  return price * guests;\n}\n```\n\n4. **次のケースを追加**\n```typescript\ntest(\"複数人の場合\", () => {\n  expect(calculate(1000, 3)).toBe(3000);\n});\n```\n\n5. **徐々に複雑なケースへ**（エッジケース、エラー処理）\n\n**コツ:** 一度に大きなステップを踏まない。小さいテスト → 小さい実装 を繰り返す。",
+    "tags": ["tdd", "testing", "workflow"],
+    "lessonSlug": "04-e2e-and-tdd",
+    "category": "concept"
+  },
+  {
+    "id": "ch22-help-08",
+    "question": "supertestでAPIテストをする時の設定方法は？",
+    "answer": "**Express/Koaアプリのテスト手順:**\n\n```bash\nnpm install --save-dev supertest @types/supertest\n```\n\n```typescript\n// app.ts（サーバー起動を分離）\nimport express from \"express\";\nexport const app = express();\napp.get(\"/api/health\", (req, res) => {\n  res.json({ status: \"ok\" });\n});\n\n// server.ts（起動のみ）\nimport { app } from \"./app\";\napp.listen(3000);\n\n// app.test.ts（テスト）\nimport request from \"supertest\";\nimport { app } from \"./app\";\n\ntest(\"ヘルスチェック\", async () => {\n  const res = await request(app).get(\"/api/health\");\n  expect(res.status).toBe(200);\n  expect(res.body.status).toBe(\"ok\");\n});\n```\n\n**ポイント:** `app` と `server` を分離し、テストではサーバーを起動せずに `app` を直接テストします。",
+    "tags": ["supertest", "api", "express", "testing"],
+    "lessonSlug": "03-integration-testing",
+    "category": "environment"
+  },
+  {
+    "id": "ch22-help-09",
+    "question": "toEqual と toBe の違いは？",
+    "answer": "| マッチャー | 比較方法 | 用途 |\n|-----------|---------|------|\n| `toBe` | `===`（参照比較） | プリミティブ値（数値、文字列、boolean） |\n| `toEqual` | 深い比較 | オブジェクト、配列の中身 |\n\n```typescript\n// toBe: プリミティブに使う\nexpect(1 + 1).toBe(2);           // ✓\nexpect(\"hello\").toBe(\"hello\");   // ✓\n\n// toBe: オブジェクトは参照が同じ場合のみ通る\nconst a = { x: 1 };\nconst b = { x: 1 };\nexpect(a).toBe(b);     // ✗ 参照が異なる\nexpect(a).toEqual(b);  // ✓ 中身が同じ\n\n// 配列も同様\nexpect([1, 2]).toBe([1, 2]);     // ✗\nexpect([1, 2]).toEqual([1, 2]);  // ✓\n```\n\n**原則:** 数値や文字列は `toBe`、オブジェクトや配列は `toEqual` を使いましょう。",
+    "tags": ["jest", "matcher", "concept"],
+    "lessonSlug": "02-unit-testing",
+    "category": "concept"
+  },
+  {
+    "id": "ch22-help-10",
+    "question": "テストファイルの配置場所はどこがいい？",
+    "answer": "**2つの流派があります:**\n\n**方式1: テスト対象の隣に置く（推奨）**\n```\nsrc/\n├── utils/\n│   ├── pricing.ts\n│   └── pricing.test.ts   ← 隣に置く\n├── api/\n│   ├── bookings.ts\n│   └── bookings.test.ts\n```\n\n**方式2: テスト専用ディレクトリ**\n```\nsrc/\n├── utils/pricing.ts\n__tests__/\n├── utils/pricing.test.ts\n```\n\n**方式1のメリット:**\n- テストファイルがすぐ見つかる\n- テストがないファイルが一目瞭然\n- importパスが短い\n\n**E2Eテストは専用ディレクトリに:**\n```\ne2e/\n├── booking-flow.spec.ts\n├── search.spec.ts\n```",
+    "tags": ["testing", "project-structure", "organization"],
+    "lessonSlug": "01-testing-pyramid",
+    "category": "concept"
+  }
+]

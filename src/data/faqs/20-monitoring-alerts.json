@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch20-help-01",
+    "question": "モニタリングツールが多すぎてどれを使えばいいかわからない",
+    "answer": "まずはクラウドプロバイダーのネイティブツールから始めましょう。\n\n**GCPの場合：**\n- Cloud Monitoring（メトリクス）\n- Cloud Logging（ログ）\n- Cloud Trace（トレース）\n\n**AWSの場合：**\n- CloudWatch（メトリクス + ログ）\n- X-Ray（トレース）\n\n**成長に合わせてステップアップ：**\n1. クラウドネイティブツール（無料枠あり）\n2. Prometheus + Grafana（OSS、自前運用）\n3. Datadog / New Relic（有料、オールインワン）\n\nShimaLinkの規模なら、まずはクラウドネイティブ + Grafanaで十分です。",
+    "tags": ["monitoring", "tools", "setup"],
+    "lessonSlug": "01-why-monitoring",
+    "category": "concept"
+  },
+  {
+    "id": "ch20-help-02",
+    "question": "ログが多すぎて必要な情報が見つからない",
+    "answer": "構造化ログとフィルタリングで解決します。\n\n**1. 構造化ログを使う**\n```javascript\nlogger.info(\"Booking created\", {\n  service: \"api\",\n  requestId: \"req-123\",\n  bookingId: \"BK-456\",\n});\n```\n\n**2. ログレベルでフィルタ**\n- 本番: INFO以上のみ表示\n- デバッグ時: DEBUG まで表示\n\n**3. クエリで絞り込む（Cloud Logging の例）**\n```\nresource.type=\"cloud_run_revision\"\nseverity>=ERROR\ntextPayload:\"database\"\n```\n\n**4. リクエストIDで追跡**\n```\njsonPayload.requestId=\"req-abc123\"\n```",
+    "tags": ["logging", "filter", "search"],
+    "lessonSlug": "02-logging-best-practices",
+    "category": "terminal"
+  },
+  {
+    "id": "ch20-help-03",
+    "question": "Prometheusのインストールと設定方法がわからない",
+    "answer": "Docker Composeで簡単にセットアップできます。\n\n```yaml\n# docker-compose.monitoring.yml\nservices:\n  prometheus:\n    image: prom/prometheus:latest\n    volumes:\n      - ./prometheus.yml:/etc/prometheus/prometheus.yml\n    ports:\n      - \"9090:9090\"\n\n  grafana:\n    image: grafana/grafana:latest\n    ports:\n      - \"3001:3000\"\n    environment:\n      - GF_SECURITY_ADMIN_PASSWORD=admin\n```\n\n```yaml\n# prometheus.yml\nscrape_configs:\n  - job_name: \"shimalink-api\"\n    scrape_interval: 15s\n    static_configs:\n      - targets: [\"api:4000\"]\n```\n\n```bash\ndocker compose -f docker-compose.monitoring.yml up -d\n```\n\nGrafanaは `http://localhost:3001` でアクセスできます。",
+    "tags": ["prometheus", "grafana", "setup"],
+    "lessonSlug": "03-metrics-dashboards",
+    "category": "environment"
+  },
+  {
+    "id": "ch20-help-04",
+    "question": "アラートが頻繁に鳴りすぎて困る",
+    "answer": "アラート疲れの典型的な症状です。以下で改善しましょう。\n\n**1. 閾値を見直す**\n- CPU 70% で鳴る → 85% に緩和\n- 一度でも超えたら鳴る → 5分継続したら鳴るに変更\n\n**2. for条件を追加**\n```yaml\nalert: HighCPU\nexpr: cpu_usage > 85\nfor: 5m  # 5分継続した場合のみ\n```\n\n**3. 優先度を分ける**\n- P1のみ電話通知\n- P2-P3はSlack\n- P4はメール（翌営業日対応）\n\n**4. 定期レビュー**\n月1回、過去のアラートを振り返り：\n- 誤報が多いルール → 閾値を調整\n- 対応不要だったアラート → 削除/格下げ",
+    "tags": ["alert", "fatigue", "tuning"],
+    "lessonSlug": "04-alerting-strategies",
+    "category": "concept"
+  },
+  {
+    "id": "ch20-help-05",
+    "question": "レスポンスタイムの「95パーセンタイル」とは？",
+    "answer": "全リクエストの95%がその時間以内に完了するという指標です。\n\n**例: 100件のリクエスト**\n- 平均: 100ms\n- 95パーセンタイル: 350ms\n\nこれは「95件は350ms以内に完了し、5件はそれ以上かかった」という意味です。\n\n**なぜ平均ではなくパーセンタイルを使う？**\n\n平均は外れ値に弱い：\n- 99件が50ms、1件が10秒 → 平均は149ms\n- でも体感では「ほとんど速い、たまに激遅」\n\nパーセンタイルなら実態を正確に表せます：\n- p50（中央値）: 50ms — 半分のユーザーの体験\n- p95: 350ms — ほとんどのユーザーの体験\n- p99: 2000ms — 最悪に近いユーザーの体験",
+    "tags": ["metrics", "percentile", "latency"],
+    "lessonSlug": "03-metrics-dashboards",
+    "category": "concept"
+  },
+  {
+    "id": "ch20-help-06",
+    "question": "ヘルスチェックエンドポイントの作り方は？",
+    "answer": "アプリケーションの死活を確認するための軽量なAPIです。\n\n```javascript\n// 基本のヘルスチェック\napp.get(\"/health\", (req, res) => {\n  res.json({ status: \"ok\" });\n});\n\n// 詳細なヘルスチェック（DB接続も確認）\napp.get(\"/health/detail\", async (req, res) => {\n  try {\n    await db.query(\"SELECT 1\");\n    res.json({\n      status: \"ok\",\n      database: \"connected\",\n      uptime: process.uptime(),\n    });\n  } catch (err) {\n    res.status(503).json({\n      status: \"error\",\n      database: \"disconnected\",\n      error: err.message,\n    });\n  }\n});\n```\n\n**Cloud Runでの設定：**\n```yaml\nstartup:\n  httpGet:\n    path: /health\n  periodSeconds: 10\n```\n\nヘルスチェックが失敗すると、ロードバランサーがそのインスタンスへのトラフィックを停止します。",
+    "tags": ["health-check", "api", "monitoring"],
+    "lessonSlug": "01-why-monitoring",
+    "category": "syntax"
+  },
+  {
+    "id": "ch20-help-07",
+    "question": "ポストモーテムの書き方がわからない",
+    "answer": "以下のテンプレートを参考にしてください。\n\n**ポストモーテムテンプレート：**\n\n```\n## インシデント概要\n- 発生日時: 2024-10-15 03:00 JST\n- 検知日時: 2024-10-15 03:02 JST\n- 復旧日時: 2024-10-15 03:25 JST\n- 影響範囲: 全ユーザーの予約機能\n- 影響人数: 約50名\n\n## タイムライン\n- 03:00 DB接続数が上限到達\n- 03:02 アラート発報\n- 03:05 対応開始\n- 03:15 原因特定（コネクションリーク）\n- 03:25 修正デプロイ、復旧確認\n\n## 根本原因\nDBコネクションのクローズ漏れ\n\n## 再発防止策\n1. コネクションプールの設定を見直す\n2. DB接続数のアラート閾値を下げる\n3. コネクションリーク検出テストを追加\n```\n\n**重要:** 個人を責めない（Blame-free）文化が大前提です。",
+    "tags": ["postmortem", "incident", "process"],
+    "lessonSlug": "04-alerting-strategies",
+    "category": "concept"
+  },
+  {
+    "id": "ch20-help-08",
+    "question": "Slack通知の設定方法がわからない",
+    "answer": "Slack Incoming Webhookを使います。\n\n**1. Webhook URLを取得**\n- Slack → App設定 → Incoming Webhooks → 有効化\n- 通知先チャンネルを選択\n- Webhook URLをコピー\n\n**2. 環境変数に設定**\n```bash\nexport SLACK_WEBHOOK_URL=\"https://hooks.slack.com/services/xxx/yyy/zzz\"\n```\n\n**3. テスト送信**\n```bash\ncurl -X POST $SLACK_WEBHOOK_URL \\\n  -H 'Content-type: application/json' \\\n  -d '{\"text\": \"テスト通知です\"}'\n```\n\n**4. Prometheusからの通知（Alertmanager）**\n```yaml\n# alertmanager.yml\nreceivers:\n  - name: \"slack\"\n    slack_configs:\n      - api_url: \"https://hooks.slack.com/services/xxx\"\n        channel: \"#monitoring\"\n```",
+    "tags": ["slack", "notification", "webhook"],
+    "lessonSlug": "04-alerting-strategies",
+    "category": "environment"
+  },
+  {
+    "id": "ch20-help-09",
+    "question": "トレースとログの違いは？",
+    "answer": "どちらも「何が起きたか」を記録しますが、視点が異なります。\n\n**ログ:** 1つのサービス内のイベント記録\n```\n[api] Booking request received\n[api] Database query executed (12ms)\n[api] Booking created\n```\n\n**トレース:** リクエスト全体の流れを追跡\n```\n[User] → [API Gateway 2ms] → [Auth Service 15ms]\n  → [Booking API 5ms] → [Database 12ms]\n  → [Email Service 100ms]\nTotal: 134ms\n```\n\n**使い分け：**\n- **ログ:** 特定のエラーの詳細を調べたい\n- **トレース:** どのサービスがボトルネックか調べたい\n\nShimaLinkのように複数サービスがある場合、トレースが特に有効です。",
+    "tags": ["trace", "log", "observability"],
+    "lessonSlug": "01-why-monitoring",
+    "category": "concept"
+  },
+  {
+    "id": "ch20-help-10",
+    "question": "ダッシュボードに何を表示すればいい？",
+    "answer": "3層構成がおすすめです。\n\n**第1層: サービス概要（1画面）**\n- 稼働率（Uptime）\n- レスポンスタイム（p95）\n- エラー率\n- リクエスト数/秒\n\n**第2層: サービス別詳細**\n- API: エンドポイント別レスポンスタイム\n- DB: クエリ実行時間、接続数\n- Web: ページ読み込み時間\n\n**第3層: インフラ**\n- CPU/メモリ/ディスク使用率\n- コンテナ数（オートスケーリングの状態）\n- ネットワーク帯域\n\n**設計のコツ：**\n- 最上部に「今、問題があるか」が一目でわかる信号を配置\n- 赤=異常、黄=警告、緑=正常で色分け\n- 時系列グラフで傾向を可視化\n- クリックで詳細にドリルダウンできる構成",
+    "tags": ["dashboard", "design", "grafana"],
+    "lessonSlug": "03-metrics-dashboards",
+    "category": "concept"
+  }
+]

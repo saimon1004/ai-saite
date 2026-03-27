@@ -1,0 +1,888 @@
+---
+title: "テストの極意"
+subtitle: "壊れないコードを書く技術"
+description: "壊れないコードを書く技術。Testing・Unit Testing・TDDを実践的なストーリーで学ぶチャプター「テストの極意」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-22
+chapter: 22
+arc: "beyond"
+arcName: "飛躍編"
+skills:
+  - { category: "testing", name: "Testing", level: "intermediate" }
+  - { category: "testing", name: "Unit Testing", level: "intro" }
+  - { category: "testing", name: "TDD", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["21-python-automation"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+ShimaLinkに新機能を追加するペースが加速していた。予約システム、口コミ機能、クーポン配信——あなたが次々と実装していく。
+
+しかし、あることが頻発するようになった。
+
+---
+
+**あなた:** 「...やばい。クーポン機能をリリースしたら、予約システムが壊れた。」
+
+**Mika:** 「えっ！？ 今日3件の予約が消えたってお店から連絡来てるんだけど...」
+
+**あなた:** 「先週もレビュー機能の修正で検索が壊れたよね。新しい機能を足すたびに、別の場所が壊れる。」
+
+**あなた:** 「直そうとすると、さらに別のところが壊れるんだよ。モグラ叩きみたいだ...」
+
+---
+
+Yukiがカフェに入ってきて、チームの深刻な表情を見た。
+
+**Yuki:** 「何があったか、大体わかるよ。**テスト**がないんでしょ？」
+
+**あなた:** 「テスト？手動で画面を確認してるけど...」
+
+**Yuki:** 「それは"テスト"じゃなくて"祈り"だよ。本当のテストは、コードがコードを検証すること。自動で、繰り返し、確実に。」
+
+**あなた:** 「テストを書くと、バグが減るんですか？」
+
+**Yuki:** 「バグが減るだけじゃない。**安心して変更できるようになる**。テストがあれば、新機能を追加しても古い機能が壊れていないことを数秒で確認できる。」
+
+---
+
+Yukiはホワイトボードにピラミッドを描いた。
+
+> 「テストには種類がある。ユニットテスト、統合テスト、E2Eテスト。これを正しいバランスで書くのが"テストの極意"だよ。」
+
+**あなた:** 「テストを書く時間があったらコードを書きたいんだけど...」
+
+**Yuki:** 「テストを書かない時間は、バグ修正の時間に変わるだけ。**テストは未来の自分へのプレゼント**だよ。」
+
+---
+
+チームは覚悟を決めた。ShimaLinkを「壊れないシステム」に進化させるための、テスト戦略の学習が始まる。
+
+</StoryPanel>
+
+## テストピラミッド — テスト戦略の全体像
+
+Yukiがホワイトボードに描いたピラミッド。それがテスト戦略のすべてを表している。
+
+> 「テストには"正しいバランス"がある。それを視覚化したのがテストピラミッドだよ。」
+
+## テストピラミッドとは？
+
+```
+        /\
+       /  \        E2Eテスト (少ない)
+      /    \       ブラウザ全体の動作確認
+     /------\
+    /        \     統合テスト (中くらい)
+   /          \    複数コンポーネントの連携
+  /------------\
+ /              \  ユニットテスト (多い)
+/________________\ 個々の関数・モジュール
+```
+
+| レベル | テスト数 | 速度 | 信頼性 | コスト |
+|-------|---------|------|--------|-------|
+| E2Eテスト | 少ない | 遅い | 実環境に近い | 高い |
+| 統合テスト | 中くらい | 中くらい | コンポーネント間 | 中くらい |
+| ユニットテスト | 多い | 速い | 個別の関数 | 低い |
+
+## なぜピラミッド型？
+
+**下に行くほど数が多い**のが理想です。
+
+- **ユニットテスト**: 個々の関数を高速にテスト。1000個書いても数秒で完了
+- **統合テスト**: APIとデータベースの連携など。ユニットテストの次に多く
+- **E2Eテスト**: ブラウザを動かして全体を確認。最も遅いので重要な流れだけ
+
+> **Yuki:** 「逆ピラミッド（E2Eばかり多い）になると、テストが遅くて不安定になる。"アイスクリームコーン"型は避けよう。」
+
+## テストの3つのA
+
+すべてのテストは3つのステップで構成されます。
+
+```javascript
+// AAA パターン
+test("予約料金を正しく計算する", () => {
+  // Arrange（準備）
+  const basePrice = 5000;
+  const guests = 3;
+
+  // Act（実行）
+  const total = calculateBookingPrice(basePrice, guests);
+
+  // Assert（検証）
+  expect(total).toBe(15000);
+});
+```
+
+| ステップ | 意味 | やること |
+|---------|------|---------|
+| **Arrange** | 準備 | テストに必要なデータを用意 |
+| **Act** | 実行 | テスト対象の関数を呼び出す |
+| **Assert** | 検証 | 結果が期待通りか確認 |
+
+## 何をテストすべきか？
+
+### テストすべき
+
+- ビジネスロジック（料金計算、在庫管理）
+- データ変換（日付フォーマット、通貨換算）
+- エッジケース（0、null、空文字列、巨大な数）
+- エラーハンドリング
+
+### テストしなくてよい
+
+- フレームワーク自体の機能（React, Expressなど）
+- 外部ライブラリの内部動作
+- 単純なゲッター/セッター
+- CSSのスタイリング（ビジュアルテストは別の話）
+
+## テストツールの選択
+
+| ツール | 種類 | 用途 |
+|-------|------|------|
+| **Jest** | テストランナー | JavaScript/TypeScriptのユニット・統合テスト |
+| **Vitest** | テストランナー | Viteプロジェクト向け高速テスト |
+| **Playwright** | E2Eテスト | ブラウザ自動操作 |
+| **Cypress** | E2Eテスト | フロントエンドE2Eテスト |
+| **pytest** | テストランナー | Pythonのテスト |
+
+## Jest のセットアップ
+
+```bash
+# インストール
+npm install --save-dev jest @types/jest ts-jest
+
+# package.json に追加
+{
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  }
+}
+```
+
+## テストカバレッジ
+
+```bash
+$ npm run test:coverage
+
+----------|---------|----------|---------|---------|
+File      | % Stmts | % Branch | % Funcs | % Lines |
+----------|---------|----------|---------|---------|
+All files |   82.5  |   75.0   |   90.0  |   82.5  |
+ pricing  |  100.0  |  100.0   |  100.0  |  100.0  |
+ booking  |   80.0  |   66.7   |   85.7  |   80.0  |
+----------|---------|----------|---------|---------|
+```
+
+> **注意**: カバレッジ100%が目標ではありません。80%前後が現実的な目標です。大事なのは「重要なコード」がテストされていること。
+
+## ポイント
+
+- テストピラミッド: ユニット > 統合 > E2E の順に数を多く
+- AAAパターン: Arrange（準備） → Act（実行） → Assert（検証）
+- ビジネスロジックとエッジケースを優先的にテスト
+- テストは「安心して変更できる」ための投資
+- カバレッジは80%前後を目安に、重要なロジックを優先
+
+## ユニットテスト — 関数を一つずつ検証する
+
+テストピラミッドの土台、ユニットテスト。最も数が多く、最も速い。
+
+> **Yuki:** 「ユニットテストは関数の"取扱説明書"。この入力に対して、この出力が返るべき——それをコードで書く。」
+
+## 最初のユニットテスト
+
+ShimaLinkの料金計算関数をテストしてみよう。
+
+```typescript
+// src/utils/pricing.ts
+export function calculateBookingPrice(
+  basePrice: number,
+  guests: number,
+  isWeekend: boolean = false
+): number {
+  if (guests <= 0) throw new Error("ゲスト数は1以上にしてください");
+  const subtotal = basePrice * guests;
+  const weekendSurcharge = isWeekend ? subtotal * 0.2 : 0;
+  return subtotal + weekendSurcharge;
+}
+```
+
+```typescript
+// src/utils/pricing.test.ts
+import { calculateBookingPrice } from "./pricing";
+
+describe("calculateBookingPrice", () => {
+  test("基本料金 × 人数を計算する", () => {
+    expect(calculateBookingPrice(5000, 3)).toBe(15000);
+  });
+
+  test("週末は20%の追加料金がかかる", () => {
+    expect(calculateBookingPrice(5000, 2, true)).toBe(12000);
+  });
+
+  test("1人の場合は基本料金のみ", () => {
+    expect(calculateBookingPrice(5000, 1)).toBe(5000);
+  });
+
+  test("ゲスト数が0以下の場合はエラー", () => {
+    expect(() => calculateBookingPrice(5000, 0)).toThrow(
+      "ゲスト数は1以上にしてください"
+    );
+  });
+
+  test("ゲスト数が負の場合もエラー", () => {
+    expect(() => calculateBookingPrice(5000, -1)).toThrow();
+  });
+});
+```
+
+## テストの実行
+
+```bash
+$ npx jest pricing.test.ts
+
+ PASS  src/utils/pricing.test.ts
+  calculateBookingPrice
+    ✓ 基本料金 × 人数を計算する (2ms)
+    ✓ 週末は20%の追加料金がかかる (1ms)
+    ✓ 1人の場合は基本料金のみ
+    ✓ ゲスト数が0以下の場合はエラー (1ms)
+    ✓ ゲスト数が負の場合もエラー
+
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+```
+
+## Jestの主なマッチャー
+
+| マッチャー | 用途 | 例 |
+|-----------|------|-----|
+| `toBe()` | 厳密等価（===） | `expect(1 + 1).toBe(2)` |
+| `toEqual()` | 深い比較（オブジェクト） | `expect(obj).toEqual({a: 1})` |
+| `toBeTruthy()` | 真っぽい値 | `expect("hello").toBeTruthy()` |
+| `toBeFalsy()` | 偽っぽい値 | `expect(0).toBeFalsy()` |
+| `toContain()` | 配列/文字列に含む | `expect([1,2,3]).toContain(2)` |
+| `toThrow()` | エラーを投げる | `expect(() => fn()).toThrow()` |
+| `toBeNull()` | nullである | `expect(null).toBeNull()` |
+| `toBeGreaterThan()` | より大きい | `expect(10).toBeGreaterThan(5)` |
+
+## エッジケースをテストする
+
+プロのテストでは「正常系」だけでなく「異常系」も書きます。
+
+```typescript
+// src/utils/validator.test.ts
+import { validateShopName } from "./validator";
+
+describe("validateShopName", () => {
+  // 正常系
+  test("有効な店舗名を受け入れる", () => {
+    expect(validateShopName("海風テラス")).toBe(true);
+  });
+
+  // 境界値
+  test("1文字の名前を受け入れる", () => {
+    expect(validateShopName("A")).toBe(true);
+  });
+
+  test("50文字ちょうどの名前を受け入れる", () => {
+    expect(validateShopName("A".repeat(50))).toBe(true);
+  });
+
+  // 異常系
+  test("空文字列を拒否する", () => {
+    expect(validateShopName("")).toBe(false);
+  });
+
+  test("51文字以上の名前を拒否する", () => {
+    expect(validateShopName("A".repeat(51))).toBe(false);
+  });
+
+  test("nullやundefinedを安全に処理する", () => {
+    expect(validateShopName(null as any)).toBe(false);
+    expect(validateShopName(undefined as any)).toBe(false);
+  });
+});
+```
+
+## モック — 外部依存を切り離す
+
+ユニットテストでは、データベースやAPIなどの外部依存を「モック」に置き換えます。
+
+```typescript
+// src/services/notification.test.ts
+import { sendBookingConfirmation } from "./notification";
+import * as emailService from "./emailService";
+
+// emailServiceのsend関数をモックに置き換える
+jest.mock("./emailService");
+const mockSend = emailService.send as jest.MockedFunction<typeof emailService.send>;
+
+describe("sendBookingConfirmation", () => {
+  beforeEach(() => {
+    mockSend.mockClear();
+  });
+
+  test("予約確認メールを送信する", async () => {
+    mockSend.mockResolvedValue({ success: true });
+
+    const result = await sendBookingConfirmation({
+      email: "mika@example.com",
+      shopName: "海風テラス",
+      date: "2025-04-01"
+    });
+
+    expect(result.success).toBe(true);
+    expect(mockSend).toHaveBeenCalledTimes(1);
+    expect(mockSend).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: "mika@example.com",
+        subject: expect.stringContaining("予約確認")
+      })
+    );
+  });
+
+  test("メール送信失敗時にエラーを返す", async () => {
+    mockSend.mockRejectedValue(new Error("SMTP Error"));
+
+    const result = await sendBookingConfirmation({
+      email: "test@example.com",
+      shopName: "テスト店",
+      date: "2025-04-01"
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBeDefined();
+  });
+});
+```
+
+## テストのベストプラクティス
+
+| 原則 | 説明 |
+|------|------|
+| **1テスト1検証** | 1つのテストでは1つのことだけ確認する |
+| **独立性** | テスト間で状態を共有しない |
+| **読みやすさ** | テスト名で「何をテストしているか」が分かるように |
+| **高速** | ユニットテストは全体で数秒以内 |
+| **決定的** | 何度実行しても同じ結果になる |
+
+## ポイント
+
+- ユニットテストは個々の関数を検証する最小単位のテスト
+- AAAパターン（Arrange/Act/Assert）で構造化する
+- 正常系だけでなく、異常系・境界値もテストする
+- モックで外部依存を切り離し、テスト対象を限定する
+- テスト名は「何をテストしているか」が一目でわかるように書く
+
+## 統合テスト — コンポーネント間の連携を検証する
+
+ユニットテストで個々の関数は動いた。でも、それらを組み合わせたとき正しく動くのか？
+
+> **Yuki:** 「部品が個別にOKでも、組み立てたら動かないことがある。統合テストは"つなぎ目"を検証するテストだよ。」
+
+## 統合テストとは？
+
+| ユニットテスト | 統合テスト |
+|--------------|----------|
+| 関数単体を検証 | 複数コンポーネントの連携を検証 |
+| モックを多用 | 実際の依存関係を使う |
+| ミリ秒で完了 | 秒単位で完了 |
+| バグの場所を特定しやすい | 連携の問題を発見できる |
+
+## APIエンドポイントの統合テスト
+
+ShimaLinkの予約APIをテストしてみよう。
+
+```bash
+npm install --save-dev supertest
+```
+
+```typescript
+// src/api/bookings.test.ts
+import request from "supertest";
+import { app } from "../app";
+import { setupTestDB, teardownTestDB } from "../test/helpers";
+
+describe("予約API", () => {
+  // テスト用データベースのセットアップ
+  beforeAll(async () => {
+    await setupTestDB();
+  });
+
+  afterAll(async () => {
+    await teardownTestDB();
+  });
+
+  describe("POST /api/bookings", () => {
+    test("有効な予約を作成できる", async () => {
+      const bookingData = {
+        shopId: "shop-001",
+        customerName: "テスト太郎",
+        date: "2025-04-15",
+        time: "18:00",
+        guests: 4
+      };
+
+      const response = await request(app)
+        .post("/api/bookings")
+        .send(bookingData)
+        .expect(201);
+
+      expect(response.body).toMatchObject({
+        id: expect.any(String),
+        shopId: "shop-001",
+        customerName: "テスト太郎",
+        status: "confirmed"
+      });
+    });
+
+    test("過去の日付では予約できない", async () => {
+      const response = await request(app)
+        .post("/api/bookings")
+        .send({
+          shopId: "shop-001",
+          customerName: "テスト太郎",
+          date: "2020-01-01",
+          time: "18:00",
+          guests: 2
+        })
+        .expect(400);
+
+      expect(response.body.error).toContain("過去の日付");
+    });
+
+    test("必須フィールドが欠けるとバリデーションエラー", async () => {
+      const response = await request(app)
+        .post("/api/bookings")
+        .send({ shopId: "shop-001" })
+        .expect(400);
+
+      expect(response.body.errors).toBeDefined();
+    });
+  });
+
+  describe("GET /api/bookings/:id", () => {
+    test("既存の予約を取得できる", async () => {
+      // まず予約を作成
+      const createRes = await request(app)
+        .post("/api/bookings")
+        .send({
+          shopId: "shop-001",
+          customerName: "テスト花子",
+          date: "2025-05-01",
+          time: "12:00",
+          guests: 2
+        });
+
+      // 作成した予約を取得
+      const response = await request(app)
+        .get(`/api/bookings/${createRes.body.id}`)
+        .expect(200);
+
+      expect(response.body.customerName).toBe("テスト花子");
+    });
+
+    test("存在しない予約はの場合404を返す", async () => {
+      await request(app)
+        .get("/api/bookings/nonexistent-id")
+        .expect(404);
+    });
+  });
+});
+```
+
+## データベース統合テスト
+
+```typescript
+// src/repositories/shop.test.ts
+import { ShopRepository } from "./ShopRepository";
+import { db } from "../database";
+
+describe("ShopRepository", () => {
+  let repo: ShopRepository;
+
+  beforeEach(async () => {
+    repo = new ShopRepository(db);
+    // 各テスト前にデータをクリーン
+    await db.query("DELETE FROM shops WHERE id LIKE 'test-%'");
+  });
+
+  test("お店を作成して取得できる", async () => {
+    const shop = await repo.create({
+      id: "test-shop-01",
+      name: "テストカフェ",
+      category: "カフェ",
+      address: "沖縄県那覇市"
+    });
+
+    const found = await repo.findById("test-shop-01");
+    expect(found).not.toBeNull();
+    expect(found!.name).toBe("テストカフェ");
+  });
+
+  test("カテゴリで検索できる", async () => {
+    await repo.create({ id: "test-cafe", name: "カフェA", category: "カフェ", address: "那覇" });
+    await repo.create({ id: "test-rest", name: "レストランA", category: "レストラン", address: "那覇" });
+
+    const cafes = await repo.findByCategory("カフェ");
+    expect(cafes.length).toBeGreaterThanOrEqual(1);
+    expect(cafes.every(s => s.category === "カフェ")).toBe(true);
+  });
+
+  test("存在しない店舗はnullを返す", async () => {
+    const result = await repo.findById("nonexistent");
+    expect(result).toBeNull();
+  });
+});
+```
+
+## テストヘルパーの作成
+
+```typescript
+// src/test/helpers.ts
+import { db } from "../database";
+
+export async function setupTestDB() {
+  // テスト用データベースに接続
+  await db.connect(process.env.TEST_DATABASE_URL);
+
+  // テーブル作成
+  await db.migrate();
+}
+
+export async function teardownTestDB() {
+  await db.disconnect();
+}
+
+export function createTestShop(overrides = {}) {
+  return {
+    id: `test-${Date.now()}`,
+    name: "テスト店舗",
+    category: "カフェ",
+    address: "沖縄県那覇市",
+    rating: 4.0,
+    ...overrides
+  };
+}
+
+export function createTestBooking(overrides = {}) {
+  return {
+    shopId: "test-shop",
+    customerName: "テストユーザー",
+    date: "2025-06-01",
+    time: "18:00",
+    guests: 2,
+    ...overrides
+  };
+}
+```
+
+## 統合テストのベストプラクティス
+
+| プラクティス | 理由 |
+|------------|------|
+| テスト用DBを使う | 本番データを壊さない |
+| 各テスト前にデータをリセット | テスト間の依存を排除 |
+| テストヘルパーを作る | テストデータ作成を共通化 |
+| CIで自動実行 | PRマージ前に必ずチェック |
+| テスト環境を分離 | `.env.test` で設定を分ける |
+
+## ポイント
+
+- 統合テストはコンポーネント間の"つなぎ目"を検証する
+- `supertest` でAPIエンドポイントをテストできる
+- テスト用データベースを用意し、本番データと分離する
+- テストヘルパーで共通処理を切り出してDRYに保つ
+- 各テストは独立して実行できるように設計する
+
+## E2Eテスト & TDD入門 — 全体を通して、先にテストを書く
+
+ピラミッドの頂点であるE2Eテストと、テストの書き方を根本から変えるTDDを学ぼう。
+
+> **Yuki:** 「E2Eテストはユーザーの目線。TDDは開発者の思考法。どちらも武器になるよ。」
+
+## E2Eテスト（End-to-End）
+
+E2Eテストは実際のブラウザを操作して、ユーザーと同じ体験をテストします。
+
+### Playwrightのセットアップ
+
+```bash
+npm install --save-dev @playwright/test
+npx playwright install
+```
+
+### 予約フローのE2Eテスト
+
+```typescript
+// e2e/booking-flow.spec.ts
+import { test, expect } from "@playwright/test";
+
+test.describe("予約フロー", () => {
+  test("ユーザーがお店を検索して予約できる", async ({ page }) => {
+    // 1. トップページにアクセス
+    await page.goto("http://localhost:3000");
+
+    // 2. 店舗を検索
+    await page.fill('[data-testid="search-input"]', "海風テラス");
+    await page.click('[data-testid="search-button"]');
+
+    // 3. 検索結果から店舗を選択
+    await page.click('text=海風テラス');
+    await expect(page).toHaveURL(/\/shops\/.*海風/);
+
+    // 4. 予約フォームに入力
+    await page.fill('[name="customerName"]', "テスト太郎");
+    await page.fill('[name="date"]', "2025-06-01");
+    await page.selectOption('[name="time"]', "18:00");
+    await page.fill('[name="guests"]', "4");
+
+    // 5. 予約を確定
+    await page.click('[data-testid="submit-booking"]');
+
+    // 6. 確認画面が表示される
+    await expect(page.locator('[data-testid="booking-confirmed"]')).toBeVisible();
+    await expect(page.locator("text=予約が確定しました")).toBeVisible();
+  });
+
+  test("未入力で送信するとバリデーションエラーが表示される", async ({ page }) => {
+    await page.goto("http://localhost:3000/shops/shop-001");
+
+    // 空のまま送信
+    await page.click('[data-testid="submit-booking"]');
+
+    // エラーメッセージが表示される
+    await expect(page.locator("text=名前を入力してください")).toBeVisible();
+    await expect(page.locator("text=日付を選択してください")).toBeVisible();
+  });
+});
+```
+
+### Playwrightの便利な機能
+
+| 機能 | 説明 | コマンド |
+|------|------|---------|
+| UI モード | テストをビジュアルに実行 | `npx playwright test --ui` |
+| デバッグ | ステップ実行 | `npx playwright test --debug` |
+| レポート | HTMLレポート生成 | `npx playwright show-report` |
+| コード生成 | ブラウザ操作を記録 | `npx playwright codegen localhost:3000` |
+
+## TDD（テスト駆動開発）
+
+TDDは「テストを先に書く」開発手法です。
+
+### Red-Green-Refactorサイクル
+
+```
+  ┌─────────────┐
+  │   🔴 Red    │  ← テストを書く（まだ失敗する）
+  └──────┬──────┘
+         ▼
+  ┌─────────────┐
+  │  🟢 Green   │  ← テストが通る最小限のコードを書く
+  └──────┬──────┘
+         ▼
+  ┌─────────────┐
+  │ 🔵 Refactor │  ← コードをきれいにする（テストは通ったまま）
+  └──────┬──────┘
+         │
+         └──→ 最初に戻る
+```
+
+### TDDの実践: クーポン割引機能
+
+**Step 1: Red — テストを先に書く**
+
+```typescript
+// src/utils/coupon.test.ts
+import { applyCoupon } from "./coupon";
+
+describe("applyCoupon", () => {
+  test("10%割引クーポンを適用する", () => {
+    const result = applyCoupon(10000, { type: "percent", value: 10 });
+    expect(result).toBe(9000);
+  });
+
+  test("500円引きクーポンを適用する", () => {
+    const result = applyCoupon(10000, { type: "fixed", value: 500 });
+    expect(result).toBe(9500);
+  });
+
+  test("割引後の金額が0円未満にならない", () => {
+    const result = applyCoupon(300, { type: "fixed", value: 500 });
+    expect(result).toBe(0);
+  });
+
+  test("無効なクーポンタイプでエラーを投げる", () => {
+    expect(() =>
+      applyCoupon(10000, { type: "invalid" as any, value: 10 })
+    ).toThrow();
+  });
+});
+```
+
+```bash
+$ npx jest coupon.test.ts
+# 🔴 FAIL — applyCoupon が存在しないので全部失敗
+```
+
+**Step 2: Green — テストが通る最小限のコードを書く**
+
+```typescript
+// src/utils/coupon.ts
+type CouponType = "percent" | "fixed";
+
+interface Coupon {
+  type: CouponType;
+  value: number;
+}
+
+export function applyCoupon(price: number, coupon: Coupon): number {
+  let discount: number;
+
+  switch (coupon.type) {
+    case "percent":
+      discount = price * (coupon.value / 100);
+      break;
+    case "fixed":
+      discount = coupon.value;
+      break;
+    default:
+      throw new Error(`無効なクーポンタイプ: ${coupon.type}`);
+  }
+
+  return Math.max(0, price - discount);
+}
+```
+
+```bash
+$ npx jest coupon.test.ts
+# 🟢 PASS — 全テスト通過！
+```
+
+**Step 3: Refactor — コードをきれいにする**
+
+テストが通っている状態で、安心してリファクタリングできます。
+
+```typescript
+// リファクタ後
+export function applyCoupon(price: number, coupon: Coupon): number {
+  const discountCalculators: Record<CouponType, (p: number, v: number) => number> = {
+    percent: (p, v) => p * (v / 100),
+    fixed: (_p, v) => v,
+  };
+
+  const calculate = discountCalculators[coupon.type];
+  if (!calculate) throw new Error(`無効なクーポンタイプ: ${coupon.type}`);
+
+  return Math.max(0, price - calculate(price, coupon.value));
+}
+```
+
+```bash
+$ npx jest coupon.test.ts
+# 🟢 PASS — リファクタ後もテスト通過！安心！
+```
+
+## TDDのメリット
+
+| メリット | 説明 |
+|---------|------|
+| 設計が改善される | テストが書きやすい=依存が少ない良い設計 |
+| 仕様が明確になる | テストが仕様書の代わりになる |
+| リグレッション防止 | 既存テストがあるので壊れたらすぐわかる |
+| 自信を持ってリファクタリング | テストが通れば安心 |
+| デバッグ時間の削減 | バグが入る前に防げる |
+
+## テスト戦略のまとめ
+
+```
+ShimaLinkのテスト構成:
+
+ユニットテスト (60-70%)
+├── utils/pricing.test.ts
+├── utils/coupon.test.ts
+├── utils/validator.test.ts
+└── ...
+
+統合テスト (20-30%)
+├── api/bookings.test.ts
+├── api/shops.test.ts
+├── repositories/shop.test.ts
+└── ...
+
+E2Eテスト (5-10%)
+├── e2e/booking-flow.spec.ts
+├── e2e/search.spec.ts
+└── e2e/auth.spec.ts
+```
+
+## ポイント
+
+- E2Eテストはブラウザを操作してユーザー体験全体を検証する
+- Playwrightはコード生成機能があり、テスト作成が簡単
+- TDDは Red → Green → Refactor のサイクルを繰り返す
+- テストを先に書くことで、設計が自然にきれいになる
+- テスト戦略は ユニット60-70%、統合20-30%、E2E5-10% が目安
+
+<StoryPanel variant="conclusion">
+
+金曜日のデプロイ。以前なら冷や汗ものだったが、今は違う。
+
+```
+$ npm test
+
+ PASS  src/utils/pricing.test.ts
+ PASS  src/api/bookings.test.ts
+ PASS  src/api/reviews.test.ts
+ PASS  src/integration/booking-flow.test.ts
+ PASS  e2e/reservation.spec.ts
+
+Test Suites: 12 passed, 12 total
+Tests:       87 passed, 87 total
+Time:        8.234s
+```
+
+87個のテストが、すべて緑。
+
+---
+
+**あなた:** 「金曜デプロイが怖くなくなった...これ、革命じゃない？」
+
+**あなた:** 「先週のクーポン機能追加でも、予約システムのテストが全部通ったから安心してリリースできた。」
+
+**Mika:** 「お店からの『動かない』って連絡がゼロになったよ！」
+
+**Yuki:** 「テストは保険と同じ。何も起きない時は退屈に感じるけど、問題を事前に防いでくれてる。」
+
+**あなた:** 「TDDも最初は面倒だったけど、先にテストを書くと設計が自然にきれいになるのが不思議だよね。」
+
+**Yuki:** 「テストが書きにくいコードは、設計に問題がある証拠。テストはコードの品質を映す鏡なんだ。」
+
+**あなた:** 「安心してコードを変更できるって、こんなに楽しいことだったんですね。」
+
+**Yuki:** 「いい調子。でもね、テストが全部通っても、ユーザーが『遅い』って感じたら意味がない。最近、ピーク時にページの読み込みが遅くなってない？」
+
+**あなた:** 「...言われてみれば、お昼時に重くなるって声があったような。」
+
+---
+
+> **次のチャプター**: *Chapter 23: 速さの追求* — ページの読み込みが遅い！パフォーマンスの計測から最適化まで、速さを追求する旅が始まる。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="22-testing-mastery" />
+
+<ChapterFaq chapterId="22-testing-mastery" />
+
+<SeriesNav current={22} />

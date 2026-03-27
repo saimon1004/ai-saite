@@ -1,0 +1,94 @@
+[
+  {
+    "id": "ch21-q01",
+    "question": "Pythonで変数を宣言する正しい方法は？",
+    "choices": ["var name = \"ShimaLink\"", "let name = \"ShimaLink\"", "name = \"ShimaLink\"", "string name = \"ShimaLink\""],
+    "correctIndex": 2,
+    "explanation": "Pythonでは型宣言やキーワード（var, let）なしで変数を宣言します。値を代入するだけで型が自動的に決まります。",
+    "storyContext": "Yukiが「Pythonの変数宣言はシンプル。余計なものは不要」と教えてくれたね。",
+    "skill": { "category": "programming", "name": "Python", "level": "intro" }
+  },
+  {
+    "id": "ch21-q02",
+    "question": "Pythonのリストで最初の要素にアクセスする方法は？",
+    "choices": ["shops[1]", "shops[0]", "shops.first()", "shops.get(0)"],
+    "correctIndex": 1,
+    "explanation": "Pythonのリスト（配列）は0から数えます。shops[0]が最初の要素、shops[1]が2番目の要素です。JavaScriptと同じですね。",
+    "storyContext": "ShimaLinkの店舗リストを扱ったとき、最初のお店「海風テラス」はshops[0]でアクセスしたね。",
+    "skill": { "category": "programming", "name": "Python", "level": "intro" }
+  },
+  {
+    "id": "ch21-q03",
+    "question": "Pythonでファイルを安全に開くための推奨構文は？",
+    "choices": ["f = open(\"file.txt\")", "with open(\"file.txt\") as f:", "file.read(\"file.txt\")", "import file(\"file.txt\")"],
+    "correctIndex": 1,
+    "explanation": "with文を使うと、ブロック終了時に自動的にファイルが閉じられます。f = open()だけだと、f.close()を忘れるリスクがあります。",
+    "storyContext": "Yukiが「withを使えばファイルの閉じ忘れがない」と強調していたのを思い出そう。",
+    "skill": { "category": "programming", "name": "Python", "level": "intro" }
+  },
+  {
+    "id": "ch21-q04",
+    "question": "Webスクレイピングで最も重要な倫理的ルールは？",
+    "choices": [
+      "できるだけ速くデータを収集する",
+      "robots.txtと利用規約を確認し、アクセス間隔を空ける",
+      "すべてのWebサイトは自由にスクレイピングしてよい",
+      "個人情報も含めてすべてのデータを収集する"
+    ],
+    "correctIndex": 1,
+    "explanation": "スクレイピングにはルールがあります。robots.txtの確認、利用規約の遵守、アクセス間隔の確保、個人情報の不収集が基本です。",
+    "storyContext": "Yukiが「ルールを守らないスクレイピングはサーバーへの攻撃と同じ」と警告していたね。",
+    "skill": { "category": "programming", "name": "Scripting", "level": "intro" }
+  },
+  {
+    "id": "ch21-q05",
+    "question": "cron式 '0 9 * * 1-5' の意味は？",
+    "choices": [
+      "毎日9:00に実行",
+      "平日9:00に実行",
+      "毎月9日に実行",
+      "9分ごとに実行"
+    ],
+    "correctIndex": 1,
+    "explanation": "1-5は月曜(1)から金曜(5)を意味します。0 9は9時0分。つまり「平日の朝9時に実行」という意味です。",
+    "storyContext": "ShimaLinkの日次レポートスクリプトを平日だけ自動実行するための設定だったね。",
+    "skill": { "category": "devops", "name": "Automation", "level": "intro" }
+  },
+  {
+    "id": "ch21-q06",
+    "question": "PythonのJSONファイル書き出しで日本語を正しく保存するオプションは？",
+    "choices": [
+      "encoding='shift-jis'",
+      "ensure_ascii=False",
+      "unicode=True",
+      "charset='utf-8'"
+    ],
+    "correctIndex": 1,
+    "explanation": "json.dump()にensure_ascii=Falseを指定すると、日本語がそのまま書き出されます。デフォルトではASCIIにエスケープされてしまいます。",
+    "storyContext": "JSONに店舗名を保存した時、\\u6d77\\u98a8みたいに文字化けした原因がこれだったね。",
+    "skill": { "category": "programming", "name": "Python", "level": "intro" }
+  },
+  {
+    "id": "ch21-q07",
+    "question": "Pythonの f\"こんにちは、{name}さん\" は何と呼ばれる？",
+    "choices": ["テンプレート文字列", "f文字列（f-string）", "フォーマット関数", "連結文字列"],
+    "correctIndex": 1,
+    "explanation": "f文字列（f-string）はPython 3.6以降で使える文字列フォーマットです。f\"...{変数}...\"の形式で変数を直接埋め込めます。",
+    "storyContext": "レポート生成でf\"合計: {total}件\"のように使っていた、あの便利な書き方だよ。",
+    "skill": { "category": "programming", "name": "Python", "level": "intro" }
+  },
+  {
+    "id": "ch21-q08",
+    "question": "if __name__ == \"__main__\": の目的は？",
+    "choices": [
+      "エラーハンドリング",
+      "スクリプトが直接実行された時だけ処理を実行する",
+      "関数を定義する",
+      "モジュールをインストールする"
+    ],
+    "correctIndex": 1,
+    "explanation": "この条件文は、ファイルがスクリプトとして直接実行されたときだけ中のコードを実行します。他のファイルからimportされたときは実行されません。",
+    "storyContext": "自動化スクリプトの最後に必ず書いていた、あのお約束パターンだね。",
+    "skill": { "category": "programming", "name": "Python", "level": "intro" }
+  }
+]

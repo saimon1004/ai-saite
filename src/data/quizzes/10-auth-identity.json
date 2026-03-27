@@ -1,0 +1,100 @@
+[
+  {
+    "id": "ch10-q01",
+    "question": "認証（Authentication）と認可（Authorization）の違いは？",
+    "choices": [
+      "認証はパスワード、認可は暗号化",
+      "認証は「誰か」を確認、認可は「何ができるか」を制御",
+      "認証はフロントエンド、認可はバックエンド",
+      "認証はログイン、認可はログアウト"
+    ],
+    "correctIndex": 1,
+    "explanation": "認証（Authentication）は「ユーザーが誰であるか」を確認するプロセス、認可（Authorization）は「そのユーザーが何をする権限があるか」を制御するプロセスです。",
+    "storyContext": "Yukiが空港の例で説明してくれたのを思い出そう。パスポート=認証、搭乗券=認可。",
+    "skill": { "category": "security", "name": "Authentication", "level": "intro" }
+  },
+  {
+    "id": "ch10-q02",
+    "question": "パスワードをデータベースに保存する際、正しい方法は？",
+    "choices": [
+      "平文（そのまま）で保存する",
+      "Base64でエンコードして保存する",
+      "bcryptでハッシュ化して保存する",
+      "AESで暗号化して保存する"
+    ],
+    "correctIndex": 2,
+    "explanation": "bcryptはパスワードのハッシュ化に最適なアルゴリズムです。一方向変換なので元に戻せず、ソルトも自動生成します。平文保存やBase64は安全ではなく、AES暗号化は復号可能なため推奨されません。",
+    "storyContext": "パスワードを平文で保存すると、データベースが漏洩したら全員のパスワードが丸見えになる——その教訓から学んだ方法だ。",
+    "skill": { "category": "security", "name": "Security Basics", "level": "intro" }
+  },
+  {
+    "id": "ch10-q03",
+    "question": "JWTの3つの構成要素は？",
+    "choices": [
+      "ユーザー名、パスワード、セッションID",
+      "Header、Payload、Signature",
+      "Token、Secret、Expiry",
+      "ID、Email、Role"
+    ],
+    "correctIndex": 1,
+    "explanation": "JWTはHeader（アルゴリズム情報）、Payload（ユーザー情報などのクレーム）、Signature（改ざん防止の署名）の3つで構成されます。ドット（.）で区切られた1つの文字列になります。",
+    "storyContext": "JWTトークンの長い文字列を分解すると、3つのパートに分かれる。それぞれに重要な役割がある。",
+    "skill": { "category": "security", "name": "JWT", "level": "intro" }
+  },
+  {
+    "id": "ch10-q04",
+    "question": "JWTのPayload部分は暗号化されている？",
+    "choices": [
+      "はい、完全に暗号化されている",
+      "いいえ、Base64エンコードなので誰でも読める",
+      "サーバーだけが読める",
+      "管理者だけが読める"
+    ],
+    "correctIndex": 1,
+    "explanation": "JWTのPayloadはBase64エンコードされているだけで、暗号化されていません。誰でもデコードして中身を読むことができます。そのため、パスワードなどの機密情報をPayloadに含めてはいけません。",
+    "storyContext": "JWTに機密情報を入れないようYukiが注意していたね。署名は改ざん防止であって、中身の秘匿ではない。",
+    "skill": { "category": "security", "name": "JWT", "level": "intro" }
+  },
+  {
+    "id": "ch10-q05",
+    "question": "ログイン失敗時のエラーメッセージとして安全なのは？",
+    "choices": [
+      "そのメールアドレスは登録されていません",
+      "パスワードが間違っています",
+      "メールアドレスまたはパスワードが正しくありません",
+      "アカウントがロックされています"
+    ],
+    "correctIndex": 2,
+    "explanation": "「メールアドレスまたはパスワードが正しくありません」という曖昧なメッセージが安全です。「メールアドレスは存在しない」や「パスワードが違う」と具体的に示すと、攻撃者にどちらが正しいかのヒントを与えてしまいます。",
+    "storyContext": "Shadowのような攻撃者は、エラーメッセージの違いからアカウントの存在を推測する。情報は最小限に。",
+    "skill": { "category": "security", "name": "Security Basics", "level": "intro" }
+  },
+  {
+    "id": "ch10-q06",
+    "question": "HTTPSが認証に必須な理由は？",
+    "choices": [
+      "HTTPSの方が通信速度が速いから",
+      "HTTPではJWTが使えないから",
+      "通信が暗号化されないと、トークンが盗まれるから",
+      "HTTPSでないとCookieが保存できないから"
+    ],
+    "correctIndex": 2,
+    "explanation": "HTTPでは通信内容が平文で送信されるため、中間者攻撃（Man-in-the-Middle）でJWTトークンやパスワードが盗まれる可能性があります。HTTPSは通信を暗号化して盗聴を防ぎます。",
+    "storyContext": "認証トークンが盗まれると、なりすましでログインされてしまう。HTTPSで通信経路を守ることが重要だ。",
+    "skill": { "category": "security", "name": "Security Basics", "level": "intro" }
+  },
+  {
+    "id": "ch10-q07",
+    "question": "ブルートフォース攻撃を防ぐための対策は？",
+    "choices": [
+      "パスワードを長くする",
+      "ログイン試行回数を制限する（レート制限）",
+      "CSSでログインボタンを隠す",
+      "エラーメッセージを表示しない"
+    ],
+    "correctIndex": 1,
+    "explanation": "レート制限（Rate Limiting）により、一定時間内のログイン試行回数を制限することで、大量のパスワード試行を防げます。5回失敗で一定時間ロックするなどの対策が一般的です。",
+    "storyContext": "Shadowが大量のリクエストを送っていたアクセスログを覚えてる？レート制限があれば、ブルートフォースを防げる。",
+    "skill": { "category": "security", "name": "Security Basics", "level": "intro" }
+  }
+]

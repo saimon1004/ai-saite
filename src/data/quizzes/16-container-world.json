@@ -1,0 +1,100 @@
+[
+  {
+    "id": "ch16-q01",
+    "question": "コンテナと仮想マシン（VM）の最も大きな違いは何？",
+    "choices": [
+      "コンテナはインターネット接続が不要",
+      "コンテナはホストOSのカーネルを共有し、VMはゲストOSを持つ",
+      "VMの方がセキュリティが低い",
+      "コンテナはWindows専用である"
+    ],
+    "correctIndex": 1,
+    "explanation": "コンテナはホストOSのカーネルを共有するため、軽量で高速に起動できます。一方、VMはゲストOSを丸ごとエミュレーションするため、起動に時間がかかりリソース消費も大きくなります。",
+    "storyContext": "Yukiが「部屋ごと運ぶ」と「家全体を運ぶ」の違いに例えた話を思い出そう。",
+    "skill": { "category": "devops", "name": "コンテナ化", "level": "intro" }
+  },
+  {
+    "id": "ch16-q02",
+    "question": "Dockerfile の FROM 命令の役割は？",
+    "choices": [
+      "コンテナの名前を設定する",
+      "ベースとなるイメージを指定する",
+      "ファイルをコンテナにコピーする",
+      "コンテナの起動コマンドを設定する"
+    ],
+    "correctIndex": 1,
+    "explanation": "FROMはDockerfileの最初に書く命令で、ベースとなるイメージ（例：node:18-alpine）を指定します。このイメージの上に、追加の設定やファイルを積み重ねてカスタムイメージを作ります。",
+    "storyContext": "ShimaLinkのDockerfileでは、FROM node:18-alpine をベースに使ったよね。",
+    "skill": { "category": "devops", "name": "Docker", "level": "intro" }
+  },
+  {
+    "id": "ch16-q03",
+    "question": "docker run -p 3000:4000 の意味は？",
+    "choices": [
+      "コンテナのポート3000をホストのポート4000に接続する",
+      "ホストのポート3000をコンテナのポート4000に接続する",
+      "3000番と4000番の両方のポートを開放する",
+      "ポート3000から4000までの範囲を開放する"
+    ],
+    "correctIndex": 1,
+    "explanation": "-p フラグは「ホストポート:コンテナポート」の形式です。-p 3000:4000 は、ホストの3000番ポートへのアクセスを、コンテナ内の4000番ポートに転送します。",
+    "storyContext": "ShimaLinkのWebサービスをブラウザからアクセスできるようにポート設定したときの話だ。",
+    "skill": { "category": "devops", "name": "Docker", "level": "intro" }
+  },
+  {
+    "id": "ch16-q04",
+    "question": "Docker Compose で depends_on を設定する理由は？",
+    "choices": [
+      "サービス間のネットワークを遮断するため",
+      "サービスの起動順序を制御するため",
+      "サービスのメモリ使用量を制限するため",
+      "サービスのログを統合するため"
+    ],
+    "correctIndex": 1,
+    "explanation": "depends_on は、あるサービスが別のサービスに依存していることを宣言します。例えば、APIサーバーがDBに依存する場合、depends_on でDBが先に起動するよう制御できます。",
+    "storyContext": "ShimaLinkではAPIがデータベースに依存していたから、DBを先に起動する必要があったね。",
+    "skill": { "category": "devops", "name": "Docker Compose", "level": "intro" }
+  },
+  {
+    "id": "ch16-q05",
+    "question": "Dockerfileでレイヤーキャッシュを効率的に使うには？",
+    "choices": [
+      "すべてのファイルを一度にCOPYする",
+      "変更頻度の低い操作を先に、高い操作を後に書く",
+      "RUN命令を1つにまとめる",
+      "キャッシュを無効にする"
+    ],
+    "correctIndex": 1,
+    "explanation": "Dockerは各命令の結果をレイヤーとしてキャッシュします。変更頻度の低いもの（package.jsonのコピーとnpm ci）を先に書き、頻繁に変わるソースコードのコピーを後にすることで、ビルド時間を短縮できます。",
+    "storyContext": "Yukiが教えてくれた「ソースコードが1行変わるたびにnpm installが走ったら遅すぎる」という話だ。",
+    "skill": { "category": "devops", "name": "Docker", "level": "intro" }
+  },
+  {
+    "id": "ch16-q06",
+    "question": "Docker Compose でコンテナ間の通信にサービス名を使える理由は？",
+    "choices": [
+      "サービス名がIPアドレスとして登録されるから",
+      "Docker Composeが内部DNSでサービス名を解決するから",
+      "すべてのコンテナが同じポートを使うから",
+      "ホストのhostsファイルが自動更新されるから"
+    ],
+    "correctIndex": 1,
+    "explanation": "Docker Composeは内部DNSを提供し、サービス名をコンテナのIPアドレスに自動解決します。そのため、APIからDBへの接続で「db:5432」のようにサービス名をホスト名として使えます。",
+    "storyContext": "ShimaLinkのAPI設定で、DATABASE_URLにサービス名「db」を使ったことを思い出そう。",
+    "skill": { "category": "devops", "name": "Docker Compose", "level": "intro" }
+  },
+  {
+    "id": "ch16-q07",
+    "question": "コンテナでrootユーザーを避けるべき理由は？",
+    "choices": [
+      "rootではコンテナが起動しないから",
+      "rootではファイルの読み込みが遅くなるから",
+      "コンテナが侵害された場合にホストへの影響を最小化するため",
+      "rootライセンスが有料だから"
+    ],
+    "correctIndex": 2,
+    "explanation": "コンテナがrootで実行されている場合、もしコンテナが攻撃者に侵害されると、ホストシステムにも影響を与える可能性があります。非rootユーザーで実行することで、被害範囲を最小限に抑えられます。",
+    "storyContext": "セキュリティ監査を乗り越えたShimaLinkだからこそ、コンテナでもセキュリティを意識しよう。",
+    "skill": { "category": "devops", "name": "Docker", "level": "intro" }
+  }
+]

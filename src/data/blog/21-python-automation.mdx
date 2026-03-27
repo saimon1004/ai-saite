@@ -1,0 +1,805 @@
+---
+title: "Pythonで自動化"
+subtitle: "繰り返し作業をスクリプトで一掃する"
+description: "繰り返し作業をスクリプトで一掃する。Python・Scripting・Automationを実践的なストーリーで学ぶチャプター「Pythonで自動化」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-21
+chapter: 21
+arc: "beyond"
+arcName: "飛躍編"
+skills:
+  - { category: "programming", name: "Python", level: "intro" }
+  - { category: "programming", name: "Scripting", level: "intro" }
+  - { category: "devops", name: "Automation", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["20-monitoring-alerts"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+ShimaLinkが100店舗を超え、チームは成長の喜びを感じていた。しかし、同時にある問題が深刻化していた。
+
+毎朝、同じ作業の繰り返し。データの集計、レポートの作成、画像のリサイズ、メール通知の確認——。手作業で回していた業務が、もう限界に達していた。
+
+---
+
+**あなた:** 「昨日も夜中の2時まで、100店舗分のアクセスレポートをExcelにまとめてたんだけど...これ毎週やるの無理じゃない？」
+
+**Mika:** 「私もお店の画像を一枚一枚リサイズして、メールで確認送って...気づいたら3時間経ってた。」
+
+**あなた:** 「みんな同じこと感じてたんだ。これ、自動化できないのかな？」
+
+**Yuki:** 「待ってました、その一言。実はね、こういう『退屈な仕事』を片付けるのに最適な言語があるの。」
+
+**あなた:** 「JavaScript？」
+
+**Yuki:** 「ううん。**Python**。シンプルな文法で、ファイル操作もデータ処理もWeb連携も、驚くほど少ないコードでできる。"退屈なことはPythonにやらせよう"って本があるくらいだよ。」
+
+---
+
+Yukiはホワイトボードに大きく書いた。
+
+> 「プログラマーの美徳は**怠惰**である。同じことを2回やるなら、自動化を考えろ。」
+
+**あなた:** 「Pythonって、JavaScriptとどう違うんですか？」
+
+**Yuki:** 「JavaScriptはWebブラウザの言語。Pythonは"万能ナイフ"。データ分析、AI、自動化、なんでもこなせる。ShimaLinkの運用を効率化するには、Pythonを覚えるのが最短ルートだよ。」
+
+---
+
+こうして、チームのPython修行が始まった。目標は明確だ——退屈な繰り返し作業を、すべてスクリプトに置き換えること。
+
+</StoryPanel>
+
+## Python入門 — 変数・関数・リスト
+
+Yukiが最初に見せてくれたのは、Pythonの驚くほどシンプルな文法だった。
+
+> 「Pythonは"読みやすさ"を哲学にした言語。コードが英語のように読めるのが最大の特徴だよ。」
+
+## Pythonのインストール確認
+
+```bash
+# バージョン確認
+python3 --version
+# → Python 3.11.x
+
+# 対話モードで試す
+python3
+>>> print("こんにちは、ShimaLink!")
+こんにちは、ShimaLink!
+>>> exit()
+```
+
+## 変数とデータ型
+
+Pythonでは変数の型宣言が不要です。値を代入するだけで型が決まります。
+
+```python
+# 文字列
+shop_name = "海風テラス"
+owner = "Mika"
+
+# 数値
+monthly_visitors = 1500
+rating = 4.8
+
+# 真偽値
+is_open = True
+
+# 表示
+print(f"{shop_name}の月間訪問者: {monthly_visitors}人")
+# → 海風テラスの月間訪問者: 1500人
+```
+
+| データ型 | 例 | 説明 |
+|---------|------|------|
+| `str` | `"ShimaLink"` | 文字列 |
+| `int` | `42` | 整数 |
+| `float` | `4.8` | 小数 |
+| `bool` | `True` / `False` | 真偽値 |
+| `list` | `[1, 2, 3]` | リスト（配列） |
+| `dict` | `{"key": "value"}` | 辞書（オブジェクト） |
+
+## リスト — データの集まり
+
+```python
+# ShimaLinkに登録されたお店のリスト
+shops = ["海風テラス", "島そば屋", "首里城カフェ", "美ら海ダイニング"]
+
+# アクセス
+print(shops[0])      # → 海風テラス（0から数える）
+print(len(shops))    # → 4（要素数）
+
+# 追加・削除
+shops.append("琉球ベーカリー")
+shops.remove("島そば屋")
+
+# ループ処理
+for shop in shops:
+    print(f"✓ {shop}")
+```
+
+## 辞書 — キーと値のペア
+
+```python
+# お店の情報を辞書で管理
+shop_info = {
+    "name": "海風テラス",
+    "category": "カフェ",
+    "rating": 4.8,
+    "monthly_visitors": 1500
+}
+
+# アクセス
+print(shop_info["name"])        # → 海風テラス
+print(shop_info.get("phone"))   # → None（キーがなくてもエラーにならない）
+
+# 更新
+shop_info["rating"] = 4.9
+```
+
+## 関数 — 処理の再利用
+
+```python
+def generate_report(shop_name, visitors, revenue):
+    """お店のレポートを生成する"""
+    avg_per_visitor = revenue / visitors if visitors > 0 else 0
+    return f"""
+    === {shop_name} レポート ===
+    訪問者数: {visitors}人
+    売上: ¥{revenue:,}
+    客単価: ¥{avg_per_visitor:,.0f}
+    """
+
+# 使う
+report = generate_report("海風テラス", 1500, 450000)
+print(report)
+```
+
+## 条件分岐
+
+```python
+def evaluate_shop(rating, visitors):
+    """お店の評価を判定する"""
+    if rating >= 4.5 and visitors >= 1000:
+        return "★★★ トップパフォーマー"
+    elif rating >= 4.0:
+        return "★★ 好調"
+    elif rating >= 3.0:
+        return "★ 改善の余地あり"
+    else:
+        return "要注意"
+
+print(evaluate_shop(4.8, 1500))  # → ★★★ トップパフォーマー
+```
+
+## JavaScript経験者向け比較
+
+| 概念 | JavaScript | Python |
+|------|-----------|--------|
+| 変数 | `let x = 10` | `x = 10` |
+| 関数 | `function f() {}` | `def f():` |
+| 配列/リスト | `[1, 2, 3]` | `[1, 2, 3]` |
+| オブジェクト/辞書 | `{key: "value"}` | `{"key": "value"}` |
+| ループ | `for (let x of arr)` | `for x in arr:` |
+| 出力 | `console.log()` | `print()` |
+| ブロック | `{ }` 中括弧 | インデント（スペース4つ） |
+
+> **Yuki:** 「Pythonで一番大事なのは**インデント**。中括弧の代わりにスペースでブロックを表すから、インデントがずれるとエラーになるよ。」
+
+## ポイント
+
+- Pythonはシンプルで読みやすい言語。型宣言不要
+- リスト（`[]`）と辞書（`{}`）がデータ管理の基本
+- `def` で関数を定義して処理を再利用
+- インデント（スペース4つ）がコードの構造を決める
+- f文字列（`f"...{変数}..."`）で文字列に変数を埋め込める
+
+## ファイル操作 — データの読み書き
+
+自動化の第一歩は、ファイルの読み書きだ。ShimaLinkの店舗データはCSVファイルで管理されている。
+
+> **Yuki:** 「プログラマーの世界では、手でExcelを開いてコピペするのは"罪"だよ。Pythonならファイルの読み書きが数行で書ける。」
+
+## テキストファイルの読み書き
+
+```python
+# ファイルに書き込む
+with open("report.txt", "w", encoding="utf-8") as f:
+    f.write("ShimaLink 週次レポート\n")
+    f.write("========================\n")
+    f.write(f"日付: 2025-03-21\n")
+    f.write(f"登録店舗数: 102\n")
+
+# ファイルを読み込む
+with open("report.txt", "r", encoding="utf-8") as f:
+    content = f.read()
+    print(content)
+```
+
+> **ポイント**: `with` 文を使うと、ファイルが自動的に閉じられます。閉じ忘れによるバグを防げます。
+
+## ファイルモード一覧
+
+| モード | 意味 | 説明 |
+|-------|------|------|
+| `"r"` | Read | 読み取り専用（デフォルト） |
+| `"w"` | Write | 書き込み（上書き） |
+| `"a"` | Append | 追記（末尾に追加） |
+| `"x"` | eXclusive | 新規作成のみ（既存なら失敗） |
+
+## CSVファイルの処理
+
+ShimaLinkの店舗データを処理してみよう。
+
+```python
+import csv
+
+# CSVを読み込む
+def read_shops(filepath):
+    """CSVから店舗データを読み込む"""
+    shops = []
+    with open(filepath, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            shops.append({
+                "name": row["name"],
+                "category": row["category"],
+                "rating": float(row["rating"]),
+                "visitors": int(row["visitors"])
+            })
+    return shops
+
+# CSVに書き込む
+def write_report(shops, output_path):
+    """集計結果をCSVに書き出す"""
+    with open(output_path, "w", encoding="utf-8", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["店舗名", "カテゴリ", "評価", "訪問者数"])
+        for shop in shops:
+            writer.writerow([
+                shop["name"],
+                shop["category"],
+                shop["rating"],
+                shop["visitors"]
+            ])
+```
+
+## JSONファイルの操作
+
+API連携でよく使うJSON形式も簡単に扱えます。
+
+```python
+import json
+
+# JSONを読み込む
+with open("config.json", "r", encoding="utf-8") as f:
+    config = json.load(f)
+    print(config["database"]["host"])
+
+# JSONに書き出す
+shop_data = {
+    "shops": [
+        {"name": "海風テラス", "rating": 4.8},
+        {"name": "首里城カフェ", "rating": 4.5}
+    ],
+    "total": 2
+}
+
+with open("shops.json", "w", encoding="utf-8") as f:
+    json.dump(shop_data, f, ensure_ascii=False, indent=2)
+```
+
+> `ensure_ascii=False` を指定すると、日本語がそのまま書き出されます（指定しないと `\u6d77\u98a8` のようにエスケープされる）。
+
+## ディレクトリ操作
+
+```python
+import os
+from pathlib import Path
+
+# ディレクトリ内のファイル一覧
+for filepath in Path("./data").glob("*.csv"):
+    print(f"Found: {filepath.name}")
+
+# ディレクトリ作成
+os.makedirs("output/reports", exist_ok=True)
+
+# ファイルの存在確認
+if Path("config.json").exists():
+    print("設定ファイルが見つかりました")
+```
+
+## 実践: ShimaLinkの月次集計スクリプト
+
+```python
+import csv
+import json
+from pathlib import Path
+from datetime import datetime
+
+def monthly_aggregate():
+    """全店舗の月次データを集計する"""
+    shops = []
+    data_dir = Path("data/shops")
+
+    # 全CSVファイルを読み込む
+    for csv_file in data_dir.glob("*.csv"):
+        with open(csv_file, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                shops.append(row)
+
+    # 集計
+    total_visitors = sum(int(s["visitors"]) for s in shops)
+    avg_rating = sum(float(s["rating"]) for s in shops) / len(shops)
+
+    # レポート生成
+    report = {
+        "date": datetime.now().strftime("%Y-%m-%d"),
+        "total_shops": len(shops),
+        "total_visitors": total_visitors,
+        "average_rating": round(avg_rating, 2)
+    }
+
+    # 出力
+    output_dir = Path("output")
+    output_dir.mkdir(exist_ok=True)
+
+    with open(output_dir / "monthly_report.json", "w", encoding="utf-8") as f:
+        json.dump(report, f, ensure_ascii=False, indent=2)
+
+    print(f"集計完了: {report['total_shops']}店舗")
+    return report
+
+if __name__ == "__main__":
+    monthly_aggregate()
+```
+
+## ポイント
+
+- `with open()` でファイルの開閉を安全に管理
+- `csv` モジュールでCSVの読み書き、`json` モジュールでJSON操作
+- `pathlib.Path` でファイルパスをオブジェクトとして扱える
+- `encoding="utf-8"` を忘れると日本語で文字化けする
+- `if __name__ == "__main__":` はスクリプトとして直接実行されたときだけ動くコード
+
+## Webスクレイピング — データを自動収集
+
+ShimaLinkに登録されたお店の口コミや競合情報を自動で収集したい。そんな時に使うのがWebスクレイピングだ。
+
+> **Yuki:** 「Webページも結局はHTMLテキスト。Pythonならそれを解析してデータだけ抜き出せるよ。ただし、ルールは守ること。」
+
+## スクレイピングの倫理とルール
+
+**必ず守るべきこと：**
+
+| ルール | 理由 |
+|-------|------|
+| `robots.txt` を確認する | サイトが許可している範囲で収集する |
+| 利用規約を確認する | スクレイピング禁止のサイトもある |
+| アクセス間隔を空ける | サーバーに負荷をかけない（1秒以上） |
+| 個人情報を収集しない | プライバシーの保護 |
+| 商用利用の可否を確認 | データの利用目的に注意 |
+
+## requestsライブラリ — HTTPリクエスト
+
+```bash
+# インストール
+pip install requests
+```
+
+```python
+import requests
+
+# GETリクエスト
+response = requests.get("https://api.example.com/shops")
+print(response.status_code)  # → 200
+print(response.json())       # JSONレスポンスを辞書に変換
+
+# ヘッダー付きリクエスト
+headers = {"User-Agent": "ShimaLink-Bot/1.0"}
+response = requests.get("https://example.com", headers=headers)
+```
+
+## BeautifulSoup — HTML解析
+
+```bash
+pip install beautifulsoup4
+```
+
+```python
+from bs4 import BeautifulSoup
+import requests
+
+# ページを取得
+url = "https://example.com/okinawa-shops"
+response = requests.get(url)
+soup = BeautifulSoup(response.text, "html.parser")
+
+# 要素を検索
+title = soup.find("h1").text
+print(f"ページタイトル: {title}")
+
+# 複数要素を検索
+shop_cards = soup.find_all("div", class_="shop-card")
+for card in shop_cards:
+    name = card.find("h2").text
+    rating = card.find("span", class_="rating").text
+    print(f"{name}: {rating}")
+```
+
+## BeautifulSoupの主なメソッド
+
+| メソッド | 説明 | 例 |
+|---------|------|-----|
+| `find()` | 最初の一致要素 | `soup.find("h1")` |
+| `find_all()` | すべての一致要素 | `soup.find_all("a")` |
+| `select()` | CSSセレクタで検索 | `soup.select(".shop-card h2")` |
+| `.text` | テキスト内容を取得 | `element.text` |
+| `.get()` | 属性値を取得 | `a_tag.get("href")` |
+
+## APIからデータを取得
+
+スクレイピングよりもAPIがあればAPIを使う方がベターです。
+
+```python
+import requests
+import json
+
+def fetch_weather(city="Naha"):
+    """天気予報APIからデータを取得"""
+    api_url = f"https://api.example.com/weather?city={city}"
+    response = requests.get(api_url)
+
+    if response.status_code == 200:
+        data = response.json()
+        return {
+            "city": data["name"],
+            "temp": data["main"]["temp"],
+            "description": data["weather"][0]["description"]
+        }
+    else:
+        print(f"Error: {response.status_code}")
+        return None
+
+weather = fetch_weather("Naha")
+if weather:
+    print(f"{weather['city']}: {weather['temp']}°C - {weather['description']}")
+```
+
+## 実践: 沖縄のイベント情報収集
+
+```python
+import requests
+from bs4 import BeautifulSoup
+import csv
+import time
+
+def scrape_events(url):
+    """イベント情報をスクレイピングする"""
+    response = requests.get(url, headers={
+        "User-Agent": "ShimaLink-Bot/1.0 (educational)"
+    })
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    events = []
+    for item in soup.find_all("div", class_="event-item"):
+        event = {
+            "title": item.find("h3").text.strip(),
+            "date": item.find("time").get("datetime", ""),
+            "location": item.find("span", class_="location").text.strip(),
+        }
+        events.append(event)
+
+    return events
+
+def save_events_csv(events, filepath):
+    """イベント一覧をCSVに保存"""
+    with open(filepath, "w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["title", "date", "location"])
+        writer.writeheader()
+        writer.writerows(events)
+
+# メイン処理
+if __name__ == "__main__":
+    pages = [
+        "https://example.com/events?page=1",
+        "https://example.com/events?page=2",
+    ]
+
+    all_events = []
+    for page_url in pages:
+        events = scrape_events(page_url)
+        all_events.extend(events)
+        time.sleep(1)  # サーバーへの配慮
+
+    save_events_csv(all_events, "okinawa_events.csv")
+    print(f"{len(all_events)}件のイベントを保存しました")
+```
+
+## ポイント
+
+- `requests` でHTTPリクエスト、`BeautifulSoup` でHTML解析
+- APIがあればスクレイピングよりAPIを優先する
+- `time.sleep()` でアクセス間隔を空け、サーバーに配慮する
+- `robots.txt` と利用規約を必ず確認する
+- データは構造化して（CSV/JSON）保存する
+
+## 自動化スクリプト — 退屈な作業をPythonに任せる
+
+基礎を覚えたら、いよいよ実務の自動化に挑戦だ。
+
+> **Yuki:** 「最高の自動化スクリプトは、存在を忘れられるスクリプト。静かに正確に、毎日仕事をこなしてくれる。」
+
+## 画像の一括リサイズ
+
+ShimaLinkでは店舗画像を統一サイズで表示する必要がある。
+
+```bash
+pip install Pillow
+```
+
+```python
+from PIL import Image
+from pathlib import Path
+
+def resize_images(input_dir, output_dir, max_width=800):
+    """画像を指定幅にリサイズする"""
+    output_path = Path(output_dir)
+    output_path.mkdir(exist_ok=True)
+
+    for img_file in Path(input_dir).glob("*"):
+        if img_file.suffix.lower() in [".jpg", ".jpeg", ".png", ".webp"]:
+            with Image.open(img_file) as img:
+                # アスペクト比を維持してリサイズ
+                if img.width > max_width:
+                    ratio = max_width / img.width
+                    new_size = (max_width, int(img.height * ratio))
+                    resized = img.resize(new_size, Image.LANCZOS)
+                else:
+                    resized = img
+
+                # 保存
+                save_path = output_path / img_file.name
+                resized.save(save_path, quality=85, optimize=True)
+                print(f"✓ {img_file.name} → {resized.size[0]}x{resized.size[1]}")
+
+if __name__ == "__main__":
+    resize_images("uploads/raw", "uploads/optimized")
+```
+
+## メール通知の自動送信
+
+```python
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+def send_report_email(to_email, subject, body):
+    """レポートをメールで送信する"""
+    msg = MIMEMultipart()
+    msg["From"] = "noreply@shimalink.com"
+    msg["To"] = to_email
+    msg["Subject"] = subject
+    msg.attach(MIMEText(body, "html", "utf-8"))
+
+    with smtplib.SMTP("smtp.example.com", 587) as server:
+        server.starttls()
+        server.login("user", "password")  # 実際は環境変数で管理
+        server.send_message(msg)
+
+    print(f"✓ メール送信完了: {to_email}")
+```
+
+## 定期実行 — cronとスケジューリング
+
+### cronで定期実行（Linux/Mac）
+
+```bash
+# crontabを編集
+crontab -e
+
+# 毎朝9時にレポートを生成
+0 9 * * * /usr/bin/python3 /home/user/scripts/weekly_report.py
+
+# 毎週月曜8時にバックアップ
+0 8 * * 1 /usr/bin/python3 /home/user/scripts/backup.py
+```
+
+### cron式の読み方
+
+```
+┌───────── 分 (0-59)
+│ ┌─────── 時 (0-23)
+│ │ ┌───── 日 (1-31)
+│ │ │ ┌─── 月 (1-12)
+│ │ │ │ ┌─ 曜日 (0-7, 0と7=日曜)
+│ │ │ │ │
+* * * * *
+```
+
+| 式 | 意味 |
+|---|------|
+| `0 9 * * *` | 毎日9:00 |
+| `0 9 * * 1-5` | 平日9:00 |
+| `*/30 * * * *` | 30分ごと |
+| `0 0 1 * *` | 毎月1日0:00 |
+
+### Pythonでスケジューリング
+
+```bash
+pip install schedule
+```
+
+```python
+import schedule
+import time
+
+def daily_report():
+    print("日次レポートを生成中...")
+    # レポート生成処理
+
+def hourly_check():
+    print("サーバー状態を確認中...")
+    # ヘルスチェック処理
+
+# スケジュール設定
+schedule.every().day.at("09:00").do(daily_report)
+schedule.every().hour.do(hourly_check)
+schedule.every().monday.at("08:00").do(lambda: print("週次バックアップ"))
+
+# 実行ループ
+while True:
+    schedule.run_pending()
+    time.sleep(60)
+```
+
+## 実践: ShimaLink運用自動化スクリプト
+
+```python
+#!/usr/bin/env python3
+"""
+ShimaLink 日次自動化スクリプト
+- 店舗データの集計
+- 異常検知
+- レポート生成
+"""
+
+import csv
+import json
+from datetime import datetime
+from pathlib import Path
+
+def load_shop_data(data_dir):
+    """店舗データを読み込む"""
+    shops = []
+    for csv_file in Path(data_dir).glob("*.csv"):
+        with open(csv_file, encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            shops.extend(list(reader))
+    return shops
+
+def detect_anomalies(shops):
+    """異常なデータを検出する"""
+    alerts = []
+    for shop in shops:
+        visitors = int(shop.get("visitors", 0))
+        rating = float(shop.get("rating", 0))
+
+        if visitors == 0:
+            alerts.append(f"⚠ {shop['name']}: 訪問者数が0")
+        if rating < 3.0:
+            alerts.append(f"⚠ {shop['name']}: 評価が{rating}に低下")
+
+    return alerts
+
+def generate_daily_report(shops, alerts):
+    """日次レポートを生成する"""
+    total_visitors = sum(int(s.get("visitors", 0)) for s in shops)
+    avg_rating = sum(float(s.get("rating", 0)) for s in shops) / max(len(shops), 1)
+
+    report = {
+        "date": datetime.now().isoformat(),
+        "summary": {
+            "total_shops": len(shops),
+            "total_visitors": total_visitors,
+            "average_rating": round(avg_rating, 2)
+        },
+        "alerts": alerts,
+        "status": "warning" if alerts else "healthy"
+    }
+
+    # JSONで保存
+    output_dir = Path("output/daily")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    filename = f"report_{datetime.now().strftime('%Y%m%d')}.json"
+    with open(output_dir / filename, "w", encoding="utf-8") as f:
+        json.dump(report, f, ensure_ascii=False, indent=2)
+
+    return report
+
+def main():
+    """メイン処理"""
+    print(f"=== ShimaLink 日次レポート ({datetime.now().strftime('%Y-%m-%d')}) ===")
+
+    # 1. データ読み込み
+    shops = load_shop_data("data/shops")
+    print(f"✓ {len(shops)}店舗のデータを読み込み")
+
+    # 2. 異常検知
+    alerts = detect_anomalies(shops)
+    if alerts:
+        print(f"⚠ {len(alerts)}件のアラート:")
+        for alert in alerts:
+            print(f"  {alert}")
+    else:
+        print("✓ 異常なし")
+
+    # 3. レポート生成
+    report = generate_daily_report(shops, alerts)
+    print(f"✓ レポート生成完了: output/daily/")
+    print(f"  - 総訪問者: {report['summary']['total_visitors']:,}人")
+    print(f"  - 平均評価: {report['summary']['average_rating']}")
+
+if __name__ == "__main__":
+    main()
+```
+
+## ポイント
+
+- 自動化の対象: 画像リサイズ、メール送信、データ集計、異常検知
+- `cron` やPythonの `schedule` で定期実行を設定
+- スクリプトは小さな関数に分割し、テストしやすくする
+- 環境変数でパスワードやAPIキーを管理する（ハードコーディング厳禁）
+- `if __name__ == "__main__":` で直接実行時のみ動作するようにする
+
+<StoryPanel variant="conclusion">
+
+金曜日の夕方。以前なら残業確定の時間帯だが、今日はチーム全員がリラックスしていた。
+
+```
+$ python weekly_report.py
+[INFO] 102店舗のデータを集計中...
+[INFO] グラフを生成中...
+[INFO] PDFレポートを作成中...
+[INFO] 完了！ output/weekly_report_2025-03-21.pdf
+```
+
+3時間かかっていたレポート作成が、たった30秒で終わる。
+
+---
+
+**あなた:** 「嘘でしょ...毎週金曜に3時間かけてた作業がワンクリック？」
+
+**あなた:** 「しかも、手作業の時よりミスがないんだよね。」
+
+**Mika:** 「画像のリサイズも自動化できたから、お店のオーナーさんに写真送ってもらったら、5分で全部処理できるようになった！」
+
+**Yuki:** 「Pythonは『最初の自動化言語』として最高なんだよ。でもね、大事なのは言語じゃなくて**自動化マインド**。同じことを2回やりそうになったら、まずスクリプトを書けないか考える。」
+
+**あなた:** 「プログラマーの美徳は怠惰、ですね。」
+
+**Yuki:** 「その通り。ところで、自動化で空いた時間をどう使う？」
+
+**あなた:** 「新機能の開発でしょ！でもさ、最近新しい機能を追加するたびに、前の機能が壊れることがあるんだよね...」
+
+**Yuki:** 「いいところに気づいたね。次は**テスト**の話をしよう。壊れないコードを書く技術だよ。」
+
+---
+
+> **次のチャプター**: *Chapter 22: テストの極意* — 新機能が古い機能を壊す問題。テストピラミッドからTDDまで、品質を守る戦略を学ぶ。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="21-python-automation" />
+
+<ChapterFaq chapterId="21-python-automation" />
+
+<SeriesNav current={21} />

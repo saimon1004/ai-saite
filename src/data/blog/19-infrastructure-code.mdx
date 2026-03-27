@@ -1,0 +1,699 @@
+---
+title: "インフラをコードで"
+subtitle: "手作業のインフラ構築から、再現可能なコード管理へ"
+description: "手作業のインフラ構築から、再現可能なコード管理へ。Infrastructure as Code・Terraform・環境管理を実践的なストーリーで学ぶチャプター「インフラをコードで」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-19
+chapter: 19
+arc: "scale"
+arcName: "拡大編"
+skills:
+  - { category: "devops", name: "Infrastructure as Code", level: "intro" }
+  - { category: "devops", name: "Terraform", level: "intro" }
+  - { category: "devops", name: "環境管理", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["18-cloud-deploy"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+クラウド移行は成功した。ShimaLinkは安定して稼働している。ある日、あなたがやってきた。
+
+---
+
+**あなた:** 「大きなニュースがある。隣の県の企業から、ShimaLinkを導入したいって連絡が来た！」
+
+**あなた:** 「すごい！沖縄以外にも展開できるってことですね。」
+
+**あなた:** 「そう。でも、セキュリティの関係で、沖縄のシステムとは完全に分離した環境が必要なんだ。同じ構成をもう一つ作らないといけない。」
+
+**あなた:** 「えっと...Cloud Run、Cloud SQL、Cloud Storage、ロードバランサー、ネットワーク設定...全部手動で作り直すの？前回、コンソールでポチポチやるのに丸一日かかったんだけど。」
+
+**あなた:** 「しかも、設定を一つでも間違えたら動かない。前回もネットワーク設定でハマったよね。」
+
+---
+
+**Yuki:** 「手動でインフラを作るのは、もう限界だね。」
+
+**あなた:** 「でも、他に方法が...」
+
+**Yuki:** 「あるよ。**Infrastructure as Code（IaC）**——インフラの構成をコードとして書く方法だ。」
+
+**あなた:** 「インフラをコードで？」
+
+**Yuki:** 「そう。クラウドのリソースをすべてコードファイルに定義する。実行すると、そのコード通りのインフラが自動的に構築される。**Terraform（テラフォーム）** というツールが業界標準だよ。」
+
+**あなた:** 「つまり、コードを実行するだけで、同じ環境をいくつでも作れるってことですか？」
+
+**Yuki:** 「そういうこと。しかもGitで管理できるから、"誰が、いつ、何を変更したか"も追跡できる。もう"あの時の設定どうだったっけ"と悩まなくて済む。」
+
+---
+
+インフラ構築を「職人技」から「再現可能な科学」に変える旅が始まる。
+
+</StoryPanel>
+
+## なぜ Infrastructure as Code が必要なのか
+
+> 「手動で作ったインフラは"雪の結晶"。二度と同じものは作れない。」 ——Yuki
+
+## 手動インフラ管理の問題点
+
+クラウドコンソールで手動でリソースを作成・設定する方法には、多くの問題があります。
+
+### 1. 再現性がない
+```
+「前回どういう設定でDB作ったっけ？」
+「ネットワーク設定のパラメータ何だったかな...」
+「あの時のファイアウォールルール、スクショ撮ってないな...」
+```
+
+### 2. ドリフト（設定のずれ）
+```
+本番環境: DB のメモリ = 8GB（誰かがコンソールで変更）
+ステージング環境: DB のメモリ = 2GB（元の設定のまま）
+→ テスト環境と本番環境で挙動が異なる
+```
+
+### 3. 変更履歴がない
+- 誰がいつ何を変更したかわからない
+- 問題が起きても原因を追跡できない
+- 変更を元に戻す手段がない
+
+### 4. 属人化
+```
+「インフラの設定は田中さんしか知らない」
+→ 田中さんが休んだら誰も対応できない
+```
+
+## Infrastructure as Code（IaC）とは
+
+インフラの構成をコードファイルとして記述し、そのコードを実行することでインフラを自動構築する手法です。
+
+| 比較 | 手動管理 | IaC |
+|------|---------|-----|
+| 構築方法 | コンソールでクリック | コードを実行 |
+| 再現性 | なし | あり（同じコードで同じ結果） |
+| 変更管理 | なし | Gitで履歴管理 |
+| レビュー | できない | コードレビューが可能 |
+| テスト | 本番で確認するしかない | 事前にプランを確認できる |
+| 共有 | ドキュメント（古くなりがち） | コード自体がドキュメント |
+
+## IaC ツールの比較
+
+| ツール | 提供元 | 特徴 |
+|--------|--------|------|
+| **Terraform** | HashiCorp | マルチクラウド対応、業界標準 |
+| **CloudFormation** | AWS | AWS専用、JSONまたはYAML |
+| **Pulumi** | Pulumi | 一般的なプログラミング言語で記述可能 |
+| **CDK** | AWS | TypeScript等でCloudFormationを生成 |
+
+ShimaLinkでは**Terraform**を使います。マルチクラウド対応で、将来のプロバイダー変更にも柔軟に対応できるからです。
+
+## IaC のワークフロー
+
+```
+1. コードを書く（main.tf）
+    ↓
+2. プランを確認する（terraform plan）
+    ↓ 「何が作られ/変更されるか」が表示される
+3. 適用する（terraform apply）
+    ↓ 実際にインフラが構築される
+4. Gitにコミットする
+    ↓ 変更履歴が記録される
+```
+
+> **Yuki:** 「IaCのいいところは、`terraform plan` で実際に何が起きるか事前に確認できること。"やってみないとわからない"がなくなるんだ。」
+
+## ポイント
+
+- 手動インフラ管理は再現性・追跡性・共有性に欠ける
+- IaCはインフラの構成をコードとして管理する手法
+- コードなのでGitでバージョン管理、レビュー、共有が可能
+- Terraformはマルチクラウド対応の業界標準IaCツール
+- `plan` で事前確認、`apply` で適用、という安全なワークフロー
+
+## Terraform の基本 — HCL、プロバイダー、リソース
+
+> 「Terraformは"インフラの設計図"を書くツール。設計図通りにクラウドを自動構築してくれる。」 ——Yuki
+
+## HCL（HashiCorp Configuration Language）
+
+TerraformはHCLという独自の言語でインフラを定義します。JSONのように宣言的で、読みやすいのが特徴です。
+
+```hcl
+# これがHCLの基本構文
+resource "リソースタイプ" "名前" {
+  設定項目 = "値"
+}
+```
+
+## Terraform プロジェクトの構成
+
+```
+shimalink-infra/
+├── main.tf          # メインのリソース定義
+├── variables.tf     # 変数の定義
+├── outputs.tf       # 出力値の定義
+├── terraform.tfvars # 変数の値（Git管理しない場合もある）
+└── providers.tf     # プロバイダーの設定
+```
+
+## プロバイダーの設定
+
+プロバイダーはTerraformとクラウドを接続するプラグインです。
+
+```hcl
+# providers.tf
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.0"
+    }
+  }
+}
+
+provider "google" {
+  project = var.project_id
+  region  = "asia-northeast1"
+}
+```
+
+## リソースの定義
+
+ShimaLinkのインフラをTerraformで定義してみましょう。
+
+```hcl
+# main.tf
+
+# Cloud Run サービス
+resource "google_cloud_run_v2_service" "shimalink_web" {
+  name     = "shimalink-web"
+  location = "asia-northeast1"
+
+  template {
+    containers {
+      image = "asia-northeast1-docker.pkg.dev/shimalink/repo/web:latest"
+
+      ports {
+        container_port = 3000
+      }
+
+      env {
+        name  = "NODE_ENV"
+        value = "production"
+      }
+
+      env {
+        name = "DATABASE_URL"
+        value_source {
+          secret_key_ref {
+            secret  = google_secret_manager_secret.db_url.secret_id
+            version = "latest"
+          }
+        }
+      }
+
+      resources {
+        limits = {
+          cpu    = "1"
+          memory = "512Mi"
+        }
+      }
+    }
+
+    scaling {
+      min_instance_count = 1
+      max_instance_count = 10
+    }
+  }
+}
+
+# Cloud SQL データベース
+resource "google_sql_database_instance" "shimalink_db" {
+  name             = "shimalink-db"
+  database_version = "POSTGRES_15"
+  region           = "asia-northeast1"
+
+  settings {
+    tier = "db-f1-micro"
+
+    backup_configuration {
+      enabled    = true
+      start_time = "03:00"
+    }
+  }
+
+  deletion_protection = true
+}
+
+# データベース
+resource "google_sql_database" "shimalink" {
+  name     = "shimalink"
+  instance = google_sql_database_instance.shimalink_db.name
+}
+```
+
+## 変数の定義
+
+```hcl
+# variables.tf
+variable "project_id" {
+  description = "GCPプロジェクトID"
+  type        = string
+}
+
+variable "environment" {
+  description = "環境名（dev, staging, prod）"
+  type        = string
+  default     = "dev"
+}
+
+variable "db_tier" {
+  description = "Cloud SQLのインスタンスタイプ"
+  type        = string
+  default     = "db-f1-micro"
+}
+```
+
+```hcl
+# terraform.tfvars
+project_id  = "shimalink-project"
+environment = "prod"
+db_tier     = "db-g1-small"
+```
+
+## 出力値
+
+```hcl
+# outputs.tf
+output "web_url" {
+  description = "ShimaLink WebアプリのURL"
+  value       = google_cloud_run_v2_service.shimalink_web.uri
+}
+
+output "db_connection" {
+  description = "データベース接続名"
+  value       = google_sql_database_instance.shimalink_db.connection_name
+  sensitive   = true
+}
+```
+
+## 基本コマンド
+
+```bash
+# プロバイダーをダウンロード
+terraform init
+
+# 実行プランを確認（何が作られるか）
+terraform plan
+
+# インフラを構築
+terraform apply
+
+# インフラを削除
+terraform destroy
+
+# 現在の状態を表示
+terraform show
+```
+
+> **Yuki:** 「`terraform plan` が一番大事なコマンドだよ。実際に変更を適用する前に、何が起きるかを確認できる。Pull Requestでもplan結果をレビューするのがベストプラクティスだ。」
+
+## ポイント
+
+- HCLは宣言的な言語で、何を作るかを記述する（どう作るかはTerraformが判断）
+- プロバイダーでクラウドとの接続を設定する
+- リソースでクラウド上のインフラ（サーバー、DB等）を定義する
+- 変数で環境ごとの値を柔軟に変えられる
+- `init` → `plan` → `apply` の3ステップが基本ワークフロー
+
+## 環境の管理 — dev、staging、production
+
+> 「同じコードで、dev・staging・prodを作れる。それがIaCの真骨頂だよ。」 ——Yuki
+
+## なぜ複数の環境が必要か
+
+| 環境 | 用途 | 利用者 |
+|------|------|--------|
+| **dev（開発）** | 新機能の開発・実験 | 開発者 |
+| **staging（検証）** | 本番デプロイ前の最終確認 | 開発者・QA |
+| **production（本番）** | 実際のユーザーが使う | エンドユーザー |
+
+```
+dev → staging → production
+ │       │          │
+ │       │          └ 実ユーザーがアクセス
+ │       └ 本番と同じ構成でテスト
+ └ 自由に壊して試せる環境
+```
+
+## Terraform Workspaces
+
+Terraformのワークスペース機能で、同じコードから複数の環境を管理できます。
+
+```bash
+# ワークスペースの作成
+terraform workspace new dev
+terraform workspace new staging
+terraform workspace new prod
+
+# ワークスペースの切り替え
+terraform workspace select prod
+
+# 一覧
+terraform workspace list
+```
+
+## 環境ごとの変数ファイル
+
+```
+shimalink-infra/
+├── main.tf
+├── variables.tf
+├── outputs.tf
+├── environments/
+│   ├── dev.tfvars
+│   ├── staging.tfvars
+│   └── prod.tfvars
+```
+
+```hcl
+# environments/dev.tfvars
+environment    = "dev"
+db_tier        = "db-f1-micro"
+min_instances  = 0
+max_instances  = 2
+```
+
+```hcl
+# environments/prod.tfvars
+environment    = "prod"
+db_tier        = "db-g1-small"
+min_instances  = 1
+max_instances  = 10
+```
+
+```bash
+# dev環境を構築
+terraform apply -var-file=environments/dev.tfvars
+
+# prod環境を構築
+terraform apply -var-file=environments/prod.tfvars
+```
+
+## 環境ごとのリソース命名
+
+```hcl
+# main.tf — 環境名をリソース名に含める
+resource "google_cloud_run_v2_service" "shimalink_web" {
+  name     = "shimalink-web-${var.environment}"
+  location = "asia-northeast1"
+
+  template {
+    containers {
+      image = var.web_image
+
+      resources {
+        limits = {
+          cpu    = var.environment == "prod" ? "2" : "1"
+          memory = var.environment == "prod" ? "1Gi" : "512Mi"
+        }
+      }
+    }
+
+    scaling {
+      min_instance_count = var.min_instances
+      max_instance_count = var.max_instances
+    }
+  }
+}
+```
+
+## モジュール化
+
+同じリソースの組み合わせを再利用可能なモジュールにまとめます。
+
+```
+shimalink-infra/
+├── modules/
+│   ├── web-service/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   └── database/
+│       ├── main.tf
+│       ├── variables.tf
+│       └── outputs.tf
+├── environments/
+│   ├── dev/
+│   │   └── main.tf
+│   └── prod/
+│       └── main.tf
+```
+
+```hcl
+# environments/prod/main.tf
+module "web" {
+  source = "../../modules/web-service"
+
+  environment   = "prod"
+  min_instances = 1
+  max_instances = 10
+  cpu           = "2"
+  memory        = "1Gi"
+}
+
+module "database" {
+  source = "../../modules/database"
+
+  environment = "prod"
+  tier        = "db-g1-small"
+  backup      = true
+}
+```
+
+## 環境間のプロモーション
+
+```
+コード変更
+    ↓
+terraform plan（dev.tfvars）→ terraform apply
+    ↓ devで動作確認
+terraform plan（staging.tfvars）→ terraform apply
+    ↓ stagingで最終テスト
+terraform plan（prod.tfvars）→ terraform apply
+    ↓ 本番リリース
+```
+
+> **Yuki:** 「新しい県への展開もこれでできる。`terraform apply -var-file=environments/kagoshima.tfvars` とするだけで、鹿児島環境が8分で完成するんだ。」
+
+## ポイント
+
+- dev、staging、productionの3環境を用意するのが標準的
+- 同じTerraformコードで環境ごとの変数ファイルを切り替える
+- リソース名に環境名を含めて衝突を防ぐ
+- モジュール化で再利用可能なインフラ部品を作る
+- 環境のプロモーション（dev → staging → prod）で安全にリリースする
+
+## ステート管理 — Terraform の心臓部
+
+> 「ステートファイルはTerraformの記憶。これを失うと、Terraformは何を管理しているか忘れてしまう。」 ——Yuki
+
+## Terraform ステートとは
+
+Terraformは、管理しているインフラの現在の状態を**ステートファイル（terraform.tfstate）**に記録します。
+
+```
+コード（main.tf）    ←→  ステート（terraform.tfstate）  ←→  実際のクラウドリソース
+  「こうあるべき」          「こうなっている」                「実際の状態」
+```
+
+`terraform plan` は、コードとステートを比較して「何を変更する必要があるか」を計算します。
+
+## ステートの重要性
+
+```bash
+# ステートに記録される情報の例
+{
+  "resources": [
+    {
+      "type": "google_cloud_run_v2_service",
+      "name": "shimalink_web",
+      "instances": [
+        {
+          "attributes": {
+            "id": "projects/shimalink/locations/asia-northeast1/services/shimalink-web",
+            "uri": "https://shimalink-web-xxxxx.run.app"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+## ローカルステート vs リモートステート
+
+### ローカルステート（デフォルト）
+
+```
+自分のPC
+└── shimalink-infra/
+    └── terraform.tfstate  ← 自分のPCにだけ存在
+```
+
+**問題点:**
+- チームメンバーと共有できない
+- PCが壊れたらステートが失われる
+- 2人が同時に `terraform apply` すると競合する
+
+### リモートステート（推奨）
+
+```
+クラウドストレージ（GCS / S3）
+└── terraform.tfstate  ← チーム全員がアクセス可能
+
+開発者A ──→ リモートステート ←── 開発者B
+              ↕ ロック機構
+           同時書き込みを防止
+```
+
+## リモートバックエンドの設定
+
+```hcl
+# backend.tf — GCS（Google Cloud Storage）を使う場合
+terraform {
+  backend "gcs" {
+    bucket = "shimalink-terraform-state"
+    prefix = "prod"
+  }
+}
+```
+
+```hcl
+# backend.tf — S3（AWS）を使う場合
+terraform {
+  backend "s3" {
+    bucket         = "shimalink-terraform-state"
+    key            = "prod/terraform.tfstate"
+    region         = "ap-northeast-1"
+    dynamodb_table = "terraform-locks"
+    encrypt        = true
+  }
+}
+```
+
+## ステートロック
+
+複数人が同時に `terraform apply` を実行すると、ステートが壊れる可能性があります。ロック機構がこれを防ぎます。
+
+```
+開発者A: terraform apply
+  → ステートをロック ← 開発者Bはここでブロックされる
+  → リソースを変更
+  → ステートを更新
+  → ロックを解放
+  → 開発者Bが実行可能に
+```
+
+## ステート操作コマンド
+
+```bash
+# ステートの内容を表示
+terraform show
+
+# 特定のリソースの詳細を表示
+terraform state show google_cloud_run_v2_service.shimalink_web
+
+# リソース一覧
+terraform state list
+
+# リソースをステートから除外（手動管理に移す）
+terraform state rm google_cloud_run_v2_service.shimalink_web
+
+# リソースをインポート（既存リソースをTerraform管理下に）
+terraform import google_sql_database_instance.shimalink_db shimalink-db
+```
+
+## ステート管理のベストプラクティス
+
+| プラクティス | 理由 |
+|------------|------|
+| リモートバックエンドを使う | チーム共有・安全性のため |
+| ステートをGitにコミットしない | 機密情報が含まれるため |
+| ロック機構を有効にする | 同時書き込みの競合を防ぐ |
+| 定期的にバックアップする | 万一の消失に備える |
+| ステートを手動で編集しない | 一貫性が壊れるため |
+
+## .gitignore の設定
+
+```gitignore
+# Terraformのステートファイル
+*.tfstate
+*.tfstate.backup
+
+# ローカルの変数値（機密情報を含む場合）
+*.tfvars
+!*.tfvars.example
+
+# Terraformのローカルディレクトリ
+.terraform/
+```
+
+> **Yuki:** 「ステートファイルにはDBのパスワードなどの機密情報が含まれることがある。絶対にGitにコミットしないこと。リモートバックエンドに保存して、暗号化を有効にするのがセキュリティの鉄則だよ。」
+
+## ポイント
+
+- ステートファイルはTerraformが管理するインフラの「記憶」
+- チーム開発ではリモートバックエンド（GCS/S3）が必須
+- ロック機構で同時操作の競合を防ぐ
+- ステートファイルには機密情報が含まれるため、Gitにコミットしない
+- `terraform import` で既存リソースをTerraform管理下に取り込める
+
+<StoryPanel variant="conclusion">
+
+Terraformで定義したShimaLinkのインフラ。新しい環境の構築にかかった時間は——
+
+```bash
+$ terraform apply
+...
+Apply complete! Resources: 12 added, 0 changed, 0 destroyed.
+
+所要時間: 8分23秒
+```
+
+---
+
+**あなた:** 「8分！？前回は丸一日かかったのに！」
+
+**あなた:** 「しかも、沖縄環境とまったく同じ構成です。設定ミスの心配もない。」
+
+**Yuki:** 「これがIaCの力だよ。コードを実行するだけで、何度でも同じ環境を再現できる。」
+
+---
+
+**あなた:** 「でもさ、これ、もし本番環境で何か問題が起きたとき、すぐに気づけるのかな？今は朝の確認でしか状態を見てないし...」
+
+**Mika:** 「実は先週、夜中にサイトが遅くなってたみたいで。翌朝お客さんから連絡が来てはじめて気づいたんです。」
+
+**あなた:** 「ユーザーよりも先に問題に気づきたいですね...」
+
+**Yuki:** 「いい課題だね。次は**モニタリングとアラート**の仕組みを作ろう。サーバーの状態を常に監視して、問題が起きたら即座に通知が来るようにする。"見守る目"を持つことが、信頼性の高いサービスの条件なんだ。」
+
+---
+
+> **次のチャプター**: *Chapter 20: 見守る目* — サービスの健康状態をリアルタイムで把握する。ログ、メトリクス、アラートで「知らなかった」をゼロに。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="19-infrastructure-code" />
+
+<ChapterFaq chapterId="19-infrastructure-code" />
+
+<SeriesNav current={19} />

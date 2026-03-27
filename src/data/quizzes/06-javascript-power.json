@@ -1,0 +1,70 @@
+[
+  {
+    "id": "ch06-q01",
+    "question": "JavaScriptの配列で、条件に合う要素だけを抽出するメソッドはどれ？",
+    "choices": ["map()", "filter()", "reduce()", "find()"],
+    "correctIndex": 1,
+    "explanation": "filter()は条件に合う要素だけを抽出して新しい配列を返します。map()は変換、reduce()は集計、find()は最初の1件だけを返します。",
+    "storyContext": "ダッシュボードで「アクティブなクライアントだけ」を表示するときに使ったメソッドだよ。",
+    "skill": { "category": "programming", "name": "JavaScript", "level": "intermediate" }
+  },
+  {
+    "id": "ch06-q02",
+    "question": "次のコードの出力は？ `const [a, b] = [10, 20, 30]; console.log(b);`",
+    "choices": ["10", "20", "30", "undefined"],
+    "correctIndex": 1,
+    "explanation": "配列の分割代入では、左辺の変数に順番に値が代入されます。aに10、bに20が入り、30は無視されます。",
+    "storyContext": "クライアントデータの配列から必要な値だけ取り出す場面で使うテクニックだ。",
+    "skill": { "category": "programming", "name": "JavaScript", "level": "intermediate" }
+  },
+  {
+    "id": "ch06-q03",
+    "question": "テンプレートリテラルを囲む記号はどれ？",
+    "choices": ["シングルクォート（'）", "ダブルクォート（\"）", "バッククォート（`）", "スラッシュ（/）"],
+    "correctIndex": 2,
+    "explanation": "テンプレートリテラルはバッククォート（`）で囲みます。その中で${変数名}と書くことで変数を埋め込めます。",
+    "storyContext": "クライアントカードのHTMLを動的に生成するとき、テンプレートリテラルを使ったのを思い出そう。",
+    "skill": { "category": "programming", "name": "ES6+", "level": "intro" }
+  },
+  {
+    "id": "ch06-q04",
+    "question": "fetch APIが返すものは何？",
+    "choices": ["JSON文字列", "HTMLドキュメント", "Promise", "配列"],
+    "correctIndex": 2,
+    "explanation": "fetch()はPromiseを返します。そのPromiseがresolve（解決）されるとResponseオブジェクトが得られ、.json()メソッドでJSONデータをパースできます。",
+    "storyContext": "サーバーからクライアントデータを取得する際、fetchの結果をawaitで待っていたね。",
+    "skill": { "category": "programming", "name": "Async Programming", "level": "intro" }
+  },
+  {
+    "id": "ch06-q05",
+    "question": "async/await でエラーを捕捉する正しい方法は？",
+    "choices": [".then()と.catch()を使う", "try/catchブロックで囲む", "if文でチェックする", "console.errorを使う"],
+    "correctIndex": 1,
+    "explanation": "async/awaitではtry/catchブロックを使ってエラーを捕捉します。.then()/.catch()はPromiseチェーン形式で使う方法です。",
+    "storyContext": "ダッシュボードでネットワークエラーが発生したとき、ユーザーに何も表示されない事態を防ぐために使った方法だ。",
+    "skill": { "category": "programming", "name": "Async Programming", "level": "intro" }
+  },
+  {
+    "id": "ch06-q06",
+    "question": "const で宣言した変数の配列にpush()でき要素を追加できる？",
+    "choices": ["できない（constは変更不可）", "できる（中身の変更は可能）", "エラーにはならないが追加されない", "strictモードでのみ可能"],
+    "correctIndex": 1,
+    "explanation": "constは再代入を禁止しますが、配列やオブジェクトの中身（プロパティや要素）の変更は可能です。const arr = [1]; arr.push(2); はOKですが、arr = [1,2]; はエラーになります。",
+    "storyContext": "ShimaLinkのクライアントリストはconstで宣言したけど、新しいクライアントをpushで追加できたのを覚えてる？",
+    "skill": { "category": "programming", "name": "JavaScript", "level": "intermediate" }
+  },
+  {
+    "id": "ch06-q07",
+    "question": "オプショナルチェーン（?.）の役割は？",
+    "choices": [
+      "プロパティが存在しない場合にデフォルト値を設定する",
+      "プロパティが存在しない場合にundefinedを返しエラーを防ぐ",
+      "プロパティを必須にする",
+      "プロパティの型をチェックする"
+    ],
+    "correctIndex": 1,
+    "explanation": "オプショナルチェーン（?.）は、途中のプロパティがnullやundefinedの場合にエラーを出さずundefinedを返します。深くネストしたオブジェクトへの安全なアクセスに便利です。",
+    "storyContext": "クライアントデータに電話番号がないケースで、client.contact?.phone?.numberとアクセスしてエラーを防いだ場面を思い出そう。",
+    "skill": { "category": "programming", "name": "ES6+", "level": "intro" }
+  }
+]

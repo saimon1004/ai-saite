@@ -1,0 +1,99 @@
+[
+  {
+    "id": "ch12-q01",
+    "question": "格納型XSS（Stored XSS）の特徴として正しいのは？",
+    "choices": [
+      "URLのパラメータを通じて攻撃する",
+      "悪意のあるスクリプトがサーバーに保存され、閲覧者全員に影響する",
+      "サーバーを経由せずブラウザだけで完結する",
+      "CSSを使ってページを改ざんする"
+    ],
+    "correctIndex": 1,
+    "explanation": "格納型XSSは悪意のあるスクリプトがデータベースに保存され、そのページを表示するすべてのユーザーのブラウザで実行されます。ShimaLinkのコメント欄で起きたのがこのタイプです。",
+    "storyContext": "Shadowがコメント欄に仕込んだスクリプトは、海風テラスのページを見た全員に影響した。",
+    "skill": { "category": "security", "name": "XSS Prevention", "level": "intro" }
+  },
+  {
+    "id": "ch12-q02",
+    "question": "HTMLエスケープで「<」はどのように変換される？",
+    "choices": ["&gt;", "&lt;", "&amp;", "&quot;"],
+    "correctIndex": 1,
+    "explanation": "「<」は「&lt;」に変換されます。これによりブラウザはHTMLタグとして解釈せず、テキストとして表示します。&gt;は「>」、&amp;は「&」、&quot;は「\"」のエスケープです。",
+    "storyContext": "<script>タグを無害化するために、< を &lt; に変換したのを覚えてる？",
+    "skill": { "category": "security", "name": "Input Sanitization", "level": "intro" }
+  },
+  {
+    "id": "ch12-q03",
+    "question": "CSP（Content Security Policy）の主な役割は？",
+    "choices": [
+      "パスワードを暗号化する",
+      "ブラウザに対してリソースの読み込み・実行を制御する",
+      "データベースへのアクセスを制限する",
+      "ファイアウォールのルールを設定する"
+    ],
+    "correctIndex": 1,
+    "explanation": "CSPはHTTPレスポンスヘッダーで、ブラウザに「どのリソースの読み込み・実行を許可するか」を指示します。これにより、サニタイズが漏れた場合でもXSSの実行をブロックできます。",
+    "storyContext": "Yukiが「サニタイズ漏れがあってもCSPがブロックする」と説明してくれた、第二の防御層だ。",
+    "skill": { "category": "security", "name": "Content Security Policy", "level": "intro" }
+  },
+  {
+    "id": "ch12-q04",
+    "question": "DOM操作で安全にテキストを挿入するのはどれ？",
+    "choices": ["innerHTML", "outerHTML", "textContent", "insertAdjacentHTML"],
+    "correctIndex": 2,
+    "explanation": "textContentはテキストとして挿入するため、HTMLタグやスクリプトが解釈・実行されません。innerHTML、outerHTML、insertAdjacentHTMLはHTMLとして解釈するため、XSSの危険があります。",
+    "storyContext": "ShimaLinkのコメント表示をinnerHTMLからtextContentに変更したのが修正のポイントだった。",
+    "skill": { "category": "security", "name": "XSS Prevention", "level": "intro" }
+  },
+  {
+    "id": "ch12-q05",
+    "question": "入力サニタイズで「ホワイトリスト」アプローチが安全な理由は？",
+    "choices": [
+      "すべての入力をブロックするから",
+      "許可するものだけを定義するため、想定外の攻撃も防げる",
+      "処理が高速だから",
+      "ユーザーが何も入力できなくなるから"
+    ],
+    "correctIndex": 1,
+    "explanation": "ホワイトリストは「許可するものだけを通す」アプローチです。ブラックリスト（禁止リスト）は新しい攻撃パターンに対応できませんが、ホワイトリストは未知の攻撃パターンも自動的にブロックできます。",
+    "storyContext": "Yukiが「招待状がある人だけ入れる」と例えたアプローチだ。",
+    "skill": { "category": "security", "name": "Input Sanitization", "level": "intro" }
+  },
+  {
+    "id": "ch12-q06",
+    "question": "ReactのJSXで{data}と書いたとき、XSSは防げる？",
+    "choices": [
+      "防げない。手動でエスケープが必要",
+      "防げる。JSXはデフォルトで自動エスケープする",
+      "CSSだけ防げる",
+      "サーバー側の設定が別途必要"
+    ],
+    "correctIndex": 1,
+    "explanation": "ReactのJSXは{data}で値を埋め込むとき、デフォルトでHTMLエスケープを行います。ただし、dangerouslySetInnerHTMLを使うとエスケープが無効化されるので注意が必要です。",
+    "storyContext": "テンプレートエンジンの自動エスケープ機能の話。Reactは名前でも警告してくれる。",
+    "skill": { "category": "security", "name": "XSS Prevention", "level": "intro" }
+  },
+  {
+    "id": "ch12-q07",
+    "question": "CSPヘッダーの「script-src 'self'」の意味は？",
+    "choices": [
+      "すべてのスクリプトを許可する",
+      "同じオリジン（自サイト）のスクリプトだけ実行を許可する",
+      "インラインスクリプトだけ許可する",
+      "外部CDNのスクリプトだけ許可する"
+    ],
+    "correctIndex": 1,
+    "explanation": "'self'は「同じオリジン（プロトコル+ドメイン+ポートが一致）のリソースだけ許可する」という意味です。外部のスクリプトやインラインスクリプトはブロックされます。",
+    "storyContext": "ShimaLinkのCSP設定で最初に入れたディレクティブだ。",
+    "skill": { "category": "security", "name": "Content Security Policy", "level": "intro" }
+  },
+  {
+    "id": "ch12-q08",
+    "question": "URLパラメータにユーザー入力を含める場合、何を使うべき？",
+    "choices": ["escapeHtml()", "JSON.stringify()", "encodeURIComponent()", "btoa()"],
+    "correctIndex": 2,
+    "explanation": "URLパラメータにはencodeURIComponent()を使います。これにより&、=、?などの特殊文字がパーセントエンコードされ、URLの構造を壊しません。escapeHtmlはHTML用、JSON.stringifyはJS用、btoaはBase64エンコードです。",
+    "storyContext": "出力コンテキストに応じたエスケープの話。URLにはURL用の処理が必要だ。",
+    "skill": { "category": "security", "name": "Input Sanitization", "level": "intro" }
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch11-help-01",
+    "question": "CIAトライアドとCIAの違いは？",
+    "answer": "**CIAトライアド**はセキュリティの基本概念で、アメリカの諜報機関とは無関係です。\n\n| 要素 | 意味 | 具体例 |\n|------|------|--------|\n| **Confidentiality（機密性）** | 認可された人だけがアクセス | パスワード保護、暗号化 |\n| **Integrity（完全性）** | データが改ざんされない | ハッシュ検証、デジタル署名 |\n| **Availability（可用性）** | 必要なとき使える | 冗長化、DDoS対策 |\n\nすべてのセキュリティ対策は、この3つのどれかを守るために存在します。",
+    "tags": ["security", "cia", "fundamentals"],
+    "lessonSlug": "01-why-security-matters",
+    "category": "concept"
+  },
+  {
+    "id": "ch11-help-02",
+    "question": "脅威モデリングの進め方がわからない",
+    "answer": "以下の4ステップで進めましょう：\n\n1. **資産の特定**: 守るべきものは何か？\n   - ユーザーデータ、認証情報、ビジネスロジック\n\n2. **攻撃面の特定**: どこから攻撃される？\n   - フォーム入力、API、ファイルアップロード\n\n3. **脅威の分類**: STRIDEで分類\n   - なりすまし、改ざん、否認、情報漏洩、DoS、権限昇格\n\n4. **優先順位付け**: 影響度 x 発生確率でランク付け\n\n```\n高影響 x 高確率 → 最優先で対応\n高影響 x 低確率 → 計画的に対応\n低影響 x 高確率 → 早めに対応\n低影響 x 低確率 → 後回しでOK\n```",
+    "tags": ["security", "threat-modeling", "stride"],
+    "lessonSlug": "03-threat-modeling",
+    "category": "concept"
+  },
+  {
+    "id": "ch11-help-03",
+    "question": "「ユーザー入力を信用しない」とは具体的にどういうこと？",
+    "answer": "すべてのユーザーからの入力データを「潜在的に悪意がある」と仮定して処理することです。\n\n**信用してはいけないもの：**\n- フォームの入力値\n- URLのパラメータ\n- クッキーの値\n- HTTPヘッダー\n- ファイルアップロード\n\n**対策：**\n```javascript\n// 必ず検証・サニタイズしてから使う\nconst name = sanitize(req.body.name);\nconst age = parseInt(req.body.age, 10);\nif (isNaN(age) || age < 0 || age > 150) {\n  return res.status(400).send('無効な年齢');\n}\n```\n\nクライアント側のバリデーションは簡単に回避できるので、**必ずサーバー側でも検証**してください。",
+    "tags": ["security", "validation", "input"],
+    "lessonSlug": "04-security-mindset",
+    "category": "concept"
+  },
+  {
+    "id": "ch11-help-04",
+    "question": "XSSとSQLインジェクションの違いがわからない",
+    "answer": "どちらも「インジェクション（注入）」攻撃ですが、対象が異なります。\n\n| | XSS | SQLインジェクション |\n|---|-----|-------------------|\n| **対象** | ユーザーのブラウザ | サーバーのデータベース |\n| **注入するもの** | JavaScript | SQL文 |\n| **被害** | クッキー窃取、フィッシング | データ漏洩、DB破壊 |\n| **攻撃先** | 他のユーザー | サーバー直接 |\n\n**XSS**: 悪意あるJSがブラウザで実行される\n**SQLi**: 悪意あるSQLがDBサーバーで実行される\n\n詳しくはChapter 12（XSS）とChapter 13（SQLi）で学びます。",
+    "tags": ["security", "xss", "sql-injection"],
+    "lessonSlug": "02-common-attack-types",
+    "category": "concept"
+  },
+  {
+    "id": "ch11-help-05",
+    "question": "ブルートフォース攻撃への対策方法は？",
+    "answer": "パスワードを総当たりで試す攻撃への対策は複数あります：\n\n1. **ログイン試行回数の制限**\n```javascript\n// 5回失敗でアカウントを15分ロック\nif (failedAttempts >= 5) {\n  lockAccount(user, 15 * 60); // 15分\n}\n```\n\n2. **強力なパスワードポリシー**\n   - 最低8文字以上\n   - 大文字・小文字・数字・記号を含む\n\n3. **多要素認証（MFA）**\n   - パスワード + SMSコード/認証アプリ\n\n4. **CAPTCHA**\n   - ボットによる自動試行を防ぐ\n\n5. **遅延の導入**\n   - 失敗するたびに待ち時間を増やす",
+    "tags": ["security", "brute-force", "authentication"],
+    "lessonSlug": "02-common-attack-types",
+    "category": "concept"
+  },
+  {
+    "id": "ch11-help-06",
+    "question": "セキュリティ事故が起きたら最初にすべきことは？",
+    "answer": "パニックにならず、以下の順序で対応します：\n\n1. **封じ込め（Containment）**\n   - サービスをメンテナンスモードに切り替え\n   - 侵害されたアカウントを無効化\n\n2. **調査（Investigation）**\n   - ログを確認して攻撃の範囲を特定\n   - いつから、何が、どこまで漏れたかを把握\n\n3. **通知（Notification）**\n   - 影響を受けたユーザーに通知\n   - 必要に応じて監督機関に報告\n\n4. **修復（Remediation）**\n   - 脆弱性を修正\n   - パスワードリセットを実施\n\n5. **振り返り（Post-mortem）**\n   - 根本原因を分析\n   - 再発防止策を策定",
+    "tags": ["security", "incident-response", "process"],
+    "lessonSlug": "01-why-security-matters",
+    "category": "concept"
+  },
+  {
+    "id": "ch11-help-07",
+    "question": "多層防御の具体的な実装イメージがわからない",
+    "answer": "Webアプリの多層防御を具体的に示すと：\n\n```\n第1層: ネットワーク\n  → ファイアウォール、WAF、DDoS対策\n\n第2層: アプリケーション\n  → 入力検証、出力エスケープ、CSRF対策\n\n第3層: 認証・認可\n  → パスワードハッシュ、MFA、RBAC\n\n第4層: データ\n  → 暗号化（保存時・通信時）、バックアップ\n\n第5層: 監視\n  → ログ監視、異常検知、アラート\n```\n\nShimaLinkにはLayer 3（認証）しかなかった。Layer 2（入力検証）がなかったためにXSSとSQLiが成功した。",
+    "tags": ["security", "defense-in-depth", "architecture"],
+    "lessonSlug": "04-security-mindset",
+    "category": "concept"
+  },
+  {
+    "id": "ch11-help-08",
+    "question": "開発者として最低限やるべきセキュリティ対策は？",
+    "answer": "以下の5つは最低限実施してください：\n\n1. **すべてのユーザー入力を検証・サニタイズする**\n   - 入力は信用しない\n\n2. **パスワードをハッシュ化して保存する**\n   - 平文保存は絶対NG（Chapter 14で詳しく）\n\n3. **HTTPSを使う**\n   - 通信を暗号化する\n\n4. **依存ライブラリを最新に保つ**\n   - `npm audit` で脆弱性をチェック\n\n5. **エラーメッセージに内部情報を含めない**\n   - スタックトレースやDBスキーマを表示しない\n\n```bash\n# 依存ライブラリの脆弱性チェック\nnpm audit\n\n# 自動修正\nnpm audit fix\n```",
+    "tags": ["security", "best-practices", "checklist"],
+    "lessonSlug": "04-security-mindset",
+    "category": "concept"
+  },
+  {
+    "id": "ch11-help-09",
+    "question": "セキュリティの勉強で参考になるリソースは？",
+    "answer": "以下のリソースがおすすめです：\n\n**入門向け：**\n- **OWASP Top 10**: Webアプリの最も重要な脆弱性トップ10（Chapter 15で詳しく学びます）\n- **MDN Web Security**: Mozillaの公式セキュリティガイド\n\n**実践向け：**\n- **OWASP WebGoat**: 安全な環境で脆弱性を体験できるトレーニングツール\n- **PortSwigger Web Security Academy**: 無料のWebセキュリティ学習サイト\n\n**日本語リソース：**\n- **IPA（情報処理推進機構）**: セキュリティ関連の資料が豊富\n- **徳丸本**: 「体系的に学ぶ 安全なWebアプリケーションの作り方」\n\nまずはOWASP Top 10を一読することをおすすめします。",
+    "tags": ["security", "resources", "learning"],
+    "lessonSlug": "01-why-security-matters",
+    "category": "concept"
+  },
+  {
+    "id": "ch11-help-10",
+    "question": "「フェイルセキュア」と「フェイルオープン」の違いは？",
+    "answer": "エラー発生時の挙動の違いです。\n\n| | フェイルセキュア | フェイルオープン |\n|---|---|---|\n| **エラー時** | アクセス拒否 | アクセス許可 |\n| **安全性** | 高い | 低い |\n| **利便性** | 低い（誤拒否あり） | 高い（誤許可あり） |\n| **使う場面** | セキュリティ重視 | 可用性重視 |\n\n```javascript\n// フェイルセキュア（推奨）\ncatch (error) { return false; } // 拒否\n\n// フェイルオープン（危険）\ncatch (error) { return true; } // 許可\n```\n\nセキュリティに関わる処理では**必ずフェイルセキュア**を採用してください。",
+    "tags": ["security", "fail-secure", "error-handling"],
+    "lessonSlug": "04-security-mindset",
+    "category": "concept"
+  }
+]

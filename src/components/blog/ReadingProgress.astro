@@ -1,0 +1,46 @@
+---
+---
+
+<div
+  id="reading-progress"
+  class="fixed top-0 left-0 right-0 z-[60] h-0.5 bg-transparent pointer-events-none"
+>
+  <div
+    id="reading-progress-bar"
+    class="h-full bg-gradient-to-r from-navy to-teal w-0 transition-none"
+  />
+</div>
+
+<script>
+  function initReadingProgress(): void {
+    const bar = document.getElementById("reading-progress-bar");
+    if (!bar) return;
+
+    const article = document.querySelector("article");
+    if (!article) return;
+
+    let ticking = false;
+    const update = () => {
+      const rect = article.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      const progress = Math.min(Math.max(-rect.top / total, 0), 1);
+      bar.style.width = `${progress * 100}%`;
+      ticking = false;
+    };
+
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    update();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initReadingProgress);
+  } else {
+    initReadingProgress();
+  }
+</script>

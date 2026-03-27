@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch23-help-01",
+    "question": "Lighthouseのスコアが毎回変わる",
+    "answer": "Lighthouseのスコアは**テスト環境や状況**によってブレます。\n\n**安定した計測のコツ:**\n- シークレットモードで実行（拡張機能の影響を排除）\n- 3回以上測定して中央値を取る\n- 他のアプリやタブを閉じる\n- 同じネットワーク環境で測定する\n\n```bash\n# CLIで複数回実行して比較\nfor i in 1 2 3; do\n  lighthouse https://example.com --output json --quiet \\\n    | jq '.categories.performance.score'\ndone\n```\n\n**PageSpeed Insights** はフィールドデータ（実際のユーザーデータ）も表示するので、より信頼性が高いです。",
+    "tags": ["lighthouse", "performance", "measurement"],
+    "lessonSlug": "01-performance-metrics",
+    "category": "concept"
+  },
+  {
+    "id": "ch23-help-02",
+    "question": "WebPフォーマットに変換する方法は？",
+    "answer": "**コマンドラインで変換:**\n```bash\n# cwebpコマンド（macOS）\nbrew install webp\ncwebp input.jpg -o output.webp -q 80\n\n# 一括変換\nfor f in *.jpg; do\n  cwebp \"$f\" -o \"${f%.jpg}.webp\" -q 80\ndone\n```\n\n**ビルドツールで自動変換:**\n```javascript\n// vite.config.ts\nimport { imagetools } from 'vite-imagetools';\n\nexport default {\n  plugins: [imagetools()]\n}\n```\n\n**HTMLで対応ブラウザ分岐:**\n```html\n<picture>\n  <source srcset=\"photo.avif\" type=\"image/avif\">\n  <source srcset=\"photo.webp\" type=\"image/webp\">\n  <img src=\"photo.jpg\" alt=\"店舗写真\">\n</picture>\n```",
+    "tags": ["webp", "image", "optimization"],
+    "lessonSlug": "02-frontend-optimization",
+    "category": "terminal"
+  },
+  {
+    "id": "ch23-help-03",
+    "question": "Redisのインストール方法がわからない",
+    "answer": "**Docker（推奨）:**\n```bash\ndocker run -d --name redis -p 6379:6379 redis:alpine\n\n# 接続確認\ndocker exec -it redis redis-cli ping\n# → PONG\n```\n\n**Mac（Homebrew）:**\n```bash\nbrew install redis\nbrew services start redis\nredis-cli ping\n```\n\n**Node.jsから接続:**\n```bash\nnpm install ioredis\n```\n\n```typescript\nimport Redis from 'ioredis';\nconst redis = new Redis(); // localhost:6379\nawait redis.set('key', 'value');\nconst val = await redis.get('key');\n```",
+    "tags": ["redis", "cache", "install"],
+    "lessonSlug": "03-backend-caching",
+    "category": "environment"
+  },
+  {
+    "id": "ch23-help-04",
+    "question": "EXPLAIN ANALYZEの出力の読み方がわからない",
+    "answer": "**重要な項目:**\n\n| 項目 | 意味 | 注目ポイント |\n|------|------|-------------|\n| **Seq Scan** | 全行スキャン | テーブルが大きい場合は遅い |\n| **Index Scan** | インデックス使用 | 速い、理想的 |\n| **rows** | 推定行数 | 実際の行数と大きくずれていないか |\n| **Execution Time** | 実行時間 | 目標: 10ms以下 |\n\n```sql\nEXPLAIN ANALYZE\nSELECT * FROM shops WHERE category = 'カフェ';\n\n-- Seq Scan が表示されたら→インデックスを追加\nCREATE INDEX idx_shops_category ON shops(category);\n\n-- 再度実行して Index Scan になることを確認\n```",
+    "tags": ["sql", "explain", "performance"],
+    "lessonSlug": "04-database-optimization",
+    "category": "concept"
+  },
+  {
+    "id": "ch23-help-05",
+    "question": "バンドルサイズが大きすぎる",
+    "answer": "**原因の特定:**\n```bash\n# Viteの場合\nnpx vite-bundle-visualizer\n\n# webpackの場合\nnpx webpack-bundle-analyzer dist/stats.json\n```\n\n**よくある原因と対策:**\n\n| 原因 | 対策 |\n|------|------|\n| lodash全体のインポート | `import debounce from 'lodash/debounce'` |\n| moment.jsの使用 | `date-fns` や `dayjs` に置き換え |\n| アイコンライブラリ全体 | 必要なアイコンだけインポート |\n| 未使用コード | Tree Shakingの確認 |\n\n**動的インポートで分割:**\n```typescript\nconst HeavyComponent = React.lazy(() => import('./Heavy'));\n```",
+    "tags": ["bundle", "webpack", "optimization"],
+    "lessonSlug": "02-frontend-optimization",
+    "category": "concept"
+  },
+  {
+    "id": "ch23-help-06",
+    "question": "キャッシュを更新したのに古いデータが表示される",
+    "answer": "**キャッシュの無効化（Cache Busting）:**\n\n1. **ブラウザキャッシュ:** ファイル名にハッシュを付ける\n```html\n<!-- ビルドツールが自動でハッシュを付与 -->\n<script src=\"app.a1b2c3d4.js\"></script>\n```\n\n2. **CDNキャッシュ:** パージ（削除）する\n```bash\n# CloudflareのAPIでパージ\ncurl -X POST \"https://api.cloudflare.com/client/v4/zones/ZONE_ID/purge_cache\" \\\n  -H \"Authorization: Bearer TOKEN\" \\\n  -d '{\"purge_everything\":true}'\n```\n\n3. **Redisキャッシュ:** キーを削除する\n```typescript\nawait redis.del('shops:all');\n// または全削除\nawait redis.flushdb();\n```\n\n**原則:** データ更新時に関連するキャッシュを必ず無効化する。",
+    "tags": ["cache", "invalidation", "troubleshooting"],
+    "lessonSlug": "03-backend-caching",
+    "category": "concept"
+  },
+  {
+    "id": "ch23-help-07",
+    "question": "lazy loadingが効いてるか確認する方法は？",
+    "answer": "**DevToolsで確認:**\n\n1. Networkタブを開く\n2. ページを読み込む\n3. `loading=\"lazy\"` の画像が**すぐにリクエストされていないこと**を確認\n4. スクロールして画像が表示される位置まで移動\n5. その時点でリクエストが発生することを確認\n\n```html\n<!-- lazy loadingの確認 -->\n<img src=\"photo.webp\" loading=\"lazy\" alt=\"テスト\" />\n```\n\n**注意:** ファーストビューの画像には `loading=\"lazy\"` を使わないこと。LCPが悪化します。\n```html\n<!-- ファーストビューの画像 -->\n<img src=\"hero.webp\" loading=\"eager\" fetchpriority=\"high\" alt=\"メイン\" />\n```",
+    "tags": ["lazy-loading", "images", "performance"],
+    "lessonSlug": "02-frontend-optimization",
+    "category": "display"
+  },
+  {
+    "id": "ch23-help-08",
+    "question": "インデックスを追加したらINSERTが遅くなった",
+    "answer": "**インデックスにはトレードオフがあります:**\n\n| 操作 | インデックスあり | インデックスなし |\n|------|----------------|----------------|\n| SELECT | 速い | 遅い |\n| INSERT | やや遅い | 速い |\n| UPDATE | やや遅い | 速い |\n| DELETE | やや遅い | 速い |\n\n**対策:**\n- 本当に必要なインデックスだけ作る\n- 使われていないインデックスは削除する\n- 大量INSERTの前にインデックスを一時削除し、後で再作成\n\n```sql\n-- 使われていないインデックスの確認（PostgreSQL）\nSELECT indexrelname, idx_scan\nFROM pg_stat_user_indexes\nWHERE idx_scan = 0;\n```",
+    "tags": ["index", "database", "tradeoff"],
+    "lessonSlug": "04-database-optimization",
+    "category": "concept"
+  },
+  {
+    "id": "ch23-help-09",
+    "question": "コネクションプールのmax値はいくつに設定すべき？",
+    "answer": "**一般的な目安:**\n\n```\nmax = (CPUコア数 × 2) + ディスク数\n```\n\n例: 4コアCPU + SSD1台 → max = 9〜10\n\n**実際の設定例:**\n```typescript\nconst pool = new Pool({\n  max: 20,                    // 小〜中規模アプリ\n  idleTimeoutMillis: 30000,   // 30秒でアイドル接続を解放\n  connectionTimeoutMillis: 5000  // 5秒で接続タイムアウト\n});\n```\n\n**多すぎるとDB側で問題が起きます。** PostgreSQLのデフォルト最大接続数は100です。複数のアプリサーバーがある場合は分配が必要です。\n\n```sql\nSHOW max_connections;\n-- → 100\n```",
+    "tags": ["database", "connection-pool", "config"],
+    "lessonSlug": "04-database-optimization",
+    "category": "environment"
+  },
+  {
+    "id": "ch23-help-10",
+    "question": "Core Web VitalsとSEOの関係は？",
+    "answer": "**GoogleはCore Web VitalsをSEOのランキング要因に含めています。**\n\n| 指標 | SEOへの影響 |\n|------|------------|\n| LCP | ページ表示速度が遅いと順位低下 |\n| FID/INP | インタラクション応答が遅いと順位低下 |\n| CLS | レイアウトずれが大きいと順位低下 |\n\n**Google Search Consoleで確認:**\n1. Search Console → 「ウェブに関する主な指標」\n2. 「良好」「改善が必要」「不良」のURLが表示される\n\n**つまり:** パフォーマンス改善はUX向上だけでなく、検索順位の向上にもつながります。ShimaLinkの店舗ページが検索で上位に表示されるためにも重要です。",
+    "tags": ["seo", "core-web-vitals", "google"],
+    "lessonSlug": "01-performance-metrics",
+    "category": "concept"
+  }
+]

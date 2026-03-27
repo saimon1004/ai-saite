@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch16-help-01",
+    "question": "「docker: command not found」と表示される",
+    "answer": "Dockerがインストールされていません。\n\n**macOSの場合：**\n1. [Docker Desktop](https://www.docker.com/products/docker-desktop/) をダウンロード\n2. インストール後、Docker Desktopを起動\n3. メニューバーにクジラのアイコンが表示されればOK\n\n```bash\n# 確認\ndocker --version\n# → Docker version 24.x.x\n```\n\n**注意:** Docker Desktopが起動していないとコマンドが使えません。",
+    "tags": ["docker", "install", "error"],
+    "lessonSlug": "02-docker-basics",
+    "category": "environment"
+  },
+  {
+    "id": "ch16-help-02",
+    "question": "docker buildで「no such file or directory」エラーが出る",
+    "answer": "Dockerfileが見つからない、またはCOPYするファイルが存在しません。\n\n```bash\n# Dockerfileがあるか確認\nls Dockerfile\n\n# Dockerfileがあるディレクトリで実行する\ncd /path/to/project\ndocker build -t myapp .\n```\n\n**チェックポイント：**\n- Dockerfileの名前が正確か（大文字のDで始まる）\n- COPYするファイルが.dockerignoreで除外されていないか\n- ビルドコンテキスト（`.`）が正しいディレクトリか",
+    "tags": ["docker", "build", "error"],
+    "lessonSlug": "02-docker-basics",
+    "category": "terminal"
+  },
+  {
+    "id": "ch16-help-03",
+    "question": "コンテナが起動してもすぐ停止してしまう",
+    "answer": "コンテナ内のプロセスがすぐに終了している可能性があります。\n\n```bash\n# ログを確認して原因を調べる\ndocker logs コンテナ名\n\n# 対話モードで起動してデバッグ\ndocker run -it myapp sh\n```\n\n**よくある原因：**\n- CMDのコマンドが間違っている\n- アプリがエラーでクラッシュしている\n- 必要な環境変数が設定されていない\n- ポートが既に使用されている",
+    "tags": ["docker", "container", "debug"],
+    "lessonSlug": "02-docker-basics",
+    "category": "terminal"
+  },
+  {
+    "id": "ch16-help-04",
+    "question": "docker compose upで「port is already allocated」エラーが出る",
+    "answer": "指定したポートが既に使用されています。\n\n```bash\n# どのプロセスがポートを使っているか確認\nlsof -i :3000\n\n# そのプロセスを停止するか、別のポートを使う\n```\n\n**docker-compose.ymlでポートを変更する場合：**\n```yaml\nservices:\n  web:\n    ports:\n      - \"3001:3000\"  # ホスト側を3001に変更\n```",
+    "tags": ["docker-compose", "port", "error"],
+    "lessonSlug": "03-docker-compose",
+    "category": "environment"
+  },
+  {
+    "id": "ch16-help-05",
+    "question": "イメージとコンテナの違いがわからない",
+    "answer": "**料理に例えると分かりやすいです：**\n\n| 概念 | 料理の例 | 特徴 |\n|------|---------|------|\n| **Dockerfile** | レシピ | 作り方の手順書 |\n| **イメージ** | 冷凍食品 | いつでも同じ料理を再現できる |\n| **コンテナ** | 実際の料理 | 食べる（実行する）もの |\n\n- 1つのイメージから複数のコンテナを作れる\n- イメージは読み取り専用、コンテナは読み書き可能\n- コンテナを削除してもイメージは残る",
+    "tags": ["docker", "image", "container", "concept"],
+    "lessonSlug": "02-docker-basics",
+    "category": "concept"
+  },
+  {
+    "id": "ch16-help-06",
+    "question": "volumeとbind mountの違いは？",
+    "answer": "どちらもデータを永続化する方法ですが、用途が異なります。\n\n| 種類 | 用途 | 例 |\n|------|------|----|\n| **Volume** | データの永続化（DB等） | `db-data:/var/lib/postgresql/data` |\n| **Bind Mount** | 開発時のコード同期 | `./src:/app/src` |\n\n**Volume:** Dockerが管理する領域にデータを保存\n**Bind Mount:** ホストの特定ディレクトリをコンテナにマウント\n\n開発時はBind Mountでコード変更を即反映、本番ではVolumeでデータを安全に保管します。",
+    "tags": ["docker", "volume", "mount", "concept"],
+    "lessonSlug": "03-docker-compose",
+    "category": "concept"
+  },
+  {
+    "id": "ch16-help-07",
+    "question": "Docker Desktopが重くてPCが遅くなる",
+    "answer": "Docker Desktopのリソース設定を調整しましょう。\n\n**設定方法：**\n1. Docker Desktop → Settings → Resources\n2. CPUとメモリの割り当てを調整\n\n**推奨設定（8GB RAMのPCの場合）：**\n- CPU: 2コア\n- Memory: 2〜3GB\n- Swap: 1GB\n\n**使わないときは停止する：**\n- メニューバーのDockerアイコン → Quit Docker Desktop\n\n**不要なイメージ・コンテナを削除：**\n```bash\ndocker system prune -a\n```",
+    "tags": ["docker", "performance", "setup"],
+    "lessonSlug": "02-docker-basics",
+    "category": "environment"
+  },
+  {
+    "id": "ch16-help-08",
+    "question": "「COPY failed: file not found」エラーの原因は？",
+    "answer": "COPYで指定したファイルがビルドコンテキスト内に見つかりません。\n\n**よくある原因：**\n\n1. **`.dockerignore`で除外されている**\n```\n# .dockerignoreを確認\nnode_modules   # ← これは除外して正しい\nsrc/           # ← これを除外すると問題になる\n```\n\n2. **パスが間違っている**\n```dockerfile\n# Dockerfileからの相対パスで指定\nCOPY ./src /app/src  # ← Dockerfileと同階層のsrc\n```\n\n3. **ビルドコンテキストが間違っている**\n```bash\n# \".\" がプロジェクトルートを指しているか確認\ndocker build -t myapp .\n```",
+    "tags": ["docker", "copy", "build", "error"],
+    "lessonSlug": "02-docker-basics",
+    "category": "syntax"
+  },
+  {
+    "id": "ch16-help-09",
+    "question": "コンテナの中に入ってデバッグしたい",
+    "answer": "実行中のコンテナにシェルで接続できます。\n\n```bash\n# 実行中のコンテナに入る\ndocker exec -it コンテナ名 sh\n\n# Composeのサービス名で入る\ndocker compose exec api sh\n\n# コンテナ内でデバッグ\nls /app\ncat /app/package.json\nenv  # 環境変数を確認\n```\n\n**exitでコンテナから出る**（コンテナは停止しません）\n```bash\nexit\n```",
+    "tags": ["docker", "debug", "exec"],
+    "lessonSlug": "02-docker-basics",
+    "category": "terminal"
+  },
+  {
+    "id": "ch16-help-10",
+    "question": "docker compose upで特定のサービスだけ再起動したい",
+    "answer": "サービス名を指定して操作できます。\n\n```bash\n# 特定サービスだけ再ビルドして起動\ndocker compose up -d --build api\n\n# 特定サービスだけ再起動\ndocker compose restart api\n\n# 特定サービスだけ停止\ndocker compose stop web\n\n# 特定サービスのログだけ表示\ndocker compose logs -f api\n```\n\n`-f` オプションでリアルタイムにログを追跡できます。",
+    "tags": ["docker-compose", "service", "command"],
+    "lessonSlug": "03-docker-compose",
+    "category": "terminal"
+  }
+]

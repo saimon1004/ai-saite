@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch18-help-01",
+    "question": "AWS、GCP、Azureのどれを選べばいい？",
+    "answer": "正解はありませんが、以下を参考にしてください。\n\n**初心者におすすめ:**\n- **GCP**: Cloud Runがシンプルで始めやすい\n- 無料枠が充実（$300クレジット）\n\n**求人・実績重視:**\n- **AWS**: 最も利用企業が多い\n- 情報が豊富で学習リソースが充実\n\n**Microsoft製品を使っている場合:**\n- **Azure**: Office 365やActive Directoryとの連携が容易\n\n**ShimaLinkの場合:**\nGCPのCloud Runから始めるのがおすすめ。Dockerイメージがあれば数コマンドでデプロイできます。",
+    "tags": ["cloud", "aws", "gcp", "azure"],
+    "lessonSlug": "02-cloud-providers",
+    "category": "concept"
+  },
+  {
+    "id": "ch18-help-02",
+    "question": "クラウドの料金が心配。予想外の高額請求が来ない？",
+    "answer": "対策を取れば安心です。\n\n**予算アラートを設定する:**\n- AWS: Billing → Budgets で上限設定\n- GCP: Billing → Budgets & alerts\n\n**無料枠を活用する:**\n- AWS: 12ヶ月の無料枠あり\n- GCP: $300クレジット + 無料枠\n\n**注意すべきポイント:**\n- リソースを使い終わったら必ず削除する\n- テスト用のインスタンスを放置しない\n- データ転送料（特に送信）に注意\n\n**月額$50以下に抑えるには:**\n- 小さなインスタンスから始める\n- サーバーレスを活用する（使わなければ$0）",
+    "tags": ["cloud", "billing", "cost"],
+    "lessonSlug": "01-cloud-concepts",
+    "category": "concept"
+  },
+  {
+    "id": "ch18-help-03",
+    "question": "gcloudコマンドのインストール方法がわからない",
+    "answer": "Google Cloud CLIのインストール手順です。\n\n**macOSの場合：**\n```bash\n# Homebrewでインストール\nbrew install --cask google-cloud-sdk\n\n# 初期設定\ngcloud init\n\n# 確認\ngcloud --version\n```\n\n**初期設定では：**\n1. Googleアカウントでログイン\n2. プロジェクトを選択（または作成）\n3. デフォルトリージョンを設定\n\n```bash\n# ログイン\ngcloud auth login\n\n# プロジェクト設定\ngcloud config set project shimalink-project\n\n# リージョン設定\ngcloud config set run/region asia-northeast1\n```",
+    "tags": ["gcloud", "install", "setup"],
+    "lessonSlug": "03-deploying-to-cloud",
+    "category": "environment"
+  },
+  {
+    "id": "ch18-help-04",
+    "question": "Cloud Runにデプロイしたが「Service Unavailable」エラーが出る",
+    "answer": "コンテナが正常に起動していない可能性があります。\n\n**確認手順：**\n\n1. **ログを確認**\n```bash\ngcloud run services logs read shimalink-web \\\n  --region asia-northeast1\n```\n\n2. **よくある原因：**\n- ポートが合っていない（Cloud Runは`PORT`環境変数を使う）\n- 環境変数が未設定\n- ヘルスチェックに失敗している\n\n3. **ポートの修正**\n```javascript\n// Cloud Runでは PORT 環境変数を使う\nconst port = process.env.PORT || 3000;\napp.listen(port);\n```\n\n4. **ローカルで同じイメージをテスト**\n```bash\ndocker run -p 3000:3000 -e PORT=3000 shimalink-web\n```",
+    "tags": ["cloud-run", "deploy", "error"],
+    "lessonSlug": "03-deploying-to-cloud",
+    "category": "environment"
+  },
+  {
+    "id": "ch18-help-05",
+    "question": "IaaS、PaaS、SaaSの違いがピンとこない",
+    "answer": "ピザに例えると分かりやすいです。\n\n| モデル | ピザの例 | IT の例 |\n|--------|---------|--------|\n| **IaaS** | 材料だけ買って自分で焼く | サーバーを借りて自分で全部設定 |\n| **PaaS** | 宅配ピザ（トッピングだけ選ぶ） | アプリをデプロイするだけ |\n| **SaaS** | レストランで食べる | 完成品を使うだけ |\n\n**ShimaLinkでの例：**\n- IaaS: EC2でサーバーを借りてDockerを自分でセットアップ\n- PaaS: Cloud Runにイメージを渡すだけで動く\n- SaaS: Google Analyticsでアクセス解析（開発不要）",
+    "tags": ["iaas", "paas", "saas", "concept"],
+    "lessonSlug": "01-cloud-concepts",
+    "category": "concept"
+  },
+  {
+    "id": "ch18-help-06",
+    "question": "ローカルのデータベースをクラウドに移行する方法は？",
+    "answer": "PostgreSQLの場合の移行手順です。\n\n**1. ローカルDBのバックアップ**\n```bash\npg_dump -h localhost -U shimalink_user shimalink > backup.sql\n```\n\n**2. クラウドDBの作成**\n- AWS RDS または GCP Cloud SQLでインスタンスを作成\n- 同じPostgreSQLバージョンを選択\n\n**3. データのインポート**\n```bash\npsql -h <クラウドDBのホスト> -U shimalink_user shimalink < backup.sql\n```\n\n**4. アプリの接続先を変更**\n```\nDATABASE_URL=postgres://user:pass@<クラウドDBホスト>:5432/shimalink\n```\n\n**注意:** 移行中はメンテナンスモードにしてデータの不整合を防ぎましょう。",
+    "tags": ["database", "migration", "postgresql"],
+    "lessonSlug": "03-deploying-to-cloud",
+    "category": "terminal"
+  },
+  {
+    "id": "ch18-help-07",
+    "question": "サーバーレス関数はどんなときに使うべき？",
+    "answer": "以下のケースに向いています。\n\n**向いている処理：**\n- イベント駆動型（メール送信、通知）\n- 定期実行（日次レポート、バックアップ）\n- 画像・動画の変換処理\n- APIのバックエンド（軽量な処理）\n\n**向いていない処理：**\n- WebSocket（常時接続）\n- 長時間実行（15分以上）\n- 大量のメモリを使う処理\n- 高頻度でコールドスタートが問題になる処理\n\n**判断基準：**\n「この処理は1日に何回呼ばれるか？」を考えてみましょう。数回〜数百回ならサーバーレスが最適です。",
+    "tags": ["serverless", "lambda", "use-case"],
+    "lessonSlug": "04-serverless",
+    "category": "concept"
+  },
+  {
+    "id": "ch18-help-08",
+    "question": "CDNとは何？なぜ必要？",
+    "answer": "**CDN（Content Delivery Network）** は、世界中にキャッシュサーバーを配置して、ユーザーに近い場所からコンテンツを配信する仕組みです。\n\n**CDNなし：**\n```\n沖縄のユーザー → 東京のサーバー（遅い）\n```\n\n**CDNあり：**\n```\n沖縄のユーザー → 沖縄に近いCDNエッジ（速い）\n```\n\n**ShimaLinkでの効果：**\n- 画像やCSS/JSの配信が高速化\n- サーバーへの負荷が軽減\n- DDoS攻撃からの保護\n\n**主なCDNサービス：**\n- AWS CloudFront\n- GCP Cloud CDN\n- Cloudflare（無料プランあり）",
+    "tags": ["cdn", "performance", "network"],
+    "lessonSlug": "02-cloud-providers",
+    "category": "concept"
+  },
+  {
+    "id": "ch18-help-09",
+    "question": "クラウドのセキュリティは大丈夫？",
+    "answer": "クラウドプロバイダーは世界最高水準のセキュリティを提供しています。ただし、**共有責任モデル**を理解することが重要です。\n\n| 責任範囲 | プロバイダーの責任 | 利用者の責任 |\n|---------|-----------------|------------|\n| 物理セキュリティ | データセンターの管理 | - |\n| ネットワーク | 基盤の暗号化 | ファイアウォール設定 |\n| OS | パッチ適用（PaaS） | パッチ適用（IaaS） |\n| アプリ | - | コードのセキュリティ |\n| データ | 暗号化基盤の提供 | アクセス制御の設定 |\n\n**最低限やるべきこと：**\n- IAMで最小権限の原則を適用\n- シークレットを環境変数で管理\n- VPCでネットワークを分離\n- 通信はHTTPSを使用",
+    "tags": ["cloud", "security", "iam"],
+    "lessonSlug": "01-cloud-concepts",
+    "category": "concept"
+  },
+  {
+    "id": "ch18-help-10",
+    "question": "AWS CLIのインストールと初期設定方法は？",
+    "answer": "AWS CLIのセットアップ手順です。\n\n**macOSの場合：**\n```bash\n# Homebrewでインストール\nbrew install awscli\n\n# 確認\naws --version\n```\n\n**初期設定：**\n```bash\naws configure\n# AWS Access Key ID: （IAMで作成したキー）\n# AWS Secret Access Key: （シークレットキー）\n# Default region: ap-northeast-1\n# Default output format: json\n```\n\n**IAMユーザーの作成：**\n1. AWSコンソール → IAM → ユーザー\n2. 「ユーザーを追加」\n3. プログラムによるアクセスを有効化\n4. 必要な権限ポリシーをアタッチ\n5. アクセスキーを安全に保管\n\n**注意:** ルートアカウントのキーは絶対に使わないでください。",
+    "tags": ["aws", "cli", "setup"],
+    "lessonSlug": "03-deploying-to-cloud",
+    "category": "environment"
+  }
+]

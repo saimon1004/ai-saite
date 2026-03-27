@@ -1,0 +1,109 @@
+[
+  {
+    "id": "ch04-q01",
+    "question": "JavaScriptで変更しない値を宣言するキーワードはどれ？",
+    "choices": ["var", "let", "const", "static"],
+    "correctIndex": 2,
+    "explanation": "const は再代入できない定数を宣言します。let は再代入可能な変数、var は古い書き方で現在は非推奨です。static はクラス内で使うキーワードです。",
+    "storyContext": "カフェの名前や最大席数など、変わらない値をconst で定義したよね。",
+    "skill": { "category": "programming", "name": "JavaScript基礎", "level": "intro" }
+  },
+  {
+    "id": "ch04-q02",
+    "question": "テンプレートリテラルで変数を埋め込む正しい書き方はどれ？",
+    "choices": [
+      "'Hello, ' + name",
+      "`Hello, ${name}`",
+      "\"Hello, #{name}\"",
+      "`Hello, {name}`"
+    ],
+    "correctIndex": 1,
+    "explanation": "テンプレートリテラルはバッククォート（`）で囲み、${} で変数を埋め込みます。+で連結する方法も動作しますが、テンプレートリテラルの方が読みやすいです。",
+    "storyContext": "予約確認メッセージに名前や人数を埋め込むときに使ったよね。",
+    "skill": { "category": "programming", "name": "JavaScript基礎", "level": "intro" }
+  },
+  {
+    "id": "ch04-q03",
+    "question": "document.querySelector('.menu-card') は何を返す？",
+    "choices": [
+      "class='menu-card' を持つすべての要素",
+      "class='menu-card' を持つ最初の要素",
+      "id='menu-card' を持つ要素",
+      "タグ名が menu-card の要素"
+    ],
+    "correctIndex": 1,
+    "explanation": "querySelector はCSSセレクタに一致する最初の要素を1つだけ返します。すべて取得するには querySelectorAll を使います。.はクラスセレクタ、#がIDセレクタです。",
+    "storyContext": "メニューカードをJavaScriptで操作するために、まず要素を取得したよね。",
+    "skill": { "category": "programming", "name": "DOM操作", "level": "intro" }
+  },
+  {
+    "id": "ch04-q04",
+    "question": "要素のCSSクラスを付け外しする（あれば外す、なければ付ける）メソッドはどれ？",
+    "choices": [
+      "classList.add()",
+      "classList.remove()",
+      "classList.toggle()",
+      "classList.switch()"
+    ],
+    "correctIndex": 2,
+    "explanation": "classList.toggle() はクラスが存在すれば削除し、存在しなければ追加します。ハンバーガーメニューの開閉など、状態を切り替える場面で便利です。add は追加のみ、remove は削除のみです。",
+    "storyContext": "ハンバーガーメニューの開閉で、openクラスを付けたり外したりしたよね。",
+    "skill": { "category": "programming", "name": "DOM操作", "level": "intro" }
+  },
+  {
+    "id": "ch04-q05",
+    "question": "フォームのsubmitイベントで event.preventDefault() を呼ぶ理由は？",
+    "choices": [
+      "フォームのスタイルをリセットするため",
+      "ブラウザのデフォルト送信（ページ遷移）を防ぐため",
+      "入力値をクリアするため",
+      "バリデーションエラーを表示するため"
+    ],
+    "correctIndex": 1,
+    "explanation": "フォームのデフォルト動作はページ遷移を伴う送信です。event.preventDefault() でこれを防ぎ、JavaScriptで送信処理やバリデーションを行うことができます。",
+    "storyContext": "予約フォームの送信をJavaScriptで処理するために使った重要なメソッドだ。",
+    "skill": { "category": "programming", "name": "イベント処理", "level": "intro" }
+  },
+  {
+    "id": "ch04-q06",
+    "question": "アロー関数の正しい書き方はどれ？",
+    "choices": [
+      "const add = (a, b) -> a + b;",
+      "const add = (a, b) => a + b;",
+      "const add = function=> (a, b) { a + b };",
+      "const add = (a, b) >> a + b;"
+    ],
+    "correctIndex": 1,
+    "explanation": "アロー関数は => を使って定義します。引数が1つの場合は括弧を省略でき、本体が1式の場合は {} と return を省略できます。-> はJavaScriptでは使いません。",
+    "storyContext": "メニューの絞り込みやコールバック関数で、何度もアロー関数を使ったね。",
+    "skill": { "category": "programming", "name": "JavaScript基礎", "level": "intro" }
+  },
+  {
+    "id": "ch04-q07",
+    "question": "配列 [10, 20, 30] から20以上の要素だけを取り出すメソッドはどれ？",
+    "choices": [
+      "array.map(n => n >= 20)",
+      "array.find(n => n >= 20)",
+      "array.filter(n => n >= 20)",
+      "array.forEach(n => n >= 20)"
+    ],
+    "correctIndex": 2,
+    "explanation": "filter は条件に合う要素だけの新しい配列を返します。map は各要素を変換した配列を返し、find は条件に合う最初の1つだけを返します。forEach は戻り値がありません。",
+    "storyContext": "メニューをカテゴリで絞り込むときに使った配列メソッドだ。",
+    "skill": { "category": "programming", "name": "JavaScript基礎", "level": "intro" }
+  },
+  {
+    "id": "ch04-q08",
+    "question": "要素のテキスト内容を安全に変更するプロパティはどれ？",
+    "choices": [
+      "innerHTML",
+      "textContent",
+      "innerText",
+      "outerHTML"
+    ],
+    "correctIndex": 1,
+    "explanation": "textContent はプレーンテキストとして扱うため、HTMLタグが挿入されず安全です。innerHTML はHTMLを解釈するため、悪意のあるスクリプトが注入されるXSSの危険があります。",
+    "storyContext": "予約確認メッセージの表示で、安全な方法としてYukiが教えてくれたよね。",
+    "skill": { "category": "programming", "name": "DOM操作", "level": "intro" }
+  }
+]

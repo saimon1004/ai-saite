@@ -1,0 +1,861 @@
+---
+title: "AIとの共創"
+subtitle: "大規模言語モデルでShimaLinkを進化させる"
+description: "大規模言語モデルでShimaLinkを進化させる。AI Concepts・LLM Integration・Prompt Engineeringを実践的なストーリーで学ぶチャプター「AIとの共創」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-24
+chapter: 24
+arc: "beyond"
+arcName: "飛躍編"
+skills:
+  - { category: "ai", name: "AI Concepts", level: "intro" }
+  - { category: "ai", name: "LLM Integration", level: "intro" }
+  - { category: "ai", name: "Prompt Engineering", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["23-performance-tuning"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+ShimaLinkは順調に成長していた。しかし、あなたがある日、興奮した様子でチームに提案した。
+
+---
+
+**あなた:** 「みんな、ChatGPTとかClaude使ったことある？あれをShimaLinkに組み込めたらすごくない？」
+
+**Mika:** 「実は私も考えてた。お店のオーナーさんから『紹介文を書くのが苦手』って相談が多いの。AIで自動生成できたらすごく助かるって。」
+
+**あなた:** 「カスタマーサポートのチャットボットも需要ありそうだよね。よくある質問に24時間自動で答えられたら、Mikaの負担も減るし。」
+
+**あなた:** 「でも、AIって機械学習とか数学とか、めちゃくちゃ難しい知識が必要じゃない？」
+
+---
+
+Yukiがコーヒーを飲みながら、にやりと笑った。
+
+**Yuki:** 「実はね、最近のAIはAPIを呼ぶだけで使えるんだよ。数学の知識は不要。必要なのは**プロンプトエンジニアリング**——AIへの"聞き方"の技術。」
+
+**あなた:** 「え、それだけ？」
+
+**Yuki:** 「もちろん、AIの仕組みを理解しているに越したことはないけど、開発者として活用するには"どう指示を出すか"が9割。料理人にならなくても、正確な注文ができればおいしい料理が出てくるでしょ？」
+
+**あなた:** 「具体的にはどんな機能が作れるんですか？」
+
+**Yuki:** 「ShimaLinkの場合だと...」
+
+Yukiがホワイトボードに書き出した。
+
+```
+1. 店舗紹介文の自動生成
+2. カスタマーサポートチャットボット
+3. レビューの要約・感情分析
+4. おすすめ店舗のパーソナライズ
+```
+
+**Mika:** 「全部欲しい！」
+
+**Yuki:** 「まずはAIの基礎を理解して、APIの使い方を覚えて、それからShimaLinkに組み込もう。大事なのは**AIに任せていいこと**と**人間が判断すべきこと**の線引きだよ。」
+
+---
+
+ShimaLinkのAI機能開発が始まる。テクノロジーの最前線に挑戦する時が来た。
+
+</StoryPanel>
+
+## AI/ML基礎 — 開発者が知るべき基本概念
+
+AIをサービスに組み込む前に、仕組みを理解しよう。深い数学は不要。概念がわかれば十分だ。
+
+> **Yuki:** 「AIを使うのに博士号は要らない。でも、何ができて何ができないかは知っておくべきだよ。」
+
+## AI・ML・LLMの違い
+
+```
+AI (人工知能)
+└── ML (機械学習)
+    └── Deep Learning (深層学習)
+        └── LLM (大規模言語モデル)
+            └── ChatGPT, Claude, Gemini...
+```
+
+| 用語 | 意味 | 例 |
+|------|------|-----|
+| **AI** | 人間の知能を模倣する技術全般 | 音声認識、画像認識、自動運転 |
+| **ML** | データからパターンを学習する技術 | スパムフィルタ、おすすめ機能 |
+| **Deep Learning** | ニューラルネットワークによるML | 画像分類、音声合成 |
+| **LLM** | 大量のテキストで学習した言語モデル | ChatGPT, Claude |
+
+## LLM（大規模言語モデル）の仕組み
+
+LLMは「次に来る単語を予測する」ことで文章を生成します。
+
+```
+入力: 「沖縄で人気の」
+LLMの予測: 「観光」(40%) 「グルメ」(25%) 「ビーチ」(20%) ...
+→ 「沖縄で人気の観光スポットは...」
+```
+
+### 主要なLLM
+
+| モデル | 提供元 | 特徴 |
+|-------|-------|------|
+| **GPT-4** | OpenAI | 高い汎用性、APIが充実 |
+| **Claude** | Anthropic | 長文処理が得意、安全性重視 |
+| **Gemini** | Google | マルチモーダル（画像も理解） |
+| **Llama** | Meta | オープンソース、自前運用可能 |
+
+## AIの得意・不得意
+
+### 得意なこと
+
+| タスク | 例 |
+|-------|-----|
+| テキスト生成 | 紹介文、メール文面の作成 |
+| 要約 | レビューの要点抽出 |
+| 翻訳 | 多言語対応 |
+| 分類 | レビューのポジティブ/ネガティブ判定 |
+| コード生成 | ボイラープレートの自動生成 |
+
+### 不得意なこと
+
+| 弱点 | 説明 |
+|------|------|
+| **ハルシネーション** | もっともらしいが間違った情報を生成 |
+| **最新情報** | 学習データ以降の情報は知らない |
+| **正確な計算** | 数学の計算は苦手なことがある |
+| **一貫性** | 同じ質問でも毎回異なる回答 |
+| **個人情報** | 送信したデータがどう扱われるか注意が必要 |
+
+## AIを安全に使うための原則
+
+```
+1. AIの出力は「下書き」として扱う（人間がレビュー）
+2. 個人情報・機密情報をAIに送らない
+3. AIの判断を最終決定にしない
+4. ハルシネーションを前提にファクトチェックする
+5. 利用規約とプライバシーポリシーを確認する
+```
+
+## AIの倫理とバイアス
+
+```
+考慮すべき点:
+├── バイアス: 学習データの偏りが出力に反映される
+├── 公平性: 特定のグループに不利な結果を生まないか
+├── 透明性: AIが判断した理由を説明できるか
+├── プライバシー: ユーザーデータの取り扱い
+└── 責任: AIの出力に対する責任は誰にあるか
+```
+
+> **Yuki:** 「AIはツール。包丁と同じで、使い方次第で便利にも危険にもなる。開発者として、倫理的な使い方を常に意識しよう。」
+
+## ShimaLinkでのAI活用方針
+
+| 機能 | AIの役割 | 人間の役割 |
+|------|---------|-----------|
+| 紹介文生成 | 下書きを生成 | オーナーが確認・編集 |
+| チャットボット | よくある質問に自動回答 | 複雑な質問は人間が対応 |
+| レビュー分析 | 傾向を自動集計 | 改善策は人間が判断 |
+| おすすめ | 候補を提案 | 最終表示は人間が確認 |
+
+## ポイント
+
+- LLMは「次の単語を予測する」仕組みで文章を生成する
+- ハルシネーション（もっともらしい嘘）に注意が必要
+- AIの出力は「下書き」として扱い、人間が最終確認する
+- 個人情報や機密情報をAIに送らない
+- AIの倫理（バイアス、公平性、透明性）を常に意識する
+
+## LLM APIの統合 — AIをサービスに組み込む
+
+基礎概念を理解したら、実際にAPIを呼んでみよう。
+
+> **Yuki:** 「AIの統合は、結局のところAPIコール。HTTPリクエストが書ければ、AIが使えるよ。」
+
+## OpenAI APIの基本
+
+### APIキーの取得
+
+```bash
+# 環境変数で管理（ハードコーディング厳禁!）
+export OPENAI_API_KEY="sk-..."
+```
+
+### Node.jsでの使用
+
+```bash
+npm install openai
+```
+
+```typescript
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+async function generateText(prompt: string): Promise<string> {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4",
+    messages: [
+      { role: "system", content: "あなたは沖縄の観光に詳しいアシスタントです。" },
+      { role: "user", content: prompt }
+    ],
+    max_tokens: 500,
+    temperature: 0.7,
+  });
+
+  return response.choices[0].message.content || "";
+}
+
+// 使用例
+const description = await generateText(
+  "海風テラスというカフェの紹介文を書いてください。海が見えるテラス席が人気です。"
+);
+console.log(description);
+```
+
+## APIのパラメータ
+
+| パラメータ | 説明 | 目安 |
+|-----------|------|------|
+| `model` | 使用するモデル | gpt-4, gpt-3.5-turbo |
+| `temperature` | 創造性の度合い（0-2） | 0.7が標準的 |
+| `max_tokens` | 最大トークン数 | 応答の長さ制限 |
+| `top_p` | 候補の絞り込み（0-1） | temperatureと併用は非推奨 |
+
+### temperatureの使い分け
+
+| 値 | 用途 | 例 |
+|---|------|-----|
+| 0.0 | 正確さ重視 | データ抽出、分類 |
+| 0.3 | やや正確 | FAQ回答、要約 |
+| 0.7 | バランス | 紹介文生成、メール作成 |
+| 1.0+ | 創造性重視 | キャッチコピー、アイデア出し |
+
+## メッセージの役割（Roles）
+
+```typescript
+const messages = [
+  // system: AIの人格・ルールを定義
+  {
+    role: "system",
+    content: "あなたはShimaLinkの店舗紹介文ライターです。沖縄の魅力を伝える温かい文体で書いてください。200文字以内で。"
+  },
+  // user: ユーザーの入力
+  {
+    role: "user",
+    content: "店名: 海風テラス\nカテゴリ: カフェ\n特徴: オーシャンビュー、自家焙煎コーヒー"
+  },
+  // assistant: AIの過去の応答（会話の継続に使用）
+  {
+    role: "assistant",
+    content: "碧い海を眺めながら、丁寧に焙煎されたコーヒーの香りに包まれる..."
+  },
+  // user: 続きの指示
+  {
+    role: "user",
+    content: "もう少しカジュアルな文体にしてください。"
+  }
+];
+```
+
+## 店舗紹介文ジェネレーターの実装
+
+```typescript
+// src/services/ai/descriptionGenerator.ts
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+
+interface ShopInfo {
+  name: string;
+  category: string;
+  features: string[];
+  location: string;
+}
+
+export async function generateShopDescription(shop: ShopInfo): Promise<string> {
+  const prompt = `
+以下のお店の紹介文を作成してください。
+
+店舗名: ${shop.name}
+カテゴリ: ${shop.category}
+特徴: ${shop.features.join("、")}
+場所: ${shop.location}
+
+条件:
+- 200文字以内
+- 沖縄の魅力が伝わる温かい文体
+- お店の特徴を具体的に盛り込む
+- 来店意欲が湧く表現
+`;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: "あなたはShimaLinkの店舗紹介文ライターです。沖縄のローカルビジネスの魅力を引き出す文章を書きます。"
+        },
+        { role: "user", content: prompt }
+      ],
+      max_tokens: 300,
+      temperature: 0.7,
+    });
+
+    return response.choices[0].message.content || "紹介文の生成に失敗しました";
+  } catch (error) {
+    console.error("AI API Error:", error);
+    throw new Error("紹介文の生成に失敗しました。しばらく経ってから再試行してください。");
+  }
+}
+```
+
+## APIのエラーハンドリング
+
+```typescript
+import { RateLimitError, APIError } from "openai";
+
+async function safeAICall(prompt: string, retries = 3): Promise<string> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await generateText(prompt);
+    } catch (error) {
+      if (error instanceof RateLimitError) {
+        // レート制限: 待ってからリトライ
+        const waitTime = Math.pow(2, i) * 1000; // 指数バックオフ
+        console.log(`Rate limited. Waiting ${waitTime}ms...`);
+        await new Promise(r => setTimeout(r, waitTime));
+        continue;
+      }
+      if (error instanceof APIError && error.status >= 500) {
+        // サーバーエラー: リトライ
+        continue;
+      }
+      // その他のエラー: 即座に失敗
+      throw error;
+    }
+  }
+  throw new Error("AI APIの呼び出しに失敗しました（リトライ上限）");
+}
+```
+
+## コスト管理
+
+| モデル | 入力コスト | 出力コスト |
+|-------|-----------|-----------|
+| GPT-4 | 高い | 高い |
+| GPT-3.5 | 低い | 低い |
+
+```typescript
+// コスト削減の工夫
+const config = {
+  // 1. 簡単なタスクには軽いモデルを使う
+  simpleModel: "gpt-3.5-turbo",  // 分類、簡単な質問
+  advancedModel: "gpt-4",        // 複雑な生成タスク
+
+  // 2. max_tokensを適切に制限
+  maxTokens: 300,  // 不必要に長い応答を防ぐ
+
+  // 3. キャッシュで同じリクエストを避ける
+  cacheEnabled: true,
+  cacheTTL: 3600,  // 1時間
+};
+```
+
+## ポイント
+
+- LLM APIはHTTPリクエストで呼べる。複雑な機械学習の知識は不要
+- APIキーは環境変数で管理し、ソースコードにハードコーディングしない
+- temperatureで創造性を制御（0=正確、1=創造的）
+- エラーハンドリングとリトライ戦略を必ず実装する
+- コスト管理のために、タスクに応じたモデル選択とキャッシュを活用する
+
+## プロンプトエンジニアリング — AIへの「聞き方」の技術
+
+AIの出力品質の80%は、プロンプト（指示文）で決まる。
+
+> **Yuki:** 「AIは優秀なインターン。能力は高いけど、指示が曖昧だと期待通りの結果は出ない。良いプロンプトを書けるかが勝負だよ。」
+
+## プロンプトの基本構造
+
+```
+[役割] あなたは〇〇です
+[コンテキスト] 背景情報・制約条件
+[タスク] 具体的にやってほしいこと
+[フォーマット] 出力の形式
+[例] 期待する出力の例
+```
+
+## テクニック1: 役割を与える
+
+```
+# 悪い例
+「カフェの紹介文を書いて」
+
+# 良い例
+「あなたは沖縄の観光ライターです。地元の魅力を引き出す温かい文体が得意です。
+以下のカフェの紹介文を200文字以内で書いてください。」
+```
+
+## テクニック2: 具体的に指示する
+
+```
+# 悪い例
+「ShimaLinkについて説明して」
+
+# 良い例
+「ShimaLinkは沖縄のローカルビジネス向けWebプラットフォームです。
+以下の3点について、それぞれ50文字以内で説明してください:
+1. サービスの概要
+2. 主な機能
+3. ターゲットユーザー」
+```
+
+## テクニック3: Few-shot（例を提示する）
+
+```
+以下の形式でお店の紹介文を作成してください。
+
+### 例1
+店名: 島そば屋
+紹介文: 三代続く老舗の味。モチモチの自家製麺と、鰹と豚骨の黄金スープ。那覇の路地裏に佇む、地元民が愛する一杯。
+
+### 例2
+店名: 美ら海ダイニング
+紹介文: 恩納村の高台から望む絶景と、県産食材にこだわったイタリアン。特別な夜を演出する、大人のための隠れ家レストラン。
+
+### あなたの番
+店名: 海風テラス
+カテゴリ: カフェ
+特徴: オーシャンビュー、自家焙煎コーヒー、手作りスイーツ
+紹介文:
+```
+
+## テクニック4: Chain of Thought（思考の連鎖）
+
+複雑なタスクでは、AIに段階的に考えさせる。
+
+```
+以下のレビューを分析してください。
+
+レビュー: 「景色は最高だったけど、料理が出てくるのに30分以上待った。
+味は普通。でもスタッフの対応は丁寧だった。」
+
+まず、以下のステップで分析してください:
+1. ポジティブな点を列挙
+2. ネガティブな点を列挙
+3. 総合的な感情（positive/neutral/negative）を判定
+4. 改善すべき点を1つ提案
+
+出力形式:
+{
+  "positive": [...],
+  "negative": [...],
+  "sentiment": "...",
+  "suggestion": "..."
+}
+```
+
+## テクニック5: 制約を明確にする
+
+```
+## 制約条件
+- 200文字以内で書くこと
+- 沖縄の方言は使わないこと
+- 事実に基づかない情報は含めないこと
+- 競合他社の名前を出さないこと
+- 価格は記載しないこと（変動するため）
+
+## 出力形式
+JSON形式で以下のフィールドを含むこと:
+{
+  "title": "キャッチコピー（20文字以内）",
+  "body": "本文（200文字以内）",
+  "tags": ["タグ1", "タグ2", "タグ3"]
+}
+```
+
+## プロンプトの改善サイクル
+
+```
+  ┌──────────────────┐
+  │  1. プロンプト作成  │
+  └────────┬─────────┘
+           ▼
+  ┌──────────────────┐
+  │  2. 出力を確認     │
+  └────────┬─────────┘
+           ▼
+  ┌──────────────────┐
+  │  3. 問題を特定     │ ← 不正確？長すぎ？形式違い？
+  └────────┬─────────┘
+           ▼
+  ┌──────────────────┐
+  │  4. プロンプトを修正 │
+  └────────┬─────────┘
+           │
+           └──→ 1に戻る
+```
+
+## 実践: ShimaLinkのプロンプトテンプレート
+
+```typescript
+// src/prompts/shopDescription.ts
+
+export function buildShopDescriptionPrompt(shop: ShopInfo): string {
+  return `
+あなたはShimaLinkの店舗紹介ライターです。
+沖縄のローカルビジネスの魅力を引き出す、温かく親しみやすい文章を書きます。
+
+## タスク
+以下の店舗情報をもとに、紹介文を作成してください。
+
+## 店舗情報
+- 店名: ${shop.name}
+- カテゴリ: ${shop.category}
+- 特徴: ${shop.features.join("、")}
+- 場所: ${shop.location}
+
+## 制約
+- 150〜200文字
+- 事実に基づかない情報は含めない
+- 来店意欲が湧く表現を使う
+- 価格情報は含めない
+
+## 出力形式
+紹介文のみを出力してください（説明や前置きは不要）。
+`.trim();
+}
+```
+
+## アンチパターン
+
+| やりがち | 改善例 |
+|---------|-------|
+| 「いい感じに書いて」 | 具体的な条件・形式を指定 |
+| 一度に複数タスク | タスクを分割して1つずつ |
+| 長すぎるプロンプト | 本質に絞って簡潔に |
+| 例なしで形式を要求 | Few-shotで例を提示 |
+| 「絶対に間違えないで」 | 検証ステップを入れる |
+
+## ポイント
+
+- プロンプトの品質がAI出力の品質を決める
+- 役割・コンテキスト・タスク・フォーマット・例を構造化する
+- Few-shot（例の提示）でAIの理解度が劇的に向上する
+- Chain of Thoughtで複雑な推論タスクを段階的に処理する
+- プロンプトは反復的に改善する（作成 → 確認 → 修正のサイクル）
+
+## AI機能の実装 — ShimaLinkをAIで強化する
+
+学んだ知識を使って、ShimaLinkに実際のAI機能を組み込もう。
+
+> **Yuki:** 「理論は十分。ここからは実装。ユーザーが本当に喜ぶAI機能を作ろう。」
+
+## 機能1: カスタマーサポートチャットボット
+
+```typescript
+// src/services/ai/chatbot.ts
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+
+// ShimaLinkのFAQデータ
+const FAQ_CONTEXT = `
+ShimaLinkは沖縄のローカルビジネス向けWebプラットフォームです。
+
+よくある質問:
+- 料金: 基本プランは月額3,000円、プレミアムは月額8,000円
+- 対応エリア: 沖縄県全域
+- 機能: 店舗ページ作成、予約管理、口コミ管理、アクセス分析
+- 解約: いつでも可能、違約金なし
+- サポート: 平日10:00-18:00（メール・チャット）
+`;
+
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export async function chatWithBot(
+  userMessage: string,
+  history: ChatMessage[] = []
+): Promise<string> {
+  const messages = [
+    {
+      role: "system" as const,
+      content: `あなたはShimaLinkのカスタマーサポートAIアシスタントです。
+
+${FAQ_CONTEXT}
+
+ルール:
+- 丁寧で親しみやすい対応
+- ShimaLinkに関する質問のみ回答する
+- わからないことは「担当者にお繋ぎします」と案内する
+- 個人情報は聞かない
+- 回答は簡潔に（100文字以内が理想）`
+    },
+    ...history.map(msg => ({
+      role: msg.role as "user" | "assistant",
+      content: msg.content
+    })),
+    { role: "user" as const, content: userMessage }
+  ];
+
+  const response = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",  // チャットには軽量モデルで十分
+    messages,
+    max_tokens: 200,
+    temperature: 0.3,  // 正確さ重視
+  });
+
+  return response.choices[0].message.content || "申し訳ございません。回答を生成できませんでした。";
+}
+```
+
+## 機能2: レビュー分析
+
+```typescript
+// src/services/ai/reviewAnalyzer.ts
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+
+interface ReviewAnalysis {
+  sentiment: "positive" | "neutral" | "negative";
+  score: number;        // 1-5
+  keywords: string[];   // キーワード
+  summary: string;      // 一言要約
+  improvements: string[]; // 改善提案
+}
+
+export async function analyzeReviews(
+  reviews: string[]
+): Promise<ReviewAnalysis> {
+  const prompt = `
+以下のレビュー群を分析してください。
+
+レビュー:
+${reviews.map((r, i) => `${i + 1}. ${r}`).join("\n")}
+
+以下のJSON形式で分析結果を出力してください:
+{
+  "sentiment": "positive" | "neutral" | "negative",
+  "score": 1〜5の数値,
+  "keywords": ["頻出キーワード1", "キーワード2", "キーワード3"],
+  "summary": "レビュー全体の一言要約（50文字以内）",
+  "improvements": ["改善提案1", "改善提案2"]
+}
+
+JSONのみを出力してください。
+`;
+
+  const response = await openai.chat.completions.create({
+    model: "gpt-4",
+    messages: [
+      { role: "system", content: "あなたはレビュー分析の専門家です。" },
+      { role: "user", content: prompt }
+    ],
+    max_tokens: 300,
+    temperature: 0.2,  // 分析は正確さ重視
+  });
+
+  const content = response.choices[0].message.content || "{}";
+
+  try {
+    return JSON.parse(content);
+  } catch {
+    throw new Error("AIの応答をパースできませんでした");
+  }
+}
+```
+
+## 機能3: APIエンドポイントの設計
+
+```typescript
+// src/api/ai.ts
+import express from "express";
+import { generateShopDescription } from "../services/ai/descriptionGenerator";
+import { chatWithBot } from "../services/ai/chatbot";
+import { analyzeReviews } from "../services/ai/reviewAnalyzer";
+import { rateLimit } from "express-rate-limit";
+
+const router = express.Router();
+
+// レート制限（AI APIのコスト対策）
+const aiLimiter = rateLimit({
+  windowMs: 60 * 1000,  // 1分
+  max: 10,               // 1分あたり10リクエスト
+  message: { error: "リクエストが多すぎます。1分後に再試行してください。" }
+});
+
+router.use(aiLimiter);
+
+// 紹介文生成
+router.post("/generate-description", async (req, res) => {
+  try {
+    const { name, category, features, location } = req.body;
+
+    if (!name || !category) {
+      return res.status(400).json({ error: "店名とカテゴリは必須です" });
+    }
+
+    const description = await generateShopDescription({
+      name, category, features: features || [], location: location || "沖縄"
+    });
+
+    res.json({ description, isAIGenerated: true });
+  } catch (error) {
+    console.error("Description generation failed:", error);
+    res.status(500).json({ error: "紹介文の生成に失敗しました" });
+  }
+});
+
+// チャットボット
+router.post("/chat", async (req, res) => {
+  try {
+    const { message, history } = req.body;
+    const response = await chatWithBot(message, history || []);
+    res.json({ response });
+  } catch (error) {
+    res.status(500).json({ error: "チャットの処理に失敗しました" });
+  }
+});
+
+// レビュー分析
+router.post("/analyze-reviews", async (req, res) => {
+  try {
+    const { reviews } = req.body;
+    const analysis = await analyzeReviews(reviews);
+    res.json(analysis);
+  } catch (error) {
+    res.status(500).json({ error: "レビュー分析に失敗しました" });
+  }
+});
+
+export default router;
+```
+
+## RAG（Retrieval-Augmented Generation）の概念
+
+チャットボットをさらに賢くするために、ShimaLinkのデータを検索してからAIに渡す。
+
+```
+ユーザーの質問
+    ↓
+[検索] ShimaLinkのFAQ/ドキュメントから関連情報を取得
+    ↓
+[生成] 取得した情報 + 質問をAIに渡す
+    ↓
+根拠のある回答
+```
+
+```typescript
+// RAGの簡易実装
+async function ragChat(question: string): Promise<string> {
+  // 1. 関連ドキュメントを検索
+  const relevantDocs = await searchFAQ(question);
+
+  // 2. コンテキストとして提供
+  const context = relevantDocs.map(d => d.content).join("\n");
+
+  // 3. AIに質問
+  const response = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        role: "system",
+        content: `以下の情報をもとに質問に回答してください。
+情報に含まれない内容は「確認が必要です」と答えてください。
+
+参考情報:
+${context}`
+      },
+      { role: "user", content: question }
+    ],
+    temperature: 0.2,
+  });
+
+  return response.choices[0].message.content || "";
+}
+```
+
+## AI機能のテスト
+
+```typescript
+// src/services/ai/__tests__/chatbot.test.ts
+import { chatWithBot } from "../chatbot";
+
+// APIをモック
+jest.mock("openai");
+
+describe("chatWithBot", () => {
+  test("ShimaLinkの料金について正しく回答する", async () => {
+    const response = await chatWithBot("料金はいくらですか？");
+    expect(response).toContain("3,000円");
+  });
+
+  test("範囲外の質問には担当者を案内する", async () => {
+    const response = await chatWithBot("明日の天気は？");
+    expect(response).toContain("担当者");
+  });
+});
+```
+
+## ポイント
+
+- AI機能はAPIエンドポイントとして設計し、フロントエンドから呼ぶ
+- レート制限でAPI呼び出しコストを管理する
+- AIの応答は必ずバリデーション・パースする（JSON等）
+- RAGパターンで自社データに基づいた回答を実現できる
+- テストではAI APIをモックして安定したテストを書く
+- AI出力には「AI生成」フラグを付けて透明性を確保する
+
+<StoryPanel variant="conclusion">
+
+ShimaLinkにAI機能をリリースして1週間。反響は予想以上だった。
+
+---
+
+**Mika:** 「すごい...紹介文ジェネレーター、もう50店舗が使ってくれてる。『自分では思いつかない表現で書いてくれた』って喜ばれてるよ！」
+
+**あなた:** 「チャットボットも好評。よくある質問の80%は自動で回答できてる。Mikaの対応件数が半分になったでしょ？」
+
+**Mika:** 「おかげで、AIが対応できない複雑な案件に集中できるようになった。人間にしかできないことに時間を使える。」
+
+**あなた:** 「でも、AIが時々おかしな回答をすることもあるよね。昨日、『沖縄のお店なのに北海道のグルメを勧めた』ケースがあった。」
+
+**Yuki:** 「そう、それが大事な気づき。AIは万能じゃない。**ハルシネーション**——もっともらしいけど間違った情報を生成することがある。だからこそ、人間のレビューの仕組みが必要なんだ。」
+
+**あなた:** 「AIの出力を100%信頼するんじゃなくて、"下書き"として使って人間が確認する。そのバランスが大事ってことだね。」
+
+**Yuki:** 「その通り。AIは最高のアシスタントだけど、最終判断は人間がする。この原則を忘れなければ、AIは強力な武器になる。」
+
+---
+
+**あなた:** 「ShimaLinkも、僕たちも、ここまで成長したんですね。Chapter 1でターミナルの使い方も知らなかったのに...」
+
+**Yuki:** 「実は、そのことで話したいことがあるんだ。覚えてる？ShimaLinkを襲ったあの攻撃と、謎の人物"Shadow"のことを。」
+
+**あなた:** 「...まさか、Shadowの正体がわかったの？」
+
+**Yuki:** 「うん。実はね——」
+
+---
+
+> **次のチャプター**: *Chapter 25: 未来への一歩* — 最終章。Shadowの正体が明かされ、ShimaLink1周年を迎える。チームの旅を振り返り、未来へ踏み出す。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="24-ai-integration" />
+
+<ChapterFaq chapterId="24-ai-integration" />
+
+<SeriesNav current={24} />

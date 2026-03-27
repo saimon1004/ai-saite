@@ -1,0 +1,81 @@
+[
+  {
+    "id": "ch01-help-01",
+    "question": "HTMLファイルをブラウザで開いても何も表示されない",
+    "answer": "以下を確認してください：\n\n1. **ファイル拡張子**が `.html` になっているか（`.txt` や拡張子なしではないか）\n2. **`<html>`, `<body>` タグ**が正しく閉じているか\n3. ブラウザのアドレスバーが `file:///...` で始まっているか確認\n4. ファイルを**ダブルクリック**で開くか、ブラウザにドラッグ＆ドロップしてみる\n\n```html\n<!-- 最小限の正しいHTML -->\n<!DOCTYPE html>\n<html>\n<head><title>テスト</title></head>\n<body>\n  <h1>Hello!</h1>\n</body>\n</html>\n```",
+    "tags": ["html", "browser", "display"],
+    "lessonSlug": "02-html-first-page",
+    "category": "display"
+  },
+  {
+    "id": "ch01-help-02",
+    "question": "ターミナルで「command not found」と表示される",
+    "answer": "このエラーは入力したコマンドが見つからないという意味です。\n\n**よくある原因：**\n- コマンドの**スペルミス**（`lss` → `ls`、`pws` → `pwd`）\n- **大文字・小文字の間違い**（Macのターミナルでは区別される）\n- そのコマンドが**インストールされていない**\n\n```bash\n# まず基本コマンドが動くか確認\npwd\nls\necho \"Hello\"\n```\n\nこれらが動かない場合は、ターミナルアプリ自体に問題がある可能性があります。",
+    "tags": ["terminal", "command", "error"],
+    "lessonSlug": "01-terminal-basics",
+    "category": "terminal"
+  },
+  {
+    "id": "ch01-help-03",
+    "question": "mkdirでフォルダを作ったのに見つからない",
+    "answer": "**`pwd` で今いる場所を確認**してください。\n\nフォルダは「現在のディレクトリ」に作られます。\n\n```bash\n# 現在地を確認\npwd\n# → /Users/yourname\n\n# フォルダを作成\nmkdir shimalink\n\n# 確認\nls\n# → shimalink が表示されるはず\n```\n\n**Finderで見たい場合：**\n```bash\nopen .\n```\nこのコマンドで現在のディレクトリをFinderで開けます。",
+    "tags": ["terminal", "mkdir", "directory"],
+    "lessonSlug": "01-terminal-basics",
+    "category": "terminal"
+  },
+  {
+    "id": "ch01-help-04",
+    "question": "Gitで「not a git repository」エラーが出る",
+    "answer": "このエラーは、**現在のディレクトリがGitリポジトリではない**という意味です。\n\n```bash\n# 解決方法1: git init で初期化する\ngit init\n\n# 解決方法2: 正しいディレクトリに移動する\ncd ~/shimalink\ngit status\n```\n\n**チェックポイント：**\n- `git init` を実行したディレクトリにいるか？\n- `.git` フォルダが存在するか？（`ls -la` で確認）",
+    "tags": ["git", "repository", "error"],
+    "lessonSlug": "03-git-basics",
+    "category": "git"
+  },
+  {
+    "id": "ch01-help-05",
+    "question": "CSSを書いたのにスタイルが反映されない",
+    "answer": "以下の順番でチェックしてください：\n\n1. **`<link>` タグ**がHTMLの `<head>` 内にあるか\n```html\n<head>\n  <link rel=\"stylesheet\" href=\"style.css\">\n</head>\n```\n\n2. **ファイル名**が正確に一致しているか（`Style.css` ≠ `style.css`）\n\n3. **ファイルの場所**が同じフォルダにあるか\n\n4. **ブラウザのキャッシュ**をクリアする（`Cmd + Shift + R`）\n\n5. CSSの**構文エラー**がないか（閉じ中括弧 `}` の漏れなど）",
+    "tags": ["css", "style", "display"],
+    "lessonSlug": "02-html-first-page",
+    "category": "display"
+  },
+  {
+    "id": "ch01-help-06",
+    "question": "HTTPリクエストとレスポンスの違いがわからない",
+    "answer": "レストランに例えると分かりやすいです：\n\n| 概念 | レストランの例 |\n|------|---------------|\n| **リクエスト** | 「カレーライスください」と注文 |\n| **レスポンス** | カレーライスが運ばれてくる |\n| **ステータスコード 200** | 注文通りの料理が来た |\n| **ステータスコード 404** | 「そのメニューはありません」 |\n| **ステータスコード 500** | 「厨房で火事です！」 |\n\n**ブラウザ**がリクエストを送り、**サーバー**がレスポンスを返す。この往復がWebの基本です。",
+    "tags": ["http", "request", "response", "concept"],
+    "lessonSlug": "04-http-basics",
+    "category": "concept"
+  },
+  {
+    "id": "ch01-help-07",
+    "question": "git addとgit commitの違いは？",
+    "answer": "引っ越しの荷造りに例えると：\n\n| コマンド | 引っ越しの例 |\n|---------|-------------|\n| `git add` | 段ボールに荷物を入れる（ステージング） |\n| `git commit` | 段ボールにラベルを貼って封をする（記録） |\n\n```bash\n# 1. ファイルをステージング（段ボールに入れる）\ngit add index.html\n\n# 2. コミット（ラベルを貼って封をする）\ngit commit -m \"トップページを作成\"\n```\n\n`git add` は**何を記録するか選ぶ**作業、`git commit` は**実際に記録する**作業です。",
+    "tags": ["git", "add", "commit", "concept"],
+    "lessonSlug": "03-git-basics",
+    "category": "concept"
+  },
+  {
+    "id": "ch01-help-08",
+    "question": "ターミナルの文字が文字化けしている",
+    "answer": "**エンコーディングの問題**です。\n\n**Macの場合：**\n1. ターミナル → 設定 → プロファイル → 詳細\n2. 「テキストエンコーディング」を **UTF-8** に設定\n\n**VS Code内蔵ターミナルの場合：**\n- 通常はUTF-8が標準。ファイル自体のエンコーディングを確認\n\n```bash\n# エンコーディングを確認\nlocale\n# LANG=ja_JP.UTF-8 と表示されればOK\n```",
+    "tags": ["terminal", "encoding", "display"],
+    "lessonSlug": "01-terminal-basics",
+    "category": "environment"
+  },
+  {
+    "id": "ch01-help-09",
+    "question": "VS Codeのインストール方法がわからない",
+    "answer": "**macOSの場合：**\n1. [code.visualstudio.com](https://code.visualstudio.com) にアクセス\n2. 「Download for Mac」をクリック\n3. ダウンロードした `.zip` を展開\n4. `Visual Studio Code.app` をアプリケーションフォルダにドラッグ\n\n**ターミナルから `code` コマンドを使えるようにする：**\n1. VS Codeを開く\n2. `Cmd + Shift + P` でコマンドパレットを開く\n3. `shell command` と入力\n4. 「Shell Command: Install 'code' command in PATH」を選択\n\n```bash\n# 確認\ncode --version\n```",
+    "tags": ["vscode", "install", "setup"],
+    "category": "environment"
+  },
+  {
+    "id": "ch01-help-10",
+    "question": "ポート番号って何？localhost:3000の意味は？",
+    "answer": "**マンションの部屋番号**のようなものです。\n\n- `localhost` = 自分のパソコン（マンション自体）\n- `:3000` = 3000番の部屋（ポート番号）\n\n1つのパソコンで**複数のサーバー**を同時に動かせます：\n\n| アドレス | 用途の例 |\n|---------|----------|\n| `localhost:3000` | Webアプリ |\n| `localhost:5432` | データベース |\n| `localhost:8080` | APIサーバー |\n\n「ポートが既に使われています」エラーが出たら、その部屋番号で別のプログラムが動いています。",
+    "tags": ["http", "port", "localhost", "concept"],
+    "lessonSlug": "04-http-basics",
+    "category": "concept"
+  }
+]

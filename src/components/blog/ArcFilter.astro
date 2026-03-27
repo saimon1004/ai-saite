@@ -1,0 +1,63 @@
+---
+import { arcs } from "../../data/blog-meta";
+---
+
+<div class="arc-filter flex flex-wrap gap-2 mb-8" data-arc-filter>
+  <button
+    class="arc-filter-btn px-4 py-2 rounded-full text-sm font-medium border transition-all bg-navy text-white border-navy"
+    data-arc="all"
+    aria-pressed="true"
+  >
+    すべて
+  </button>
+  {arcs.map((arc) => (
+    <button
+      class="arc-filter-btn px-4 py-2 rounded-full text-sm font-medium border transition-all bg-surface text-text-secondary border-border hover:border-navy/30"
+      data-arc={arc.id}
+      aria-pressed="false"
+    >
+      {arc.emoji} {arc.name}
+    </button>
+  ))}
+</div>
+
+<script>
+  function initArcFilter(): void {
+    const container = document.querySelector("[data-arc-filter]");
+    if (!container) return;
+
+    const buttons = container.querySelectorAll<HTMLButtonElement>(".arc-filter-btn");
+    const cards = document.querySelectorAll<HTMLElement>("[data-arc-card]");
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const arc = btn.dataset.arc;
+
+        // Update button states
+        buttons.forEach((b) => {
+          b.classList.remove("bg-navy", "text-white", "border-navy");
+          b.classList.add("bg-surface", "text-text-secondary", "border-border");
+          b.setAttribute("aria-pressed", "false");
+        });
+        btn.classList.remove("bg-surface", "text-text-secondary", "border-border");
+        btn.classList.add("bg-navy", "text-white", "border-navy");
+        btn.setAttribute("aria-pressed", "true");
+
+        // Filter cards
+        cards.forEach((card) => {
+          if (arc === "all" || card.dataset.arcCard === arc) {
+            card.style.display = "";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initArcFilter);
+  } else {
+    initArcFilter();
+  }
+</script>

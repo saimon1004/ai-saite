@@ -1,0 +1,116 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/common/Header.astro";
+import Footer from "../../components/common/Footer.astro";
+import BlogCard from "../../components/blog/BlogCard.astro";
+import ArcFilter from "../../components/blog/ArcFilter.astro";
+import { getCollection } from "astro:content";
+import { arcs } from "../../data/blog-meta";
+
+const allPosts = await getCollection("blog");
+const sortedPosts = allPosts.sort((a, b) => a.data.chapter - b.data.chapter);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Course",
+  name: "CodeQuest — 物語で学ぶプログラミング無料研修",
+  description: "株式会社SAIMONが提供する無料プログラミング研修。ShimaLinkの物語を通じてWeb開発・セキュリティ・インフラを実践的に学ぶ全25章。",
+  url: "https://sai-mon.co.jp/blog/",
+  provider: {
+    "@type": "Organization",
+    name: "株式会社SAIMON",
+    url: "https://sai-mon.co.jp",
+  },
+  isAccessibleForFree: true,
+  numberOfCredits: 25,
+  educationalLevel: "Beginner to Intermediate",
+};
+---
+
+<BaseLayout
+  title="無料研修 | CodeQuest — 物語で学ぶプログラミング"
+  description="株式会社SAIMONが提供する無料プログラミング研修。ShimaLinkの物語を通じてWeb開発・セキュリティ・インフラを実践的に学ぶ全25章のカリキュラム。"
+  jsonLd={jsonLd}
+>
+  <Header />
+
+  <main class="min-h-screen">
+    <!-- Hero -->
+    <section class="bg-gradient-to-b from-navy to-navy-light py-20 sm:py-28">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        <span class="inline-block px-4 py-1.5 rounded-full text-xs font-bold tracking-wider bg-teal/20 text-teal-light mb-6">
+          FREE COURSE
+        </span>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-heading font-black text-white leading-tight mb-4">
+          CodeQuest
+        </h1>
+        <p class="text-lg sm:text-xl text-white/70 mb-2">物語で学ぶプログラミング <span class="text-teal-light font-bold">無料研修</span></p>
+        <p class="text-sm text-white/50 max-w-lg mx-auto mb-8">
+          架空のスタートアップ「ShimaLink」を立ち上げる物語を通じて、Web開発・セキュリティ・インフラを実践的に学ぶ全25章のカリキュラム。SAIMONが提供する無料のプログラミング研修です。
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <span class="flex items-center gap-1.5 text-xs text-white/60">
+            <svg class="w-4 h-4 text-teal-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            全25章・約20時間
+          </span>
+          <span class="flex items-center gap-1.5 text-xs text-white/60">
+            <svg class="w-4 h-4 text-teal-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            完全無料
+          </span>
+          <span class="flex items-center gap-1.5 text-xs text-white/60">
+            <svg class="w-4 h-4 text-teal-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+            初心者〜中級者向け
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Arc Overview -->
+    <section class="py-12 border-b border-border">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {arcs.map((arc) => (
+            <a
+              href={`/blog/series/${arc.id}/`}
+              class="group flex flex-col items-center p-4 rounded-xl border border-border hover:border-navy/20 hover:bg-surface-dim transition-all text-center"
+            >
+              <span class="text-2xl mb-2">{arc.emoji}</span>
+              <span class="text-sm font-bold text-text-primary group-hover:text-navy transition-colors">
+                {arc.name}
+              </span>
+              <span class="text-xs text-text-secondary mt-1">
+                {arc.chapters.length}章
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Posts Grid -->
+    <section class="py-12">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <ArcFilter />
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          {sortedPosts.map((post) => (
+            <div data-arc-card={post.data.arc}>
+              <BlogCard
+                id={post.id}
+                title={post.data.title}
+                subtitle={post.data.subtitle}
+                chapter={post.data.chapter}
+                arc={post.data.arc}
+                arcName={post.data.arcName}
+                skills={post.data.skills}
+                estimatedMinutes={post.data.estimatedMinutes}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>

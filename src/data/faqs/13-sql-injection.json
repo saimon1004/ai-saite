@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch13-help-01",
+    "question": "パラメータ化クエリとプリペアドステートメントは同じ？",
+    "answer": "ほぼ同じ意味で使われますが、厳密には異なります。\n\n**プリペアドステートメント**: データベース側でSQL文を事前にコンパイルする機能\n**パラメータ化クエリ**: プレースホルダーを使ってデータを分離するクエリの書き方\n\n実用上は同じものを指していると考えてOKです。\n\n```javascript\n// これが「パラメータ化クエリ」であり「プリペアドステートメント」\ndb.execute('SELECT * FROM users WHERE id = ?', [userId]);\n```\n\nどちらの名前で呼ばれても、「データと命令を分離する」ことが本質です。",
+    "tags": ["sql", "parameterized", "prepared-statement"],
+    "lessonSlug": "02-parameterized-queries",
+    "category": "concept"
+  },
+  {
+    "id": "ch13-help-02",
+    "question": "Prismaのインストール方法は？",
+    "answer": "```bash\n# Prismaのインストール\nnpm install prisma @prisma/client\n\n# 初期化\nnpx prisma init\n```\n\n`prisma/schema.prisma` が作成されるので、モデルを定義します：\n\n```prisma\ngenerator client {\n  provider = \"prisma-client-js\"\n}\n\ndatasource db {\n  provider = \"mysql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Shop {\n  id       Int    @id @default(autoincrement())\n  name     String\n  category String\n  city     String\n}\n```\n\n```bash\n# マイグレーション実行\nnpx prisma migrate dev --name init\n\n# クライアント生成\nnpx prisma generate\n```",
+    "tags": ["prisma", "orm", "setup"],
+    "lessonSlug": "03-orm-prepared-statements",
+    "category": "environment"
+  },
+  {
+    "id": "ch13-help-03",
+    "question": "既存のSQLクエリをパラメータ化に変換する方法がわからない",
+    "answer": "3ステップで変換できます：\n\n**Step 1**: 文字列結合している箇所を見つける\n```javascript\n// Before\nconst sql = `SELECT * FROM users WHERE email = '${email}'`;\n```\n\n**Step 2**: 変数部分を `?` に置き換える\n```javascript\nconst sql = 'SELECT * FROM users WHERE email = ?';\n```\n\n**Step 3**: 変数を配列で渡す\n```javascript\ndb.execute(sql, [email]);\n```\n\n**複数パラメータの場合：**\n```javascript\n// Before\nconst sql = `SELECT * FROM shops WHERE city = '${city}' AND category = '${cat}'`;\n\n// After\nconst sql = 'SELECT * FROM shops WHERE city = ? AND category = ?';\ndb.execute(sql, [city, cat]);\n```",
+    "tags": ["sql", "parameterized", "migration"],
+    "lessonSlug": "02-parameterized-queries",
+    "category": "syntax"
+  },
+  {
+    "id": "ch13-help-04",
+    "question": "LIKE句でパラメータ化する方法は？",
+    "answer": "LIKE句では `%` をパラメータの値に含めます。\n\n```javascript\n// 正しい方法\nconst sql = 'SELECT * FROM shops WHERE name LIKE ?';\ndb.execute(sql, [`%${query}%`]);\n\n// PostgreSQLの場合\nconst sql = 'SELECT * FROM shops WHERE name LIKE $1';\npool.query(sql, [`%${query}%`]);\n```\n\n**注意**: `%` や `_` はLIKEの特殊文字です。ユーザー入力に含まれる場合はエスケープが必要です。\n\n```javascript\nfunction escapeLike(str) {\n  return str.replace(/[%_\\\\]/g, '\\\\$&');\n}\n\nconst safeQuery = `%${escapeLike(query)}%`;\ndb.execute(sql, [safeQuery]);\n```",
+    "tags": ["sql", "like", "parameterized"],
+    "lessonSlug": "02-parameterized-queries",
+    "category": "syntax"
+  },
+  {
+    "id": "ch13-help-05",
+    "question": "SQLインジェクションのテスト方法は？",
+    "answer": "**自分の開発環境でのみ**テストしてください。\n\n**基本的なテスト入力：**\n```\n1. シングルクォート: '\n   → エラーが出ればSQLi脆弱性の可能性\n\n2. OR条件: ' OR '1'='1\n   → 全件返却されれば脆弱\n\n3. コメント: ' --\n   → 後続のSQLが無視されれば脆弱\n\n4. UNION: ' UNION SELECT 1,2,3--\n   → 追加データが返れば脆弱\n```\n\n**自動ツール（開発環境用）：**\n- sqlmap: オープンソースのSQLi検出ツール\n- OWASP ZAP: Webアプリ脆弱性スキャナー\n\n**重要**: 他人のサイトに対するテストは不正アクセス禁止法違反です。",
+    "tags": ["sql-injection", "testing", "security"],
+    "lessonSlug": "01-what-is-sql-injection",
+    "category": "concept"
+  },
+  {
+    "id": "ch13-help-06",
+    "question": "escape()やmysql.escape()は安全？",
+    "answer": "**パラメータ化クエリと比べると安全性が劣ります。**\n\n```javascript\n// escape関数を使う方法（推奨しない）\nconst sql = `SELECT * FROM users WHERE name = ${mysql.escape(name)}`;\n\n// パラメータ化クエリ（推奨）\ndb.execute('SELECT * FROM users WHERE name = ?', [name]);\n```\n\n**escape関数の問題：**\n- 文字セット（charset）の不一致で回避される場合がある\n- エスケープ漏れのリスクが残る\n- 文字列結合という構造的な問題が解消されない\n\n**結論**: escape関数よりも常にパラメータ化クエリを使ってください。",
+    "tags": ["escape", "mysql", "security"],
+    "lessonSlug": "02-parameterized-queries",
+    "category": "concept"
+  },
+  {
+    "id": "ch13-help-07",
+    "question": "ORDER BYやテーブル名をパラメータ化できない場合は？",
+    "answer": "プレースホルダーは**値**にしか使えません。カラム名やテーブル名には使えません。\n\n```javascript\n// これはエラーになる\ndb.execute('SELECT * FROM ? ORDER BY ?', [tableName, column]);\n```\n\n**安全な対処法: ホワイトリストを使う**\n\n```javascript\nconst allowedColumns = ['name', 'rating', 'created_at'];\nconst allowedOrders = ['ASC', 'DESC'];\n\nconst sortBy = allowedColumns.includes(req.query.sort)\n  ? req.query.sort\n  : 'name'; // デフォルト\n\nconst order = allowedOrders.includes(req.query.order?.toUpperCase())\n  ? req.query.order.toUpperCase()\n  : 'ASC'; // デフォルト\n\nconst sql = `SELECT * FROM shops ORDER BY ${sortBy} ${order}`;\n// sortByとorderはホワイトリストから選ばれるので安全\n```",
+    "tags": ["sql", "order-by", "whitelist"],
+    "lessonSlug": "02-parameterized-queries",
+    "category": "syntax"
+  },
+  {
+    "id": "ch13-help-08",
+    "question": "ブラインドSQLインジェクションとは？",
+    "answer": "通常のSQLiはエラーメッセージやデータで結果が分かりますが、ブラインドSQLiは**レスポンスの違い**から情報を推測します。\n\n**Boolean-based（真偽ベース）:**\n```\n入力: ' AND 1=1-- → 正常なレスポンス\n入力: ' AND 1=2-- → 空のレスポンス\n→ 条件の真偽でYes/Noを判定し、1文字ずつデータを推測\n```\n\n**Time-based（時間ベース）:**\n```\n入力: ' AND SLEEP(5)-- → 5秒遅延あり\n入力: ' AND SLEEP(0)-- → 遅延なし\n→ レスポンス時間の差でYes/Noを判定\n```\n\n**対策はパラメータ化クエリで同じです。** エラーを隠すだけでは不十分です。",
+    "tags": ["sql-injection", "blind", "security"],
+    "lessonSlug": "01-what-is-sql-injection",
+    "category": "concept"
+  },
+  {
+    "id": "ch13-help-09",
+    "question": "NoSQLデータベースでもインジェクションは起きる？",
+    "answer": "はい、**NoSQLインジェクション**も存在します。\n\n**MongoDBの例：**\n```javascript\n// 脆弱なコード\nconst user = await db.collection('users').findOne({\n  username: req.body.username,\n  password: req.body.password\n});\n\n// 攻撃: JSONでオペレータを送信\n// { \"username\": \"admin\", \"password\": { \"$gt\": \"\" } }\n// → パスワードが空文字より大きい（= 任意の値）でマッチ\n```\n\n**対策：**\n```javascript\n// 型チェックを厳密に行う\nif (typeof req.body.password !== 'string') {\n  return res.status(400).send('不正な入力');\n}\n```\n\nNoSQLでも入力検証は必須です。",
+    "tags": ["nosql", "mongodb", "injection"],
+    "lessonSlug": "01-what-is-sql-injection",
+    "category": "concept"
+  },
+  {
+    "id": "ch13-help-10",
+    "question": "WAF（Web Application Firewall）とは？",
+    "answer": "Webアプリケーションの前段に配置し、既知の攻撃パターンをブロックするファイアウォールです。\n\n```\nユーザー → [WAF] → Webサーバー → アプリ → DB\n              ↑\n          SQLi、XSSなどの\n          攻撃パターンを検知\n```\n\n**代表的なWAF：**\n- AWS WAF\n- Cloudflare WAF\n- ModSecurity（オープンソース）\n\n**注意点：**\n- WAFは「追加の防御層」であり、パラメータ化クエリの代替にはならない\n- 新しい攻撃パターンには対応できない場合がある\n- 誤検知（正常なリクエストのブロック）の可能性がある\n\nあくまで多層防御の一つとして活用してください。",
+    "tags": ["waf", "firewall", "security"],
+    "lessonSlug": "04-defense-in-depth",
+    "category": "concept"
+  }
+]

@@ -31,7 +31,7 @@ const currentYear = new Date().getFullYear();
           {navigation.map((item) => (
             <li>
               <a
-                href={`${base}${item.href}`}
+                href={item.href.startsWith("/") ? item.href : `${base}${item.href}`}
                 class="text-xs text-text-on-dark/60 hover:text-teal transition-colors duration-200"
               >
                 {item.labelEn}

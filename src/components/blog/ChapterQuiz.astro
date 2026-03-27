@@ -1,0 +1,135 @@
+---
+import fs from "node:fs";
+import path from "node:path";
+
+interface Props {
+  chapterId: string;
+}
+
+interface QuizQuestion {
+  id: string;
+  question: string;
+  choices: string[];
+  correctIndex: number;
+  explanation: string;
+  storyContext: string;
+}
+
+const { chapterId } = Astro.props;
+
+let questions: QuizQuestion[] = [];
+try {
+  const filePath = path.resolve(`src/data/quizzes/${chapterId}.json`);
+  const raw = fs.readFileSync(filePath, "utf-8");
+  questions = JSON.parse(raw);
+} catch {
+  // Quiz data not found
+}
+---
+
+{questions.length > 0 && (
+  <section class="quiz-section my-12">
+    <h2 class="text-2xl font-heading font-bold text-navy mb-6 flex items-center gap-2">
+      <span>🧠</span> 理解度チェック
+    </h2>
+    <div class="space-y-6" data-quiz>
+      {questions.map((q, i) => (
+        <div
+          class="quiz-question rounded-xl border border-border p-6 transition-all"
+          data-quiz-question={i}
+          data-correct={q.correctIndex}
+        >
+          <p class="font-medium text-text-primary mb-1">
+            <span class="text-navy font-bold">Q{i + 1}.</span> {q.question}
+          </p>
+          {q.storyContext && (
+            <p class="text-xs text-text-secondary mb-4 italic">💡 {q.storyContext}</p>
+          )}
+          <div class="grid gap-2">
+            {q.choices.map((choice, ci) => (
+              <button
+                class="quiz-choice text-left px-4 py-3 rounded-lg border border-border bg-surface hover:bg-surface-dim hover:border-navy/20 transition-all text-sm cursor-pointer"
+                data-choice={ci}
+              >
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full border border-border text-xs font-bold mr-2">
+                  {String.fromCharCode(65 + ci)}
+                </span>
+                {choice}
+              </button>
+            ))}
+          </div>
+          <div
+            class="quiz-explanation hidden mt-4 p-4 rounded-lg text-sm leading-relaxed"
+            data-explanation
+          >
+            <p>{q.explanation}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+<script>
+  function initQuiz(): void {
+    const quizContainers = document.querySelectorAll<HTMLElement>("[data-quiz]");
+
+    quizContainers.forEach((container) => {
+      const questions = container.querySelectorAll<HTMLElement>("[data-quiz-question]");
+
+      questions.forEach((questionEl) => {
+        const correctIndex = Number(questionEl.dataset.correct);
+        const choices = questionEl.querySelectorAll<HTMLButtonElement>("[data-choice]");
+        const explanation = questionEl.querySelector<HTMLElement>("[data-explanation]");
+        let answered = false;
+
+        choices.forEach((choice) => {
+          choice.addEventListener("click", () => {
+            if (answered) return;
+            answered = true;
+
+            const choiceIndex = Number(choice.dataset.choice);
+            const isCorrect = choiceIndex === correctIndex;
+
+            // Disable all choices
+            choices.forEach((c) => {
+              c.classList.add("pointer-events-none");
+              const ci = Number(c.dataset.choice);
+              if (ci === correctIndex) {
+                c.classList.remove("border-border", "bg-surface");
+                c.classList.add("border-green-500", "bg-green-50", "text-green-800");
+              } else if (ci === choiceIndex && !isCorrect) {
+                c.classList.remove("border-border", "bg-surface");
+                c.classList.add("border-red-400", "bg-red-50", "text-red-700", "line-through");
+              } else {
+                c.classList.add("opacity-50");
+              }
+            });
+
+            // Show explanation
+            if (explanation) {
+              explanation.classList.remove("hidden");
+              explanation.classList.add(
+                isCorrect ? "bg-green-50" : "bg-amber-50",
+                isCorrect ? "text-green-800" : "text-amber-800"
+              );
+            }
+
+            // Update question border
+            questionEl.classList.remove("border-border");
+            questionEl.classList.add(
+              isCorrect ? "border-green-300" : "border-amber-300",
+              isCorrect ? "bg-green-50/30" : "bg-amber-50/30"
+            );
+          });
+        });
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initQuiz);
+  } else {
+    initQuiz();
+  }
+</script>

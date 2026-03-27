@@ -1,0 +1,627 @@
+---
+title: "データの住処"
+subtitle: "データベースでデータを永続化する"
+description: "データベースでデータを永続化する。Database Concepts・SQL・Data Modelingを実践的なストーリーで学ぶチャプター「データの住処」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-09
+chapter: 9
+arc: "growth"
+arcName: "成長編"
+skills:
+  - { category: "backend", name: "Database Concepts", level: "intro" }
+  - { category: "backend", name: "SQL", level: "intro" }
+  - { category: "backend", name: "Data Modeling", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["08-api-gateway"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+月曜の朝。Mikaから緊急の電話がかかってきた。
+
+---
+
+**Mika:** 「予約データが全部消えてるんです！週末に入った予約が全部なくなってて...」
+
+**あなた:** 「えっ？ちょっと確認します...」
+
+サーバーのログを確認すると、日曜日の深夜にサーバーが自動再起動された記録があった。
+
+**あなた:** 「あ...サーバー再起動すると、メモリ上のデータ全部消えるんだった。」
+
+**あなた:** 「Yukiさん、これどうすれば...」
+
+**Yuki:** 「これは想定内の問題だよ。今のAPIは、データをメモリ（サーバーのRAM）に一時的に保持してるだけ。サーバーが止まれば消える。データを"永続化"するには、データベースが必要なんだ。」
+
+---
+
+**Yuki:** 「データベースは、データの"住処"。ファイルシステムに安全にデータを保存し、高速に検索し、複数のユーザーが同時にアクセスしても壊れないように管理してくれる。」
+
+**あなた:** 「データベースって、Excelみたいなもの？」
+
+**Yuki:** 「表形式でデータを管理する点は似てるけど、規模もパワーも桁違い。何百万行のデータを一瞬で検索できるし、同時アクセスにも耐えられる。まずはSQLという言語から学ぼう。」
+
+あなたはMikaに「必ず対策します」と約束した。二度とデータが消えないシステムを構築するために。
+
+</StoryPanel>
+
+## なぜデータベースが必要か
+
+ShimaLinkの予約データが消えた原因は、データの保存方法にあった。メモリ上のデータは揮発性——電源が切れれば消える。
+
+> 「メモリはホワイトボード。電源を切ったら消える。データベースはノート。書いたら残る。」——Yuki
+
+## データ保存方法の比較
+
+| 方法 | 永続性 | 検索速度 | 同時アクセス | 整合性 |
+|------|--------|---------|-------------|--------|
+| メモリ（変数） | なし | 最速 | 不可 | なし |
+| JSONファイル | あり | 遅い | 危険 | なし |
+| データベース | あり | 高速 | 安全 | あり |
+
+## データベースが解決する問題
+
+### 1. 永続化（Persistence）
+```
+サーバー再起動 → メモリのデータ → 消失！
+サーバー再起動 → データベース → そのまま残る
+```
+
+### 2. 高速検索
+```
+JSONファイル: ファイル全体を読んでからフィルタリング
+データベース: インデックスを使って瞬時に検索
+```
+
+### 3. 同時アクセス
+```
+JSONファイル: 2人が同時に書き込み → データ破壊
+データベース: トランザクションで安全に処理
+```
+
+### 4. データの整合性
+```
+JSONファイル: 不正なデータも書き込める
+データベース: 制約（NOT NULL, UNIQUE等）で不正データを防ぐ
+```
+
+## データベースの種類
+
+### リレーショナルデータベース（RDBMS）
+
+表形式（テーブル）でデータを管理。SQLで操作する。
+
+| 名前 | 特徴 | 用途 |
+|------|------|------|
+| PostgreSQL | 高機能、信頼性 | 本番環境 |
+| MySQL | 普及率が高い | Web開発全般 |
+| SQLite | ファイルベース、軽量 | 小規模アプリ、学習 |
+
+### NoSQLデータベース
+
+テーブル以外の形式でデータを管理。
+
+| 名前 | 形式 | 用途 |
+|------|------|------|
+| MongoDB | ドキュメント（JSON風） | 柔軟なスキーマ |
+| Redis | キーバリュー | キャッシュ |
+| Firebase | ドキュメント | リアルタイムアプリ |
+
+## ShimaLinkではどれを使う？
+
+```
+ShimaLinkの要件:
+- クライアント、予約、ユーザーの管理 → 構造化データ
+- データ間の関連（クライアント↔予約）→ リレーション
+- 信頼性が必要 → トランザクション
+
+→ リレーショナルデータベース（SQLite → 将来はPostgreSQL）
+```
+
+> **ポイント**: まずはSQLiteで学習。仕組みは同じなので、本番環境ではPostgreSQLに移行しやすい。SQLiteはインストール不要で、1つのファイルにデータベース全体が入ります。
+
+## SQL基礎 — SELECT / INSERT / UPDATE
+
+SQL（Structured Query Language）は、データベースを操作するための言語だ。「何が欲しいか」を宣言的に記述する。
+
+> 「SQLは"注文書"みたいなもの。どんなデータが欲しいかを書くだけで、データベースが探してきてくれる。」——Yuki
+
+## テーブルの作成（CREATE TABLE）
+
+まず、ShimaLinkのクライアントテーブルを作ろう。
+
+```sql
+CREATE TABLE clients (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  owner TEXT NOT NULL,
+  category TEXT NOT NULL,
+  monthly_visits INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### よく使うデータ型
+
+| SQL型 | 説明 | 例 |
+|-------|------|-----|
+| `INTEGER` | 整数 | `42` |
+| `TEXT` | 文字列 | `'海風テラス'` |
+| `REAL` | 浮動小数点 | `3.14` |
+| `BOOLEAN` | 真偽値 | `true` / `false` |
+| `DATETIME` | 日時 | `'2024-12-01 10:30:00'` |
+
+### よく使う制約
+
+| 制約 | 説明 |
+|------|------|
+| `PRIMARY KEY` | 主キー（一意の識別子） |
+| `NOT NULL` | NULLを許可しない |
+| `UNIQUE` | 重複を許可しない |
+| `DEFAULT` | デフォルト値を設定 |
+| `AUTOINCREMENT` | 自動採番 |
+
+## SELECT — データの取得
+
+```sql
+-- 全クライアントを取得
+SELECT * FROM clients;
+
+-- 特定のカラムだけ取得
+SELECT name, category, monthly_visits FROM clients;
+
+-- 条件を指定（WHERE）
+SELECT * FROM clients WHERE category = 'カフェ';
+
+-- 複数条件（AND / OR）
+SELECT * FROM clients
+WHERE is_active = true AND monthly_visits > 500;
+
+-- 並び替え（ORDER BY）
+SELECT * FROM clients
+ORDER BY monthly_visits DESC;
+
+-- 件数制限（LIMIT）
+SELECT * FROM clients
+ORDER BY monthly_visits DESC
+LIMIT 5;
+```
+
+### よく使うSELECT構文
+
+```sql
+-- 件数を数える
+SELECT COUNT(*) FROM clients WHERE is_active = true;
+
+-- 合計値
+SELECT SUM(monthly_visits) FROM clients;
+
+-- 平均値
+SELECT AVG(monthly_visits) FROM clients;
+
+-- カテゴリごとの集計
+SELECT category, COUNT(*) as count, AVG(monthly_visits) as avg_visits
+FROM clients
+GROUP BY category;
+```
+
+## INSERT — データの追加
+
+```sql
+-- 1件追加
+INSERT INTO clients (name, owner, category)
+VALUES ('海風テラス', 'Mika', 'カフェ');
+
+-- 複数件追加
+INSERT INTO clients (name, owner, category) VALUES
+  ('首里そば太郎', '太郎', '飲食'),
+  ('美ら花フラワー', '花子', '花屋');
+```
+
+## UPDATE — データの更新
+
+```sql
+-- 特定のクライアントを更新
+UPDATE clients
+SET monthly_visits = 1500, is_active = true
+WHERE id = 1;
+
+-- WHEREなしは全件更新（危険！）
+UPDATE clients SET is_active = false;
+-- → 全クライアントが非アクティブに！
+```
+
+> **警告**: UPDATE と DELETE は必ず WHERE をつけること。WHERE なしだと全件に適用されます。
+
+## DELETE — データの削除
+
+```sql
+-- 特定のクライアントを削除
+DELETE FROM clients WHERE id = 3;
+
+-- 条件付き削除
+DELETE FROM clients WHERE is_active = false;
+```
+
+## 実行順序
+
+SQLは書いた順番とは異なる順序で実行されます。
+
+```
+書く順: SELECT → FROM → WHERE → GROUP BY → ORDER BY → LIMIT
+実行順: FROM → WHERE → GROUP BY → SELECT → ORDER BY → LIMIT
+```
+
+> **ポイント**: まずは SELECT, INSERT, UPDATE, DELETE の4つを覚えれば、基本的なデータ操作はすべてできます。WHERE句は特に重要です。
+
+## データモデリングとリレーション
+
+ShimaLinkには「クライアント」と「予約」という2つのデータがある。これらには関連がある——予約は必ず特定のクライアントに紐づく。この関連を**リレーション**と呼ぶ。
+
+> 「データモデリングは設計図を描くこと。建物を建てる前に設計するように、コードを書く前にデータの構造を考える。」——Yuki
+
+## テーブル間の関係
+
+### 1対多（One-to-Many）
+
+1つのクライアントは複数の予約を持てるが、1つの予約は1つのクライアントにだけ属する。
+
+```
+clients テーブル          reservations テーブル
+┌────┬──────────┐       ┌────┬───────────┬────────────┐
+│ id │ name     │       │ id │ client_id │ guest_name │
+├────┼──────────┤       ├────┼───────────┼────────────┤
+│ 1  │ 海風テラス│  ←──  │ 1  │ 1         │ 田中様     │
+│    │          │  ←──  │ 2  │ 1         │ 山田様     │
+│ 2  │ 首里そば │  ←──  │ 3  │ 2         │ 佐藤様     │
+└────┴──────────┘       └────┴───────────┴────────────┘
+```
+
+### 外部キー（Foreign Key）
+
+テーブル間の関連を定義するのが**外部キー**です。
+
+```sql
+CREATE TABLE reservations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  client_id INTEGER NOT NULL,
+  guest_name TEXT NOT NULL,
+  date TEXT NOT NULL,
+  party_size INTEGER DEFAULT 1,
+  status TEXT DEFAULT 'pending',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (client_id) REFERENCES clients(id)
+);
+```
+
+`FOREIGN KEY` により、存在しないクライアントIDの予約は作成できなくなります。
+
+## ShimaLinkのデータモデル
+
+```
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+│   clients   │     │ reservations │     │   users     │
+├─────────────┤     ├──────────────┤     ├─────────────┤
+│ id (PK)     │──┐  │ id (PK)      │     │ id (PK)     │
+│ name        │  └─>│ client_id(FK)│     │ email       │
+│ owner       │     │ guest_name   │     │ password    │
+│ category    │     │ date         │     │ role        │
+│ visits      │     │ party_size   │     │ created_at  │
+│ is_active   │     │ status       │     └─────────────┘
+│ created_at  │     │ created_at   │
+└─────────────┘     └──────────────┘
+```
+
+## JOIN — テーブルを結合する
+
+リレーションを使ってデータを取得するのが**JOIN**です。
+
+```sql
+-- クライアント名と一緒に予約情報を取得
+SELECT
+  reservations.id,
+  clients.name AS client_name,
+  reservations.guest_name,
+  reservations.date,
+  reservations.party_size
+FROM reservations
+INNER JOIN clients ON reservations.client_id = clients.id
+WHERE reservations.date >= '2024-12-01'
+ORDER BY reservations.date;
+```
+
+### JOINの種類
+
+| 種類 | 説明 |
+|------|------|
+| `INNER JOIN` | 両方に存在するデータのみ |
+| `LEFT JOIN` | 左テーブルの全データ + 右の一致データ |
+| `RIGHT JOIN` | 右テーブルの全データ + 左の一致データ |
+
+```sql
+-- LEFT JOIN: 予約がないクライアントも含めて表示
+SELECT
+  clients.name,
+  COUNT(reservations.id) AS reservation_count
+FROM clients
+LEFT JOIN reservations ON clients.id = reservations.client_id
+GROUP BY clients.id;
+```
+
+## 正規化の基本
+
+データの重複を避けるために、テーブルを適切に分割することを**正規化**と言います。
+
+```sql
+-- 悪い例: 予約テーブルにクライアント名を直接入れる
+CREATE TABLE reservations_bad (
+  id INTEGER PRIMARY KEY,
+  client_name TEXT,      -- 名前が変わったら全部更新が必要！
+  client_category TEXT,  -- 重複データ
+  guest_name TEXT,
+  date TEXT
+);
+
+-- 良い例: クライアントIDで参照する
+CREATE TABLE reservations_good (
+  id INTEGER PRIMARY KEY,
+  client_id INTEGER,     -- IDで参照（名前変更の影響なし）
+  guest_name TEXT,
+  date TEXT,
+  FOREIGN KEY (client_id) REFERENCES clients(id)
+);
+```
+
+> **ポイント**: データモデリングは「何を保存するか」と「データ同士がどう関係するか」を考えること。適切な設計は、将来の変更やバグ防止に大きく貢献します。
+
+## データベースをアプリに接続する
+
+SQLの基礎を学んだ。次は、ShimaLinkのAPIとデータベースを接続して、データを永続化しよう。
+
+> 「APIがウェイターなら、データベースはキッチンの冷蔵庫。ウェイターが冷蔵庫から材料を取り出して、お客さんに料理を届ける。」——Yuki
+
+## 接続の全体像
+
+```
+ブラウザ
+   │
+   │ fetch("/api/clients")
+   ↓
+APIサーバー（Node.js）
+   │
+   │ SQL クエリ
+   ↓
+データベース（SQLite）
+   │
+   │ 結果を返す
+   ↓
+APIサーバー
+   │
+   │ JSONレスポンス
+   ↓
+ブラウザ
+```
+
+## SQLiteの導入
+
+```bash
+# better-sqlite3 をインストール（Node.js用）
+npm install better-sqlite3
+npm install -D @types/better-sqlite3
+```
+
+## データベース接続の基本
+
+```typescript
+// db.ts — データベース接続
+import Database from "better-sqlite3";
+
+// データベースファイルを作成（なければ自動生成）
+const db = new Database("shimalink.db");
+
+// WALモード（パフォーマンス向上）
+db.pragma("journal_mode = WAL");
+
+export default db;
+```
+
+## テーブルの初期化
+
+```typescript
+// init-db.ts — テーブル作成
+import db from "./db";
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS clients (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    owner TEXT NOT NULL,
+    category TEXT NOT NULL,
+    monthly_visits INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS reservations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    client_id INTEGER NOT NULL,
+    guest_name TEXT NOT NULL,
+    date TEXT NOT NULL,
+    party_size INTEGER DEFAULT 1,
+    status TEXT DEFAULT 'pending',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (client_id) REFERENCES clients(id)
+  );
+`);
+
+console.log("データベースの初期化が完了しました");
+```
+
+## APIとの連携
+
+メモリ上の配列をデータベースに置き換えます。
+
+```typescript
+// Before: メモリ上の配列（サーバー再起動で消える）
+let clients: Client[] = [];
+
+// After: データベースから取得（永続化）
+function getClients(): Client[] {
+  const stmt = db.prepare("SELECT * FROM clients WHERE is_active = 1");
+  return stmt.all() as Client[];
+}
+```
+
+### CRUD操作の実装
+
+```typescript
+// READ: 全クライアント取得
+function getAllClients(): Client[] {
+  const stmt = db.prepare(
+    "SELECT * FROM clients ORDER BY created_at DESC"
+  );
+  return stmt.all() as Client[];
+}
+
+// READ: IDで1件取得
+function getClientById(id: number): Client | undefined {
+  const stmt = db.prepare("SELECT * FROM clients WHERE id = ?");
+  return stmt.get(id) as Client | undefined;
+}
+
+// CREATE: 新規作成
+function createClient(
+  name: string,
+  owner: string,
+  category: string
+): Client {
+  const stmt = db.prepare(
+    "INSERT INTO clients (name, owner, category) VALUES (?, ?, ?)"
+  );
+  const result = stmt.run(name, owner, category);
+
+  return getClientById(result.lastInsertRowid as number)!;
+}
+
+// UPDATE: 更新
+function updateClient(
+  id: number,
+  updates: Partial<Client>
+): Client | undefined {
+  const fields = Object.keys(updates)
+    .map(key => `${key} = ?`)
+    .join(", ");
+  const values = Object.values(updates);
+
+  const stmt = db.prepare(
+    `UPDATE clients SET ${fields} WHERE id = ?`
+  );
+  stmt.run(...values, id);
+
+  return getClientById(id);
+}
+
+// DELETE: 削除
+function deleteClient(id: number): boolean {
+  const stmt = db.prepare("DELETE FROM clients WHERE id = ?");
+  const result = stmt.run(id);
+  return result.changes > 0;
+}
+```
+
+## プレースホルダー（?）の重要性
+
+```typescript
+// 危険！ SQLインジェクション攻撃の対象
+const name = "'; DROP TABLE clients; --";
+db.prepare(`SELECT * FROM clients WHERE name = '${name}'`);
+// → テーブルが削除される！
+
+// 安全！ プレースホルダーを使う
+db.prepare("SELECT * FROM clients WHERE name = ?").get(name);
+// → 文字列として安全に処理される
+```
+
+> **警告**: ユーザーの入力をSQLに直接埋め込んではいけません。必ずプレースホルダー（`?`）を使いましょう。これは**SQLインジェクション**と呼ばれる攻撃を防ぎます。
+
+## トランザクション
+
+複数の操作をまとめて実行し、一つでも失敗したら全部取り消す仕組みです。
+
+```typescript
+// 複数のINSERTをトランザクションで実行
+const insertMany = db.transaction((clients: NewClient[]) => {
+  const stmt = db.prepare(
+    "INSERT INTO clients (name, owner, category) VALUES (?, ?, ?)"
+  );
+
+  for (const client of clients) {
+    stmt.run(client.name, client.owner, client.category);
+  }
+});
+
+// 全部成功するか、全部失敗するか
+insertMany([
+  { name: "店A", owner: "太郎", category: "飲食" },
+  { name: "店B", owner: "花子", category: "カフェ" },
+]);
+```
+
+> **ポイント**: データベース接続は「メモリの配列をSQLクエリに置き換える」だけ。API側のインターフェースは変わらないので、フロントエンドのコードは修正不要です。
+
+<StoryPanel variant="conclusion">
+
+データベースの導入が完了した。サーバーを再起動しても、データはしっかりとデータベースに残っている。Mikaに確認のメッセージを送った。
+
+```sql
+SELECT name, date, party_size FROM reservations
+WHERE client_id = 1 AND date >= '2024-12-01'
+ORDER BY date;
+```
+
+```
+| name       | date       | party_size |
+|------------|------------|------------|
+| 田中様     | 2024-12-05 | 4          |
+| 山田様     | 2024-12-08 | 2          |
+| 佐藤様     | 2024-12-12 | 6          |
+```
+
+---
+
+**Mika:** 「本当だ、予約データがちゃんと残ってる！サーバー再起動しても大丈夫なんですね？」
+
+**あなた:** 「はい。データベースに保存されているので、サーバーが止まっても消えません。」
+
+**Mika:** 「ありがとうございます！安心しました。ところで、お客さんから"予約状況をネットで確認したい"って声があるんですけど...」
+
+**あなた:** 「それ、ユーザーごとにログインが必要になるよね。」
+
+**Yuki:** 「その通り。今のShimaLinkには大きな穴がある。」
+
+Yukiがブラウザを開き、ダッシュボードのURLを直接入力した。
+
+**Yuki:** 「ほら、URLを知っていれば誰でもアクセスできる。クライアントの売上データも、予約情報も、全部丸見えだ。」
+
+**あなた:** 「...それはまずいですね。」
+
+**Yuki:** 「認証——つまり"誰がアクセスしているか"を確認する仕組みが必要だ。次はそこに取り組もう。」
+
+ちょうどその時、あなたのモニターにアクセスログの異常な数字が映っていた。見知らぬIPアドレスから、大量のリクエストが送られている——。
+
+---
+
+> **次のチャプター**: *Chapter 10: 誰がアクセスしているか* — ダッシュボードに認証機能を追加。そして、謎のアクセスの正体とは...？
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="09-database-foundation" />
+
+<ChapterFaq chapterId="09-database-foundation" />
+
+<SeriesNav current={9} />

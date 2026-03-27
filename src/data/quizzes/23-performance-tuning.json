@@ -1,0 +1,90 @@
+[
+  {
+    "id": "ch23-q01",
+    "question": "Core Web VitalsのLCP（Largest Contentful Paint）の「良い」基準は？",
+    "choices": ["≤ 1.0秒", "≤ 2.5秒", "≤ 4.0秒", "≤ 5.0秒"],
+    "correctIndex": 1,
+    "explanation": "LCPは2.5秒以下が「良い」、4.0秒以下が「改善が必要」、4.0秒超が「不良」とGoogleが定義しています。",
+    "storyContext": "ShimaLinkのLCPが8秒だった時、Yukiが「2.5秒以下を目指そう」と言っていたね。",
+    "skill": { "category": "performance", "name": "Performance", "level": "intro" }
+  },
+  {
+    "id": "ch23-q02",
+    "question": "CLS（Cumulative Layout Shift）を改善するために最も効果的な対策は？",
+    "choices": [
+      "JavaScriptを最小化する",
+      "画像にwidth/height属性を指定する",
+      "サーバーのCPUを増やす",
+      "HTTPSを使用する"
+    ],
+    "correctIndex": 1,
+    "explanation": "CLSの主な原因は画像やiframeなどのサイズが予約されていないことです。width/heightを指定すると、ブラウザが表示領域を事前に確保でき、レイアウトのずれを防げます。",
+    "storyContext": "店舗写真が後から読み込まれてレイアウトがガタガタしていた問題、width/heightで解決したよね。",
+    "skill": { "category": "performance", "name": "Optimization", "level": "intro" }
+  },
+  {
+    "id": "ch23-q03",
+    "question": "Cache-Control: public, max-age=300 の意味は？",
+    "choices": [
+      "キャッシュを禁止する",
+      "300秒間、CDNとブラウザの両方でキャッシュする",
+      "300回アクセスしたらキャッシュを破棄する",
+      "プライベートデータを300秒キャッシュする"
+    ],
+    "correctIndex": 1,
+    "explanation": "publicはCDNや共有キャッシュもOK、max-age=300は300秒（5分）間キャッシュを保持する意味です。この間はサーバーにリクエストせずキャッシュを返します。",
+    "storyContext": "ShimaLinkの店舗一覧APIに設定した、あのHTTPキャッシュヘッダーの設定だよ。",
+    "skill": { "category": "performance", "name": "Caching", "level": "intro" }
+  },
+  {
+    "id": "ch23-q04",
+    "question": "データベースのインデックスの説明として正しいのは？",
+    "choices": [
+      "データベースのバックアップ機能",
+      "クエリの検索を高速化するためのデータ構造",
+      "データベースの暗号化機能",
+      "データベースの容量を削減する機能"
+    ],
+    "correctIndex": 1,
+    "explanation": "インデックスは「本の索引」のようなもので、全行をスキャンせずに目的のデータにすばやくアクセスできるデータ構造です。",
+    "storyContext": "カテゴリ検索が15msから0.15msになった、あのインデックス追加のインパクトを思い出そう。",
+    "skill": { "category": "performance", "name": "Optimization", "level": "intro" }
+  },
+  {
+    "id": "ch23-q05",
+    "question": "N+1問題とは何か？",
+    "choices": [
+      "データベースのテーブルが多すぎる問題",
+      "親データN件に対して、子データを個別にN回取得してしまう問題",
+      "APIのバージョンが合わない問題",
+      "インデックスが多すぎてINSERTが遅くなる問題"
+    ],
+    "correctIndex": 1,
+    "explanation": "N+1問題は、1回のクエリで親データN件を取得した後、各親データに対して子データを個別に取得（N回）してしまう問題です。JOINやIN句で一括取得すれば解決できます。",
+    "storyContext": "100店舗のレビューを取得するのに101回もDBクエリが走っていた、あの問題だね。",
+    "skill": { "category": "performance", "name": "Optimization", "level": "intro" }
+  },
+  {
+    "id": "ch23-q06",
+    "question": "画像の最適化で最も推奨されるフォーマットは？",
+    "choices": ["JPEG", "PNG", "WebP", "BMP"],
+    "correctIndex": 2,
+    "explanation": "WebPはGoogleが開発した画像フォーマットで、JPEGと同等の画質でファイルサイズが約30%小さくなります。現在のほぼすべてのブラウザでサポートされています。",
+    "storyContext": "ShimaLinkの店舗画像をJPEGからWebPに変換して、ページサイズが大幅に減った場面を覚えてる？",
+    "skill": { "category": "performance", "name": "Optimization", "level": "intro" }
+  },
+  {
+    "id": "ch23-q07",
+    "question": "パフォーマンスチューニングの鉄則は？",
+    "choices": [
+      "すべてのコードを最適化する",
+      "推測するな、計測せよ",
+      "常に最新のハードウェアを使う",
+      "キャッシュは使わない方が安全"
+    ],
+    "correctIndex": 1,
+    "explanation": "パフォーマンス最適化は必ず計測に基づいて行うべきです。推測で最適化すると、効果のない箇所に時間を浪費してしまいます。",
+    "storyContext": "Yukiが最初に教えてくれた鉄則。Lighthouseで計測して、ボトルネックを特定してから改善したよね。",
+    "skill": { "category": "performance", "name": "Performance", "level": "intro" }
+  }
+]

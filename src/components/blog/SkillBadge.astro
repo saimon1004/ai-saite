@@ -1,0 +1,24 @@
+---
+interface Props {
+  category: string;
+  name: string;
+  level: string;
+}
+
+const { category, name, level } = Astro.props;
+
+const categoryColors: Record<string, string> = {
+  programming: "bg-blue-100 text-blue-800",
+  devtools: "bg-purple-100 text-purple-800",
+  "web-fundamentals": "bg-teal/10 text-teal-dark",
+  security: "bg-red-100 text-red-800",
+  infrastructure: "bg-orange-100 text-orange-800",
+};
+
+const colorClass = categoryColors[category] || "bg-gray-100 text-gray-700";
+---
+
+<span class={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${colorClass}`}>
+  {name}
+  <span class="opacity-60">· {level}</span>
+</span>

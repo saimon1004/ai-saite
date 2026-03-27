@@ -1,0 +1,59 @@
+---
+import SkillBadge from "./SkillBadge.astro";
+import { getArcByChapter } from "../../data/blog-meta";
+
+interface Props {
+  id: string;
+  title: string;
+  subtitle: string;
+  chapter: number;
+  arc: string;
+  arcName: string;
+  skills: { category: string; name: string; level: string }[];
+  estimatedMinutes: number;
+}
+
+const { id, title, subtitle, chapter, arc, arcName, skills, estimatedMinutes } = Astro.props;
+const arcData = getArcByChapter(chapter);
+---
+
+<a
+  href={`/blog/${id}/`}
+  class="group block rounded-2xl border border-border bg-surface hover:shadow-card-hover hover:border-navy/20 transition-all duration-300 overflow-hidden"
+>
+  <div class="p-5 sm:p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-3">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-navy bg-navy/5 px-2 py-0.5 rounded-md">
+          Ch.{String(chapter).padStart(2, "0")}
+        </span>
+        <span class="text-xs font-medium text-text-secondary">
+          {arcData?.emoji} {arcName}
+        </span>
+      </div>
+      <span class="text-xs text-text-secondary flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        {estimatedMinutes}分
+      </span>
+    </div>
+
+    <!-- Title -->
+    <h3 class="text-lg font-bold text-text-primary group-hover:text-navy transition-colors mb-1">
+      {title}
+    </h3>
+    <p class="text-sm text-text-secondary mb-4">{subtitle}</p>
+
+    <!-- Skills -->
+    <div class="flex flex-wrap gap-1.5">
+      {skills.slice(0, 3).map((skill) => (
+        <SkillBadge category={skill.category} name={skill.name} level={skill.level} />
+      ))}
+      {skills.length > 3 && (
+        <span class="text-xs text-text-secondary self-center">+{skills.length - 3}</span>
+      )}
+    </div>
+  </div>
+</a>

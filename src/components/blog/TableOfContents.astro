@@ -1,0 +1,79 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const tocHeadings = headings.filter((h) => h.depth === 2);
+---
+
+{tocHeadings.length > 0 && (
+  <details class="toc mb-10 rounded-xl border border-border bg-surface-dim/50 group" data-toc>
+    <summary class="flex items-center justify-between gap-3 px-5 py-4 cursor-pointer list-none select-none">
+      <div class="flex items-center gap-2">
+        <svg class="w-4 h-4 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h10M4 18h10" />
+        </svg>
+        <span class="text-sm font-bold text-text-primary">目次</span>
+        <span class="text-xs text-text-secondary">({tocHeadings.length}セクション)</span>
+      </div>
+      <svg class="w-4 h-4 text-text-secondary transition-transform duration-300 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </summary>
+    <div class="accordion-content" data-open="false">
+      <div>
+        <ul class="px-5 pb-4 columns-1 sm:columns-2 gap-x-8">
+          {tocHeadings.map((heading, i) => (
+            <li class="break-inside-avoid">
+              <a
+                href={`#${heading.slug}`}
+                class="toc-link flex items-baseline gap-2 py-1.5 text-sm text-text-secondary hover:text-navy transition-colors"
+                data-toc-link
+                data-slug={heading.slug}
+              >
+                <span class="text-xs text-text-secondary/50 font-mono shrink-0">{String(i + 1).padStart(2, "0")}</span>
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </details>
+)}
+
+<script>
+  function initToc(): void {
+    const details = document.querySelector<HTMLDetailsElement>("[data-toc]");
+    if (!details) return;
+
+    const content = details.querySelector<HTMLElement>(".accordion-content");
+    if (content) {
+      details.addEventListener("toggle", () => {
+        content.setAttribute("data-open", details.open ? "true" : "false");
+      });
+    }
+
+    // Close TOC when clicking a link
+    const links = details.querySelectorAll<HTMLAnchorElement>("[data-toc-link]");
+    links.forEach((link) => {
+      link.addEventListener("click", () => {
+        details.open = false;
+        if (content) content.setAttribute("data-open", "false");
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initToc);
+  } else {
+    initToc();
+  }
+</script>

@@ -1,0 +1,85 @@
+[
+  {
+    "id": "ch09-q01",
+    "question": "メモリ上の変数にデータを保存する場合の最大の問題点は？",
+    "choices": ["データの検索が遅い", "データ量に制限がある", "サーバー再起動でデータが消える", "同時アクセスが速すぎる"],
+    "correctIndex": 2,
+    "explanation": "メモリ（RAM）は揮発性ストレージなので、サーバーが再起動するとデータは消失します。これがMikaの予約データが消えた原因です。データベースはディスクに保存するため、永続化されます。",
+    "storyContext": "Mikaの予約データが日曜夜のサーバー再起動で消えてしまった事件を思い出そう。",
+    "skill": { "category": "backend", "name": "Database Concepts", "level": "intro" }
+  },
+  {
+    "id": "ch09-q02",
+    "question": "SQLでデータを取得するために使うキーワードは？",
+    "choices": ["GET", "FETCH", "SELECT", "READ"],
+    "correctIndex": 2,
+    "explanation": "SQLでデータを取得するにはSELECT文を使います。GET、FETCH、READはSQLのキーワードではありません（FETCHはカーソル操作で使いますが、基本的なデータ取得にはSELECTを使います）。",
+    "storyContext": "ShimaLinkのクライアント一覧を取得するとき、SELECT * FROM clientsと書いたのを覚えてる？",
+    "skill": { "category": "backend", "name": "SQL", "level": "intro" }
+  },
+  {
+    "id": "ch09-q03",
+    "question": "外部キー（FOREIGN KEY）の役割は？",
+    "choices": [
+      "テーブルにパスワードを設定する",
+      "テーブル間のリレーションを定義し、整合性を保つ",
+      "データを暗号化する",
+      "テーブルの読み取り権限を設定する"
+    ],
+    "correctIndex": 1,
+    "explanation": "外部キーはテーブル間の参照関係を定義します。reservationsテーブルのclient_idがclientsテーブルのidを参照することで、存在しないクライアントの予約は作成できなくなります。",
+    "storyContext": "予約テーブルのclient_idがクライアントテーブルのidを参照している——この関連が外部キーだ。",
+    "skill": { "category": "backend", "name": "Data Modeling", "level": "intro" }
+  },
+  {
+    "id": "ch09-q04",
+    "question": "WHERE句なしでDELETE文を実行するとどうなる？",
+    "choices": ["エラーになる", "何も削除されない", "テーブルの全データが削除される", "最後の1件だけ削除される"],
+    "correctIndex": 2,
+    "explanation": "WHERE句なしのDELETE FROM clientsはテーブル内の全データを削除します。非常に危険な操作なので、DELETE文には必ずWHERE句をつけましょう。",
+    "storyContext": "Yukiが「UPDATEとDELETEのWHERE句忘れは最も危険なミスの一つ」と警告していたね。",
+    "skill": { "category": "backend", "name": "SQL", "level": "intro" }
+  },
+  {
+    "id": "ch09-q05",
+    "question": "SQLインジェクション攻撃を防ぐ方法は？",
+    "choices": [
+      "長い変数名を使う",
+      "プレースホルダー（?）を使ってパラメータを渡す",
+      "SELECT文だけを使う",
+      "データベースを暗号化する"
+    ],
+    "correctIndex": 1,
+    "explanation": "プレースホルダー（?）を使うと、ユーザー入力が自動的にエスケープされ、SQLとして実行されることを防ぎます。入力をSQL文に直接結合するのは非常に危険です。",
+    "storyContext": "ユーザーの入力に「'; DROP TABLE clients; --」が含まれていたら、テーブルが丸ごと削除されてしまう！",
+    "skill": { "category": "backend", "name": "Database Concepts", "level": "intro" }
+  },
+  {
+    "id": "ch09-q06",
+    "question": "INNER JOINの結果に含まれるのは？",
+    "choices": [
+      "左テーブルの全データ",
+      "右テーブルの全データ",
+      "両方のテーブルで一致するデータのみ",
+      "両方のテーブルの全データ"
+    ],
+    "correctIndex": 2,
+    "explanation": "INNER JOINは、結合条件（ON句）に一致するデータだけを返します。一致しないデータは結果に含まれません。全データを含めたい場合はLEFT JOINを使います。",
+    "storyContext": "クライアント情報と予約情報を結合して表示するとき、予約のあるクライアントだけが表示された。",
+    "skill": { "category": "backend", "name": "SQL", "level": "intro" }
+  },
+  {
+    "id": "ch09-q07",
+    "question": "PRIMARY KEYの特徴として正しいのは？",
+    "choices": [
+      "NULLを許可する",
+      "重複する値を許可する",
+      "テーブルに複数設定できる",
+      "各行を一意に識別する"
+    ],
+    "correctIndex": 3,
+    "explanation": "PRIMARY KEYはテーブル内の各行を一意に識別するための制約です。NOT NULLかつUNIQUEであることが保証されます。通常、テーブルに1つだけ設定します。",
+    "storyContext": "クライアントテーブルのidカラムがPRIMARY KEY。各クライアントを一意に識別するIDだ。",
+    "skill": { "category": "backend", "name": "Data Modeling", "level": "intro" }
+  }
+]

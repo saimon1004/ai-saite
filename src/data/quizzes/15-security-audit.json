@@ -1,0 +1,114 @@
+[
+  {
+    "id": "ch15-q01",
+    "question": "OWASP Top 10の2021年版で最も上位にランクされているリスクは？",
+    "choices": [
+      "インジェクション",
+      "アクセス制御の不備",
+      "暗号化の失敗",
+      "セキュリティの設定ミス"
+    ],
+    "correctIndex": 1,
+    "explanation": "2021年版では「アクセス制御の不備（Broken Access Control）」がA01に位置しています。認可チェックの欠如により、本来アクセスできないデータや機能にアクセスできてしまう問題が最も多い脆弱性です。",
+    "storyContext": "佐久間さんがShimaLinkで最初に見つけたIDORの脆弱性も、アクセス制御の問題だった。",
+    "skill": { "category": "security", "name": "OWASP Top 10", "level": "intro" }
+  },
+  {
+    "id": "ch15-q02",
+    "question": "ペネトレーションテストを実施する際に最も重要な前提条件は？",
+    "choices": [
+      "最新のツールを使うこと",
+      "書面による許可を得ること",
+      "夜間に実施すること",
+      "全員に通知すること"
+    ],
+    "correctIndex": 1,
+    "explanation": "ペネトレーションテストは実際にシステムを攻撃するため、必ず書面による許可（テスト範囲、期間、免責事項を含む）を事前に取得する必要があります。許可なくテストを行うことは不正アクセス禁止法違反となります。",
+    "storyContext": "佐久間さんも「許可を得た上で攻撃します」と最初に明言していた。",
+    "skill": { "category": "security", "name": "Penetration Testing", "level": "intro" }
+  },
+  {
+    "id": "ch15-q03",
+    "question": "IDOR（Insecure Direct Object Reference）とは？",
+    "choices": [
+      "データベースの参照速度が遅いこと",
+      "URLやパラメータのID値を書き換えて、他人のデータにアクセスできる脆弱性",
+      "オブジェクト指向プログラミングのバグ",
+      "ファイルの参照パスが不正確なこと"
+    ],
+    "correctIndex": 1,
+    "explanation": "IDORは、URLやAPIのIDパラメータを書き換えることで、認可チェックなしに他のユーザーのデータにアクセスできてしまう脆弱性です。例えば /api/shops/123 を /api/shops/456 に変更して他人のショップ情報にアクセスできる問題です。",
+    "storyContext": "佐久間さんがShimaLinkで発見した3つの問題の1つ目がこれだった。",
+    "skill": { "category": "security", "name": "Security Audit", "level": "intro" }
+  },
+  {
+    "id": "ch15-q04",
+    "question": "インシデント対応の最初のフェーズは？",
+    "choices": [
+      "復旧",
+      "封じ込め",
+      "準備",
+      "根絶"
+    ],
+    "correctIndex": 2,
+    "explanation": "インシデント対応は「準備（Preparation）」から始まります。事故が起きる前に対応チーム、連絡先、手順書を整備しておくことが、迅速な対応の基盤となります。準備→検知→封じ込め→事後対応の順序です。",
+    "storyContext": "佐久間さんが「消防署は火事の前に避難計画を作る」と言っていた通りだ。",
+    "skill": { "category": "security", "name": "Incident Response", "level": "intro" }
+  },
+  {
+    "id": "ch15-q05",
+    "question": "ポストモーテムの主な目的は？",
+    "choices": [
+      "犯人を特定して罰すること",
+      "プロセスを改善し、再発を防止すること",
+      "上司への報告書を作成すること",
+      "セキュリティツールを購入すること"
+    ],
+    "correctIndex": 1,
+    "explanation": "ポストモーテムは「犯人探し」ではなく「プロセス改善」のために行います。何が起きたか、なぜ起きたか、どうすれば防げたかを分析し、再発防止策を策定します。非難のない文化（Blameless Culture）が重要です。",
+    "storyContext": "佐久間さんが「誰かを責めるんじゃなく、プロセスを改善する」と強調していた。",
+    "skill": { "category": "security", "name": "Incident Response", "level": "intro" }
+  },
+  {
+    "id": "ch15-q06",
+    "question": "npm auditコマンドの用途は？",
+    "choices": [
+      "コードの文法エラーを検出する",
+      "依存ライブラリの既知の脆弱性をチェックする",
+      "テストを実行する",
+      "パッケージをインストールする"
+    ],
+    "correctIndex": 1,
+    "explanation": "npm auditはNode.jsプロジェクトの依存ライブラリに既知の脆弱性がないかチェックするコマンドです。OWASP Top 10のA06「脆弱で古いコンポーネント」に対する基本的な対策です。",
+    "storyContext": "定期的にnpm auditを実行して「時限爆弾」を排除する——佐久間さんのアドバイスだ。",
+    "skill": { "category": "security", "name": "Security Audit", "level": "intro" }
+  },
+  {
+    "id": "ch15-q07",
+    "question": "ブラックボックステストとホワイトボックステストの違いは？",
+    "choices": [
+      "テスト環境の色が異なる",
+      "テスターが事前に持つシステム情報の量が異なる",
+      "テストの実施時間帯が異なる",
+      "使用するプログラミング言語が異なる"
+    ],
+    "correctIndex": 1,
+    "explanation": "ブラックボックスはテスターがシステム内部の情報を持たずに（外部攻撃者の視点で）テストし、ホワイトボックスはソースコードや設計書など全情報を持った状態でテストします。グレーボックスはその中間です。",
+    "storyContext": "佐久間さんがShimaLinkに対して行ったのは、API仕様など一部の情報を持つグレーボックステストだった。",
+    "skill": { "category": "security", "name": "Penetration Testing", "level": "intro" }
+  },
+  {
+    "id": "ch15-q08",
+    "question": "セキュリティインシデント発生時、最初にすべきことは？",
+    "choices": [
+      "システムを完全にシャットダウンする",
+      "全ユーザーにメールで通知する",
+      "被害の拡大を止める封じ込めを行う",
+      "ソースコードを全面的に書き直す"
+    ],
+    "correctIndex": 2,
+    "explanation": "インシデント検知後、最初にすべきは封じ込め（Containment）です。攻撃元のブロック、侵害されたアカウントの無効化、必要に応じたメンテナンスモード切り替えなどにより、被害の拡大を止めます。",
+    "storyContext": "ShimaLinkの侵害時、最初にサービスをメンテナンスモードに切り替えたのが封じ込めだった。",
+    "skill": { "category": "security", "name": "Incident Response", "level": "intro" }
+  }
+]

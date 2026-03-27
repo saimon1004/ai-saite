@@ -1,0 +1,104 @@
+[
+  {
+    "id": "ch25-q01",
+    "question": "SOLID原則の「S」（単一責任の原則）の意味は？",
+    "choices": [
+      "1つのファイルに1つのクラスだけ書く",
+      "1つのモジュールは1つの責任（変更理由）だけを持つべき",
+      "1つの関数は1行だけにすべき",
+      "1つのプロジェクトに1つの言語だけ使うべき"
+    ],
+    "correctIndex": 1,
+    "explanation": "単一責任の原則は、モジュール（クラスや関数）が変更される理由は1つだけであるべきという考え方です。複数の責任を持つと、1つの変更が別の機能に影響します。",
+    "storyContext": "ShopControllerに詰め込まれていた処理を、サービスごとに分離したリファクタリングを思い出そう。",
+    "skill": { "category": "career", "name": "Software Architecture", "level": "intro" }
+  },
+  {
+    "id": "ch25-q02",
+    "question": "オープンソースへの最初の貢献として最も始めやすいのは？",
+    "choices": [
+      "新機能を一から実装してPRを送る",
+      "プロジェクトをフォークして独自バージョンを公開する",
+      "ドキュメントの改善やバグ報告をする",
+      "メンテナーに直接連絡してコミット権をもらう"
+    ],
+    "correctIndex": 2,
+    "explanation": "OSS貢献の入り口として最も始めやすいのは、ドキュメントの誤字修正、翻訳、バグ報告です。コードの変更より低リスクで、プロジェクトの流れを学べます。",
+    "storyContext": "Yukiが「コードを書くだけが貢献じゃない。ドキュメント改善も立派な貢献」と言っていたね。",
+    "skill": { "category": "career", "name": "Open Source", "level": "intro" }
+  },
+  {
+    "id": "ch25-q03",
+    "question": "T型スキルの「深い部分」にあたるのは？",
+    "choices": [
+      "すべての技術を均等に学ぶこと",
+      "1つの専門領域を深く掘り下げること",
+      "最も新しい技術だけを追いかけること",
+      "基礎を完全に無視して応用だけ学ぶこと"
+    ],
+    "correctIndex": 1,
+    "explanation": "T型スキルの「│」部分は1つの専門分野を深く極めることを表します。「─」部分は幅広い知識。この組み合わせが市場価値の高いエンジニアの条件です。",
+    "storyContext": "ShimaLinkの経験で広い知識は身についた。次は「どの分野を深掘りするか」を選ぶ段階だね。",
+    "skill": { "category": "career", "name": "Career Development", "level": "intro" }
+  },
+  {
+    "id": "ch25-q04",
+    "question": "モノリスアーキテクチャのメリットとして正しいのは？",
+    "choices": [
+      "個別にスケーリングできる",
+      "技術スタックを機能ごとに変えられる",
+      "シンプルでデプロイが簡単",
+      "チーム間の調整が不要"
+    ],
+    "correctIndex": 2,
+    "explanation": "モノリスアーキテクチャは全てが1つのアプリケーションにまとまっているため、デプロイやデバッグがシンプルです。小〜中規模のチームやプロジェクトに適しています。",
+    "storyContext": "Yukiが「ShimaLinkの規模ならモノリスで十分」と言っていた理由がこれだよ。",
+    "skill": { "category": "career", "name": "Software Architecture", "level": "intro" }
+  },
+  {
+    "id": "ch25-q05",
+    "question": "技術面接のSTAR法で「A」は何を表す？",
+    "choices": ["分析（Analysis）", "回答（Answer）", "行動（Action）", "認識（Awareness）"],
+    "correctIndex": 2,
+    "explanation": "STARはSituation（状況）、Task（課題）、Action（行動）、Result（結果）の略です。具体的な行動を説明することで、あなたの貢献が明確になります。",
+    "storyContext": "パフォーマンスチューニングの経験をSTAR法で語る例を学んだね。",
+    "skill": { "category": "career", "name": "Career Development", "level": "intro" }
+  },
+  {
+    "id": "ch25-q06",
+    "question": "学習のアンチパターン「チュートリアル地獄」を避ける方法は？",
+    "choices": [
+      "チュートリアルを一切やらない",
+      "学んだ後に自分のプロジェクトで実践する",
+      "チュートリアルの数をもっと増やす",
+      "本だけを読んで手を動かさない"
+    ],
+    "correctIndex": 1,
+    "explanation": "チュートリアルだけをこなし続けても実力は伸びません。学んだ知識を自分のプロジェクトで使い、問題に直面して解決する経験が成長につながります。",
+    "storyContext": "ShimaLinkというプロジェクトを通じて学んだ経験が、座学よりもはるかに力になったよね。",
+    "skill": { "category": "career", "name": "Continuous Learning", "level": "intro" }
+  },
+  {
+    "id": "ch25-q07",
+    "question": "Conventional Commitsで新機能追加時に使うプレフィックスは？",
+    "choices": ["fix:", "feat:", "docs:", "chore:"],
+    "correctIndex": 1,
+    "explanation": "feat:は「feature（機能）」の略で、新機能の追加時に使います。fix:はバグ修正、docs:はドキュメント変更、chore:は雑務（依存更新など）です。",
+    "storyContext": "OSS貢献の作法として学んだ、コミットメッセージの規約だね。",
+    "skill": { "category": "career", "name": "Open Source", "level": "intro" }
+  },
+  {
+    "id": "ch25-q08",
+    "question": "70-20-10の法則で、学習の70%を占めるべき方法は？",
+    "choices": [
+      "書籍や講座での座学",
+      "メンターからの指導",
+      "実践（仕事や個人プロジェクト）",
+      "オンライン動画の視聴"
+    ],
+    "correctIndex": 2,
+    "explanation": "70-20-10の法則では、学習の70%は実践（実際のプロジェクトや仕事）、20%は他者からの学び（メンター、コードレビュー）、10%が座学（書籍、講座）です。",
+    "storyContext": "ShimaLinkの開発を通じて最も多くを学んだ、という1年の体験そのものだね。",
+    "skill": { "category": "career", "name": "Continuous Learning", "level": "intro" }
+  }
+]

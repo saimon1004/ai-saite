@@ -1,0 +1,100 @@
+[
+  {
+    "id": "ch24-q01",
+    "question": "LLM（大規模言語モデル）の基本的な仕組みは？",
+    "choices": [
+      "データベースから正確な回答を検索する",
+      "次に来る可能性が高い単語を予測して文章を生成する",
+      "プログラムのルールに従って定型文を出力する",
+      "インターネットからリアルタイムで情報を取得する"
+    ],
+    "correctIndex": 1,
+    "explanation": "LLMは大量のテキストデータで学習し、「次に来る確率が最も高い単語」を予測することで文章を生成します。検索エンジンではなく、確率的な生成モデルです。",
+    "storyContext": "Yukiが「LLMは次の単語を予測する仕組み」と説明した、あの基礎の話だよ。",
+    "skill": { "category": "ai", "name": "AI Concepts", "level": "intro" }
+  },
+  {
+    "id": "ch24-q02",
+    "question": "AIのハルシネーション（幻覚）とは何か？",
+    "choices": [
+      "AIが人間の感情を理解すること",
+      "もっともらしいが事実に基づかない情報を生成すること",
+      "AIが学習データを暗記すること",
+      "AIの処理速度が低下すること"
+    ],
+    "correctIndex": 1,
+    "explanation": "ハルシネーションは、AIが自信を持って回答するが、実際には事実に基づかない情報を生成する現象です。だからこそ人間による検証が重要です。",
+    "storyContext": "チャットボットが沖縄のお店なのに北海道のグルメを勧めた、あのケースがハルシネーションだったね。",
+    "skill": { "category": "ai", "name": "AI Concepts", "level": "intro" }
+  },
+  {
+    "id": "ch24-q03",
+    "question": "OpenAI APIのtemperatureパラメータを0に設定するとどうなる？",
+    "choices": [
+      "AIが回答を拒否する",
+      "最も確率の高い回答を選び、創造性が低く正確性が高い出力になる",
+      "回答がランダムになる",
+      "処理速度が最も速くなる"
+    ],
+    "correctIndex": 1,
+    "explanation": "temperature=0は最も確率の高いトークンを選択するため、毎回ほぼ同じ回答が返ります。正確性が重要なタスク（データ抽出、分類）に適しています。",
+    "storyContext": "レビュー分析では正確さ重視でtemperature=0.2、紹介文生成では創造性を出すために0.7に設定した場面を思い出そう。",
+    "skill": { "category": "ai", "name": "LLM Integration", "level": "intro" }
+  },
+  {
+    "id": "ch24-q04",
+    "question": "プロンプトエンジニアリングのFew-shotテクニックとは？",
+    "choices": [
+      "AIに少量のデータで再学習させること",
+      "プロンプト内に入出力の例を数個提示すること",
+      "AIのパラメータを微調整すること",
+      "短いプロンプトだけで質問すること"
+    ],
+    "correctIndex": 1,
+    "explanation": "Few-shotは、プロンプト内に期待する入出力の例を数個提示するテクニックです。AIはこの例に倣って出力するため、品質が大きく向上します。",
+    "storyContext": "紹介文のプロンプトに「島そば屋」と「美ら海ダイニング」の例を入れたら、一気に品質が上がった場面だよ。",
+    "skill": { "category": "ai", "name": "Prompt Engineering", "level": "intro" }
+  },
+  {
+    "id": "ch24-q05",
+    "question": "AI機能をAPI化する際にレート制限が必要な最大の理由は？",
+    "choices": [
+      "セキュリティ対策のため",
+      "AIのAPIコストが従量課金で、無制限に呼ぶと費用が膨大になるため",
+      "AIの精度を上げるため",
+      "サーバーのメモリを節約するため"
+    ],
+    "correctIndex": 1,
+    "explanation": "LLMのAPI呼び出しは従量課金です。レート制限なしで公開すると、大量リクエストによりコストが爆発する可能性があります。",
+    "storyContext": "ShimaLinkのAIエンドポイントに「1分10リクエスト」の制限を設定した理由がこれだよ。",
+    "skill": { "category": "ai", "name": "LLM Integration", "level": "intro" }
+  },
+  {
+    "id": "ch24-q06",
+    "question": "RAG（Retrieval-Augmented Generation）の説明として正しいのは？",
+    "choices": [
+      "AIモデルを再学習させる手法",
+      "質問に関連する情報を検索してからAIに渡す手法",
+      "AIの出力を自動的にフィルタリングする手法",
+      "複数のAIモデルを組み合わせる手法"
+    ],
+    "correctIndex": 1,
+    "explanation": "RAGは質問に関連するドキュメントをまず検索（Retrieval）し、それをコンテキストとしてAIに渡して回答を生成（Generation）する手法です。",
+    "storyContext": "チャットボットをShimaLinkのFAQデータと組み合わせて、より正確な回答を返すために使った手法だよ。",
+    "skill": { "category": "ai", "name": "LLM Integration", "level": "intro" }
+  },
+  {
+    "id": "ch24-q07",
+    "question": "AI APIキーの管理方法として正しいのは？",
+    "choices": [
+      "ソースコードに直接記述する",
+      "環境変数で管理し、.envファイルはGitに含めない",
+      "フロントエンドのJavaScriptに埋め込む",
+      "公開リポジトリのREADMEに記載する"
+    ],
+    "correctIndex": 1,
+    "explanation": "APIキーは環境変数で管理し、.envファイルは.gitignoreに追加します。ソースコードやフロントエンドに含めると、第三者に悪用されるリスクがあります。",
+    "storyContext": "Chapter 1のGit基礎で学んだ.gitignoreの大切さが、ここでも活きているね。",
+    "skill": { "category": "ai", "name": "LLM Integration", "level": "intro" }
+  }
+]

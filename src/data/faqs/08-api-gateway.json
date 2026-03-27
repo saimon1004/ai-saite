@@ -1,0 +1,65 @@
+[
+  {
+    "id": "ch08-help-01",
+    "question": "GETとPOSTの使い分けが分からない",
+    "answer": "**シンプルなルール**: データを取得するだけならGET、データを送信して何かを作成するならPOST。\n\n```\nGET  /api/clients     → 「クライアント一覧をください」\nPOST /api/clients     → 「新しいクライアントを登録してください」\n```\n\n| | GET | POST |\n|---|---|---|\n| 目的 | データ取得 | データ作成 |\n| ボディ | なし | あり（送信データ） |\n| ブラウザ履歴 | 残る | 残らない |\n| ブックマーク | 可能 | 不可 |\n| 冪等性 | あり | なし |",
+    "tags": ["api", "http", "get", "post"],
+    "category": "concept"
+  },
+  {
+    "id": "ch08-help-02",
+    "question": "PUTとPATCHの違いは？",
+    "answer": "どちらもデータの更新に使いますが、範囲が異なります。\n\n- **PUT**: リソースの**全体**を置き換える\n- **PATCH**: リソースの**一部**だけを更新する\n\n```typescript\n// PUT: 全プロパティを送る必要がある\nawait fetch(\"/api/clients/1\", {\n  method: \"PUT\",\n  body: JSON.stringify({\n    name: \"海風テラス\",\n    category: \"カフェ\",\n    visits: 1500,\n    isActive: true\n  })\n});\n\n// PATCH: 変更したい部分だけ送ればOK\nawait fetch(\"/api/clients/1\", {\n  method: \"PATCH\",\n  body: JSON.stringify({ visits: 1500 })\n});\n```\n\n実務ではPATCHの方が便利な場面が多いです。",
+    "tags": ["api", "http", "put", "patch"],
+    "category": "concept"
+  },
+  {
+    "id": "ch08-help-03",
+    "question": "APIリクエストで「404 Not Found」が返ってくる",
+    "answer": "URLが正しいか確認しましょう。\n\n**チェックリスト**:\n1. **URLのスペルミス**: `/api/clents` → `/api/clients`\n2. **IDが存在するか**: `/api/clients/999` でID 999が存在しない\n3. **ベースURLの確認**: `http://localhost:3000` vs `http://localhost:8080`\n4. **末尾のスラッシュ**: `/api/clients/` vs `/api/clients`\n\n```typescript\n// デバッグ: 実際のURLを確認\nconst url = \"/api/clients\";\nconsole.log(\"リクエストURL:\", url);\nconst response = await fetch(url);\nconsole.log(\"ステータス:\", response.status);\n```",
+    "tags": ["api", "404", "error", "debug"],
+    "category": "environment"
+  },
+  {
+    "id": "ch08-help-04",
+    "question": "JSON.parse()でエラーが出る",
+    "answer": "**JSONの形式が不正**な可能性が高いです。\n\n**よくある原因**:\n\n```javascript\n// NG: シングルクォート\nJSON.parse(\"{'name': 'Mika'}\"); // Error!\n\n// OK: ダブルクォート\nJSON.parse('{\"name\": \"Mika\"}'); // OK\n\n// NG: 末尾カンマ\nJSON.parse('{\"name\": \"Mika\",}'); // Error!\n\n// NG: 空文字列\nJSON.parse(\"\"); // Error!\n```\n\n**デバッグ方法**:\n```javascript\ntry {\n  const data = JSON.parse(responseText);\n} catch (e) {\n  console.error(\"JSONパースエラー:\", e.message);\n  console.log(\"受信データ:\", responseText);\n}\n```",
+    "tags": ["json", "parse", "error"],
+    "category": "syntax"
+  },
+  {
+    "id": "ch08-help-05",
+    "question": "fetchでPOSTしたのにサーバーにデータが届かない",
+    "answer": "**Content-Typeヘッダーの設定忘れ**が最も多い原因です。\n\n```typescript\n// NG: headersがない\nawait fetch(\"/api/clients\", {\n  method: \"POST\",\n  body: JSON.stringify({ name: \"テスト\" })\n});\n// サーバーがJSONとして認識しない\n\n// OK: Content-Typeを設定\nawait fetch(\"/api/clients\", {\n  method: \"POST\",\n  headers: {\n    \"Content-Type\": \"application/json\"\n  },\n  body: JSON.stringify({ name: \"テスト\" })\n});\n```\n\n**その他のチェックポイント**:\n- `JSON.stringify()`で文字列に変換しているか\n- サーバー側でリクエストボディをパースしているか\n- ネットワークタブでリクエスト内容を確認",
+    "tags": ["fetch", "post", "content-type", "headers"],
+    "category": "syntax"
+  },
+  {
+    "id": "ch08-help-06",
+    "question": "APIのURLをどう設計すればいいか分からない",
+    "answer": "**RESTful URLの基本ルール**:\n\n1. **名詞・複数形を使う**: `/api/clients`（`/api/getClient`ではない）\n2. **階層でリソースの関係を表す**: `/api/clients/1/reservations`\n3. **動詞はHTTPメソッドで表す**: GET/POST/PUT/DELETE\n\n```\n良い例:\nGET    /api/clients           全クライアント\nGET    /api/clients/1          ID=1のクライアント\nPOST   /api/clients            クライアント作成\nGET    /api/clients/1/reservations  クライアント1の予約\n\n悪い例:\n/api/getAllClients\n/api/createNewClient\n/api/deleteClient?id=1\n```",
+    "tags": ["api", "rest", "url", "design"],
+    "category": "concept"
+  },
+  {
+    "id": "ch08-help-07",
+    "question": "response.json()とJSON.parse()の違いは？",
+    "answer": "**結果は同じ**ですが、使いどころが違います。\n\n```typescript\n// response.json() — fetchのレスポンスをパース（推奨）\nconst response = await fetch(\"/api/clients\");\nconst data = await response.json(); // Promiseを返す\n\n// JSON.parse() — 任意の文字列をパース\nconst jsonString = '{\"name\": \"Mika\"}';\nconst obj = JSON.parse(jsonString); // 同期処理\n```\n\n**response.json()の方が便利な理由**:\n- ストリームからの読み取りを自動処理\n- Promiseベースで非同期対応\n- fetchのレスポンスに最適化されている\n\n**JSON.parse()を使う場面**:\n- localStorage のデータを読む\n- WebSocket のメッセージをパース\n- 手動でJSON文字列を扱うとき",
+    "tags": ["json", "fetch", "parse"],
+    "category": "concept"
+  },
+  {
+    "id": "ch08-help-08",
+    "question": "APIテストはどうすればいい？",
+    "answer": "**ブラウザの開発者ツール**や**専用ツール**を使います。\n\n**方法1: ブラウザの開発者ツール（Network タブ）**\n- F12で開いて Network タブを選択\n- APIリクエストの内容やレスポンスを確認\n\n**方法2: curlコマンド**\n```bash\n# GET\ncurl http://localhost:3000/api/clients\n\n# POST\ncurl -X POST http://localhost:3000/api/clients \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"name\": \"テスト\"}'\n```\n\n**方法3: VS Code拡張機能**\n- REST Client（.httpファイルでリクエストを管理）\n- Thunder Client（GUIでリクエスト送信）",
+    "tags": ["api", "testing", "debug", "curl"],
+    "category": "environment"
+  },
+  {
+    "id": "ch08-help-09",
+    "question": "ステータスコード200と201の使い分けは？",
+    "answer": "**200 OK**: 一般的な成功。GET、PUT、PATCHなどで使います。\n**201 Created**: 新しいリソースが作成された。POSTで使います。\n\n```\nGET  /api/clients     → 200 OK（データ取得成功）\nPOST /api/clients     → 201 Created（新規作成成功）\nPUT  /api/clients/1   → 200 OK（更新成功）\nDELETE /api/clients/1 → 204 No Content（削除成功、返すデータなし）\n```\n\n**204 No Content**はDELETEの成功時によく使います。レスポンスボディが空であることを示します。",
+    "tags": ["api", "status-code", "http"],
+    "category": "concept"
+  }
+]

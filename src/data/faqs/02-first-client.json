@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch02-help-01",
+    "question": "セマンティックタグを使う意味がわからない。<div>で十分では？",
+    "answer": "機能的には `<div>` で同じことができます。でもセマンティックタグには3つの大きなメリットがあります：\n\n1. **アクセシビリティ**: スクリーンリーダーが `<nav>` を「ナビゲーション」と認識\n2. **SEO**: 検索エンジンがページ構造を理解しやすくなる\n3. **保守性**: 他の開発者がコードの意図を把握しやすい\n\n```html\n<!-- Before -->\n<div class=\"header\"><div class=\"nav\">...</div></div>\n\n<!-- After -->\n<header><nav>...</nav></header>\n```\n\n特に業務でサイトを作る場合、アクセシビリティは法的要件になることもあります。",
+    "tags": ["html", "semantic", "accessibility"],
+    "lessonSlug": "01-semantic-html",
+    "category": "concept"
+  },
+  {
+    "id": "ch02-help-02",
+    "question": "CSSが反映されない。何を確認すればいい？",
+    "answer": "以下を順番にチェックしてください：\n\n1. **`<link>` タグ**がHTMLの `<head>` 内にあるか\n```html\n<link rel=\"stylesheet\" href=\"style.css\">\n```\n\n2. **ファイル名**が完全に一致しているか（大文字小文字も区別される）\n\n3. **パス**が正しいか（HTMLとCSSが同じフォルダにあるか）\n\n4. **CSSの構文**が正しいか（閉じ `}` の漏れ、セミコロン忘れなど）\n\n5. **キャッシュ**をクリア（`Cmd + Shift + R` で強制リロード）\n\n6. ブラウザの**開発者ツール**（F12）のConsoleタブにエラーがないか確認",
+    "tags": ["css", "debug", "link"],
+    "lessonSlug": "02-css-selectors",
+    "category": "display"
+  },
+  {
+    "id": "ch02-help-03",
+    "question": "margin と padding の違いがわからない",
+    "answer": "**padding** = 箱の内側の余白（背景色が適用される）\n**margin** = 箱の外側の余白（透明）\n\n```\n┌── margin（透明な間隔）──┐\n│ ┌── border ──────────┐ │\n│ │ ┌── padding ──────┐│ │\n│ │ │   content       ││ │\n│ │ └─────────────────┘│ │\n│ └────────────────────┘ │\n└─────────────────────────┘\n```\n\n**覚え方**: padding は「部屋の中のスペース」、margin は「部屋と部屋の間の廊下」。\n\n```css\n.box {\n  background: yellow;\n  padding: 20px;  /* 黄色い領域が広がる */\n  margin: 20px;   /* 黄色の外側に透明な間隔 */\n}\n```",
+    "tags": ["css", "box-model", "layout"],
+    "lessonSlug": "03-box-model",
+    "category": "concept"
+  },
+  {
+    "id": "ch02-help-04",
+    "question": "レスポンシブデザインがうまく動かない",
+    "answer": "最もよくある原因は **viewport メタタグの不足**です：\n\n```html\n<!-- これが <head> 内にあるか確認！ -->\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n```\n\nそれ以外のチェックポイント：\n\n1. メディアクエリの**構文**が正しいか\n```css\n/* 正しい */\n@media (min-width: 768px) { ... }\n\n/* 間違い（括弧なし） */\n@media min-width: 768px { ... }\n```\n\n2. メディアクエリが他のスタイルの**後**に書かれているか\n\n3. `box-sizing: border-box` が設定されているか（幅の計算に影響）\n\n4. 開発者ツールのレスポンシブモード（F12 → スマホアイコン）で確認",
+    "tags": ["responsive", "viewport", "media-query"],
+    "lessonSlug": "04-responsive-basics",
+    "category": "display"
+  },
+  {
+    "id": "ch02-help-05",
+    "question": "class と id の使い分けがわからない",
+    "answer": "**class**: 同じスタイルを**複数の要素**に適用できる（再利用可能）\n**id**: ページ内で**1つだけ**の要素を特定する\n\n```html\n<!-- class: 複数使える -->\n<div class=\"menu-card\">料理A</div>\n<div class=\"menu-card\">料理B</div>\n\n<!-- id: 1つだけ -->\n<header id=\"site-header\">...</header>\n```\n\n**実務でのルール**:\n- スタイリングには基本的に **class** を使う\n- **id** はページ内リンク（`<a href=\"#menu\">`）やJavaScript用に使う\n- idはCSSの詳細度が高すぎて、後からスタイルを上書きしにくい",
+    "tags": ["html", "css", "class", "id"],
+    "lessonSlug": "02-css-selectors",
+    "category": "syntax"
+  },
+  {
+    "id": "ch02-help-06",
+    "question": "要素が画面からはみ出してしまう",
+    "answer": "よくある原因と解決方法：\n\n**1. 画像のはみ出し**\n```css\nimg {\n  max-width: 100%;\n  height: auto;\n}\n```\n\n**2. box-sizing の問題**\n```css\n*, *::before, *::after {\n  box-sizing: border-box;\n}\n```\n\n**3. 固定幅の指定**\n```css\n/* 悪い例 */\n.container { width: 960px; }\n\n/* 良い例 */\n.container { width: 100%; max-width: 960px; }\n```\n\n**4. padding/border が幅に加算されている**\n→ `box-sizing: border-box` で解決\n\n開発者ツール（F12）でその要素を選択し、ボックスモデルの図を確認してみてください。",
+    "tags": ["css", "overflow", "layout"],
+    "lessonSlug": "03-box-model",
+    "category": "display"
+  },
+  {
+    "id": "ch02-help-07",
+    "question": "rem と px の違いは？どちらを使うべき？",
+    "answer": "| 単位 | 基準 | 特徴 |\n|------|------|------|\n| `px` | 固定ピクセル | 常に同じサイズ |\n| `rem` | ルートのフォントサイズ（通常16px） | ユーザー設定で拡大縮小される |\n\n**使い分けの目安**:\n- `rem`: フォントサイズ、余白（padding, margin）\n- `px`: ボーダー幅、シャドウのオフセットなど細かい装飾\n- `%`: 幅（width）\n\n```css\n/* rem の計算 */\n/* ルートが16pxの場合 */\n1rem = 16px\n1.5rem = 24px\n2rem = 32px\n```\n\nアクセシビリティの観点からも、フォントサイズには `rem` が推奨されます。",
+    "tags": ["css", "units", "responsive"],
+    "lessonSlug": "04-responsive-basics",
+    "category": "concept"
+  },
+  {
+    "id": "ch02-help-08",
+    "question": "ブラウザの開発者ツールの使い方がわからない",
+    "answer": "開発者ツールはWeb開発の必須ツールです。\n\n**開き方**: `F12` または `Cmd + Option + I`（Mac）\n\n**よく使うタブ**:\n1. **Elements**: HTMLとCSSをリアルタイムで確認・編集\n2. **Console**: エラーメッセージの確認\n3. **Network**: 読み込まれるファイルの確認\n\n**要素の調査**:\n1. 開発者ツール左上の矢印アイコンをクリック\n2. ページ上の要素をクリック\n3. 右側にその要素のCSSが表示される\n\n**レスポンシブ確認**:\n1. 開発者ツール左上のスマホアイコンをクリック\n2. 画面上部でデバイスを選択\n3. 様々な画面サイズでの表示を確認できる",
+    "tags": ["devtools", "browser", "debug"],
+    "lessonSlug": "02-css-selectors",
+    "category": "environment"
+  },
+  {
+    "id": "ch02-help-09",
+    "question": "HTMLのインデント（字下げ）はどうすればいい？",
+    "answer": "HTMLのインデントは**ネスト（入れ子）の深さ**を表現します：\n\n```html\n<!-- 良い例：構造が一目でわかる -->\n<header>\n  <h1>海風テラス</h1>\n  <nav>\n    <ul>\n      <li><a href=\"#menu\">メニュー</a></li>\n      <li><a href=\"#access\">アクセス</a></li>\n    </ul>\n  </nav>\n</header>\n\n<!-- 悪い例：読めない -->\n<header><h1>海風テラス</h1><nav><ul><li><a href=\"#menu\">メニュー</a></li></ul></nav></header>\n```\n\n**ルール**:\n- 子要素を1段深く（スペース2つ or 4つ）\n- VS Codeなら `Shift + Alt + F` で自動整形\n- チームで統一することが大事",
+    "tags": ["html", "formatting", "vscode"],
+    "lessonSlug": "01-semantic-html",
+    "category": "syntax"
+  },
+  {
+    "id": "ch02-help-10",
+    "question": "CSSの色指定の方法が多すぎてわからない",
+    "answer": "主な色指定方法は3つ：\n\n| 方法 | 例 | 用途 |\n|------|-----|------|\n| 色名 | `red`, `blue` | テスト用、限定的 |\n| HEX | `#1a5276` | 最も一般的 |\n| RGB | `rgb(26, 82, 118)` | 透明度が必要な場合 |\n\n```css\n/* すべて同じ色 */\ncolor: #1a5276;\ncolor: rgb(26, 82, 118);\n\n/* 透明度付き（背景に便利） */\nbackground-color: rgba(26, 82, 118, 0.8);\n```\n\n**HEXの読み方**: `#RRGGBB`（赤・緑・青、各2桁の16進数）\n- `#000000` = 黒、`#ffffff` = 白\n- `#ff0000` = 赤、`#00ff00` = 緑、`#0000ff` = 青\n\nデザインツールやカラーピッカーサイトでHEXコードをコピーするのが実務の定番です。",
+    "tags": ["css", "color", "hex"],
+    "lessonSlug": "02-css-selectors",
+    "category": "syntax"
+  }
+]

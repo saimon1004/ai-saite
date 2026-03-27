@@ -1,0 +1,81 @@
+---
+import fs from "node:fs";
+import path from "node:path";
+
+interface Props {
+  chapterId: string;
+}
+
+interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+const { chapterId } = Astro.props;
+
+let faqItems: FaqItem[] = [];
+try {
+  const filePath = path.resolve(`src/data/faqs/${chapterId}.json`);
+  const raw = fs.readFileSync(filePath, "utf-8");
+  faqItems = JSON.parse(raw);
+} catch {
+  // FAQ data not found
+}
+---
+
+{faqItems.length > 0 && (
+  <section class="faq-section my-12">
+    <h2 class="text-2xl font-heading font-bold text-navy mb-6 flex items-center gap-2">
+      <span>❓</span> よくある質問
+    </h2>
+    <div class="divide-y divide-border">
+      {faqItems.map((item) => (
+        <details class="group" data-faq-item>
+          <summary class="flex items-center justify-between gap-4 py-4 cursor-pointer list-none select-none text-left">
+            <span class="text-sm sm:text-base font-medium text-text-primary group-open:text-navy transition-colors">
+              {item.question}
+            </span>
+            <span class="shrink-0 w-7 h-7 flex items-center justify-center rounded-full border border-border group-open:border-navy group-open:bg-navy transition-all duration-300">
+              <svg
+                class="w-3.5 h-3.5 text-text-secondary group-open:text-white transition-transform duration-300 group-open:rotate-45"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+            </span>
+          </summary>
+          <div class="accordion-content" data-open="false">
+            <div>
+              <p class="pb-4 text-sm text-text-secondary leading-relaxed pr-10">
+                {item.answer}
+              </p>
+            </div>
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+)}
+
+<script>
+  function initFaqAccordions(): void {
+    const items = document.querySelectorAll<HTMLDetailsElement>("[data-faq-item]");
+    items.forEach((item) => {
+      const content = item.querySelector<HTMLElement>(".accordion-content");
+      if (!content) return;
+      item.addEventListener("toggle", () => {
+        content.setAttribute("data-open", item.open ? "true" : "false");
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initFaqAccordions);
+  } else {
+    initFaqAccordions();
+  }
+</script>

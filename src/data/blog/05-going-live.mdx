@@ -1,0 +1,600 @@
+---
+title: "世界に公開"
+subtitle: "海風テラスのサイトをインターネットに公開する"
+description: "海風テラスのサイトをインターネットに公開する。デプロイ・DNS・HTTPS・Gitを実践的なストーリーで学ぶチャプター「世界に公開」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-05
+chapter: 5
+arc: "founding"
+arcName: "創業編"
+skills:
+  - { category: "devtools", name: "デプロイ", level: "intro" }
+  - { category: "web-fundamentals", name: "DNS", level: "intro" }
+  - { category: "security", name: "HTTPS", level: "intro" }
+  - { category: "devtools", name: "Git", level: "intermediate" }
+estimatedMinutes: 50
+prerequisites: ["04-bringing-it-alive"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+海風テラスのサイトが完成した。HTMLの構造、CSSのデザイン、JavaScriptのインタラクション。すべてがローカル環境で完璧に動いている。
+
+あとは——世界に公開するだけだ。
+
+---
+
+**あなた:** 「Mikaさんから"いつ公開できますか？"ってまた連絡来てる。友人にも宣伝したいって。」
+
+**あなた:** 「公開って、具体的には何をすればいいんですか？ファイルをどこかに送る？」
+
+**Yuki:** 「ざっくり言うと3ステップ。まず、Gitのブランチ運用を整えて安全にコードを管理できるようにする。次にデプロイサービスにファイルをアップロードする。最後にドメインとHTTPSを設定する。」
+
+**あなた:** 「ドメインって、うちのサイトのアドレスだよね。"umikaze-terrace.com" みたいな。」
+
+**Yuki:** 「そう。ドメインを買って、DNSで設定して、HTTPSで暗号化する。Chapter 1で学んだDNSの話、覚えてる？」
+
+**あなた:** 「インターネットの電話帳...ですよね。ドメイン名をIPアドレスに変換する。」
+
+**Yuki:** 「よく覚えてるね！今日はそれを実際に設定していくよ。あと、Gitのブランチも重要。今まで1本の線で開発してきたけど、これからは"安全に並行作業する"方法を覚えよう。」
+
+---
+
+あなたが嬉しそうにスマホを取り出す。
+
+**あなた:** 「サイトが公開されたら、ShimaLinkの公式サイトにも"実績"として載せよう。最初のクライアントのサイトを公開したんだぜ！」
+
+**Yuki:** 「その前に、本番公開で失敗しないための手順をしっかり学ぼう。ローンチはエキサイティングだけど、準備が全てだよ。」
+
+</StoryPanel>
+
+## Gitブランチ — 安全な並行開発
+
+Chapter 1でGitの基本（`add`, `commit`）を学んだ。でもこれまではずっと1本の線（mainブランチ）で開発してきた。チームで開発するとき、全員が同じブランチを触ると大事故が起きる。
+
+> **Yuki:** 「ブランチは"平行世界"みたいなもの。新機能を試す世界と、安定版の世界を分けておける。失敗しても本番に影響しないんだ。」
+
+## ブランチとは
+
+```
+main:      A --- B --- C --- F (安定版)
+                  \         /
+feature:           D --- E   (新機能開発)
+```
+
+- **main**: 本番環境にデプロイされる安定版
+- **feature**: 新機能や修正を開発するブランチ
+
+## ブランチの基本操作
+
+```bash
+# 現在のブランチを確認
+git branch
+# * main
+
+# 新しいブランチを作成して切り替え
+git checkout -b feature/reservation-form
+# または（新しい書き方）
+git switch -c feature/reservation-form
+
+# ブランチの一覧
+git branch
+#   main
+# * feature/reservation-form
+
+# mainに戻る
+git checkout main
+# または
+git switch main
+```
+
+## ブランチ命名規則
+
+チームで統一した命名規則を使うと管理しやすい：
+
+| 種類 | 接頭辞 | 例 |
+|------|--------|-----|
+| 新機能 | `feature/` | `feature/reservation-form` |
+| バグ修正 | `fix/` | `fix/menu-filter-bug` |
+| ホットフィックス | `hotfix/` | `hotfix/security-patch` |
+| リファクタリング | `refactor/` | `refactor/css-cleanup` |
+
+## マージ — ブランチを統合する
+
+開発が完了したら、featureブランチをmainに統合（マージ）する：
+
+```bash
+# mainブランチに切り替え
+git switch main
+
+# featureブランチをマージ
+git merge feature/reservation-form
+
+# マージ後、不要なブランチを削除
+git branch -d feature/reservation-form
+```
+
+## コンフリクトの解消
+
+同じファイルの同じ箇所を別々のブランチで編集すると、コンフリクト（衝突）が起きる：
+
+```
+<<<<<<< HEAD
+<h1>海風テラス — Ocean Breeze Cafe</h1>
+=======
+<h1>海風テラス — Umikaze Terrace</h1>
+>>>>>>> feature/update-title
+```
+
+- `<<<<<<< HEAD` から `=======` まで: 現在のブランチの内容
+- `=======` から `>>>>>>> feature/...` まで: マージしようとしたブランチの内容
+
+**解消手順**:
+1. どちらの内容を採用するか決める
+2. マーカー（`<<<<`, `====`, `>>>>`）を削除する
+3. `git add` → `git commit` で解決を記録
+
+```html
+<!-- 解消後 -->
+<h1>海風テラス — Umikaze Terrace</h1>
+```
+
+## GitHubとの連携
+
+ローカルのGitリポジトリをGitHubに接続する：
+
+```bash
+# GitHubにリポジトリを作成後
+git remote add origin https://github.com/shimalink/umikaze-terrace.git
+
+# mainブランチをプッシュ
+git push -u origin main
+
+# featureブランチをプッシュ
+git push origin feature/reservation-form
+```
+
+## プルリクエスト（PR）
+
+GitHubでは、直接mainにマージするのではなく、プルリクエストを使ってレビューしてからマージするのが一般的：
+
+1. featureブランチをGitHubにプッシュ
+2. GitHub上でプルリクエストを作成
+3. チームメンバーがコードをレビュー
+4. 承認後にマージ
+
+> **Yuki:** 「PRは"このコード、mainに入れていい？"とチームに確認する仕組み。コードレビューはバグを防ぐだけじゃなく、チーム全体の技術力を底上げするんだ。」
+
+## 海風テラスのブランチ戦略
+
+```bash
+# 予約フォーム機能の開発
+git switch -c feature/reservation-form
+# ... 開発 ...
+git add .
+git commit -m "予約フォームのバリデーション追加"
+git push origin feature/reservation-form
+# → GitHubでPRを作成 → レビュー → マージ
+
+# mainを最新に
+git switch main
+git pull origin main
+```
+
+## ポイント
+
+- `main` ブランチは常に安定版を保つ
+- 新機能は `feature/` ブランチで開発する
+- マージ前にコンフリクトがないか確認する
+- GitHubのプルリクエストでコードレビューを行う
+- ブランチ名は `feature/`, `fix/` などの接頭辞で統一する
+
+## デプロイ — サイトを世界に公開する
+
+ローカル環境（localhost）でしか見られなかったサイトを、世界中の誰でもアクセスできるようにする。これが「デプロイ（deploy）」だ。
+
+> **Yuki:** 「デプロイは"引っ越し"みたいなもの。自分の部屋（ローカル）で作ったものを、みんなが来れるお店（サーバー）に移すんだ。」
+
+## デプロイの選択肢
+
+静的サイト（HTML/CSS/JS）のデプロイ方法は複数ある：
+
+| サービス | 特徴 | 費用 |
+|---------|------|------|
+| **GitHub Pages** | GitHubリポジトリから直接公開 | 無料 |
+| **Vercel** | Git連携で自動デプロイ | 無料プランあり |
+| **Netlify** | ドラッグ＆ドロップでもデプロイ可 | 無料プランあり |
+| **Cloudflare Pages** | 高速CDNで配信 | 無料プランあり |
+
+> **Yuki:** 「最初はGitHub PagesかVercelがおすすめ。どちらもGitにプッシュするだけで自動的にデプロイされるよ。」
+
+## GitHub Pages でデプロイ
+
+### Step 1: GitHubにリポジトリを作成
+
+```bash
+# GitHubでリポジトリ作成後
+git remote add origin https://github.com/shimalink/umikaze-terrace.git
+git push -u origin main
+```
+
+### Step 2: GitHub Pages を有効にする
+
+1. GitHubのリポジトリページを開く
+2. Settings → Pages
+3. Source: 「Deploy from a branch」を選択
+4. Branch: 「main」、フォルダ: 「/ (root)」を選択
+5. Save をクリック
+
+数分後、サイトが `https://shimalink.github.io/umikaze-terrace/` で公開される。
+
+## Vercel でデプロイ
+
+Vercelはより高機能なデプロイプラットフォーム：
+
+### Step 1: Vercelにサインアップ
+
+GitHubアカウントでログインする。
+
+### Step 2: プロジェクトをインポート
+
+1. 「New Project」をクリック
+2. GitHubリポジトリを選択
+3. 「Deploy」をクリック
+
+これだけで完了。以降、GitHubにプッシュするたびに自動デプロイされる。
+
+### 自動デプロイの仕組み
+
+```
+[ローカルで編集] → [git push] → [Vercelが検知] → [自動ビルド＆デプロイ]
+```
+
+この流れを**CI/CD（継続的インテグレーション/継続的デプロイ）**と呼ぶ。手動でファイルをアップロードする必要がない。
+
+## 本番環境と開発環境
+
+| 環境 | URL | 用途 |
+|------|-----|------|
+| **開発環境** | `localhost:3000` | 開発中の動作確認 |
+| **ステージング** | `staging.umikaze-terrace.com` | 公開前の最終チェック |
+| **本番環境** | `umikaze-terrace.com` | 実際のユーザーが見るサイト |
+
+> **Yuki:** 「本番環境に直接デプロイするのは危険。ステージング環境で確認してから本番に出すのがプロの流れだよ。」
+
+## デプロイ前のチェックリスト
+
+本番公開前に確認すべきこと：
+
+```markdown
+- [ ] すべてのリンクが正しく動作するか
+- [ ] 画像が表示されるか（パスは正しいか）
+- [ ] スマホ・タブレット・PCで表示を確認
+- [ ] フォームが正しく動作するか
+- [ ] ページの読み込み速度は許容範囲か
+- [ ] metaタグ（title, description）が設定されているか
+- [ ] favicon が設定されているか
+- [ ] console.log() のデバッグコードを削除したか
+- [ ] 404エラーページが用意されているか
+```
+
+## ポイント
+
+- 静的サイトのデプロイは GitHub Pages や Vercel で無料でできる
+- GitにプッシュするだけでCI/CDで自動デプロイが走る
+- 本番デプロイ前にチェックリストで最終確認する
+- ステージング環境で検証してから本番に出すのがベストプラクティス
+- デプロイ後もブラウザの開発者ツールでエラーがないか確認する
+
+## ドメインとDNS — サイトの「住所」を設定する
+
+Chapter 1でDNSの仕組みを学んだ。ドメイン名をIPアドレスに変換する「インターネットの電話帳」だ。今回はそれを実際に設定する。
+
+> **Yuki:** 「GitHub PagesやVercelにデプロイすると、`shimalink.github.io` みたいなURLになる。でもクライアントに渡すなら、独自ドメイン `umikaze-terrace.com` の方がプロフェッショナルだよね。」
+
+## ドメインの仕組み
+
+```
+umikaze-terrace.com
+├── umikaze-terrace → ドメイン名（自分で選ぶ）
+└── .com            → トップレベルドメイン（TLD）
+```
+
+| TLD | 用途 | 年間費用の目安 |
+|-----|------|--------------|
+| `.com` | 商用（最も一般的） | ¥1,500〜2,000 |
+| `.jp` | 日本のサイト | ¥3,000〜4,000 |
+| `.co.jp` | 日本の法人 | ¥4,000〜6,000 |
+| `.dev` | 開発者向け | ¥1,500〜2,500 |
+| `.okinawa` | 沖縄関連 | ¥2,000〜3,000 |
+
+## ドメインの購入
+
+ドメインは「レジストラ」と呼ばれるサービスで購入する：
+
+| サービス | 特徴 |
+|---------|------|
+| **Google Domains** | シンプル、Google連携 |
+| **Cloudflare Registrar** | 原価で購入可能 |
+| **お名前.com** | 日本語サポート充実 |
+| **ムームードメイン** | 日本語、初心者向け |
+
+## DNSレコードの設定
+
+ドメインを購入したら、「どのサーバーに接続するか」をDNSレコードで設定する：
+
+| レコード | 用途 | 例 |
+|---------|------|-----|
+| **A** | ドメインをIPアドレスに紐づけ | `umikaze-terrace.com → 185.199.108.153` |
+| **CNAME** | ドメインを別のドメインに紐づけ | `www → shimalink.github.io` |
+| **TXT** | テキスト情報（所有権証明など） | ドメイン認証用 |
+| **MX** | メール用サーバーの指定 | メール運用時 |
+
+## GitHub Pages にカスタムドメインを設定
+
+### Step 1: DNSレコードを追加
+
+ドメインのDNS設定画面で以下を追加：
+
+```
+タイプ: A
+名前: @
+値:
+  185.199.108.153
+  185.199.109.153
+  185.199.110.153
+  185.199.111.153
+
+タイプ: CNAME
+名前: www
+値: shimalink.github.io
+```
+
+### Step 2: GitHubの設定
+
+1. リポジトリの Settings → Pages
+2. Custom domain に `umikaze-terrace.com` を入力
+3. Save をクリック
+4. 「Enforce HTTPS」にチェック
+
+### Step 3: 反映を待つ
+
+DNS設定の反映には最大48時間かかることがある（通常は数分〜数時間）。
+
+```bash
+# DNSの反映を確認
+nslookup umikaze-terrace.com
+# または
+dig umikaze-terrace.com
+```
+
+## Vercelにカスタムドメインを設定
+
+Vercelの場合はもっと簡単：
+
+1. プロジェクトの Settings → Domains
+2. ドメイン名を入力して Add
+3. 表示されたDNSレコードをレジストラに設定
+4. Vercelが自動的にSSL証明書を発行
+
+## DNS伝播（浸透）とは
+
+DNSレコードを変更すると、世界中のDNSサーバーに変更が行き渡るまで時間がかかる。これを「DNS伝播」と呼ぶ。
+
+```
+[レジストラで変更]
+    ↓ 数分〜数時間
+[ルートDNSサーバー]
+    ↓
+[各国のDNSサーバー]
+    ↓
+[ISPのDNSサーバー]
+    ↓
+[ユーザーのブラウザ]
+```
+
+> **Yuki:** 「"サイトが見られない！"と焦る前に、DNSの伝播を待とう。確認には `nslookup` コマンドが便利だよ。」
+
+## サブドメイン
+
+メインのドメインの前に文字を追加したもの：
+
+```
+umikaze-terrace.com       → メインサイト
+www.umikaze-terrace.com   → wwwサブドメイン
+blog.umikaze-terrace.com  → ブログ用
+staging.umikaze-terrace.com → ステージング環境
+```
+
+サブドメインは追加購入不要。DNSレコードで設定するだけだ。
+
+## ポイント
+
+- ドメインはレジストラで購入し、年間で更新する
+- AレコードでIPアドレスに、CNAMEで別のドメインに紐づけ
+- DNS設定の反映には数分〜最大48時間かかる
+- GitHub PagesもVercelもカスタムドメインに対応
+- サブドメインは追加費用なしで自由に作れる
+
+## HTTPS — 安全な通信を実現する
+
+Chapter 1で「HTTPはハガキ、HTTPSは封筒」と学んだ。HTTPSは通信を暗号化して、ユーザーのデータを守る仕組みだ。予約フォームで個人情報を扱う海風テラスのサイトには必須だ。
+
+> **Yuki:** 「2026年の今、HTTPSは"オプション"じゃなくて"標準"。Google ChromeはHTTPのサイトに"保護されていない通信"って警告を出すし、SEOにも影響するよ。」
+
+## HTTPSの仕組み
+
+HTTPS = HTTP + TLS（Transport Layer Security）
+
+```
+1. ブラウザがサーバーに接続を要求
+2. サーバーがSSL証明書を提示
+3. ブラウザが証明書の正当性を確認
+4. 暗号化された通信路（トンネル）を確立
+5. データが暗号化されて送受信される
+```
+
+| 項目 | HTTP | HTTPS |
+|------|------|-------|
+| 暗号化 | なし | あり |
+| データの盗聴 | 可能 | 不可能 |
+| 改ざん検知 | なし | あり |
+| アドレスバー | 「保護されていない」警告 | 鍵マーク表示 |
+| SEO | 不利 | 有利 |
+
+## SSL証明書とは
+
+SSL証明書は「このサイトは本物ですよ」という証明書。認証局（CA）が発行する。
+
+| 種類 | 認証レベル | 用途 |
+|------|-----------|------|
+| **DV（ドメイン認証）** | ドメインの所有者確認 | 個人サイト、小規模ビジネス |
+| **OV（組織認証）** | 組織の実在確認 | 企業サイト |
+| **EV（拡張認証）** | 厳格な審査 | 銀行、EC大手 |
+
+> 海風テラスのようなサイトにはDV証明書で十分だ。
+
+## Let's Encrypt — 無料のSSL証明書
+
+Let's Encrypt は無料でSSL証明書を発行してくれるサービス。GitHub Pages、Vercel、Netlifyなどの主要プラットフォームは自動的にLet's Encryptの証明書を設定してくれる。
+
+### GitHub Pagesの場合
+
+Settings → Pages → 「Enforce HTTPS」にチェックを入れるだけ。
+
+### Vercelの場合
+
+カスタムドメインを設定すると自動的にSSL証明書が発行される。設定不要。
+
+## HTTPからHTTPSへのリダイレクト
+
+ユーザーが `http://umikaze-terrace.com` にアクセスした場合、自動的に `https://` に転送する設定：
+
+```
+http://umikaze-terrace.com
+    ↓ 301リダイレクト
+https://umikaze-terrace.com
+```
+
+GitHub PagesやVercelでは「Enforce HTTPS」を有効にすると自動的にリダイレクトされる。
+
+## Mixed Content に注意
+
+HTTPSのページからHTTPのリソースを読み込むと「Mixed Content」エラーになる：
+
+```html
+<!-- HTTPSのページで... -->
+
+<!-- NG: HTTPの画像を読み込んでいる -->
+<img src="http://example.com/photo.jpg">
+
+<!-- OK: HTTPSの画像 -->
+<img src="https://example.com/photo.jpg">
+
+<!-- OK: プロトコル相対URL -->
+<img src="//example.com/photo.jpg">
+
+<!-- OK: 相対パス（同じサーバー内） -->
+<img src="/images/photo.jpg">
+```
+
+> **Yuki:** 「HTTPS化したら、サイト内のすべてのリソースもHTTPSで読み込むようにしよう。CSSファイル内のフォントURLなんかも見落としやすいから注意だよ。」
+
+## HTTPSの確認方法
+
+サイトをデプロイしたら、以下を確認：
+
+1. **ブラウザのアドレスバー**: 鍵マークが表示されているか
+2. **HTTPでアクセス**: 自動的にHTTPSにリダイレクトされるか
+3. **開発者ツール**: Console に Mixed Content 警告が出ていないか
+
+```bash
+# ターミナルで確認
+curl -I https://umikaze-terrace.com
+# HTTP/2 200 が返ればOK
+
+curl -I http://umikaze-terrace.com
+# HTTP/1.1 301 Moved Permanently が返ればリダイレクト設定OK
+```
+
+## セキュリティヘッダー
+
+より安全にするためのHTTPヘッダー設定（Vercelの場合 `vercel.json` で設定可能）：
+
+```json
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}
+```
+
+これらのヘッダーは、クリックジャッキングやMIMEタイプ偽装などの攻撃を防ぐ。
+
+## ポイント
+
+- HTTPSは現代のWebサイトの必須要件
+- Let's Encrypt で無料のSSL証明書が取得できる
+- GitHub Pages / Vercel は自動でHTTPSを設定してくれる
+- HTTPからHTTPSへのリダイレクトを設定する
+- Mixed Content（HTTP/HTTPSの混在）に注意する
+- デプロイ後は鍵マークの表示を確認する
+
+<StoryPanel variant="conclusion">
+
+ブラウザのアドレスバーに「umikaze-terrace.com」と入力する。鍵マークが表示され、海風テラスのサイトが世界中からアクセス可能になった。
+
+---
+
+**あなた:** 「見ろよ、スマホからもアクセスできる！しかもアドレスバーに鍵マーク付いてる！」
+
+**Mika:** 「わぁ...！本当にインターネットに公開されてる。友人に早速URLを送ります！」
+
+Mikaが笑顔でスマホにURLを打ち込んでいる。その横で、あなたはGitのログを眺めていた。
+
+```
+$ git log --oneline
+f8a2e1d HTTPS設定とリダイレクトの追加
+b3c7d9a メニューフィルター機能の実装
+9e1f4b6 予約フォームのバリデーション追加
+7d2a8c3 レスポンシブデザインの調整
+4b6e0f2 CSSレイアウトのリファクタリング
+a1b2c3d ShimaLinkの最初のランディングページを作成
+```
+
+6つのコミット。最初の1行から始まり、ここまで来た。
+
+**あなた:** 「最初はpwdコマンドすら知らなかったのに...いつの間にかWebサイトを作って公開できるようになったんですね。」
+
+**Yuki:** 「すごい成長だよ。でもね、これはまだ始まりの始まり。」
+
+**あなた:** 「実はさ、Mikaさんの友人からも問い合わせが来てるんだ。"ダイビングショップのサイトを作って欲しい"って。あと、"予約システムをもっと本格的にしたい"って声も出てきてる。」
+
+**Yuki:** 「複数のクライアントを抱えるなら、もっと効率的な開発手法が必要になるね。フレームワーク、データベース、API...ShimaLinkとしてスケールするための次のステージだ。」
+
+**あなた:** 「次のステージ...」
+
+遠くに見える沖縄の海。潮風が窓から吹き込む。ShimaLinkの「創業編」はここで一区切り。でも、物語はまだまだ続く——。
+
+---
+
+> **創業編 完結！** ShimaLinkの物語は「成長編」へ続く。フレームワーク、API開発、データベース...スタートアップの本格的な技術基盤を構築していく。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="05-going-live" />
+
+<ChapterFaq chapterId="05-going-live" />
+
+<SeriesNav current={5} />

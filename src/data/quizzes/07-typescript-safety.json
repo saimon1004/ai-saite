@@ -1,0 +1,85 @@
+[
+  {
+    "id": "ch07-q01",
+    "question": "TypeScriptはJavaScriptに何を追加した言語？",
+    "choices": ["クラス", "型システム", "非同期処理", "モジュール"],
+    "correctIndex": 1,
+    "explanation": "TypeScriptはJavaScriptに静的型システムを追加した言語です。コンパイル時に型チェックを行い、実行前にバグを発見できます。クラスや非同期処理、モジュールはJavaScript自体にも存在します。",
+    "storyContext": "KentaのバグをYukiが「型があれば防げた」と言っていたのを思い出そう。",
+    "skill": { "category": "programming", "name": "TypeScript", "level": "intro" }
+  },
+  {
+    "id": "ch07-q02",
+    "question": "次のTypeScriptコードでエラーになるのはどれ？\n```\nlet name: string = \"Mika\";\n```",
+    "choices": ["name = \"Yuki\"", "name = 42", "name = \"Mika\" + \"さん\"", "name = `${name}!`"],
+    "correctIndex": 1,
+    "explanation": "nameはstring型と宣言されているので、number型の42を代入するとコンパイルエラーになります。文字列の代入や結合はすべてstring型なのでOKです。",
+    "storyContext": "Kentaが型のない変数に意図しない値を代入してバグを起こした場面を思い出そう。",
+    "skill": { "category": "programming", "name": "Type Safety", "level": "intro" }
+  },
+  {
+    "id": "ch07-q03",
+    "question": "interfaceでオプショナル（任意）のプロパティを示す記号は？",
+    "choices": ["!", "?", "*", "&"],
+    "correctIndex": 1,
+    "explanation": "プロパティ名の後に?をつけると、そのプロパティはオプショナル（あってもなくてもよい）になります。ShimaLinkのClient型でphoneやwebsiteに使いました。",
+    "storyContext": "Client型の定義で、電話番号やWebサイトURLはあるクライアントとないクライアントがいるため、?をつけたのを覚えてる？",
+    "skill": { "category": "programming", "name": "Interfaces", "level": "intro" }
+  },
+  {
+    "id": "ch07-q04",
+    "question": "TypeScriptの型推論について正しいのは？",
+    "choices": [
+      "すべての変数に型アノテーションが必須",
+      "代入された値から型を自動的に推論できる",
+      "型推論はanyと同じ",
+      "型推論は配列には使えない"
+    ],
+    "correctIndex": 1,
+    "explanation": "TypeScriptは代入された値から型を推論します。const name = \"Mika\" と書けば自動的にstring型と推論されます。すべてに型を書く必要はありません。",
+    "storyContext": "Yukiが「const name = \"海風テラス\" だけでstringと分かる」と教えてくれた場面だね。",
+    "skill": { "category": "programming", "name": "TypeScript", "level": "intro" }
+  },
+  {
+    "id": "ch07-q05",
+    "question": "Partial<Client> はどのような型になる？",
+    "choices": [
+      "Clientのすべてのプロパティが必須になる",
+      "Clientのすべてのプロパティがオプショナルになる",
+      "Clientからidプロパティが除外される",
+      "Clientの型がstring型になる"
+    ],
+    "correctIndex": 1,
+    "explanation": "Partial<T>は、型Tのすべてのプロパティをオプショナル（?付き）にするユーティリティ型です。クライアント情報の部分更新などに便利です。",
+    "storyContext": "クライアント情報を更新するとき、名前だけ変えたいのに全プロパティを渡すのは面倒。Partialを使えば必要な部分だけ指定できる。",
+    "skill": { "category": "programming", "name": "TypeScript", "level": "intro" }
+  },
+  {
+    "id": "ch07-q06",
+    "question": "ジェネリクスの<T>の役割は？",
+    "choices": [
+      "テンプレートリテラルを表す",
+      "型を引数として受け取る",
+      "タプル型を定義する",
+      "型をnullにする"
+    ],
+    "correctIndex": 1,
+    "explanation": "ジェネリクスの<T>は型の引数（型パラメータ）です。使う側が具体的な型を指定することで、1つの定義で様々な型に対応できます。ApiResponse<Client[]>のように使います。",
+    "storyContext": "ApiResponse<T>の<T>にClient[]を渡せばクライアント一覧、Reservation[]を渡せば予約一覧のレスポンス型になったね。",
+    "skill": { "category": "programming", "name": "TypeScript", "level": "intro" }
+  },
+  {
+    "id": "ch07-q07",
+    "question": "anyとunknownの違いは？",
+    "choices": [
+      "違いはない",
+      "anyは型チェックを無効にし、unknownは型チェックを要求する",
+      "anyは文字列専用で、unknownは数値専用",
+      "anyは古い書き方で、unknownは新しい書き方"
+    ],
+    "correctIndex": 1,
+    "explanation": "anyはすべての型チェックを無効にする危険な型です。unknownもあらゆる値を受け入れますが、使う前に型チェック（型ガード）が必要で、より安全です。",
+    "storyContext": "Yukiが「anyは最終手段。まずunknownを試して、型ガードで安全にしよう」と言っていたのを思い出そう。",
+    "skill": { "category": "programming", "name": "Type Safety", "level": "intro" }
+  }
+]

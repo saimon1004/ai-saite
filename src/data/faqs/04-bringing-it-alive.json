@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch04-help-01",
+    "question": "JavaScriptが実行されない・エラーが出る",
+    "answer": "基本のチェックリスト：\n\n**1. `<script>` タグの位置**\n```html\n<!-- </body> の直前に置く -->\n  <script src=\"script.js\"></script>\n</body>\n```\n\n**2. ファイルパスの確認**\n```html\n<!-- HTMLファイルと同じフォルダなら -->\n<script src=\"script.js\"></script>\n\n<!-- jsフォルダ内なら -->\n<script src=\"js/script.js\"></script>\n```\n\n**3. コンソールでエラー確認**\n- `F12` → Console タブでエラーメッセージを確認\n- 赤いエラーの行番号をクリックすると、問題箇所に飛べる\n\n**4. よくある構文エラー**\n- セミコロン `;` の漏れ\n- 括弧 `()` `{}` `[]` の閉じ忘れ\n- スペルミス（`documnet` → `document`）",
+    "tags": ["javascript", "error", "debug"],
+    "lessonSlug": "01-js-basics",
+    "category": "syntax"
+  },
+  {
+    "id": "ch04-help-02",
+    "question": "const と let の使い分けがわからない",
+    "answer": "シンプルなルール：\n\n| キーワード | 使うとき | 例 |\n|-----------|---------|----|\n| `const` | **基本はこれ** | 関数、設定値、DOM要素 |\n| `let` | 値を変更する必要があるとき | カウンター、状態フラグ |\n\n```javascript\n// const：再代入できない\nconst cafeName = \"海風テラス\";\ncafeName = \"別の名前\"; // エラー！\n\n// let：再代入できる\nlet count = 0;\ncount = count + 1; // OK\n\n// 配列やオブジェクトのconst：中身は変更OK\nconst items = [];\nitems.push(\"沖縄そば\"); // OK（配列自体を変えてないから）\n```\n\n**迷ったらまず `const`**。後で変更が必要になったら `let` に変えましょう。",
+    "tags": ["javascript", "const", "let", "variable"],
+    "lessonSlug": "01-js-basics",
+    "category": "concept"
+  },
+  {
+    "id": "ch04-help-03",
+    "question": "querySelector で要素が取得できない（null になる）",
+    "answer": "原因は主に3つ：\n\n**1. スクリプトの実行タイミングが早い**\n```html\n<!-- 問題：headで読み込むとHTMLがまだない -->\n<head>\n  <script src=\"script.js\"></script>\n</head>\n\n<!-- 解決：bodyの最後で読み込む -->\n  <script src=\"script.js\"></script>\n</body>\n```\n\n**2. セレクタが間違っている**\n```javascript\n// クラスにはドット（.）を忘れずに\ndocument.querySelector(\"menu-card\");   // NG\ndocument.querySelector(\".menu-card\");  // OK\n\n// IDにはシャープ（#）\ndocument.querySelector(\"header\");      // <header>タグ\ndocument.querySelector(\"#header\");     // id=\"header\"\n```\n\n**3. HTMLのclass/id名にタイプミス**\n- HTMLとJavaScriptで完全に一致しているか確認",
+    "tags": ["javascript", "dom", "querySelector", "null"],
+    "lessonSlug": "03-dom-api",
+    "category": "syntax"
+  },
+  {
+    "id": "ch04-help-04",
+    "question": "addEventListenerが動かない",
+    "answer": "チェックポイント：\n\n**1. 要素が正しく取得できているか**\n```javascript\nconst btn = document.querySelector(\"#reserve-btn\");\nconsole.log(btn); // null ならセレクタが間違っている\n```\n\n**2. イベント名が正しいか**\n```javascript\n// 正しい\nbtn.addEventListener(\"click\", () => { ... });\n\n// 間違い\nbtn.addEventListener(\"Click\", () => { ... }); // 大文字\nbtn.addEventListener(\"onclick\", () => { ... }); // on不要\n```\n\n**3. コールバックが関数になっているか**\n```javascript\n// 正しい：関数を渡す\nbtn.addEventListener(\"click\", handleClick);\n\n// 間違い：関数を実行してしまっている\nbtn.addEventListener(\"click\", handleClick()); // () が余計\n```",
+    "tags": ["javascript", "event", "addEventListener"],
+    "lessonSlug": "04-event-handling",
+    "category": "syntax"
+  },
+  {
+    "id": "ch04-help-05",
+    "question": "フォームの入力値が取得できない",
+    "answer": "フォーム要素の値は `.value` プロパティで取得します：\n\n```javascript\n// テキスト入力\nconst name = document.querySelector(\"#name\").value;\n\n// 数値入力（文字列として取得される）\nconst guests = document.querySelector(\"#guests\").value;\nconsole.log(typeof guests); // \"string\"\n\n// 数値に変換する\nconst guestsNum = Number(guests);\n```\n\n**注意点**:\n- `input.value` は常に**文字列**を返す\n- 数値が欲しい場合は `Number()` で変換\n- `textContent` ではなく `value` を使う（inputは表示テキストではなく入力値）\n- `submit` イベント内で取得するタイミングは正しいか確認",
+    "tags": ["javascript", "form", "input", "value"],
+    "lessonSlug": "04-event-handling",
+    "category": "syntax"
+  },
+  {
+    "id": "ch04-help-06",
+    "question": "=== と == の違いは？",
+    "answer": "JavaScriptには2種類の等価演算子があります：\n\n| 演算子 | 名前 | 特徴 |\n|--------|------|------|\n| `===` | 厳密等価 | 型も値も同じなら true |\n| `==` | 等価 | 型変換してから比較 |\n\n```javascript\n// === の場合（推奨）\n1 === \"1\"    // false（数値と文字列で型が違う）\n1 === 1      // true\n\n// == の場合（非推奨）\n1 == \"1\"     // true（型変換されてしまう）\n0 == false   // true（予期しない結果になりやすい）\n```\n\n**ルール**: 常に `===` を使う。`==` は予期しないバグの原因になります。",
+    "tags": ["javascript", "comparison", "operator"],
+    "lessonSlug": "01-js-basics",
+    "category": "concept"
+  },
+  {
+    "id": "ch04-help-07",
+    "question": "forEach と map の違いがわからない",
+    "answer": "| メソッド | 戻り値 | 用途 |\n|---------|--------|------|\n| `forEach` | なし（undefined） | 各要素に対して処理を実行 |\n| `map` | **新しい配列** | 各要素を変換した配列を作る |\n\n```javascript\nconst prices = [850, 650, 450];\n\n// forEach: 表示するだけ（戻り値なし）\nprices.forEach(p => console.log(p));\n\n// map: 税込価格の配列を作る（新しい配列が返る）\nconst taxPrices = prices.map(p => Math.floor(p * 1.1));\n// [935, 715, 495]\n```\n\n**判断基準**: 結果の配列が欲しい → `map`、ただ処理したいだけ → `forEach`",
+    "tags": ["javascript", "array", "forEach", "map"],
+    "lessonSlug": "02-functions",
+    "category": "concept"
+  },
+  {
+    "id": "ch04-help-08",
+    "question": "「Cannot read properties of null」エラーが出る",
+    "answer": "このエラーは、`null`（存在しないもの）のプロパティにアクセスしようとすると発生します。\n\n**最もよくある原因**: `querySelector` で要素が見つからなかった\n\n```javascript\nconst btn = document.querySelector(\"#reserv-btn\"); // タイプミス!\nconsole.log(btn); // null\nbtn.addEventListener(\"click\", ...); // Error!\n```\n\n**解決方法**:\n1. セレクタのスペルを確認\n2. HTML要素が存在するか確認\n3. スクリプトの実行タイミングを確認\n\n**安全なコード**:\n```javascript\nconst btn = document.querySelector(\"#reserve-btn\");\nif (btn) {\n  btn.addEventListener(\"click\", () => { ... });\n}\n```",
+    "tags": ["javascript", "error", "null", "debug"],
+    "lessonSlug": "03-dom-api",
+    "category": "syntax"
+  },
+  {
+    "id": "ch04-help-09",
+    "question": "innerHTML と textContent のどちらを使うべき？",
+    "answer": "**基本は `textContent` を使いましょう**。\n\n| プロパティ | 扱い | 安全性 |\n|-----------|------|--------|\n| `textContent` | プレーンテキスト | 安全（HTMLタグが無効化される） |\n| `innerHTML` | HTML | **XSS攻撃の危険あり** |\n\n```javascript\nconst userInput = '<script>alert(\"攻撃！\")</script>';\n\n// textContent: テキストとして表示（安全）\nelement.textContent = userInput;\n// → 文字列としてそのまま表示される\n\n// innerHTML: HTMLとして解釈される（危険）\nelement.innerHTML = userInput;\n// → スクリプトが実行される可能性がある\n```\n\n**innerHTML を使うとき**: 信頼できるHTMLを動的に追加する場合のみ。ユーザー入力は絶対に innerHTML に入れない。",
+    "tags": ["javascript", "dom", "security", "xss"],
+    "lessonSlug": "03-dom-api",
+    "category": "concept"
+  },
+  {
+    "id": "ch04-help-10",
+    "question": "console.log の使い方とデバッグのコツ",
+    "answer": "**基本の使い方**:\n```javascript\n// 値の確認\nconsole.log(\"名前:\", name);\n\n// オブジェクトの中身を見る\nconsole.log(reservation);\n\n// 複数の値を同時に\nconsole.log(\"price:\", price, \"tax:\", tax);\n```\n\n**デバッグのコツ**:\n1. **怪しい箇所の前後**に `console.log` を入れる\n2. **変数の型**を確認: `console.log(typeof value)`\n3. **条件分岐**の中に入れて、どの分岐に入ったか確認\n4. **イベント内**に入れて、イベントが発火しているか確認\n\n```javascript\nbtn.addEventListener(\"click\", () => {\n  console.log(\"クリックされた！\"); // まずこれが表示されるか確認\n  const value = input.value;\n  console.log(\"入力値:\", value);   // 値が取れているか確認\n});\n```\n\n確認が終わったら `console.log` は削除しましょう。",
+    "tags": ["javascript", "debug", "console"],
+    "lessonSlug": "01-js-basics",
+    "category": "terminal"
+  }
+]

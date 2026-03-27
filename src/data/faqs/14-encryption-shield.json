@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch14-help-01",
+    "question": "bcryptのインストール方法は？",
+    "answer": "```bash\n# Node.js\nnpm install bcrypt\n\n# ネイティブモジュールのビルドに失敗する場合\nnpm install bcryptjs  # 純粋なJavaScript実装（やや遅いが互換性が高い）\n```\n\n**使い方：**\n```javascript\nconst bcrypt = require('bcrypt');\n\n// ハッシュ化\nconst hash = await bcrypt.hash('password123', 12);\n\n// 検証\nconst isValid = await bcrypt.compare('password123', hash);\n```\n\nbcryptjsを使う場合もAPIは同じです：\n```javascript\nconst bcrypt = require('bcryptjs');\n// 使い方は全く同じ\n```",
+    "tags": ["bcrypt", "install", "password"],
+    "lessonSlug": "02-hashing-bcrypt-argon2",
+    "category": "environment"
+  },
+  {
+    "id": "ch14-help-02",
+    "question": "ハッシュ化と暗号化の使い分けがわからない",
+    "answer": "**判断基準: 元のデータに戻す必要があるかどうか**\n\n| 用途 | 方法 | 理由 |\n|------|------|------|\n| パスワード保存 | **ハッシュ化** | 元に戻す必要なし。比較だけでOK |\n| メールアドレス保存 | **暗号化** | 表示やメール送信に元データが必要 |\n| 電話番号保存 | **暗号化** | 表示に元データが必要 |\n| ファイル整合性検証 | **ハッシュ化** | 一致確認だけでOK |\n| APIキー保存 | **ハッシュ化** | 比較だけでOK |\n| クレジットカード | **暗号化**（+PCI DSS） | 表示に元データの一部が必要 |\n\n迷ったら「元に戻す必要がある？」と自問してください。",
+    "tags": ["hash", "encryption", "comparison"],
+    "lessonSlug": "02-hashing-bcrypt-argon2",
+    "category": "concept"
+  },
+  {
+    "id": "ch14-help-03",
+    "question": "Let's Encryptの証明書の更新方法は？",
+    "answer": "Let's Encryptの証明書は90日で期限切れになります。自動更新を設定しましょう。\n\n```bash\n# 自動更新のテスト\nsudo certbot renew --dry-run\n\n# 手動更新\nsudo certbot renew\n\n# cronで自動化（1日2回チェック）\nsudo crontab -e\n# 以下を追加:\n0 0,12 * * * certbot renew --quiet --post-hook \"systemctl reload nginx\"\n```\n\n**確認方法：**\n```bash\n# 現在の証明書の有効期限を確認\nsudo certbot certificates\n```\n\n更新後にNginxのリロードを忘れないでください。",
+    "tags": ["letsencrypt", "ssl", "certificate"],
+    "lessonSlug": "03-tls-https",
+    "category": "environment"
+  },
+  {
+    "id": "ch14-help-04",
+    "question": "コストファクターはいくつに設定すべき？",
+    "answer": "**目安: ハッシュ計算に0.25〜0.5秒かかる値**\n\n一般的な推奨値：\n- **開発環境**: 10（高速にテストしたい場合）\n- **本番環境**: 12〜14（サーバーの性能による）\n\n**ベンチマークで判断する：**\n```javascript\nconst bcrypt = require('bcrypt');\n\nasync function benchmark() {\n  for (let cost = 10; cost <= 14; cost++) {\n    const start = Date.now();\n    await bcrypt.hash('test', cost);\n    console.log(`Cost ${cost}: ${Date.now() - start}ms`);\n  }\n}\nbenchmark();\n```\n\n**注意**: コストファクターを上げすぎるとログインが遅くなります。ユーザー体験とのバランスを考慮してください。",
+    "tags": ["bcrypt", "cost-factor", "performance"],
+    "lessonSlug": "02-hashing-bcrypt-argon2",
+    "category": "concept"
+  },
+  {
+    "id": "ch14-help-05",
+    "question": "既存ユーザーの平文パスワードをハッシュ化に移行するには？",
+    "answer": "段階的に移行する方法が安全です。\n\n**方法1: 強制パスワードリセット**\n```\n1. 全ユーザーにパスワードリセットメールを送信\n2. 新しいパスワードはbcryptでハッシュ化して保存\n3. 旧パスワード列を削除\n```\n\n**方法2: ログイン時に段階移行**\n```javascript\nasync function login(email, password) {\n  const user = await getUser(email);\n\n  if (user.password_hash) {\n    // 新方式: bcrypt検証\n    return bcrypt.compare(password, user.password_hash);\n  } else {\n    // 旧方式: 平文比較 → 成功したらハッシュ化\n    if (password === user.password_plain) {\n      const hash = await bcrypt.hash(password, 12);\n      await updatePasswordHash(user.id, hash);\n      await clearPlainPassword(user.id);\n      return true;\n    }\n    return false;\n  }\n}\n```\n\nShimaLinkでは方法1を選択し、全ユーザーにリセットを依頼しました。",
+    "tags": ["migration", "password", "bcrypt"],
+    "lessonSlug": "02-hashing-bcrypt-argon2",
+    "category": "concept"
+  },
+  {
+    "id": "ch14-help-06",
+    "question": "開発環境でHTTPSを使うには？",
+    "answer": "自己署名証明書を使います（本番では使わないでください）。\n\n```bash\n# OpenSSLで自己署名証明書を生成\nopenssl req -x509 -newkey rsa:4096 \\\n  -keyout server.key -out server.cert \\\n  -days 365 -nodes \\\n  -subj '/CN=localhost'\n```\n\n```javascript\nconst https = require('https');\nconst fs = require('fs');\nconst express = require('express');\nconst app = express();\n\nconst options = {\n  key: fs.readFileSync('server.key'),\n  cert: fs.readFileSync('server.cert')\n};\n\nhttps.createServer(options, app).listen(3443, () => {\n  console.log('HTTPS: https://localhost:3443');\n});\n```\n\nブラウザで「安全でない接続」の警告が出ますが、開発環境では「詳細」→「続行」で問題ありません。",
+    "tags": ["https", "development", "self-signed"],
+    "lessonSlug": "03-tls-https",
+    "category": "environment"
+  },
+  {
+    "id": "ch14-help-07",
+    "question": "AES-256-GCMのGCMとは？",
+    "answer": "GCM（Galois/Counter Mode）は、暗号化と同時に**認証（改ざん検知）** も行うモードです。\n\n| モード | 暗号化 | 認証 | 推奨 |\n|--------|--------|------|------|\n| ECB | あり | なし | 非推奨 |\n| CBC | あり | なし | 非推奨 |\n| GCM | あり | **あり** | **推奨** |\n\n**GCMの利点：**\n- 暗号文が改ざんされると検知できる\n- 暗号化と認証が1つの操作で完了（高速）\n\n```javascript\n// GCMが生成するauthTagで改ざんを検知\nconst tag = cipher.getAuthTag();\n// 復号時にtagが一致しなければエラー\ndecipher.setAuthTag(tag);\n```\n\n**常にGCMモードを使ってください。**",
+    "tags": ["aes", "gcm", "encryption"],
+    "lessonSlug": "01-symmetric-asymmetric",
+    "category": "concept"
+  },
+  {
+    "id": "ch14-help-08",
+    "question": "Argon2とbcryptどちらを使うべき？",
+    "answer": "**新規プロジェクトならArgon2がベスト。** ただしbcryptも十分安全です。\n\n| | bcrypt | Argon2 |\n|---|--------|--------|\n| **歴史** | 1999年〜 | 2015年〜 |\n| **対GPU** | 普通 | 強い（メモリハード） |\n| **設定** | コストファクター | 時間、メモリ、並列度 |\n| **採用** | 広く普及 | 増加中 |\n\n```bash\n# Argon2のインストール\nnpm install argon2\n```\n\n```javascript\nconst argon2 = require('argon2');\n\n// ハッシュ化\nconst hash = await argon2.hash('password123');\n\n// 検証\nconst isValid = await argon2.verify(hash, 'password123');\n```\n\n**結論**: どちらを使っても問題ありません。重要なのは「平文で保存しない」ことです。",
+    "tags": ["argon2", "bcrypt", "comparison"],
+    "lessonSlug": "02-hashing-bcrypt-argon2",
+    "category": "concept"
+  },
+  {
+    "id": "ch14-help-09",
+    "question": ".envファイルをチームで共有する安全な方法は？",
+    "answer": "**.envファイル自体をSlackやメールで送らないでください。**\n\n**安全な共有方法：**\n\n1. **1Password / Bitwarden**: パスワードマネージャーの共有機能\n\n2. **.env.example**: テンプレートだけGitにコミット\n```bash\n# .env.example（値は空 or ダミー）\nSECRET_KEY=your-secret-key-here\nDB_PASSWORD=your-db-password-here\n```\n\n3. **dotenv-vault**: .envの暗号化・共有ツール\n```bash\nnpx dotenv-vault push\nnpx dotenv-vault pull\n```\n\n4. **クラウドシークレット**: AWS Secrets Manager等で一元管理\n\n**原則**: 秘密情報は暗号化された経路でのみ共有する。",
+    "tags": ["env", "secrets", "team"],
+    "lessonSlug": "04-key-management",
+    "category": "concept"
+  },
+  {
+    "id": "ch14-help-10",
+    "question": "MD5やSHA-1をパスワードに使ってはいけない理由は？",
+    "answer": "**3つの理由で危険です：**\n\n1. **高速すぎる**: GPUで毎秒数十億回のハッシュ計算が可能\n```\nMD5: 1秒に約60億回\nbcrypt(12): 1秒に約10回\n→ bcryptは約6億倍遅い = 6億倍安全\n```\n\n2. **ソルトなし**: 同じ入力は常に同じ出力\n→ レインボーテーブルで逆引き可能\n\n3. **衝突脆弱性**: MD5とSHA-1は衝突（異なる入力で同じ出力）が発見済み\n\n**現在MD5/SHA-1を使っている場合：**\n即座にbcryptまたはArgon2への移行を計画してください。ログイン時の段階移行が最も現実的です。",
+    "tags": ["md5", "sha1", "deprecation"],
+    "lessonSlug": "02-hashing-bcrypt-argon2",
+    "category": "concept"
+  }
+]

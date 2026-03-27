@@ -1,0 +1,104 @@
+[
+  {
+    "id": "ch01-q01",
+    "question": "ターミナルで今いるディレクトリを確認するコマンドはどれ？",
+    "choices": ["ls", "pwd", "cd", "mkdir"],
+    "correctIndex": 1,
+    "explanation": "pwd（print working directory）は、現在の作業ディレクトリのフルパスを表示するコマンドです。lsはファイル一覧、cdはディレクトリ移動、mkdirはフォルダ作成です。",
+    "storyContext": "ShimaLinkのフォルダを作る前に、Yukiが最初に教えてくれたコマンドを思い出そう。",
+    "skill": { "category": "devtools", "name": "Terminal", "level": "intro" }
+  },
+  {
+    "id": "ch01-q02",
+    "question": "HTMLで最も大きな見出しを表すタグはどれ？",
+    "choices": ["<title>", "<h6>", "<header>", "<h1>"],
+    "correctIndex": 3,
+    "explanation": "<h1>が最も大きな見出しで、<h6>が最も小さな見出しです。<title>はブラウザのタブに表示されるタイトル、<header>はページのヘッダー領域を示すセマンティックタグです。",
+    "storyContext": "ShimaLinkのランディングページで「ShimaLink へようこそ」と大きく表示したタグだよ。",
+    "skill": { "category": "programming", "name": "HTML/CSS", "level": "intro" }
+  },
+  {
+    "id": "ch01-q03",
+    "question": "Gitで変更をコミットする前に必要なステップは？",
+    "choices": [
+      "git push でリモートに送信する",
+      "git add でファイルをステージングする",
+      "git branch で新しいブランチを作る",
+      "git pull でリモートから取得する"
+    ],
+    "correctIndex": 1,
+    "explanation": "コミットする前に、git add でファイルをステージングエリアに追加する必要があります。これは「次のコミットに含めるファイルを選ぶ」作業です。pushはリモート送信、branchは分岐作成、pullはリモート取得で、コミットの前提条件ではありません。",
+    "storyContext": "Yukiが「保険証券にサインする前に、何を保証するか選ばないとね」と言っていたのを思い出そう。",
+    "skill": { "category": "devtools", "name": "Git", "level": "intro" }
+  },
+  {
+    "id": "ch01-q04",
+    "question": "HTTPステータスコード 404 の意味は？",
+    "choices": [
+      "リクエスト成功",
+      "サーバーエラー",
+      "ページが見つからない",
+      "認証が必要"
+    ],
+    "correctIndex": 2,
+    "explanation": "404は「Not Found」で、リクエストされたページやリソースがサーバーに存在しないことを意味します。200が成功、500がサーバーエラー、401が認証必要です。",
+    "storyContext": "YukiがWebの仕組みを説明した時に出てきた、あの有名なエラーコードだ。",
+    "skill": { "category": "web-fundamentals", "name": "HTTP", "level": "intro" }
+  },
+  {
+    "id": "ch01-q05",
+    "question": "HTTPとHTTPSの違いで正しいのは？",
+    "choices": [
+      "HTTPSの方が速い",
+      "HTTPSは通信が暗号化されている",
+      "HTTPの方が安全",
+      "HTTPSは無料で使えない"
+    ],
+    "correctIndex": 1,
+    "explanation": "HTTPSは TLS/SSL による暗号化通信を行います。HTTPは通信が暗号化されないため、データが盗み見される危険があります。Yukiの例えでは「HTTPはハガキ、HTTPSは封筒」でしたね。",
+    "storyContext": "ShimaLinkではユーザーの個人情報を扱うから、HTTPSは必須だとYukiが強調していたね。",
+    "skill": { "category": "security", "name": "HTTPS", "level": "intro" }
+  },
+  {
+    "id": "ch01-q06",
+    "question": ".gitignore ファイルの役割は？",
+    "choices": [
+      "Gitのインストール設定を保存する",
+      "Gitで管理しないファイルを指定する",
+      "Gitのコミット履歴を削除する",
+      "Gitのリモートリポジトリを設定する"
+    ],
+    "correctIndex": 1,
+    "explanation": ".gitignore は、Gitの追跡対象から除外するファイルやディレクトリを指定するファイルです。パスワードファイル(.env)や一時ファイル(node_modules/)などを含めないようにするために使います。",
+    "storyContext": "Yukiが「.envファイルは絶対にGitに入れちゃダメ」と言っていた、あのセキュリティの話を覚えてる？",
+    "skill": { "category": "security", "name": "認証情報管理", "level": "intro" }
+  },
+  {
+    "id": "ch01-q07",
+    "question": "DNSの役割として正しいのは？",
+    "choices": [
+      "Webページのデザインを管理する",
+      "ドメイン名をIPアドレスに変換する",
+      "データベースにデータを保存する",
+      "HTMLファイルを圧縮する"
+    ],
+    "correctIndex": 1,
+    "explanation": "DNS（Domain Name System）は、人間が読めるドメイン名（例：shimalink.com）を、コンピューターが理解できるIPアドレス（例：203.0.113.42）に変換するシステムです。インターネットの「電話帳」のような役割です。",
+    "storyContext": "ブラウザでURLを入力した時、最初に起きる「名前解決」のステップだね。",
+    "skill": { "category": "web-fundamentals", "name": "DNS", "level": "intro" }
+  },
+  {
+    "id": "ch01-q08",
+    "question": "パス ~/Desktop/shimalink の ~ が意味するのは？",
+    "choices": [
+      "ルートディレクトリ",
+      "現在のディレクトリ",
+      "ホームディレクトリ",
+      "一つ上のディレクトリ"
+    ],
+    "correctIndex": 2,
+    "explanation": "~（チルダ）はホームディレクトリの省略記号です。macOSでは /Users/ユーザー名 を意味します。/ はルートディレクトリ、. は現在のディレクトリ、.. は一つ上のディレクトリです。",
+    "storyContext": "ターミナルの基本で、Yukiが「住所の省略記号」と教えてくれたやつだ。",
+    "skill": { "category": "devtools", "name": "Terminal", "level": "intro" }
+  }
+]

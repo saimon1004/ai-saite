@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch05-help-01",
+    "question": "git push で rejected エラーが出る",
+    "answer": "リモートに自分のローカルにない変更がある場合に発生します：\n\n```bash\n# まずリモートの変更を取り込む\ngit pull origin main\n\n# コンフリクトがあれば解決してから\ngit add .\ngit commit -m \"マージコンフリクトを解決\"\n\n# その後にプッシュ\ngit push origin main\n```\n\n**注意**: `git push --force` は他の人の変更を上書きしてしまうので、チーム開発では絶対に避けましょう。\n\n`--force` が必要な場面は非常に限られています。迷ったら `git pull` で解決してください。",
+    "tags": ["git", "push", "rejected", "error"],
+    "lessonSlug": "01-git-branching",
+    "category": "git"
+  },
+  {
+    "id": "ch05-help-02",
+    "question": "Gitのコンフリクトの解消方法がわからない",
+    "answer": "コンフリクトが発生すると、ファイルにマーカーが挿入されます：\n\n```\n<<<<<<< HEAD\n自分の変更内容\n=======\n相手の変更内容\n>>>>>>> feature/branch-name\n```\n\n**解消手順**:\n1. マーカー（`<<<<`, `====`, `>>>>`）を含む箇所を見つける\n2. どちらの内容を採用するか決める（または両方を組み合わせる）\n3. マーカーを削除する\n4. ファイルを保存\n5. `git add [ファイル名]`\n6. `git commit -m \"コンフリクトを解消\"`\n\n**VS Codeの場合**: コンフリクト箇所に「Accept Current」「Accept Incoming」「Accept Both」のボタンが表示されます。",
+    "tags": ["git", "conflict", "merge"],
+    "lessonSlug": "01-git-branching",
+    "category": "git"
+  },
+  {
+    "id": "ch05-help-03",
+    "question": "GitHub Pages にデプロイしたのにサイトが表示されない",
+    "answer": "以下を順番にチェック：\n\n**1. Pages の設定を確認**\n- Settings → Pages → Source が正しいか\n- Branch が `main`、フォルダが `/ (root)` になっているか\n\n**2. index.html が存在するか**\n- リポジトリのルートに `index.html` があるか\n- ファイル名が完全に `index.html`（大文字小文字注意）\n\n**3. URLを確認**\n- `https://[ユーザー名].github.io/[リポジトリ名]/`\n- リポジトリ名がURLに含まれる点に注意\n\n**4. デプロイ完了を待つ**\n- Actions タブで緑のチェックマークが付いているか確認\n- 初回は数分かかることがある\n\n**5. キャッシュをクリア**\n- `Cmd + Shift + R` で強制リロード",
+    "tags": ["github-pages", "deploy", "error"],
+    "lessonSlug": "02-deployment",
+    "category": "environment"
+  },
+  {
+    "id": "ch05-help-04",
+    "question": "カスタムドメインを設定したのにサイトにアクセスできない",
+    "answer": "**DNS伝播に時間がかかっている可能性が高いです。**\n\n**確認手順**:\n\n1. **DNSレコードの確認**\n```bash\nnslookup umikaze-terrace.com\n# IPアドレスが表示されるか確認\n```\n\n2. **伝播状況の確認**\n- [dnschecker.org](https://dnschecker.org) でグローバルに確認できます\n\n3. **よくある原因**:\n- DNSレコードの設定値が間違っている\n- A レコードのIPアドレスが正しいか\n- CNAME の値に末尾のドット(.)が必要な場合がある\n- レジストラの設定画面で「保存」を押し忘れている\n\n4. **待機時間の目安**:\n- 通常: 数分〜1時間\n- 最大: 48時間\n\n焦らず待ちましょう。24時間経っても反映されない場合はレコード設定を再確認してください。",
+    "tags": ["dns", "domain", "deploy"],
+    "lessonSlug": "03-domains-dns",
+    "category": "environment"
+  },
+  {
+    "id": "ch05-help-05",
+    "question": "HTTPSの鍵マークが表示されない",
+    "answer": "HTTPS設定後に鍵マークが出ない原因：\n\n**1. Mixed Content の問題**\nHTTPSページ内にHTTPのリソースがある：\n```html\n<!-- NG: httpの画像 -->\n<img src=\"http://example.com/photo.jpg\">\n\n<!-- OK: httpsに変更 -->\n<img src=\"https://example.com/photo.jpg\">\n\n<!-- OK: 相対パス -->\n<img src=\"/images/photo.jpg\">\n```\n\n**確認方法**: F12 → Console タブで「Mixed Content」警告を探す\n\n**2. SSL証明書がまだ発行されていない**\n- GitHub Pages: 「Enforce HTTPS」を有効にして数分待つ\n- Vercel: ドメイン追加後、自動発行を待つ（最大数分）\n\n**3. CSSやJS内のURLもチェック**\n```css\n/* NG */\n@import url('http://fonts.googleapis.com/...');\n\n/* OK */\n@import url('https://fonts.googleapis.com/...');\n```",
+    "tags": ["https", "ssl", "mixed-content", "security"],
+    "lessonSlug": "04-https-basics",
+    "category": "display"
+  },
+  {
+    "id": "ch05-help-06",
+    "question": "git pull と git fetch の違いは？",
+    "answer": "| コマンド | 動作 |\n|---------|------|\n| `git fetch` | リモートの変更を**取得するだけ**（マージしない） |\n| `git pull` | リモートの変更を**取得してマージ**（fetch + merge） |\n\n```bash\n# fetch: 安全に確認してからマージ\ngit fetch origin main\ngit log origin/main  # リモートの変更を確認\ngit merge origin/main  # 納得したらマージ\n\n# pull: 一気にやる（通常はこちらでOK）\ngit pull origin main\n```\n\n**使い分け**:\n- 通常は `git pull` でOK\n- リモートの変更を確認してからマージしたいなら `git fetch` → `git merge`",
+    "tags": ["git", "pull", "fetch", "remote"],
+    "lessonSlug": "01-git-branching",
+    "category": "concept"
+  },
+  {
+    "id": "ch05-help-07",
+    "question": "Vercelでデプロイが失敗する",
+    "answer": "Vercelのデプロイ失敗の主な原因：\n\n**1. ビルドエラー**\n- Deployments タブでエラーログを確認\n- ローカルでビルドが通るか確認\n\n**2. ファイルパスの大文字小文字**\n```\n<!-- ローカル（Mac）では動くがVercelでは失敗 -->\n<img src=\"Images/Photo.jpg\">\n<!-- ファイル名: images/photo.jpg -->\n```\nMacはデフォルトで大文字小文字を区別しないが、Vercelのサーバー（Linux）は区別する。\n\n**3. 環境変数の未設定**\n- ローカルの `.env` ファイルの変数がVercelに設定されているか\n- Settings → Environment Variables で確認\n\n**4. ルートディレクトリの指定**\n- `index.html` がプロジェクトのルートにあるか\n- サブディレクトリにある場合は Root Directory を設定",
+    "tags": ["vercel", "deploy", "error", "build"],
+    "lessonSlug": "02-deployment",
+    "category": "environment"
+  },
+  {
+    "id": "ch05-help-08",
+    "question": "ブランチを間違えてコミットしてしまった",
+    "answer": "まだプッシュしていない場合の対処法：\n\n**直前のコミットを取り消す（変更は残す）**\n```bash\n# コミットを取り消し、変更をステージングに戻す\ngit reset --soft HEAD~1\n\n# 正しいブランチに切り替え\ngit switch feature/correct-branch\n\n# 改めてコミット\ngit commit -m \"正しいメッセージ\"\n```\n\n**すでにプッシュしてしまった場合**:\n```bash\n# cherry-pick で正しいブランチにコミットをコピー\ngit switch feature/correct-branch\ngit cherry-pick [コミットハッシュ]\n\n# 間違ったブランチからコミットを削除\ngit switch main\ngit reset --soft HEAD~1\ngit stash  # 変更を一時退避\n```\n\n**迷ったらまず**: `git log --oneline` で現状を確認してから行動しましょう。",
+    "tags": ["git", "commit", "branch", "reset"],
+    "lessonSlug": "01-git-branching",
+    "category": "git"
+  },
+  {
+    "id": "ch05-help-09",
+    "question": "デプロイ後にローカルと表示が違う",
+    "answer": "ローカルと本番環境で表示が違う原因：\n\n**1. ファイルパスの問題**\n```html\n<!-- ローカルでは動くが本番では動かない -->\n<link rel=\"stylesheet\" href=\"/style.css\">\n<!-- GitHub Pages: /repository-name/style.css が正しいパスかも -->\n\n<!-- 安全な相対パス -->\n<link rel=\"stylesheet\" href=\"style.css\">\n```\n\n**2. ブラウザキャッシュ**\n- `Cmd + Shift + R` で強制リロード\n- シークレットウィンドウで確認\n\n**3. ビルド対象の漏れ**\n- 新しく作ったファイルが `git add` されていない\n- `.gitignore` で除外されていないか確認\n\n**4. 大文字小文字の違い**（前述）\n\n**確認手順**: 本番環境の開発者ツール → Network タブで、404エラーのファイルがないか確認",
+    "tags": ["deploy", "display", "path", "cache"],
+    "lessonSlug": "02-deployment",
+    "category": "display"
+  },
+  {
+    "id": "ch05-help-10",
+    "question": "Let's Encrypt の証明書って本当に安全？",
+    "answer": "**はい、安全です。** Let's Encrypt は世界で最も広く使われているSSL証明書発行機関です。\n\n| 項目 | Let's Encrypt | 有料証明書 |\n|------|--------------|----------|\n| 暗号化の強度 | 同じ | 同じ |\n| ブラウザ対応 | ほぼ全て | ほぼ全て |\n| 有効期間 | 90日（自動更新） | 1年 |\n| サポート | コミュニティ | ベンダーサポート |\n| 費用 | 無料 | 年間数千〜数万円 |\n\n**有料証明書が必要な場合**:\n- OV/EV証明書が求められるとき（組織の実在証明）\n- 特定の業界規制に準拠する必要があるとき\n\n**海風テラスのような一般的なWebサイト**では、Let's Encrypt のDV証明書で十分です。GitHub Pages や Vercel は自動で更新してくれるので、証明書の期限切れの心配もありません。",
+    "tags": ["https", "ssl", "lets-encrypt", "security"],
+    "lessonSlug": "04-https-basics",
+    "category": "concept"
+  }
+]

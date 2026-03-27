@@ -1,0 +1,702 @@
+---
+title: "誰がアクセスしているか"
+subtitle: "認証とセキュリティの基礎を学ぶ"
+description: "認証とセキュリティの基礎を学ぶ。Authentication・JWT・Security Basicsを実践的なストーリーで学ぶチャプター「誰がアクセスしているか」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-10
+chapter: 10
+arc: "growth"
+arcName: "成長編"
+skills:
+  - { category: "security", name: "Authentication", level: "intro" }
+  - { category: "security", name: "JWT", level: "intro" }
+  - { category: "security", name: "Security Basics", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["09-database-foundation"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+朝のミーティング。あなたがモニターを指差した。
+
+---
+
+**あなた:** 「これ、見てくれない？昨日の深夜から、見たことないIPアドレスからのアクセスが大量に来てる。」
+
+画面にはサーバーのアクセスログが表示されていた。通常は1時間に数十件のアクセスが、深夜2時から3時の間に500件以上に跳ね上がっている。
+
+**あなた:** 「これは...誰かがAPIのエンドポイントを順番に叩いてる？」
+
+**Yuki:** 「スキャンだね。ShimaLinkのAPIを探索しようとしている人がいる。」
+
+**あなた:** 「でも、別に壊されたわけじゃないんでしょ？」
+
+**Yuki:** 「今のところはね。でも、今のShimaLinkはURLさえ知っていれば誰でもデータにアクセスできる。クライアントの売上データも、お客さんの予約情報も、全部だ。」
+
+ブラウザのアドレスバーに直接URLを入力して見せた。ログインなしで、すべてのデータが表示される。
+
+**あなた:** 「...これは大問題ですね。」
+
+---
+
+**Yuki:** 「認証——"誰がアクセスしているか"を確認する仕組みが必要だ。そして認可——"その人は何ができるか"を制御する仕組みも。」
+
+**あなた:** 「ログイン画面を作ればいいんでしょ？簡単じゃん。」
+
+**Yuki:** 「ログイン画面を作るのは簡単。でも、パスワードをどう保存するか、認証状態をどう管理するか、攻撃からどう守るか——セキュリティの世界は奥が深いんだ。」
+
+あなたはサーバーのアクセスログをもう一度見つめた。"Shadow"と名前をつけたその謎のアクセスの主は、今もどこかからShimaLinkを見ているのかもしれない。
+
+</StoryPanel>
+
+## 認証と認可 — Authentication vs Authorization
+
+セキュリティの話をするとき、2つの似た言葉が登場する。**認証（Authentication）**と**認可（Authorization）**。この違いを理解することが第一歩だ。
+
+> 「認証は"あなたは誰？"、認可は"あなたは何ができる？"。空港の例で考えてみて。パスポートの確認が認証、搭乗券の確認が認可。」——Yuki
+
+## 認証（Authentication）= Who are you?
+
+**ユーザーの身元を確認する**プロセスです。
+
+```
+ユーザー: 「メールアドレスとパスワードはこれです」
+サーバー: 「確認しました。あなたはMikaさんですね」→ ログイン成功
+```
+
+### 認証の方法
+
+| 方法 | 仕組み | 例 |
+|------|--------|-----|
+| ID/パスワード | 知識ベース | ログインフォーム |
+| OAuth | 第三者認証 | Googleでログイン |
+| 生体認証 | 身体的特徴 | 指紋、顔認証 |
+| ワンタイムパスワード | 一時的なコード | SMS認証 |
+
+## 認可（Authorization）= What can you do?
+
+**認証済みユーザーに対して、何ができるかを制御する**プロセスです。
+
+```
+Mika（オーナー）: 海風テラスのデータを閲覧・編集できる
+スタッフ: 海風テラスのデータを閲覧のみ
+他のクライアント: 海風テラスのデータにアクセスできない
+```
+
+### ロールベースのアクセス制御（RBAC）
+
+```typescript
+// ShimaLinkのロール定義
+type Role = "admin" | "owner" | "staff" | "viewer";
+
+interface User {
+  id: number;
+  email: string;
+  role: Role;
+  clientId?: number; // 所属クライアント
+}
+
+// ロールごとの権限
+const permissions = {
+  admin:  ["read", "write", "delete", "manage_users"],
+  owner:  ["read", "write", "delete"],
+  staff:  ["read", "write"],
+  viewer: ["read"]
+};
+```
+
+## ShimaLinkでの認証フロー
+
+```
+1. ユーザーがメールアドレスとパスワードを送信
+   POST /api/login { email, password }
+
+2. サーバーがデータベースで照合
+   SELECT * FROM users WHERE email = ?
+
+3. パスワードが一致したらトークンを発行
+   → JWTトークンを返す
+
+4. 以降のリクエストにトークンを添付
+   GET /api/clients
+   Authorization: Bearer <token>
+
+5. サーバーがトークンを検証
+   → 有効なら処理を続行
+   → 無効なら 401 Unauthorized
+```
+
+## 認証なしのリスク
+
+```
+【現在のShimaLink】
+GET /api/clients → 全クライアントのデータが見える
+GET /api/clients/1/reservations → Mikaの予約が全部見える
+DELETE /api/clients/1 → 誰でもクライアントを削除できる！
+
+【認証導入後のShimaLink】
+GET /api/clients → 401 Unauthorized（トークンなし）
+GET /api/clients (+ 有効なトークン) → 自分のデータだけ表示
+```
+
+> **ポイント**: 認証は「門番」、認可は「鍵」。認証がないシステムは、誰でも入れる建物と同じ。ShimaLinkにはクライアントの機密データがあるので、認証は必須です。
+
+## パスワードハッシュ — 安全な保存方法
+
+認証の最初のステップは、ユーザーのパスワードを安全に保存すること。しかし、パスワードをそのまま保存するのは**絶対にNG**だ。
+
+> 「パスワードを平文（そのまま）で保存するのは、金庫の暗証番号を金庫の外に貼り付けるようなもの。」——Yuki
+
+## なぜ平文保存がダメなのか
+
+```
+【平文保存のデータベース】
+| email           | password    |
+|-----------------|-------------|
+| mika@example.com | cafe1234   |
+| user@example.com | password1 |
+
+→ データベースが漏洩したら、全員のパスワードが丸見え！
+→ 他のサービスでも同じパスワードを使っている人は全滅
+```
+
+## ハッシュとは
+
+**ハッシュ関数**は、入力を固定長の文字列に変換する一方向の関数。元に戻すことはできない。
+
+```
+入力: "cafe1234"
+  ↓ ハッシュ関数
+出力: "$2b$10$X7rG5y8qN2..." (60文字のハッシュ値)
+
+ハッシュ値 → 元のパスワード？ → 不可能！
+```
+
+## bcryptを使ったハッシュ化
+
+```typescript
+import bcrypt from "bcrypt";
+
+// パスワードのハッシュ化（ユーザー登録時）
+async function hashPassword(password: string): Promise<string> {
+  const saltRounds = 10; // ソルトのラウンド数
+  const hashed = await bcrypt.hash(password, saltRounds);
+  return hashed;
+  // "$2b$10$X7rG5y8qN2vB3kL1mP4..."
+}
+
+// パスワードの検証（ログイン時）
+async function verifyPassword(
+  password: string,
+  hashedPassword: string
+): Promise<boolean> {
+  return bcrypt.compare(password, hashedPassword);
+}
+```
+
+## ソルト（Salt）
+
+ソルトは、ハッシュ化の前にパスワードに追加されるランダムな文字列です。
+
+```
+ソルトなし:
+"password123" → ハッシュ値A
+"password123" → ハッシュ値A（同じ！レインボーテーブル攻撃に弱い）
+
+ソルトあり:
+"password123" + ソルト1 → ハッシュ値X
+"password123" + ソルト2 → ハッシュ値Y（異なる！）
+```
+
+> bcryptはソルトを自動生成し、ハッシュ値に含めます。手動でソルトを管理する必要はありません。
+
+## ユーザー登録の実装
+
+```typescript
+// ユーザーテーブル
+// CREATE TABLE users (
+//   id INTEGER PRIMARY KEY AUTOINCREMENT,
+//   email TEXT UNIQUE NOT NULL,
+//   password_hash TEXT NOT NULL,
+//   role TEXT DEFAULT 'viewer',
+//   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+// );
+
+async function registerUser(
+  email: string,
+  password: string,
+  role: string = "viewer"
+): Promise<User> {
+  // パスワードの強度チェック
+  if (password.length < 8) {
+    throw new Error("パスワードは8文字以上必要です");
+  }
+
+  // パスワードをハッシュ化
+  const passwordHash = await hashPassword(password);
+
+  // データベースに保存（平文パスワードは保存しない！）
+  const stmt = db.prepare(
+    "INSERT INTO users (email, password_hash, role) VALUES (?, ?, ?)"
+  );
+  const result = stmt.run(email, passwordHash, role);
+
+  return { id: result.lastInsertRowid as number, email, role };
+}
+```
+
+## ログインの実装
+
+```typescript
+async function loginUser(
+  email: string,
+  password: string
+): Promise<User | null> {
+  // メールアドレスでユーザーを検索
+  const stmt = db.prepare(
+    "SELECT * FROM users WHERE email = ?"
+  );
+  const user = stmt.get(email) as UserRow | undefined;
+
+  if (!user) {
+    return null; // ユーザーが見つからない
+  }
+
+  // パスワードの検証
+  const isValid = await verifyPassword(password, user.password_hash);
+
+  if (!isValid) {
+    return null; // パスワードが一致しない
+  }
+
+  return { id: user.id, email: user.email, role: user.role };
+}
+```
+
+## やってはいけないこと
+
+| NG | 理由 |
+|----|------|
+| パスワードを平文で保存 | 漏洩時に全員のパスワードが露出 |
+| MD5やSHA-1でハッシュ化 | 高速すぎてブルートフォースに弱い |
+| 全ユーザーで同じソルト | レインボーテーブル攻撃に弱い |
+| パスワードをログに出力 | ログからパスワードが漏洩 |
+
+> **ポイント**: パスワードは必ずbcryptでハッシュ化。データベースに保存するのはハッシュ値だけ。元のパスワードはサーバーにも残らないのが正しい状態です。
+
+## JWTトークン — 認証の証明書
+
+ログインに成功したら、そのユーザーが認証済みであることを証明する「チケット」が必要だ。それが**JWT（JSON Web Token）**だ。
+
+> 「JWTは遊園地のリストバンド。入場時に本人確認して渡す。あとはリストバンドを見せるだけでアトラクションに乗れる。」——Yuki
+
+## JWTとは
+
+JWTは3つのパートからなるトークン（文字列）です。
+
+```
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoibWlrYUBleGFtcGxlLmNvbSJ9.abc123signature
+└──── Header ────┘ └──────────── Payload ──────────────┘ └── Signature ──┘
+```
+
+| パート | 内容 | 例 |
+|--------|------|-----|
+| Header | アルゴリズム情報 | `{"alg": "HS256"}` |
+| Payload | ユーザー情報（クレーム） | `{"userId": 1, "email": "..."}` |
+| Signature | 改ざん防止の署名 | サーバーの秘密鍵で生成 |
+
+## JWTの仕組み
+
+```
+1. ログイン成功
+   サーバー: ユーザー情報 + 秘密鍵 → JWT生成 → クライアントに返す
+
+2. APIリクエスト
+   クライアント: リクエスト + JWT → サーバーに送信
+
+3. トークン検証
+   サーバー: JWT + 秘密鍵 → 署名を検証 → 有効ならリクエストを処理
+```
+
+## JWTの生成と検証
+
+```typescript
+import jwt from "jsonwebtoken";
+
+// 秘密鍵（環境変数で管理すること！）
+const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
+
+// JWTの生成（ログイン成功時）
+function generateToken(user: User): string {
+  const payload = {
+    userId: user.id,
+    email: user.email,
+    role: user.role
+  };
+
+  return jwt.sign(payload, JWT_SECRET, {
+    expiresIn: "24h" // 24時間で有効期限切れ
+  });
+}
+
+// JWTの検証（APIリクエスト時）
+function verifyToken(token: string): TokenPayload | null {
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as TokenPayload;
+    return decoded;
+  } catch (error) {
+    return null; // 無効なトークン
+  }
+}
+```
+
+## ログインAPIの実装
+
+```typescript
+// POST /api/login
+async function handleLogin(req: Request): Promise<Response> {
+  const { email, password } = req.body;
+
+  // ユーザー認証
+  const user = await loginUser(email, password);
+
+  if (!user) {
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error: { code: "AUTH_FAILED", message: "メールアドレスまたはパスワードが正しくありません" }
+      }),
+      { status: 401 }
+    );
+  }
+
+  // JWTトークンを生成
+  const token = generateToken(user);
+
+  return new Response(
+    JSON.stringify({
+      success: true,
+      data: { token, user: { id: user.id, email: user.email, role: user.role } }
+    }),
+    { status: 200 }
+  );
+}
+```
+
+## フロントエンドでのトークン管理
+
+```typescript
+// ログイン処理
+async function login(email: string, password: string) {
+  const response = await fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const result = await response.json();
+
+  if (result.success) {
+    // トークンをローカルストレージに保存
+    localStorage.setItem("token", result.data.token);
+    return result.data.user;
+  } else {
+    throw new Error(result.error.message);
+  }
+}
+
+// 認証付きAPIリクエスト
+async function authenticatedFetch(url: string, options?: RequestInit) {
+  const token = localStorage.getItem("token");
+
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...options?.headers,
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}` // トークンをヘッダーに添付
+    }
+  });
+}
+
+// 使用例
+const response = await authenticatedFetch("/api/clients");
+```
+
+## トークンの有効期限
+
+```typescript
+// 短い有効期限 + リフレッシュトークン が推奨
+const accessToken = jwt.sign(payload, SECRET, { expiresIn: "15m" });  // 15分
+const refreshToken = jwt.sign(payload, REFRESH_SECRET, { expiresIn: "7d" }); // 7日
+
+// アクセストークンが切れたら、リフレッシュトークンで再発行
+```
+
+## JWTの注意点
+
+| 注意 | 説明 |
+|------|------|
+| Payloadは暗号化されない | Base64エンコードなので誰でも読める。機密情報は入れない |
+| 秘密鍵の管理 | 環境変数で管理。コードに直書きしない |
+| トークンの無効化 | JWTは発行後に無効化が難しい。有効期限を短くして対処 |
+| HTTPS必須 | トークンが盗まれると成りすまし可能。必ずHTTPSを使う |
+
+> **ポイント**: JWTは「署名付きの証明書」。サーバーは毎回データベースを参照しなくても、署名を検証するだけでユーザーを識別できます。
+
+## セッション管理 — 認証状態を維持する
+
+JWTでログイン認証ができるようになった。しかし、実際のアプリでは「ログアウト」「セッション切れ」「不正アクセスの検知」など、セッション全体を管理する必要がある。
+
+> 「認証は"入場"、セッション管理は"滞在中の安全確保"。入場したら終わりじゃない。」——Yuki
+
+## セッションとは
+
+ユーザーがログインしてからログアウトするまでの「一連のやり取り」をセッションと呼びます。
+
+```
+ログイン → セッション開始
+  ↓
+ページ閲覧、データ操作...（セッション中）
+  ↓
+ログアウト or 有効期限切れ → セッション終了
+```
+
+## セッション管理の2つの方式
+
+### 1. サーバーサイドセッション（Cookie + セッションID）
+
+```
+ログイン → サーバーがセッションIDを生成 → Cookieに保存
+  ↓
+リクエスト → Cookieが自動送信 → サーバーがセッションIDで照合
+```
+
+```typescript
+// サーバー側でセッションを管理
+const sessions = new Map<string, SessionData>();
+
+function createSession(user: User): string {
+  const sessionId = crypto.randomUUID();
+  sessions.set(sessionId, {
+    userId: user.id,
+    email: user.email,
+    role: user.role,
+    createdAt: new Date(),
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24時間
+  });
+  return sessionId;
+}
+```
+
+### 2. トークンベース（JWT）
+
+```
+ログイン → サーバーがJWTを生成 → クライアントが保存
+  ↓
+リクエスト → AuthorizationヘッダーにJWT添付 → サーバーが署名を検証
+```
+
+### 比較
+
+| 特徴 | Cookie + セッション | JWT |
+|------|---------------------|-----|
+| 状態管理 | サーバー側 | クライアント側 |
+| スケーラビリティ | サーバー間で共有が必要 | サーバー間共有不要 |
+| ログアウト | セッション削除で即座に無効化 | 有効期限まで無効化が困難 |
+| ストレージ | サーバーのメモリ/DB | クライアントのストレージ |
+
+## 認証ミドルウェアの実装
+
+すべてのAPIリクエストに対して認証チェックを行います。
+
+```typescript
+// 認証ミドルウェア
+function authMiddleware(req: Request): TokenPayload {
+  const authHeader = req.headers.get("Authorization");
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    throw new AuthError("認証トークンがありません", 401);
+  }
+
+  const token = authHeader.split(" ")[1];
+  const payload = verifyToken(token);
+
+  if (!payload) {
+    throw new AuthError("無効なトークンです", 401);
+  }
+
+  return payload;
+}
+
+// APIエンドポイントで使用
+async function handleGetClients(req: Request): Promise<Response> {
+  // 認証チェック
+  const user = authMiddleware(req);
+
+  // 認可チェック（adminは全件、ownerは自分のクライアントのみ）
+  let clients;
+  if (user.role === "admin") {
+    clients = getAllClients();
+  } else {
+    clients = getClientsByOwner(user.userId);
+  }
+
+  return new Response(
+    JSON.stringify({ success: true, data: clients })
+  );
+}
+```
+
+## ログアウトの実装
+
+```typescript
+// フロントエンド: トークンを削除
+function logout() {
+  localStorage.removeItem("token");
+  window.location.href = "/login";
+}
+
+// セッション方式の場合: サーバー側でも削除
+async function handleLogout(req: Request): Promise<Response> {
+  const sessionId = req.cookies.get("sessionId");
+  if (sessionId) {
+    sessions.delete(sessionId);
+  }
+  return new Response(null, {
+    status: 200,
+    headers: {
+      "Set-Cookie": "sessionId=; Max-Age=0" // Cookieを無効化
+    }
+  });
+}
+```
+
+## セキュリティのベストプラクティス
+
+### 1. HTTPS を必ず使う
+
+```
+HTTP:  データが平文で送信される → トークンが盗まれる
+HTTPS: データが暗号化される → 安全
+```
+
+### 2. トークンの安全な保存
+
+```typescript
+// NG: XSS攻撃に弱い
+localStorage.setItem("token", token);
+
+// より安全: HttpOnly Cookie
+// Set-Cookie: token=xxx; HttpOnly; Secure; SameSite=Strict
+// → JavaScriptからアクセスできない
+```
+
+### 3. レート制限
+
+```typescript
+// ブルートフォース攻撃を防ぐ
+const loginAttempts = new Map<string, number>();
+
+function checkRateLimit(ip: string): boolean {
+  const attempts = loginAttempts.get(ip) || 0;
+  if (attempts >= 5) {
+    return false; // 5回失敗したらブロック
+  }
+  loginAttempts.set(ip, attempts + 1);
+  return true;
+}
+```
+
+### 4. エラーメッセージの注意
+
+```typescript
+// NG: どちらが間違いか教えてしまう
+"メールアドレスが存在しません"
+"パスワードが間違っています"
+
+// OK: 攻撃者にヒントを与えない
+"メールアドレスまたはパスワードが正しくありません"
+```
+
+## Shadowの攻撃手法を理解する
+
+ShimaLinkのアクセスログに記録されていたShadowのスキャンは、以下のような手法だった可能性がある。
+
+```
+1. ディレクトリスキャン: /admin, /api/users, /api/debug...
+   → 存在するエンドポイントを探索
+
+2. パラメータ改ざん: /api/clients/1, /api/clients/2...
+   → 他のユーザーのデータにアクセス試行
+
+3. ブルートフォース: 一般的なパスワードを大量に試行
+   → ログイン突破を試みる
+```
+
+認証を導入すれば、これらの攻撃は大半を防げます。
+
+> **ポイント**: セキュリティは「一度入れたら終わり」ではない。定期的な見直しとアップデートが重要です。Shadowのような脅威は常に存在することを意識しよう。
+
+<StoryPanel variant="conclusion">
+
+認証システムの実装が完了した。ダッシュボードにアクセスするにはログインが必要になり、APIエンドポイントはJWTトークンなしではアクセスできなくなった。
+
+```
+POST /api/login → JWTトークン発行
+GET  /api/clients (Authorization: Bearer <token>) → データ取得
+GET  /api/clients (トークンなし) → 401 Unauthorized
+```
+
+---
+
+**Mika:** 「ログイン画面ができたんですね。パスワードを忘れたらどうすればいいですか？」
+
+**あなた:** 「パスワードリセット機能も実装しました。登録メールアドレスにリセットリンクを送信します。」
+
+**あなた:** 「あの謎のアクセス、その後どうなった？」
+
+**あなた:** 「認証を入れてからは、401エラーが返るだけで、データにはアクセスできてない。」
+
+**Yuki:** 「いい仕事だね。でも、セキュリティに"完成"はないよ。常に最新の脅威を把握して、対策をアップデートし続ける必要がある。」
+
+Yukiがホワイトボードに今後のロードマップを描き始めた。
+
+**Yuki:** 「ShimaLinkは、ここまでで"基礎"が完成した。ターミナル、HTML/CSS、Git、デプロイ、JavaScript、TypeScript、API、データベース、認証。次のステップは——」
+
+**あなた:** 「フレームワーク！ReactとかNext.jsとか！」
+
+**Yuki:** 「その通り。ここからは"実践編"。フレームワークを使って本格的なWebアプリを構築していく。成長編で学んだ基礎があれば、フレームワークの理解も速いよ。」
+
+---
+
+ふと、あなたのメールに匿名のメッセージが届いていた。
+
+> **From:** shadow@proton.me
+> **Subject:** おめでとう
+>
+> 「セキュリティ対策、悪くないね。でも、まだ甘い部分がある。次に会うときまでに、もっと強くなっておいて。」
+
+あなたが横から覗き込む。
+
+**あなた:** 「え、何これ？あの"Shadow"から？」
+
+**Yuki:** 「...面白い。どうやら、ただのスキャンじゃなかったみたいだね。」
+
+あなたは画面を閉じた。ShimaLinkの物語は、まだ始まったばかりだ。
+
+---
+
+> **次のアーク**: *実践編（Practice Arc）* — React、Next.js、そしてShimaLinkの本格的なプロダクト開発が始まる。Shadowの正体は...？
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="10-auth-identity" />
+
+<ChapterFaq chapterId="10-auth-identity" />
+
+<SeriesNav current={10} />

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch25-help-01",
+    "question": "GitHubでFork（フォーク）する方法がわからない",
+    "answer": "**手順:**\n1. 貢献したいリポジトリのGitHubページへ\n2. 右上の「Fork」ボタンをクリック\n3. 自分のアカウントにコピーが作られる\n4. フォークをクローン:\n\n```bash\ngit clone https://github.com/YOUR_NAME/project.git\ncd project\n\n# アップストリーム（元のリポジトリ）を追加\ngit remote add upstream https://github.com/ORIGINAL/project.git\n\n# 最新を取得\ngit fetch upstream\ngit merge upstream/main\n```\n\n**フォークとクローンの違い:**\n- フォーク: GitHubサーバー上でリポジトリをコピー\n- クローン: リポジトリをローカルPCにダウンロード",
+    "tags": ["github", "fork", "opensource"],
+    "lessonSlug": "02-open-source",
+    "category": "git"
+  },
+  {
+    "id": "ch25-help-02",
+    "question": "Pull Requestが「コンフリクト」で出せない",
+    "answer": "**リベースでコンフリクトを解消:**\n\n```bash\n# 元のリポジトリの最新を取得\ngit fetch upstream\n\n# 自分のブランチをリベース\ngit rebase upstream/main\n\n# コンフリクトが表示されたら:\n# 1. 該当ファイルを開いて手動で解消\n# 2. git add <解消したファイル>\n# 3. git rebase --continue\n\n# フォークにプッシュ（--forceが必要）\ngit push origin my-branch --force-with-lease\n```\n\n**コンフリクトの読み方:**\n```\n<<<<<<< HEAD\n自分の変更\n=======\n相手の変更\n>>>>>>> upstream/main\n```\n両方の変更を見て、正しい状態に手動で修正します。",
+    "tags": ["git", "conflict", "pull-request"],
+    "lessonSlug": "02-open-source",
+    "category": "git"
+  },
+  {
+    "id": "ch25-help-03",
+    "question": "技術ブログの書き方がわからない",
+    "answer": "**基本構成:**\n\n```\n1. タイトル（問題→解決の形が引きがある）\n   例: 「N+1問題を解消してAPIレスポンスを100倍速くした」\n\n2. 導入（何が問題だったか）\n   → 具体的な数値があると良い\n\n3. 原因（なぜその問題が起きたか）\n   → 技術的な分析\n\n4. 解決策（どう解決したか）\n   → コード例付き\n\n5. 結果（どれくらい改善したか）\n   → Before/Afterの数値比較\n\n6. まとめ（学んだこと）\n```\n\n**投稿先:**\n- Zenn（日本のエンジニア向け）\n- Qiita（日本最大の技術記事プラットフォーム）\n- 個人ブログ（自由度が高い）\n- note（カジュアルな記事向け）",
+    "tags": ["blog", "writing", "career"],
+    "lessonSlug": "03-career-paths",
+    "category": "concept"
+  },
+  {
+    "id": "ch25-help-04",
+    "question": "ポートフォリオに何を載せればいい？",
+    "answer": "**必須項目:**\n\n1. **自己紹介**: 名前、スキル、経験年数\n2. **プロジェクト（3つ以上）**:\n   - スクリーンショット\n   - 使用技術\n   - 自分の役割\n   - デモURL or GitHubリンク\n3. **技術スタック**: 使える技術一覧\n4. **連絡先**: メール、GitHub、LinkedIn\n\n**ShimaLinkの書き方例:**\n```\nShimaLink — 沖縄ローカルビジネスプラットフォーム\n\n技術: React, TypeScript, Express, PostgreSQL,\n      Docker, AWS, OpenAI API\n\n成果:\n- 150+店舗が利用する実サービス\n- Lighthouse 95点のパフォーマンス\n- AI紹介文生成機能の設計・実装\n```\n\n**コツ:** 技術の羅列より「何を解決したか」を伝える。",
+    "tags": ["portfolio", "career", "job"],
+    "lessonSlug": "03-career-paths",
+    "category": "concept"
+  },
+  {
+    "id": "ch25-help-05",
+    "question": "MITライセンスとGPLの違いがわからない",
+    "answer": "**簡単な比較:**\n\n| | MIT | GPL |\n|---|---|---|\n| 商用利用 | OK | OK |\n| 改変 | OK | OK |\n| 再配布 | OK | OK |\n| ソースコード公開 | **不要** | **必要** |\n| 派生物のライセンス | 自由 | **GPLのみ** |\n\n**例え:**\n- MIT: 「自由に使っていいよ。著作権表示だけ残してね」\n- GPL: 「自由に使っていいよ。ただし、あなたの派生物もGPLで公開してね」\n\n**どちらを選ぶ？**\n- 多くの人に使ってほしい → MIT\n- 派生物もオープンでいてほしい → GPL\n- 迷ったら → MIT",
+    "tags": ["license", "opensource", "legal"],
+    "lessonSlug": "02-open-source",
+    "category": "concept"
+  },
+  {
+    "id": "ch25-help-06",
+    "question": "技術的負債って具体的にどう管理する？",
+    "answer": "**技術的負債の管理フロー:**\n\n1. **記録する**: TODOコメントやIssueで可視化\n```typescript\n// TODO: この関数はN+1問題がある。JOINに書き換える\n// Technical Debt: #issue-123\n```\n\n2. **優先度をつける**\n| 優先度 | 基準 |\n|--------|------|\n| High | ユーザーに影響がある |\n| Medium | 開発速度に影響がある |\n| Low | コードが読みにくいだけ |\n\n3. **定期的に返済する**\n- スプリントの20%を技術的負債の解消に使う\n- 「ボーイスカウトルール」: 触ったコードは必ず少し改善する\n\n4. **増やさない工夫**\n- コードレビューで負債を防ぐ\n- テストがあれば安心してリファクタリングできる",
+    "tags": ["technical-debt", "refactoring", "architecture"],
+    "lessonSlug": "01-software-architecture",
+    "category": "concept"
+  },
+  {
+    "id": "ch25-help-07",
+    "question": "新しい技術を効率よくキャッチアップする方法は？",
+    "answer": "**5ステップ学習法:**\n\n1. **概要を掴む（30分）**\n   - 公式サイトの「Getting Started」を読む\n   - 何が嬉しいのか（Why）を理解する\n\n2. **チュートリアルを1つだけやる（2時間）**\n   - 公式のチュートリアルが最も信頼できる\n   - 完璧に理解しなくてOK\n\n3. **ミニプロジェクトを作る（1日）**\n   - TODOアプリなど、小さなものでいい\n   - チュートリアルの延長ではなく、自分で考える\n\n4. **既存プロジェクトに組み込む（数日）**\n   - ShimaLinkの一部で試す\n   - 実際の問題を解決する\n\n5. **アウトプットする（1時間）**\n   - 学んだことをブログ記事にする\n   - 「5分で分かる〇〇」形式が書きやすい",
+    "tags": ["learning", "new-technology", "strategy"],
+    "lessonSlug": "04-continuous-learning",
+    "category": "concept"
+  },
+  {
+    "id": "ch25-help-08",
+    "question": "エンジニアのコミュニティはどこで見つける？",
+    "answer": "**オンラインコミュニティ:**\n\n| プラットフォーム | 特徴 |\n|---------------|------|\n| connpass | 日本のIT勉強会検索サイト |\n| Discord | リアルタイムチャット |\n| X (Twitter) | 技術情報の速報 |\n| Zenn | 技術記事＋スクラップ |\n| GitHub Discussions | OSSプロジェクトの議論 |\n\n**オフラインコミュニティ:**\n- もくもく会: 黙々と作業する会（初心者歓迎が多い）\n- LT会: 5分間のプレゼン（聴くだけでもOK）\n- ハッカソン: チームでプロダクトを作る\n\n**始め方:**\n1. connpassで「沖縄 エンジニア」と検索\n2. 興味のあるイベントに参加申込み\n3. まずは聴く側で参加（発表は不要）\n4. 慣れたらLTに挑戦",
+    "tags": ["community", "networking", "events"],
+    "lessonSlug": "04-continuous-learning",
+    "category": "concept"
+  },
+  {
+    "id": "ch25-help-09",
+    "question": "レイヤードアーキテクチャの各層の役割がわからない",
+    "answer": "**レストランで例えると:**\n\n| 層 | レストランの例 | ShimaLinkの例 |\n|---|---|---|\n| **Presentation** | ウェイター（注文を受ける） | APIルーター、コントローラー |\n| **Application** | フロアマネージャー（調整） | ユースケース、ワークフロー |\n| **Domain** | シェフ（料理のルール） | ビジネスロジック、バリデーション |\n| **Infrastructure** | 食材倉庫、調理器具 | DB、外部API、ファイルシステム |\n\n```typescript\n// Presentation: HTTPリクエストを受ける\nrouter.post('/api/bookings', bookingController.create);\n\n// Application: ワークフローを調整\nasync function createBooking(data) {\n  validate(data);\n  const booking = await bookingRepo.save(data);\n  await notificationService.send(booking);\n  return booking;\n}\n\n// Domain: ビジネスルール\nfunction validate(data) { /* バリデーション */ }\n\n// Infrastructure: DB操作\nconst bookingRepo = { save: (data) => db.insert(data) };\n```",
+    "tags": ["architecture", "layers", "design"],
+    "lessonSlug": "01-software-architecture",
+    "category": "concept"
+  },
+  {
+    "id": "ch25-help-10",
+    "question": "マイクロサービスに移行すべきタイミングは？",
+    "answer": "**移行の判断基準:**\n\n| 状況 | モノリスを維持 | マイクロサービスを検討 |\n|------|--------------|--------------------|\n| チーム規模 | 〜10人 | 20人以上 |\n| デプロイ頻度 | 週1-2回 | 1日複数回、独立して |\n| スケーリング | 全体で十分 | 機能ごとに異なる要件 |\n| 技術多様性 | 統一で問題なし | 機能に最適な言語を使いたい |\n\n**ShimaLinkの場合:**\n- チーム5人 → モノリスで十分\n- 将来チームが20人を超えたら検討\n\n**Yukiのアドバイス:**\n> 「マイクロサービスは銀の弾丸じゃない。複雑さが増す分、運用コストも跳ね上がる。モノリスのまま、レイヤー分離をきちんとやる方が現実的だよ。」",
+    "tags": ["microservices", "monolith", "architecture"],
+    "lessonSlug": "01-software-architecture",
+    "category": "concept"
+  }
+]

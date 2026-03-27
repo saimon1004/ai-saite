@@ -1,0 +1,525 @@
+---
+title: "クラウドへの旅"
+subtitle: "自前サーバーの限界を超え、スケーラブルなインフラへ"
+description: "自前サーバーの限界を超え、スケーラブルなインフラへ。クラウドコンピューティング・AWS/GCP・サーバーレスを実践的なストーリーで学ぶチャプター「クラウドへの旅」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-18
+chapter: 18
+arc: "scale"
+arcName: "拡大編"
+skills:
+  - { category: "infrastructure", name: "クラウドコンピューティング", level: "intro" }
+  - { category: "infrastructure", name: "AWS/GCP", level: "intro" }
+  - { category: "infrastructure", name: "サーバーレス", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["17-ci-cd-pipeline"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+10月。沖縄は観光シーズン真っ只中だった。
+
+---
+
+**あなた:** 「やばい、サイト落ちてる！」
+
+あなたのスマホにも通知が殺到していた。ShimaLinkを利用している飲食店のオンライン予約ページが、軒並みレスポンスを返さなくなっていた。
+
+**あなた:** 「アクセスログ見ると...今、同時アクセスが通常の10倍になってる。沖縄食品フェアの影響だ。」
+
+**あなた:** 「うちのサーバー、1台しかないもんな。CPUが100%に張り付いてる。」
+
+必死にプロセスを再起動して、なんとか復旧させた。しかし、アクセスが集中するたびにサーバーが限界を迎える状況は変わらない。
+
+---
+
+**Yuki:** 「自前サーバーの限界が来たね。1台のサーバーでは、急激なアクセス増に対応できない。」
+
+**あなた:** 「サーバーを増やせばいいんですか？」
+
+**Yuki:** 「物理サーバーを買い足すのは、時間もコストもかかる。しかも、ピークが過ぎたら余剰になる。そこで**クラウド**の出番だよ。」
+
+**あなた:** 「クラウドって、AWSとかGCPとか？聞いたことはあるけど、なんか難しそうで...」
+
+**Yuki:** 「難しくないよ。**必要な分だけコンピュータを借りて、使った分だけ払う**。それがクラウドの基本。アクセスが増えたら自動で台数を増やし、減ったら減らす。これを"スケーリング"っていうんだ。」
+
+---
+
+**Mika:** 「次のフェスティバルシーズンまでに間に合いますか？」
+
+**Yuki:** 「大丈夫。Dockerコンテナ化は済んでるし、CI/CDパイプラインもある。クラウドへの移行は、思っているよりスムーズにいくはずだよ。」
+
+ShimaLinkの"空"への旅が始まる。
+
+</StoryPanel>
+
+## クラウドコンピューティングの基本
+
+> 「自前サーバーは"家を買う"こと。クラウドは"必要な時だけホテルに泊まる"こと。」 ——Yuki
+
+## クラウドとは何か
+
+クラウドコンピューティングとは、**インターネット経由でコンピュータリソースを必要な分だけ借りて使う**サービスです。
+
+| 比較項目 | 自前サーバー（オンプレミス） | クラウド |
+|---------|----------------------|---------|
+| 初期費用 | 高い（サーバー購入） | ほぼゼロ |
+| スケーリング | 物理的な増設が必要 | 数分で増減可能 |
+| 運用負荷 | すべて自分で管理 | プロバイダーが大部分を担当 |
+| 支払い | 固定費 | 従量課金（使った分だけ） |
+| 障害対応 | 自分で対応 | プロバイダーが対応 |
+
+## クラウドの3つのサービスモデル
+
+```
+┌─────────────────────────────────────┐
+│        SaaS（Gmail, Slack等）         │ ← すべてお任せ
+├─────────────────────────────────────┤
+│     PaaS（Heroku, Cloud Run等）      │ ← アプリだけ管理
+├─────────────────────────────────────┤
+│      IaaS（EC2, Compute Engine等）   │ ← インフラから管理
+└─────────────────────────────────────┘
+```
+
+| モデル | 意味 | 自分で管理するもの | 例 |
+|--------|------|-------------------|-----|
+| **IaaS** | Infrastructure as a Service | OS、ミドルウェア、アプリ | AWS EC2、GCP Compute Engine |
+| **PaaS** | Platform as a Service | アプリのみ | Heroku、Google Cloud Run |
+| **SaaS** | Software as a Service | なし（利用するだけ） | Gmail、Slack |
+
+ShimaLinkではまず**PaaS**を活用するのが効率的です。
+
+## スケーリングの種類
+
+### 垂直スケーリング（スケールアップ）
+サーバーのスペックを上げる（CPUやメモリを増やす）
+
+```
+小さなサーバー → 大きなサーバー
+[2CPU/4GB]    → [8CPU/32GB]
+```
+
+- 限界がある（物理的な上限）
+- ダウンタイムが発生する場合がある
+
+### 水平スケーリング（スケールアウト）
+サーバーの台数を増やす
+
+```
+1台 → 3台 → 5台 → 3台 → 1台
+     ↑                    ↑
+  負荷増加時           負荷減少時
+```
+
+- 理論上は無限にスケール可能
+- コンテナ化されていれば実現しやすい
+
+> **Yuki:** 「クラウドの真骨頂は水平スケーリング。ShimaLinkをDockerコンテナ化した理由はここにもあるんだ。同じコンテナを増やすだけでスケールできる。」
+
+## 従量課金の考え方
+
+クラウドでは使った分だけ支払います。
+
+| リソース | 課金単位 | 例 |
+|---------|---------|-----|
+| コンピュート | 秒/時間単位 | EC2: $0.01/時間〜 |
+| ストレージ | GB/月単位 | S3: $0.025/GB/月 |
+| データ転送 | GB単位 | $0.09/GB（送信） |
+| API呼び出し | リクエスト数 | Lambda: $0.20/100万回 |
+
+**ShimaLinkの場合の月額目安:**
+- 小規模（〜50クライアント）: $50〜100/月
+- 中規模（〜200クライアント）: $200〜500/月
+
+## ポイント
+
+- クラウドは「必要な分だけ借りて、使った分だけ払う」モデル
+- IaaS、PaaS、SaaSの3つのサービスモデルがある
+- 水平スケーリングでアクセス増減に柔軟に対応できる
+- 従量課金で無駄なコストを抑えられる
+- コンテナ化されたアプリはクラウド移行が容易
+
+## 主要クラウドプロバイダーの比較
+
+> 「どのクラウドが一番かは、何を作るかによる。正解は1つじゃない。」 ——Yuki
+
+## 3大クラウドプロバイダー
+
+| プロバイダー | 特徴 | シェア |
+|------------|------|--------|
+| **AWS** (Amazon) | サービス数が最多、実績豊富 | 最大 |
+| **GCP** (Google) | データ分析・ML に強い、シンプルな料金体系 | 3位 |
+| **Azure** (Microsoft) | エンタープライズ向け、Windows連携 | 2位 |
+
+## 主要サービスの比較
+
+| 用途 | AWS | GCP | Azure |
+|------|-----|-----|-------|
+| 仮想サーバー | EC2 | Compute Engine | Virtual Machines |
+| コンテナ実行 | ECS / Fargate | Cloud Run | Container Apps |
+| サーバーレス関数 | Lambda | Cloud Functions | Functions |
+| オブジェクトストレージ | S3 | Cloud Storage | Blob Storage |
+| データベース(SQL) | RDS | Cloud SQL | SQL Database |
+| データベース(NoSQL) | DynamoDB | Firestore | Cosmos DB |
+| CDN | CloudFront | Cloud CDN | Azure CDN |
+| DNS | Route 53 | Cloud DNS | Azure DNS |
+
+## ShimaLink に適したサービス構成
+
+### AWS での構成例
+
+```
+ユーザー
+  ↓
+[CloudFront] ← CDN（静的ファイル配信）
+  ↓
+[ALB] ← ロードバランサー
+  ↓
+[ECS Fargate] ← Dockerコンテナ実行（サーバーレス）
+  ↓
+[RDS PostgreSQL] ← マネージドDB
+  ↓
+[S3] ← 画像・ファイル保存
+```
+
+### GCP での構成例
+
+```
+ユーザー
+  ↓
+[Cloud CDN] ← CDN
+  ↓
+[Cloud Load Balancing]
+  ↓
+[Cloud Run] ← Dockerコンテナ実行（サーバーレス）
+  ↓
+[Cloud SQL PostgreSQL] ← マネージドDB
+  ↓
+[Cloud Storage] ← 画像・ファイル保存
+```
+
+## マネージドサービスのメリット
+
+**自前で管理する場合:**
+- OSのアップデート
+- セキュリティパッチの適用
+- バックアップの設定と実行
+- 障害時の復旧作業
+- スケーリングの設定
+
+**マネージドサービスの場合:**
+- 上記すべてをクラウドプロバイダーが対応
+- 開発者はアプリケーションの開発に集中できる
+
+例えば、AWS RDS（マネージドDB）では：
+- 自動バックアップ
+- 自動パッチ適用
+- 自動フェイルオーバー（障害時の自動切り替え）
+- ワンクリックでスケーリング
+
+## クラウド選定の基準
+
+| 基準 | 詳細 |
+|------|------|
+| **チームの経験** | 既に使い慣れたプラットフォームがあるか |
+| **サービスの充実度** | 必要なサービスが揃っているか |
+| **料金** | 予算に合うか（無料枠の有無も重要） |
+| **リージョン** | 日本リージョンがあるか（レイテンシに影響） |
+| **ドキュメント** | 日本語ドキュメントの充実度 |
+
+> **Yuki:** 「ShimaLinkは沖縄のサービスだから、日本リージョンがあることは必須。AWSの東京リージョン、GCPの東京リージョンなら、沖縄からのレイテンシも許容範囲だよ。」
+
+## ポイント
+
+- AWS、GCP、Azureが3大クラウドプロバイダー
+- それぞれ同等のサービスを提供しているが、得意分野が異なる
+- マネージドサービスを使えばインフラ運用から解放される
+- 選定はチームの経験、料金、リージョンなどを総合的に判断する
+- まずは無料枠を活用して試してみるのがベスト
+
+## クラウドへのデプロイ
+
+> 「Dockerイメージさえあれば、クラウドへのデプロイはそこまで難しくない。」 ——Yuki
+
+## デプロイの全体フロー
+
+```
+ローカル開発
+    ↓
+Dockerイメージをビルド
+    ↓
+コンテナレジストリにプッシュ
+    ↓
+クラウドサービスからイメージをプル
+    ↓
+コンテナとして実行
+```
+
+## コンテナレジストリ
+
+コンテナレジストリは、Dockerイメージを保存・配布するためのサービスです。
+
+| レジストリ | プロバイダー | 特徴 |
+|-----------|------------|------|
+| Docker Hub | Docker社 | 最もポピュラー |
+| ECR | AWS | AWSとの連携が容易 |
+| GCR / Artifact Registry | GCP | GCPとの連携が容易 |
+| GHCR | GitHub | GitHub Actionsとの連携が容易 |
+
+## Cloud Run へのデプロイ例
+
+Google Cloud Run は、Dockerコンテナをサーバーレスで実行できるサービスです。
+
+### 1. コンテナレジストリにイメージをプッシュ
+
+```bash
+# GCPのArtifact Registryにプッシュ
+docker tag shimalink-web:latest \
+  asia-northeast1-docker.pkg.dev/shimalink-project/shimalink/web:latest
+
+docker push \
+  asia-northeast1-docker.pkg.dev/shimalink-project/shimalink/web:latest
+```
+
+### 2. Cloud Run にデプロイ
+
+```bash
+gcloud run deploy shimalink-web \
+  --image asia-northeast1-docker.pkg.dev/shimalink-project/shimalink/web:latest \
+  --platform managed \
+  --region asia-northeast1 \
+  --port 3000 \
+  --allow-unauthenticated \
+  --set-env-vars "NODE_ENV=production"
+```
+
+### 3. CI/CD と連携
+
+```yaml
+# .github/workflows/deploy-cloud-run.yml
+deploy:
+  needs: test
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+
+    - name: GCP認証
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Docker イメージをビルド＆プッシュ
+      run: |
+        gcloud auth configure-docker asia-northeast1-docker.pkg.dev
+        docker build -t asia-northeast1-docker.pkg.dev/shimalink-project/shimalink/web:${{ github.sha }} .
+        docker push asia-northeast1-docker.pkg.dev/shimalink-project/shimalink/web:${{ github.sha }}
+
+    - name: Cloud Run にデプロイ
+      uses: google-github-actions/deploy-cloudrun@v2
+      with:
+        service: shimalink-web
+        image: asia-northeast1-docker.pkg.dev/shimalink-project/shimalink/web:${{ github.sha }}
+        region: asia-northeast1
+```
+
+## AWS ECS Fargate へのデプロイ例
+
+AWS Fargate は、サーバーの管理なしでコンテナを実行できるサービスです。
+
+```bash
+# ECRにイメージをプッシュ
+aws ecr get-login-password --region ap-northeast-1 | \
+  docker login --username AWS --password-stdin 123456789.dkr.ecr.ap-northeast-1.amazonaws.com
+
+docker tag shimalink-web:latest \
+  123456789.dkr.ecr.ap-northeast-1.amazonaws.com/shimalink-web:latest
+
+docker push \
+  123456789.dkr.ecr.ap-northeast-1.amazonaws.com/shimalink-web:latest
+
+# ECSサービスを更新（新イメージでデプロイ）
+aws ecs update-service \
+  --cluster shimalink-cluster \
+  --service shimalink-web \
+  --force-new-deployment
+```
+
+## データベースの移行
+
+ローカルのDBからクラウドのマネージドDBへ移行します。
+
+```
+ローカル PostgreSQL → Cloud SQL / RDS PostgreSQL
+```
+
+```bash
+# データのエクスポート（ローカル）
+pg_dump -h localhost -U shimalink_user shimalink > backup.sql
+
+# データのインポート（クラウド）
+psql -h <cloud-db-host> -U shimalink_user shimalink < backup.sql
+```
+
+> **Yuki:** 「Dockerコンテナ化とCI/CDが済んでいるから、クラウドへの移行はイメージの保存先と実行先を変えるだけ。準備が整っているとスムーズだね。」
+
+## ポイント
+
+- Dockerイメージをコンテナレジストリにプッシュし、クラウドで実行する
+- Cloud RunやFargateならサーバー管理不要でコンテナを動かせる
+- CI/CDパイプラインにクラウドデプロイのステップを追加する
+- マネージドDBへの移行はpg_dumpとpsqlで行える
+- コンテナ化・CI/CD化が済んでいればクラウド移行は比較的容易
+
+## サーバーレスの世界
+
+> 「サーバーレスって、サーバーがないわけじゃない。サーバーのことを考えなくて済むってことだよ。」 ——Yuki
+
+## サーバーレスとは
+
+サーバーレスとは、サーバーの管理を一切気にせず、コード（関数）だけに集中できるクラウドの実行モデルです。
+
+| 比較項目 | 従来のサーバー | サーバーレス |
+|---------|------------|-----------|
+| サーバー管理 | 必要 | 不要 |
+| スケーリング | 手動/設定が必要 | 完全自動 |
+| 課金 | 常時稼働分を支払い | 実行時間分だけ |
+| アイドル時 | コスト発生 | コスト0 |
+| 起動時間 | 常に起動済み | コールドスタートあり |
+
+## サーバーレス関数の仕組み
+
+```
+イベント発生（HTTPリクエスト、タイマー等）
+    ↓
+クラウドが自動的に関数を起動
+    ↓
+関数が処理を実行
+    ↓
+結果を返す
+    ↓
+関数が自動的に終了（課金も終了）
+```
+
+## AWS Lambda の例
+
+ShimaLinkの予約確認メール送信をLambda関数として実装します。
+
+```javascript
+// functions/sendConfirmation.js
+exports.handler = async (event) => {
+  const booking = JSON.parse(event.body);
+
+  // 予約確認メールを送信
+  await sendEmail({
+    to: booking.email,
+    subject: `予約確認: ${booking.shopName}`,
+    body: `${booking.date} ${booking.time} のご予約を承りました。`,
+  });
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: "確認メールを送信しました" }),
+  };
+};
+```
+
+## ShimaLink でのサーバーレス活用
+
+すべてをサーバーレスにする必要はありません。適材適所で使い分けます。
+
+| 処理 | 実行方法 | 理由 |
+|------|---------|------|
+| Webアプリ本体 | Cloud Run / ECS | 常にリクエストを受ける |
+| 予約確認メール | Lambda / Cloud Functions | イベント駆動で十分 |
+| 画像リサイズ | Lambda / Cloud Functions | アップロード時だけ実行 |
+| 日次レポート生成 | Lambda / Cloud Functions | 定期実行（1日1回） |
+| データバックアップ | Lambda / Cloud Functions | 定期実行 |
+
+## イベント駆動アーキテクチャ
+
+```
+[予約API] → 予約をDBに保存
+              ↓ イベント発行
+         [メール送信Lambda] → メール送信
+              ↓
+         [集計更新Lambda] → ダッシュボード更新
+```
+
+メインのAPIは予約の保存だけに集中し、メール送信や集計更新はサーバーレス関数に任せます。これにより：
+- APIの応答時間が短くなる
+- 各機能が独立して動作する
+- 障害の影響範囲が限定される
+
+## コールドスタート問題
+
+サーバーレス関数がしばらく呼ばれないと、次の呼び出し時に起動時間（コールドスタート）が発生します。
+
+| 言語 | コールドスタート時間 |
+|------|------------------|
+| Python | ~200ms |
+| Node.js | ~200ms |
+| Go | ~100ms |
+| Java | ~1000ms以上 |
+
+**対策:**
+- 軽量な言語（Node.js、Python）を選ぶ
+- 関数のパッケージサイズを小さくする
+- Provisioned Concurrency（事前ウォームアップ）を利用する
+
+> **Yuki:** 「サーバーレスは銀の弾丸じゃない。常時接続が必要なWebSocketや、長時間実行が必要な処理には向かない。ShimaLinkでは、イベント駆動の処理にだけ使うのが賢い選択だよ。」
+
+## ポイント
+
+- サーバーレスは「サーバー管理不要」で「実行時間分だけ課金」されるモデル
+- イベント駆動型の処理（メール送信、画像処理、定期実行）に最適
+- すべてをサーバーレスにする必要はなく、適材適所で使い分ける
+- コールドスタートがあるため、レイテンシに敏感な処理には注意
+- メインアプリとサーバーレス関数を組み合わせるのが現実的な設計
+
+<StoryPanel variant="conclusion">
+
+ShimaLinkがクラウドで稼働を始めた。最初の負荷テストの結果が出る。
+
+```
+負荷テスト結果:
+- 同時接続: 1,000ユーザー
+- 平均応答時間: 120ms
+- エラー率: 0.01%
+- オートスケーリング: 2台 → 5台 → 2台（自動調整）
+```
+
+---
+
+**あなた:** 「1,000人同時アクセスでも120msで返してる！前は100人でパンクしてたのに。」
+
+**あなた:** 「しかも、負荷が下がったら自動で2台に戻ってる。無駄なコストがかからない。」
+
+**Mika:** 「年末の観光シーズン、今年は安心ですね。」
+
+**Yuki:** 「スケーリングだけじゃない。クラウドのマネージドサービスを使えば、DBのバックアップも自動だし、障害時の復旧も早い。インフラの運用負荷がグッと下がるよ。」
+
+---
+
+**あなた:** 「ただ、クラウドの設定をコンソールで手動で作ったから、同じ環境をもう一度作れって言われたら自信ないな...」
+
+**Yuki:** 「いい気づきだね。実は、インフラもコードで管理できるんだ。**Infrastructure as Code**——Terraformっていうツールを使えば、クラウドの構成をコードとして記述できる。」
+
+**あなた:** 「コードとして管理...つまり、Gitでバージョン管理もできる？」
+
+**Yuki:** 「そう。CI/CDパイプラインでインフラの変更も自動化できるようになるよ。」
+
+---
+
+> **次のチャプター**: *Chapter 19: インフラをコードで* — クラウドの設定を手動からコード管理へ。Terraformで再現可能なインフラを構築する。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="18-cloud-deploy" />
+
+<ChapterFaq chapterId="18-cloud-deploy" />
+
+<SeriesNav current={18} />

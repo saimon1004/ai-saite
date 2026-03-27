@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch12-help-01",
+    "question": "XSSのテストはどうやって行えばいい？",
+    "answer": "開発中に以下のテストペイロードを入力フォームに試してみてください：\n\n```html\n<!-- 基本 -->\n<script>alert('XSS')</script>\n\n<!-- イベントハンドラ -->\n<img src=x onerror=alert('XSS')>\n\n<!-- SVG -->\n<svg onload=alert('XSS')>\n\n<!-- 属性脱出 -->\n\" onmouseover=\"alert('XSS')\n```\n\nどれも`alert`が表示されなければ安全です。表示された場合はエスケープが不十分です。\n\n**重要**: テストは必ず自分の開発環境で行ってください。他人のサイトで行うのは犯罪です。",
+    "tags": ["xss", "testing", "security"],
+    "lessonSlug": "01-what-is-xss",
+    "category": "concept"
+  },
+  {
+    "id": "ch12-help-02",
+    "question": "DOMPurifyのインストール方法は？",
+    "answer": "```bash\n# npm\nnpm install dompurify\n\n# yarn\nyarn add dompurify\n```\n\n**使い方：**\n```javascript\nimport DOMPurify from 'dompurify';\n\n// 基本的な使い方\nconst clean = DOMPurify.sanitize(dirty);\n\n// 許可するタグを指定\nconst clean = DOMPurify.sanitize(dirty, {\n  ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a'],\n  ALLOWED_ATTR: ['href']\n});\n```\n\nNode.js環境では `jsdom` との併用が必要です：\n```bash\nnpm install dompurify jsdom\n```",
+    "tags": ["dompurify", "library", "sanitize"],
+    "lessonSlug": "02-input-validation-sanitization",
+    "category": "environment"
+  },
+  {
+    "id": "ch12-help-03",
+    "question": "CSPを設定したらサイトが表示されなくなった",
+    "answer": "CSPが厳しすぎると、正当なリソースもブロックされます。\n\n**デバッグ手順：**\n1. ブラウザのDevTools → Console を確認\n2. CSP違反エラーが表示されているはず\n\n```\nRefused to load the script 'https://cdn.example.com/lib.js'\nbecause it violates the Content Security Policy directive: \"script-src 'self'\"\n```\n\n3. 必要なドメインをCSPに追加\n\n```\nscript-src 'self' https://cdn.example.com\n```\n\n**おすすめ**: まず `Content-Security-Policy-Report-Only` で試し、違反レポートを確認してから本番適用する。",
+    "tags": ["csp", "debugging", "header"],
+    "lessonSlug": "03-content-security-policy",
+    "category": "display"
+  },
+  {
+    "id": "ch12-help-04",
+    "question": "innerHTMLを使わないとリッチテキストが表示できない",
+    "answer": "リッチテキスト（太字、リンク等）を表示する必要がある場合は、以下の方法を検討してください：\n\n1. **DOMPurifyでサニタイズしてから使う**\n```javascript\nimport DOMPurify from 'dompurify';\nelement.innerHTML = DOMPurify.sanitize(richText);\n```\n\n2. **Markdownを使う**\n```javascript\nimport { marked } from 'marked';\nimport DOMPurify from 'dompurify';\n\nconst html = marked.parse(markdownText);\nelement.innerHTML = DOMPurify.sanitize(html);\n```\n\n3. **DOM APIで構築する**\n```javascript\nconst p = document.createElement('p');\nconst strong = document.createElement('strong');\nstrong.textContent = '太字テキスト';\np.appendChild(strong);\n```",
+    "tags": ["innerHTML", "richtext", "dom"],
+    "lessonSlug": "04-output-encoding",
+    "category": "syntax"
+  },
+  {
+    "id": "ch12-help-05",
+    "question": "反射型XSSと格納型XSSの見分け方は？",
+    "answer": "**見分けるポイント：**\n\n| | 格納型 | 反射型 |\n|---|---|---|\n| **保存場所** | サーバーのDB | URLパラメータ |\n| **持続性** | ページを開くたび実行 | 特定URLにアクセスした時だけ |\n| **影響範囲** | そのページの全訪問者 | リンクをクリックした人だけ |\n| **よくある場所** | コメント欄、プロフィール | 検索結果、エラーページ |\n\n**例：**\n- 格納型: コメント欄に`<script>`を投稿 → DB保存 → 全員影響\n- 反射型: `?q=<script>` をURLに含める → そのURLにアクセスした人だけ影響",
+    "tags": ["xss", "stored", "reflected"],
+    "lessonSlug": "01-what-is-xss",
+    "category": "concept"
+  },
+  {
+    "id": "ch12-help-06",
+    "question": "helmetライブラリの導入方法は？",
+    "answer": "Express.jsのセキュリティヘッダーをまとめて設定できるライブラリです。\n\n```bash\nnpm install helmet\n```\n\n```javascript\nconst express = require('express');\nconst helmet = require('helmet');\nconst app = express();\n\n// デフォルト設定（推奨）\napp.use(helmet());\n\n// CSPをカスタマイズする場合\napp.use(helmet({\n  contentSecurityPolicy: {\n    directives: {\n      defaultSrc: [\"'self'\"],\n      scriptSrc: [\"'self'\"],\n      styleSrc: [\"'self'\", \"'unsafe-inline'\"],\n      imgSrc: [\"'self'\", \"data:\", \"https:\"]\n    }\n  }\n}));\n```\n\nhelmetが自動設定するヘッダー：CSP、X-Frame-Options、X-Content-Type-Options など。",
+    "tags": ["helmet", "express", "security-headers"],
+    "lessonSlug": "03-content-security-policy",
+    "category": "environment"
+  },
+  {
+    "id": "ch12-help-07",
+    "question": "エスケープとエンコーディングの違いがわからない",
+    "answer": "文脈は似ていますが、微妙に異なります：\n\n**エスケープ（Escape）:**\n特殊文字に「この文字は特別な意味ではなく、文字そのものとして扱ってね」と印をつけること。\n```\n< → &lt;  （HTMLエスケープ）\n' → \\'    （JavaScriptエスケープ）\n```\n\n**エンコーディング（Encoding）:**\n文字を別の表現形式に変換すること。\n```\nスペース → %20  （URLエンコード）\nあ → %E3%81%82  （URLエンコード・UTF-8）\n```\n\n**セキュリティでは、どちらも「安全な形にデータを変換する」目的で使い、まとめて「出力エンコーディング」と呼ぶことが多いです。**",
+    "tags": ["escape", "encoding", "concept"],
+    "lessonSlug": "04-output-encoding",
+    "category": "concept"
+  },
+  {
+    "id": "ch12-help-08",
+    "question": "CSPのnonceとhashの違いは？",
+    "answer": "どちらもインラインスクリプトを安全に許可する方法です。\n\n**nonce（ナンス）:**\nリクエストごとにサーバーが生成するランダムな値。\n```html\nContent-Security-Policy: script-src 'nonce-abc123'\n<script nonce=\"abc123\">...</script>\n```\n- 毎回異なる値 → 攻撃者が予測できない\n- サーバー側でリクエストごとに生成が必要\n\n**hash:**\nスクリプトの内容のハッシュ値。\n```html\nContent-Security-Policy: script-src 'sha256-xyz...'\n<script>固定のスクリプト内容</script>\n```\n- スクリプトの内容が変わらない場合に有効\n- 動的なスクリプトには使えない\n\n一般的には **nonce** がより柔軟で推奨されます。",
+    "tags": ["csp", "nonce", "hash"],
+    "lessonSlug": "03-content-security-policy",
+    "category": "concept"
+  },
+  {
+    "id": "ch12-help-09",
+    "question": "Vue.jsでのXSS対策は？",
+    "answer": "Vue.jsもReact同様、デフォルトで自動エスケープします。\n\n```html\n<!-- 安全: 自動エスケープ -->\n<p>{{ userInput }}</p>\n\n<!-- 危険: HTMLとして挿入 -->\n<p v-html=\"userInput\"></p>\n```\n\n**v-htmlは原則使わないでください。** やむを得ない場合はサニタイズ必須です：\n\n```javascript\nimport DOMPurify from 'dompurify';\n\nexport default {\n  computed: {\n    safeHtml() {\n      return DOMPurify.sanitize(this.rawHtml);\n    }\n  }\n}\n```\n\n```html\n<p v-html=\"safeHtml\"></p>\n```",
+    "tags": ["vue", "xss", "framework"],
+    "lessonSlug": "04-output-encoding",
+    "category": "syntax"
+  },
+  {
+    "id": "ch12-help-10",
+    "question": "クライアント側のバリデーションは意味がないの？",
+    "answer": "意味はありますが、**セキュリティ対策としては不十分**です。\n\n**クライアント側のバリデーションの役割：**\n- UX向上（即座にエラーを表示できる）\n- サーバーへの不要なリクエストを減らす\n\n**なぜセキュリティとしては不十分か：**\n- DevToolsでHTML属性を削除できる\n- JavaScriptを無効化できる\n- curlやPostmanで直接APIを叩ける\n\n```bash\n# バリデーションを完全にバイパスする例\ncurl -X POST https://shimalink.com/api/comment \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"comment\": \"<script>alert(1)</script>\"}'\n```\n\n**結論**: クライアント側はUX用、サーバー側はセキュリティ用。**両方実装する**のがベストプラクティスです。",
+    "tags": ["validation", "client-server", "security"],
+    "lessonSlug": "02-input-validation-sanitization",
+    "category": "concept"
+  }
+]

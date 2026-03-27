@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ch24-help-01",
+    "question": "OpenAI APIキーの取得方法は？",
+    "answer": "1. [platform.openai.com](https://platform.openai.com) にアクセス\n2. アカウントを作成してログイン\n3. 「API Keys」ページへ移動\n4. 「Create new secret key」をクリック\n5. 表示されたキーをコピー（**一度しか表示されない**）\n\n```bash\n# .envファイルに保存\necho 'OPENAI_API_KEY=sk-...' >> .env\n\n# .gitignoreに追加\necho '.env' >> .gitignore\n```\n\n**注意:** 無料枠には制限があります。料金プランを確認してからAPIを使い始めましょう。",
+    "tags": ["openai", "api-key", "setup"],
+    "lessonSlug": "02-llm-api-integration",
+    "category": "environment"
+  },
+  {
+    "id": "ch24-help-02",
+    "question": "APIレスポンスが遅い・タイムアウトする",
+    "answer": "**AI APIは通常のAPIより応答が遅い**です（数秒かかることも）。\n\n```typescript\n// タイムアウトを設定\nconst openai = new OpenAI({\n  timeout: 30000,  // 30秒\n});\n\n// ストリーミングで体感速度を改善\nconst stream = await openai.chat.completions.create({\n  model: \"gpt-4\",\n  messages: [...],\n  stream: true,  // ストリーミング有効\n});\n\nfor await (const chunk of stream) {\n  process.stdout.write(chunk.choices[0]?.delta?.content || \"\");\n}\n```\n\n**対策:**\n- `stream: true` で逐次表示（体感速度が大幅改善）\n- 軽量モデル（gpt-3.5-turbo）を使う\n- キャッシュで同じ質問への再計算を防ぐ",
+    "tags": ["openai", "timeout", "streaming"],
+    "lessonSlug": "02-llm-api-integration",
+    "category": "terminal"
+  },
+  {
+    "id": "ch24-help-03",
+    "question": "AIのJSON出力がパースできない",
+    "answer": "AIの出力が常に正しいJSONとは限りません。\n\n**対策1: プロンプトで厳密に指示**\n```\n以下のJSON形式で出力してください。JSONのみを出力し、\n前後に説明文やマークダウンの```は含めないでください。\n```\n\n**対策2: パース時のエラーハンドリング**\n```typescript\nfunction parseAIJson(content: string) {\n  // マークダウンのコードブロックを除去\n  const cleaned = content\n    .replace(/```json\\n?/g, '')\n    .replace(/```\\n?/g, '')\n    .trim();\n\n  try {\n    return JSON.parse(cleaned);\n  } catch (e) {\n    console.error('JSON parse failed:', content);\n    return null;\n  }\n}\n```\n\n**対策3: OpenAIのJSON mode**\n```typescript\nconst response = await openai.chat.completions.create({\n  model: \"gpt-4\",\n  response_format: { type: \"json_object\" },\n  messages: [...]\n});\n```",
+    "tags": ["openai", "json", "parsing", "error"],
+    "lessonSlug": "04-ai-powered-features",
+    "category": "syntax"
+  },
+  {
+    "id": "ch24-help-04",
+    "question": "プロンプトの改善方法がわからない",
+    "answer": "**段階的に改善しましょう:**\n\n1. **問題を特定**: AIの出力の何がダメか？\n   - 長すぎる → 文字数制限を追加\n   - 関係ない内容 → コンテキストを具体化\n   - 形式が違う → 出力例を提示（Few-shot）\n\n2. **1つずつ修正**: 一度に多くの変更をしない\n\n3. **A/Bテスト**: 2つのプロンプトを比較\n\n```typescript\n// プロンプトのバージョン管理\nconst prompts = {\n  v1: \"紹介文を書いてください\",\n  v2: \"200文字以内で、沖縄の魅力が伝わる紹介文を書いてください\",\n  v3: \"あなたは沖縄の観光ライターです。以下の情報をもとに...\",\n};\n```\n\n**コツ:** プロンプトもコードと同じでバージョン管理して、どの変更がどんな効果を生んだか記録しましょう。",
+    "tags": ["prompt", "engineering", "improvement"],
+    "lessonSlug": "03-prompt-engineering",
+    "category": "concept"
+  },
+  {
+    "id": "ch24-help-05",
+    "question": "AIのAPI料金が高くなりすぎる",
+    "answer": "**コスト削減の方法:**\n\n| 対策 | 効果 |\n|------|------|\n| 軽量モデル使用 | GPT-3.5はGPT-4の1/30のコスト |\n| max_tokensの制限 | 不必要に長い応答を防ぐ |\n| キャッシュ | 同じ質問への再計算を防ぐ |\n| レート制限 | 過剰なリクエストを防止 |\n| バッチ処理 | リアルタイムでなくてよい処理をまとめる |\n\n```typescript\n// キャッシュの実装例\nconst cache = new Map();\n\nasync function cachedAICall(prompt: string) {\n  const key = hashString(prompt);\n  if (cache.has(key)) return cache.get(key);\n\n  const result = await generateText(prompt);\n  cache.set(key, result);\n  return result;\n}\n```\n\n**月額上限の設定:** OpenAIダッシュボードで使用量の上限を設定できます。",
+    "tags": ["cost", "optimization", "api"],
+    "lessonSlug": "02-llm-api-integration",
+    "category": "concept"
+  },
+  {
+    "id": "ch24-help-06",
+    "question": "チャットボットが関係ない質問にも答えてしまう",
+    "answer": "**systemプロンプトでスコープを限定**しましょう:\n\n```typescript\nconst systemPrompt = `\nあなたはShimaLinkのカスタマーサポートです。\n\n重要なルール:\n- ShimaLinkに関する質問のみ回答すること\n- ShimaLink以外の質問には「申し訳ございません、\n  ShimaLinkに関するご質問のみ対応しております」と回答\n- 料理のレシピ、天気、一般知識の質問には回答しない\n- 不明な場合は「担当者にお繋ぎします」と案内する\n`;\n```\n\n**追加対策:**\n- ユーザー入力を事前にフィルタリング\n- AIの回答をポストフィルタリング\n- 「ShimaLink」に関連しないキーワードを検出したらフォールバック応答",
+    "tags": ["chatbot", "scope", "prompt"],
+    "lessonSlug": "04-ai-powered-features",
+    "category": "concept"
+  },
+  {
+    "id": "ch24-help-07",
+    "question": "ストリーミング応答の実装方法は？",
+    "answer": "**Server-Sent Events（SSE）でストリーミング:**\n\n```typescript\n// バックエンド\napp.post('/api/ai/stream', async (req, res) => {\n  res.setHeader('Content-Type', 'text/event-stream');\n  res.setHeader('Cache-Control', 'no-cache');\n\n  const stream = await openai.chat.completions.create({\n    model: 'gpt-3.5-turbo',\n    messages: [{ role: 'user', content: req.body.message }],\n    stream: true,\n  });\n\n  for await (const chunk of stream) {\n    const content = chunk.choices[0]?.delta?.content || '';\n    res.write(`data: ${JSON.stringify({ content })}\\n\\n`);\n  }\n  res.write('data: [DONE]\\n\\n');\n  res.end();\n});\n```\n\n```typescript\n// フロントエンド\nconst response = await fetch('/api/ai/stream', { method: 'POST', body: ... });\nconst reader = response.body.getReader();\n// チャンクごとにUIを更新\n```",
+    "tags": ["streaming", "sse", "realtime"],
+    "lessonSlug": "04-ai-powered-features",
+    "category": "syntax"
+  },
+  {
+    "id": "ch24-help-08",
+    "question": "AIとMLの違いがよくわからない",
+    "answer": "**日常の例で理解:**\n\n| 概念 | 料理で例えると |\n|------|---------------|\n| **AI** | 「人間のように料理できる」概念全体 |\n| **ML** | 「レシピを見なくても、材料の組み合わせパターンから料理を学ぶ」技術 |\n| **Deep Learning** | 「味覚の複雑なパターンも理解できる高度な学習法」 |\n| **LLM** | 「世界中のレシピを読んだ結果、料理の話が得意になったAI」 |\n\n**開発者として大事なこと:**\n- AIの理論を完全に理解する必要はない\n- APIの使い方とプロンプトの書き方が最も重要\n- 何ができて何ができないかを理解すること",
+    "tags": ["ai", "ml", "concept"],
+    "lessonSlug": "01-ai-basics",
+    "category": "concept"
+  },
+  {
+    "id": "ch24-help-09",
+    "question": "OpenAI以外のAI APIはある？",
+    "answer": "**主要なAI APIの選択肢:**\n\n| プロバイダー | モデル | 特徴 |\n|------------|-------|------|\n| OpenAI | GPT-4, GPT-3.5 | 最もポピュラー、API充実 |\n| Anthropic | Claude | 長文対応、安全性重視 |\n| Google | Gemini | Google連携、マルチモーダル |\n| Amazon | Bedrock | AWS連携、複数モデル選択可 |\n| ローカル | Ollama + Llama | 無料、プライバシー重視 |\n\n```bash\n# Ollamaでローカル実行（無料）\nbrew install ollama\nollama run llama3\n```\n\n**選び方:** コスト、精度、速度、プライバシー要件に応じて選択しましょう。",
+    "tags": ["ai", "api", "alternatives"],
+    "lessonSlug": "02-llm-api-integration",
+    "category": "concept"
+  },
+  {
+    "id": "ch24-help-10",
+    "question": "AI機能のテストはどうすればいい？",
+    "answer": "**AI APIをモックしてテスト:**\n\n```typescript\n// __mocks__/openai.ts\nexport default class OpenAI {\n  chat = {\n    completions: {\n      create: jest.fn().mockResolvedValue({\n        choices: [{\n          message: { content: 'モックされた回答' }\n        }]\n      })\n    }\n  };\n}\n```\n\n```typescript\n// テスト\njest.mock('openai');\n\ntest('紹介文が生成される', async () => {\n  const result = await generateDescription(shopData);\n  expect(result).toBeDefined();\n  expect(typeof result).toBe('string');\n});\n```\n\n**ポイント:**\n- 実際のAPIは呼ばない（コスト・速度の問題）\n- モックで入出力の形式をテスト\n- プロンプトのスナップショットテスト\n- E2Eテストでは実APIを少量だけ使う",
+    "tags": ["testing", "mock", "ai"],
+    "lessonSlug": "04-ai-powered-features",
+    "category": "concept"
+  }
+]

@@ -1,0 +1,104 @@
+[
+  {
+    "id": "ch03-q01",
+    "question": "Flexboxで子要素を横並びにするために、親要素に指定するプロパティはどれ？",
+    "choices": ["display: block", "display: flex", "display: inline", "display: grid"],
+    "correctIndex": 1,
+    "explanation": "display: flex を親要素に指定すると、子要素が自動的に横並び（flex-direction: row がデフォルト）になります。display: grid は二次元レイアウト用、block は縦並み、inline はインライン表示です。",
+    "storyContext": "メニューカードを横に並べるとき、Yukiが最初に教えてくれたプロパティだ。",
+    "skill": { "category": "programming", "name": "Flexbox", "level": "intro" }
+  },
+  {
+    "id": "ch03-q02",
+    "question": "Flexboxで子要素を等間隔に配置するjustify-contentの値はどれ？",
+    "choices": ["center", "flex-start", "space-between", "stretch"],
+    "correctIndex": 2,
+    "explanation": "space-between は最初と最後の子要素を端に寄せ、残りの間隔を均等に配分します。center は中央揃え、flex-start は左揃え、stretch は引き伸ばし（align-items のデフォルト値）です。",
+    "storyContext": "ナビゲーションリンクを両端揃えで均等に配置するときに使ったね。",
+    "skill": { "category": "programming", "name": "Flexbox", "level": "intro" }
+  },
+  {
+    "id": "ch03-q03",
+    "question": "CSS Gridで3等分のカラムを作る正しい書き方はどれ？",
+    "choices": [
+      "grid-columns: 3",
+      "grid-template-columns: 1fr 1fr 1fr",
+      "column-count: 3",
+      "grid-template-rows: 1fr 1fr 1fr"
+    ],
+    "correctIndex": 1,
+    "explanation": "grid-template-columns: 1fr 1fr 1fr で3等分のカラムが作れます。fr は利用可能な空間を比率で分割する単位です。repeat(3, 1fr) と書くこともできます。grid-template-rows は行の定義です。",
+    "storyContext": "メニューカードを3列のグリッドに配置したときの設定だ。",
+    "skill": { "category": "programming", "name": "CSSレイアウト", "level": "intermediate" }
+  },
+  {
+    "id": "ch03-q04",
+    "question": "メディアクエリなしでレスポンシブなグリッドを実現する記法はどれ？",
+    "choices": [
+      "grid-template-columns: auto auto auto",
+      "grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))",
+      "grid-template-columns: 33% 33% 33%",
+      "grid-template-columns: repeat(3, auto)"
+    ],
+    "correctIndex": 1,
+    "explanation": "repeat(auto-fit, minmax(280px, 1fr)) は、各カラムを最小280px〜最大1frの範囲で自動的に列数を調整します。画面幅に応じて1列〜複数列にレスポンシブ対応できます。",
+    "storyContext": "Yukiが「魔法のような記法」と言っていたGridの定番パターンだね。",
+    "skill": { "category": "programming", "name": "CSSレイアウト", "level": "intermediate" }
+  },
+  {
+    "id": "ch03-q05",
+    "question": "Webサイトのテキスト色に純粋な黒（#000000）を避ける理由は？",
+    "choices": [
+      "ブラウザが正しく表示できないから",
+      "コントラストが強すぎて目が疲れやすいから",
+      "印刷できないから",
+      "古いブラウザと互換性がないから"
+    ],
+    "correctIndex": 1,
+    "explanation": "純粋な黒（#000）と白背景の組み合わせはコントラストが強すぎて、長時間読むと目が疲れやすくなります。ダークグレー（#2c3e50 など）を使うと、十分な可読性を保ちながら優しい印象になります。",
+    "storyContext": "海風テラスのカラーパレットで、テキスト色にダークグレーを選んだ理由だ。",
+    "skill": { "category": "web-fundamentals", "name": "デザイン原則", "level": "intro" }
+  },
+  {
+    "id": "ch03-q06",
+    "question": "CSSの transition プロパティの役割は？",
+    "choices": [
+      "要素を非表示にする",
+      "状態変化を滑らかなアニメーションにする",
+      "要素を別の位置に移動する",
+      "メディアクエリの切り替えを制御する"
+    ],
+    "correctIndex": 1,
+    "explanation": "transition は、プロパティの値が変化するとき（hover時など）、その変化を指定した時間をかけて滑らかにアニメーションさせます。transform は位置・サイズ変更、display: none は非表示です。",
+    "storyContext": "メニューカードにホバーしたとき、ふわっと浮き上がるエフェクトを作ったよね。",
+    "skill": { "category": "programming", "name": "CSSレイアウト", "level": "intermediate" }
+  },
+  {
+    "id": "ch03-q07",
+    "question": "BEM命名規則で「メニューカードのタイトル」を表すクラス名はどれ？",
+    "choices": [
+      "menu-card-title",
+      "menu-card__title",
+      "menu-card--title",
+      "menuCard.title"
+    ],
+    "correctIndex": 1,
+    "explanation": "BEM命名規則では、Block（コンポーネント）とElement（構成要素）をアンダースコア2つ（__）で接続します。ハイフン2つ（--）はModifier（バリエーション）に使います。",
+    "storyContext": "コンポーネントが増えてきたときに、Yukiが提案した命名ルールだ。",
+    "skill": { "category": "programming", "name": "CSSレイアウト", "level": "intermediate" }
+  },
+  {
+    "id": "ch03-q08",
+    "question": "CSS変数（カスタムプロパティ）を定義する正しい書き方はどれ？",
+    "choices": [
+      "$primary-color: #1a5276;",
+      "var(--primary-color): #1a5276;",
+      "--primary-color: #1a5276;",
+      "@primary-color: #1a5276;"
+    ],
+    "correctIndex": 2,
+    "explanation": "CSS変数は -- (ダブルハイフン)で始めて定義します。通常は :root セレクタ内で定義し、var(--primary-color) で参照します。$ はSASS、@ はLESSの記法です。",
+    "storyContext": "海風テラスのカラーパレットを管理するために使ったCSS変数だね。",
+    "skill": { "category": "programming", "name": "CSSレイアウト", "level": "intermediate" }
+  }
+]

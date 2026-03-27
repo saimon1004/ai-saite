@@ -1,0 +1,109 @@
+[
+  {
+    "id": "ch05-q01",
+    "question": "Gitで新しいブランチを作成して切り替えるコマンドはどれ？",
+    "choices": [
+      "git branch feature/new",
+      "git checkout -b feature/new",
+      "git merge feature/new",
+      "git push feature/new"
+    ],
+    "correctIndex": 1,
+    "explanation": "git checkout -b はブランチの作成と切り替えを同時に行います。git branch は作成のみ（切り替えは別途必要）、git merge は統合、git push はリモートへの送信です。git switch -c でも同じことができます。",
+    "storyContext": "予約フォーム機能を開発するときに、feature ブランチを作ったよね。",
+    "skill": { "category": "devtools", "name": "Git", "level": "intermediate" }
+  },
+  {
+    "id": "ch05-q02",
+    "question": "Gitでコンフリクトが発生するのはどんなとき？",
+    "choices": [
+      "新しいファイルを追加したとき",
+      "同じファイルの同じ箇所を異なるブランチで編集したとき",
+      "ブランチを作成したとき",
+      "git push したとき"
+    ],
+    "correctIndex": 1,
+    "explanation": "コンフリクトは、同じファイルの同じ箇所を異なるブランチで編集し、それをマージしようとしたときに発生します。Gitはどちらの変更を採用すべきかわからないため、手動で解決する必要があります。",
+    "storyContext": "Kentaがサイトのタイトルを変更して、同じ場所を編集してしまったときの話を思い出そう。",
+    "skill": { "category": "devtools", "name": "Git", "level": "intermediate" }
+  },
+  {
+    "id": "ch05-q03",
+    "question": "GitHub Pagesの特徴として正しいのはどれ？",
+    "choices": [
+      "サーバーサイドのプログラムも実行できる",
+      "GitHubリポジトリから静的サイトを無料で公開できる",
+      "データベースが付属している",
+      "有料プランのみで利用できる"
+    ],
+    "correctIndex": 1,
+    "explanation": "GitHub Pagesは、GitHubリポジトリ内のHTML/CSS/JSファイルを無料で静的サイトとして公開できるサービスです。サーバーサイドの処理やデータベースは使えません。",
+    "storyContext": "海風テラスのサイトを公開するために使ったデプロイ先だ。",
+    "skill": { "category": "devtools", "name": "デプロイ", "level": "intro" }
+  },
+  {
+    "id": "ch05-q04",
+    "question": "DNSのAレコードの役割はどれ？",
+    "choices": [
+      "メールサーバーを指定する",
+      "ドメイン名をIPアドレスに紐づける",
+      "ドメイン名を別のドメインに転送する",
+      "SSL証明書を発行する"
+    ],
+    "correctIndex": 1,
+    "explanation": "Aレコードはドメイン名をIPアドレスに紐づけるDNSレコードです。MXレコードがメール用、CNAMEが別ドメインへの転送、SSL証明書はDNSではなく認証局が発行します。",
+    "storyContext": "umikaze-terrace.com をGitHub PagesのIPアドレスに紐づけた設定だね。",
+    "skill": { "category": "web-fundamentals", "name": "DNS", "level": "intro" }
+  },
+  {
+    "id": "ch05-q05",
+    "question": "HTTPSで通信が暗号化される仕組みを何と呼ぶ？",
+    "choices": ["DNS", "FTP", "TLS/SSL", "CDN"],
+    "correctIndex": 2,
+    "explanation": "TLS（Transport Layer Security）/ SSL（Secure Sockets Layer）がHTTPS通信の暗号化を担当します。DNSは名前解決、FTPはファイル転送、CDNはコンテンツ配信ネットワークです。",
+    "storyContext": "海風テラスで予約者の個人情報を安全に送受信するために必要な技術だ。",
+    "skill": { "category": "security", "name": "HTTPS", "level": "intro" }
+  },
+  {
+    "id": "ch05-q06",
+    "question": "HTTPSのページでHTTPのリソースを読み込むとどうなる？",
+    "choices": [
+      "正常に表示される",
+      "Mixed Content エラーが発生する",
+      "ページ全体がHTTPに切り替わる",
+      "自動的にHTTPSに変換される"
+    ],
+    "correctIndex": 1,
+    "explanation": "HTTPSのページからHTTPのリソース（画像、CSS、JSなど）を読み込むとMixed Contentエラーが発生します。ブラウザがセキュリティ上の理由でHTTPリソースをブロックすることがあります。",
+    "storyContext": "HTTPS化した後、画像のURLがhttpのままだったときに起きた問題だね。",
+    "skill": { "category": "security", "name": "HTTPS", "level": "intro" }
+  },
+  {
+    "id": "ch05-q07",
+    "question": "DNS設定を変更した後、反映に時間がかかる理由は？",
+    "choices": [
+      "サーバーの処理速度が遅いから",
+      "世界中のDNSサーバーに変更が伝播するのに時間がかかるから",
+      "ドメイン料金の決済に時間がかかるから",
+      "SSL証明書の発行に時間がかかるから"
+    ],
+    "correctIndex": 1,
+    "explanation": "DNS設定の変更は、世界中の階層的なDNSサーバーに順次伝播する必要があるため、数分〜最大48時間かかることがあります。これをDNS伝播（浸透）と呼びます。",
+    "storyContext": "ドメインを設定した直後にサイトが見られなくて焦った、あの場面を思い出そう。",
+    "skill": { "category": "web-fundamentals", "name": "DNS", "level": "intro" }
+  },
+  {
+    "id": "ch05-q08",
+    "question": "プルリクエスト（PR）の主な目的は？",
+    "choices": [
+      "リモートリポジトリからコードを取得する",
+      "コードレビューを経てからブランチを安全にマージする",
+      "コンフリクトを自動的に解消する",
+      "デプロイを自動化する"
+    ],
+    "correctIndex": 1,
+    "explanation": "プルリクエストは、featureブランチの変更をmainにマージする前に、チームメンバーがコードレビューを行うための仕組みです。バグの早期発見やコード品質の向上に役立ちます。",
+    "storyContext": "Yukiが「チームに確認する仕組み」と説明してくれたGitHubの機能だ。",
+    "skill": { "category": "devtools", "name": "Git", "level": "intermediate" }
+  }
+]

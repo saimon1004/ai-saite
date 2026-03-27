@@ -1,0 +1,65 @@
+[
+  {
+    "id": "ch09-help-01",
+    "question": "SQLiteとPostgreSQLの違いは？",
+    "answer": "**SQLite**: ファイルベースの軽量DB。サーバー不要。学習や小規模プロジェクトに最適。\n\n**PostgreSQL**: サーバー型の本格DB。大規模・高負荷に対応。\n\n| 特徴 | SQLite | PostgreSQL |\n|------|--------|------------|\n| セットアップ | 不要 | サーバー構築が必要 |\n| 同時アクセス | 制限あり | 高い同時実行性 |\n| データ量 | 小～中規模 | 大規模対応 |\n| 用途 | 開発・学習 | 本番環境 |\n\n**ShimaLinkの戦略**: 開発中はSQLite、本番ではPostgreSQLに移行。SQLの文法はほぼ同じなので移行は簡単です。",
+    "tags": ["database", "sqlite", "postgresql"],
+    "category": "concept"
+  },
+  {
+    "id": "ch09-help-02",
+    "question": "「SQLITE_ERROR: no such table」エラーが出る",
+    "answer": "テーブルがまだ作成されていません。\n\n**対処法**:\n\n1. **テーブル作成スクリプトを実行する**\n```bash\nnode init-db.js\n```\n\n2. **CREATE TABLE IF NOT EXISTS を使う**\n```sql\nCREATE TABLE IF NOT EXISTS clients (\n  id INTEGER PRIMARY KEY AUTOINCREMENT,\n  name TEXT NOT NULL\n);\n```\n\n3. **データベースファイルの場所を確認**\n```javascript\nconst db = new Database(\"shimalink.db\");\n// 実行ディレクトリに shimalink.db が作られる\n```\n\n`IF NOT EXISTS` をつけると、テーブルが既にある場合はスキップされます。",
+    "tags": ["sqlite", "error", "table"],
+    "category": "environment"
+  },
+  {
+    "id": "ch09-help-03",
+    "question": "SELECTで結果が0件になる（データがあるはずなのに）",
+    "answer": "**WHERE句の条件を確認**しましょう。\n\n**よくある原因**:\n\n1. **文字列の大小文字**\n```sql\n-- SQLiteは大小文字を区別する\nSELECT * FROM clients WHERE category = 'カフェ';\n-- 'Cafe' や 'CAFE' では一致しない\n```\n\n2. **型の不一致**\n```sql\n-- is_activeがINTEGERの場合\nWHERE is_active = 'true'  -- NG（文字列）\nWHERE is_active = 1       -- OK（数値）\n```\n\n3. **NULLの比較**\n```sql\n-- NULLは = で比較できない\nWHERE phone = NULL   -- NG（常にfalse）\nWHERE phone IS NULL  -- OK\n```\n\n**デバッグ**: まず `SELECT * FROM clients;` で全件表示し、データの状態を確認しましょう。",
+    "tags": ["sql", "select", "where", "debug"],
+    "category": "syntax"
+  },
+  {
+    "id": "ch09-help-04",
+    "question": "JOINが分からない。いつ使うの？",
+    "answer": "**2つ以上のテーブルのデータを組み合わせて取得したい**ときに使います。\n\n**例**: 予約情報にクライアント名を含めたい\n\n```sql\n-- JOINなし: client_id だけ表示される\nSELECT * FROM reservations;\n-- | id | client_id | guest_name |\n-- | 1  | 1         | 田中様     |\n\n-- JOINあり: クライアント名も表示\nSELECT r.*, c.name AS client_name\nFROM reservations r\nINNER JOIN clients c ON r.client_id = c.id;\n-- | id | client_id | guest_name | client_name |\n-- | 1  | 1         | 田中様     | 海風テラス   |\n```\n\n**イメージ**: 2枚のExcelシートを、共通のIDで横に結合するイメージです。",
+    "tags": ["sql", "join", "relation"],
+    "category": "concept"
+  },
+  {
+    "id": "ch09-help-05",
+    "question": "AUTO_INCREMENTとは何？",
+    "answer": "**自動で連番を振ってくれる**機能です。\n\n```sql\nCREATE TABLE clients (\n  id INTEGER PRIMARY KEY AUTOINCREMENT,\n  name TEXT NOT NULL\n);\n\nINSERT INTO clients (name) VALUES ('海風テラス');\n-- id は自動的に 1 になる\n\nINSERT INTO clients (name) VALUES ('首里そば太郎');\n-- id は自動的に 2 になる\n```\n\n**注意点**:\n- idを手動で指定する必要がない\n- 削除された番号は再利用されない（1, 2, 3 の2を削除しても、次は4）\n- SQLiteでは `INTEGER PRIMARY KEY` だけでも自動採番されるが、`AUTOINCREMENT` をつけるとより厳密に管理される",
+    "tags": ["sql", "autoincrement", "primary-key"],
+    "category": "concept"
+  },
+  {
+    "id": "ch09-help-06",
+    "question": "トランザクションって何？いつ使うの？",
+    "answer": "**複数のSQL操作をまとめて「全部成功」か「全部取り消し」にする**仕組みです。\n\n**例**: 振込処理（Aから引いてBに足す）\n```sql\nBEGIN TRANSACTION;\n  UPDATE accounts SET balance = balance - 1000 WHERE id = 'A';\n  UPDATE accounts SET balance = balance + 1000 WHERE id = 'B';\nCOMMIT;\n-- 片方だけ実行される事態を防ぐ\n```\n\n**失敗した場合**:\n```sql\nBEGIN TRANSACTION;\n  UPDATE accounts SET balance = balance - 1000 WHERE id = 'A';\n  -- ここでエラー発生！\nROLLBACK;\n-- 最初のUPDATEも取り消される\n```\n\n**ShimaLinkでの使いどころ**: 複数のクライアントを一括登録するとき、1件でも失敗したら全部取り消す。",
+    "tags": ["database", "transaction", "rollback"],
+    "category": "concept"
+  },
+  {
+    "id": "ch09-help-07",
+    "question": "データベースの設計（テーブル分割）の基準は？",
+    "answer": "**正規化の基本ルール**に従います。\n\n**原則**: 同じデータを2か所以上に保存しない。\n\n```\n悪い例（非正規化）:\n予約テーブル\n| guest | client_name | client_phone | date |\n→ client_nameを何度も書く。名前変更時に全部更新が必要。\n\n良い例（正規化）:\nクライアントテーブル: | id | name | phone |\n予約テーブル:         | id | client_id | guest | date |\n→ client_idで参照。名前変更は1か所だけ。\n```\n\n**テーブル分割の判断基準**:\n- そのデータは他のデータから独立して存在できるか？\n- そのデータが繰り返し出現しないか？\n- 更新時に複数箇所を変更する必要がないか？",
+    "tags": ["database", "normalization", "design"],
+    "category": "concept"
+  },
+  {
+    "id": "ch09-help-08",
+    "question": "GROUP BYの使い方が分からない",
+    "answer": "`GROUP BY`は**同じ値を持つ行をまとめて集計**するときに使います。\n\n```sql\n-- カテゴリごとのクライアント数を集計\nSELECT category, COUNT(*) as count\nFROM clients\nGROUP BY category;\n\n-- 結果:\n-- | category | count |\n-- | カフェ   | 3     |\n-- | 飲食     | 5     |\n-- | 花屋     | 2     |\n```\n\n**集計関数と一緒に使う**:\n- `COUNT(*)`: 件数\n- `SUM(column)`: 合計\n- `AVG(column)`: 平均\n- `MAX(column)`: 最大値\n- `MIN(column)`: 最小値\n\n**HAVING**: GROUP BY後に条件をつける\n```sql\nSELECT category, COUNT(*) as count\nFROM clients\nGROUP BY category\nHAVING count >= 3;\n-- 3件以上のカテゴリだけ表示\n```",
+    "tags": ["sql", "group-by", "aggregate"],
+    "category": "syntax"
+  },
+  {
+    "id": "ch09-help-09",
+    "question": "better-sqlite3のインストールでエラーが出る",
+    "answer": "better-sqlite3はネイティブモジュールなので、ビルドツールが必要です。\n\n**Mac**:\n```bash\n# Xcodeコマンドラインツールをインストール\nxcode-select --install\nnpm install better-sqlite3\n```\n\n**Windows**:\n```bash\n# windows-build-toolsをインストール\nnpm install --global windows-build-tools\nnpm install better-sqlite3\n```\n\n**それでもダメな場合**:\n```bash\n# Node.jsのバージョンを確認（v18以上推奨）\nnode --version\n\n# npm キャッシュをクリアして再試行\nnpm cache clean --force\nnpm install better-sqlite3\n```\n\n**代替**: ネイティブモジュールが不要な `sql.js`（Wasm版SQLite）も選択肢です。",
+    "tags": ["sqlite", "install", "error", "npm"],
+    "category": "environment"
+  }
+]

@@ -1,0 +1,100 @@
+[
+  {
+    "id": "ch17-q01",
+    "question": "CI（継続的インテグレーション）の主な目的は？",
+    "choices": [
+      "サーバーのスケーリングを自動化する",
+      "コード変更を頻繁にマージし、自動テストで品質を保証する",
+      "ドキュメントを自動生成する",
+      "データベースのバックアップを取る"
+    ],
+    "correctIndex": 1,
+    "explanation": "CIは開発者のコード変更を頻繁に共通のブランチに統合（integrate）し、その都度自動テストを実行することで、問題を早期に発見する仕組みです。",
+    "storyContext": "テスト用データが本番に出てしまった事故を思い出そう。CIがあれば防げたはずだ。",
+    "skill": { "category": "devops", "name": "CI/CD", "level": "intro" }
+  },
+  {
+    "id": "ch17-q02",
+    "question": "GitHub Actionsのワークフロー定義ファイルを置くディレクトリは？",
+    "choices": [
+      ".github/actions/",
+      ".github/workflows/",
+      ".ci/pipelines/",
+      "workflows/"
+    ],
+    "correctIndex": 1,
+    "explanation": "GitHub Actionsのワークフローは .github/workflows/ ディレクトリにYAMLファイルとして配置します。GitHubはこのディレクトリを自動的に認識します。",
+    "storyContext": "ShimaLinkのCI設定を作ったとき、ci.ymlを置いた場所だ。",
+    "skill": { "category": "devops", "name": "GitHub Actions", "level": "intro" }
+  },
+  {
+    "id": "ch17-q03",
+    "question": "GitHub Actionsで、あるジョブを別のジョブの完了後に実行するには？",
+    "choices": [
+      "after キーワードを使う",
+      "needs キーワードを使う",
+      "depends_on キーワードを使う",
+      "wait キーワードを使う"
+    ],
+    "correctIndex": 1,
+    "explanation": "needs キーワードでジョブ間の依存関係を定義します。例えば needs: test と書くと、testジョブの完了を待ってから実行されます。depends_on はDocker Composeの用語です。",
+    "storyContext": "テストが終わる前にビルドが始まったら意味がない。needsで順序を制御したよね。",
+    "skill": { "category": "devops", "name": "GitHub Actions", "level": "intro" }
+  },
+  {
+    "id": "ch17-q04",
+    "question": "パスワードやAPIキーをGitHub Actionsで安全に使うには？",
+    "choices": [
+      "YAMLファイルに直接書く",
+      ".envファイルをリポジトリにコミットする",
+      "GitHub Secretsに登録して ${{ secrets.NAME }} で参照する",
+      "コメントアウトして隠す"
+    ],
+    "correctIndex": 2,
+    "explanation": "GitHub Secretsはリポジトリの設定画面で暗号化して保存され、ワークフロー内で ${{ secrets.NAME }} として参照できます。YAMLに直接書いたり、.envをコミットするのはセキュリティ上危険です。",
+    "storyContext": "セキュリティ監査を乗り越えたShimaLinkだからこそ、シークレット管理は徹底しないとね。",
+    "skill": { "category": "devops", "name": "GitHub Actions", "level": "intro" }
+  },
+  {
+    "id": "ch17-q05",
+    "question": "CI/CDパイプラインでテストを実行する正しい順序は？",
+    "choices": [
+      "E2E → インテグレーション → ユニット → リント",
+      "リント → ユニット → インテグレーション → E2E",
+      "ユニット → リント → E2E → インテグレーション",
+      "順序は関係ない"
+    ],
+    "correctIndex": 1,
+    "explanation": "速くて軽いテストから順に実行するのが効率的です。リント（構文チェック）→ ユニットテスト（個別関数）→ インテグレーション（連携）→ E2E（全体）の順で、早い段階で問題を発見してパイプラインを止められます。",
+    "storyContext": "Yukiが「テストピラミッド」として教えてくれた、下から上への順番だ。",
+    "skill": { "category": "testing", "name": "自動テスト", "level": "intro" }
+  },
+  {
+    "id": "ch17-q06",
+    "question": "GitHub Actionsでのmatrix戦略の目的は？",
+    "choices": [
+      "ジョブを並列実行して速度を上げる",
+      "複数の条件（Node.jsバージョン等）で同時にテストする",
+      "テスト結果をマトリクス表示する",
+      "複数のリポジトリを同時にビルドする"
+    ],
+    "correctIndex": 1,
+    "explanation": "matrix戦略を使うと、複数のNode.jsバージョンやOS環境など、異なる組み合わせで自動的にテストを並列実行できます。互換性を効率よく確認するための仕組みです。",
+    "storyContext": "ShimaLinkがNode.js 14と18で挙動が違ったのを思い出そう。matrixなら事前に検出できた。",
+    "skill": { "category": "devops", "name": "GitHub Actions", "level": "intro" }
+  },
+  {
+    "id": "ch17-q07",
+    "question": "デプロイ後に問題が発見された場合、最優先で行うべきことは？",
+    "choices": [
+      "問題の原因をじっくり調査する",
+      "新しい修正コードを即座にデプロイする",
+      "以前の安定版にロールバックする",
+      "サーバーを停止してメンテナンスモードにする"
+    ],
+    "correctIndex": 2,
+    "explanation": "本番環境で問題が発生した場合、まずロールバック（前の安定版に戻す）して影響を最小化します。原因調査や修正は、安定版に戻してから落ち着いて行います。",
+    "storyContext": "テストデータが本番に出た事故のとき、ロールバック手順がなくて焦ったことを覚えてる？",
+    "skill": { "category": "devops", "name": "CI/CD", "level": "intro" }
+  }
+]

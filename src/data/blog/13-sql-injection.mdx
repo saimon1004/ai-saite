@@ -1,0 +1,683 @@
+---
+title: "データベースへの侵入"
+subtitle: "SQLインジェクションの仕組みと、パラメータ化クエリによる防御"
+description: "SQLインジェクションの仕組みと、パラメータ化クエリによる防御。SQL Injection Prevention・Parameterized Queries・ORM Safetyを実践的なストーリーで学ぶチャプター「データベースへの侵入」。ShimaLinkの物語とともにスキルを身につけよう。"
+pubDate: 2026-04-13
+chapter: 13
+arc: "crisis"
+arcName: "危機編"
+skills:
+  - { category: "security", name: "SQL Injection Prevention", level: "intro" }
+  - { category: "security", name: "Parameterized Queries", level: "intro" }
+  - { category: "security", name: "ORM Safety", level: "intro" }
+estimatedMinutes: 55
+prerequisites: ["12-xss-injection"]
+---
+
+import StoryPanel from "../../components/blog/StoryPanel.astro";
+import ChapterQuiz from "../../components/blog/ChapterQuiz.astro";
+import ChapterFaq from "../../components/blog/ChapterFaq.astro";
+import SeriesNav from "../../components/blog/SeriesNav.astro";
+
+<StoryPanel>
+
+XSSの修正を終えたあなたは、次の脅威に目を向ける。Yukiが検索機能のアクセスログを画面に映した。
+
+---
+
+**Yuki:** 「XSSはブラウザへの攻撃だった。でもShadowの真の目的はこっちだ——データベースへの直接アクセス。」
+
+ログには、通常の検索とは明らかに異なるリクエストが記録されていた。
+
+```
+[2024-03-15 02:17:33] GET /api/search?q=cafe
+[2024-03-15 02:17:45] GET /api/search?q=cafe' OR '1'='1
+[2024-03-15 02:18:01] GET /api/search?q=cafe' UNION SELECT email,password,null FROM users--
+[2024-03-15 02:18:15] GET /api/search?q=cafe'; SELECT * FROM users WHERE role='admin'--
+```
+
+**あなた:** 「検索欄にSQL文を直接入力してる...？」
+
+**Yuki:** 「正確にはね。ShimaLinkの検索機能が、ユーザーの入力をそのままSQL文に組み込んでいたんだ。」
+
+Yukiがコードを開く。
+
+```javascript
+// ShimaLinkの検索機能（修正前）
+app.get('/api/search', (req, res) => {
+  const query = req.query.q;
+  const sql = `SELECT * FROM shops WHERE name LIKE '%${query}%'`;
+  db.query(sql); // ← ここが問題
+});
+```
+
+**あなた:** 「つまり、検索欄に入力したものがそのままデータベースへの命令になってた？」
+
+**Yuki:** 「その通り。Shadowは検索欄を通じて、データベースに任意の命令を実行した。ユーザーのメールアドレス、パスワード——すべてが抜き取られた。」
+
+**あなた:** 「パスワードまで...!?」
+
+**Yuki:** 「そう。しかもパスワードは平文で保存されていた。これは暗号化の問題だから次のチャプターで扱うけど、まずはこのSQLインジェクションを完全に塞ごう。」
+
+---
+
+Shadowは検索欄という小さな入り口から、ShimaLinkのデータベース全体にアクセスした。
+
+この穴を塞ぐために、SQLインジェクションの仕組みと防御方法を徹底的に学ぶ。
+
+</StoryPanel>
+
+## SQLインジェクションとは
+
+SQLインジェクションは、アプリケーションのSQL文にユーザー入力を不正に注入し、データベースを操作する攻撃です。
+
+> **Yuki:** 「レストランで注文書に『カレー。あと厨房の鍵もください』と書いたようなもの。注文をそのまま処理するシステムなら、鍵まで渡してしまう。」
+
+## 仕組み
+
+ShimaLinkの検索機能を例に見てみましょう。
+
+```javascript
+// 脆弱なコード
+const query = req.query.q; // ユーザーの入力
+const sql = `SELECT * FROM shops WHERE name LIKE '%${query}%'`;
+```
+
+### 正常な動作
+
+ユーザーが「カフェ」と入力した場合：
+
+```sql
+SELECT * FROM shops WHERE name LIKE '%カフェ%'
+-- → 名前に「カフェ」を含むお店を検索（正常）
+```
+
+### 攻撃時の動作
+
+ユーザーが `' OR '1'='1` と入力した場合：
+
+```sql
+SELECT * FROM shops WHERE name LIKE '%' OR '1'='1%'
+-- → '1'='1' は常にtrue → 全レコードが返される
+```
+
+さらに危険なパターン：
+
+```sql
+-- UNION攻撃: 別テーブルのデータを取得
+SELECT * FROM shops WHERE name LIKE '%' UNION SELECT email,password,null FROM users--%'
+
+-- DROP攻撃: テーブルを削除
+SELECT * FROM shops WHERE name LIKE '%'; DROP TABLE users;--%'
+```
+
+## なぜ起きるのか
+
+根本原因は**「データ」と「命令」が混在**していることです。
+
+```
+ユーザーの入力（データ）:  カフェ
+SQL文（命令）:             SELECT * FROM shops WHERE name LIKE '%..%'
+
+→ データと命令が文字列結合で混ざる
+→ データの中に命令を忍ばせることができる
+```
+
+## SQLインジェクションの種類
+
+| 種類 | 説明 | 危険度 |
+|------|------|--------|
+| **UNION攻撃** | UNION句で別テーブルのデータを取得 | 高 |
+| **エラーベース** | SQLエラーメッセージから情報を読み取る | 中 |
+| **ブラインド** | true/falseの応答差からデータを推測 | 中 |
+| **時間ベース** | レスポンス時間の差からデータを推測 | 中 |
+| **スタック** | セミコロンで複数のSQL文を実行 | 極高 |
+
+### Shadowが使った手法
+
+```
+Step 1: 検証（脆弱性の確認）
+  入力: cafe' OR '1'='1
+  結果: 全件返却 → 脆弱性あり
+
+Step 2: テーブル構造の調査
+  入力: cafe' UNION SELECT table_name,null,null FROM information_schema.tables--
+  結果: テーブル一覧が見える
+
+Step 3: データの抽出
+  入力: cafe' UNION SELECT email,password,null FROM users--
+  結果: ユーザーの認証情報が取得される
+```
+
+## 被害の範囲
+
+SQLインジェクションが成功すると、攻撃者は以下のことが可能になります。
+
+| 操作 | 具体例 |
+|------|--------|
+| **データの読み取り** | ユーザー情報、パスワード、個人データ |
+| **データの改ざん** | 管理者権限の付与、データの書き換え |
+| **データの削除** | テーブルの削除（DROP TABLE） |
+| **認証バイパス** | パスワードなしでログイン |
+| **OS操作** | 一部のDBでは、OSコマンドの実行まで可能 |
+
+> **あなた:** 「検索欄一つで、こんなことまでできるのか...」
+
+## ポイント
+
+- SQLインジェクションはユーザー入力をSQL文に不正注入する攻撃
+- 根本原因は「データ」と「命令」の境界が曖昧なこと
+- データの読み取り、改ざん、削除、認証バイパスなど深刻な被害
+- 次のレッスンで防御方法を学ぶ
+
+## パラメータ化クエリ — SQLインジェクションの特効薬
+
+SQLインジェクションの最も効果的な防御方法は**パラメータ化クエリ（プリペアドステートメント）** です。
+
+> **Yuki:** 「パラメータ化クエリは、SQL文の"命令部分"と"データ部分"を完全に分離する。これが根本的な解決策だ。」
+
+## 文字列結合 vs パラメータ化クエリ
+
+### 文字列結合（危険）
+
+```javascript
+// ユーザー入力をそのままSQL文に埋め込む
+const sql = `SELECT * FROM shops WHERE name LIKE '%${query}%'`;
+db.query(sql);
+```
+
+攻撃者の入力がSQL命令の一部として解釈されてしまいます。
+
+### パラメータ化クエリ（安全）
+
+```javascript
+// プレースホルダーを使い、データは別パラメータで渡す
+const sql = 'SELECT * FROM shops WHERE name LIKE ?';
+db.query(sql, [`%${query}%`]);
+```
+
+データベースエンジンが「?の部分は必ずデータとして扱う」と認識するため、SQL命令として解釈されません。
+
+## なぜパラメータ化クエリが安全なのか
+
+```
+文字列結合の場合:
+  SQL解析 → "SELECT * FROM shops WHERE name LIKE '%' OR '1'='1%'"
+  DB: "ああ、ORが入ってるから条件を2つ評価するのね" → 全件返却
+
+パラメータ化クエリの場合:
+  SQL解析 → "SELECT * FROM shops WHERE name LIKE ?"
+  DB: "?の部分はデータね"
+  データバインド → "?' OR '1'='1" がそのまま検索文字列として扱われる
+  DB: "名前に「' OR '1'='1」を含むお店を検索" → 0件
+```
+
+**データベースがSQL文の構造を先に理解し、その後でデータを埋め込む**ため、データがSQL命令として解釈されることがありません。
+
+## 各言語での実装例
+
+### Node.js（mysql2）
+
+```javascript
+const mysql = require('mysql2/promise');
+
+// 検索
+const [rows] = await db.execute(
+  'SELECT * FROM shops WHERE name LIKE ?',
+  [`%${query}%`]
+);
+
+// 挿入
+await db.execute(
+  'INSERT INTO comments (user_id, text, created_at) VALUES (?, ?, NOW())',
+  [userId, commentText]
+);
+
+// 更新
+await db.execute(
+  'UPDATE shops SET name = ?, description = ? WHERE id = ?',
+  [name, description, shopId]
+);
+```
+
+### Node.js（PostgreSQL / pg）
+
+```javascript
+const { Pool } = require('pg');
+const pool = new Pool();
+
+// PostgreSQLは$1, $2...を使う
+const result = await pool.query(
+  'SELECT * FROM shops WHERE name LIKE $1',
+  [`%${query}%`]
+);
+```
+
+### Python（sqlite3）
+
+```python
+import sqlite3
+conn = sqlite3.connect('shimalink.db')
+cursor = conn.cursor()
+
+# Pythonは ? をプレースホルダーに使う
+cursor.execute(
+    'SELECT * FROM shops WHERE name LIKE ?',
+    (f'%{query}%',)
+)
+```
+
+## 複数条件の場合
+
+```javascript
+// 複数のパラメータ
+const sql = `
+  SELECT * FROM shops
+  WHERE category = ?
+  AND city = ?
+  AND rating >= ?
+  ORDER BY rating DESC
+  LIMIT ?
+`;
+
+const [rows] = await db.execute(sql, [category, city, minRating, limit]);
+```
+
+## IN句の処理
+
+IN句は少し工夫が必要です。
+
+```javascript
+// 動的なIN句
+const ids = [1, 2, 3, 4, 5];
+const placeholders = ids.map(() => '?').join(',');
+const sql = `SELECT * FROM shops WHERE id IN (${placeholders})`;
+
+const [rows] = await db.execute(sql, ids);
+// → SELECT * FROM shops WHERE id IN (?, ?, ?, ?, ?)
+```
+
+## ストアドプロシージャ
+
+処理をデータベース側に定義することで、さらに安全性を高められます。
+
+```sql
+-- ストアドプロシージャの定義
+CREATE PROCEDURE SearchShops(IN searchTerm VARCHAR(100))
+BEGIN
+  SELECT * FROM shops WHERE name LIKE CONCAT('%', searchTerm, '%');
+END;
+```
+
+```javascript
+// 呼び出し
+await db.execute('CALL SearchShops(?)', [query]);
+```
+
+## ポイント
+
+- パラメータ化クエリは「データ」と「命令」を完全に分離する
+- 文字列結合でSQL文を組み立てては**絶対にいけない**
+- すべてのデータベース操作でプレースホルダーを使う
+- 言語やDBによってプレースホルダーの記法が異なる（?, $1, :name）
+
+## ORM とプリペアドステートメント
+
+パラメータ化クエリを毎回手書きするのは大変です。**ORM（Object-Relational Mapping）** を使えば、SQLを直接書かずに安全なデータベース操作ができます。
+
+> **Yuki:** 「ORMは通訳みたいなもの。JavaScriptのオブジェクト操作をSQLに翻訳してくれる。そして自動的にパラメータ化してくれるんだ。」
+
+## ORMとは
+
+ORMは、プログラミング言語のオブジェクトとデータベースのテーブルを対応づける技術です。
+
+```
+JavaScript Object          ←→  Database Table
+─────────────────               ────────────────
+{ name: "海風テラス",       ←→  shops テーブル
+  category: "カフェ",             name | category | city
+  city: "那覇"              ←→  海風テラス | カフェ | 那覇
+}
+```
+
+## 代表的なORM
+
+| ORM | 言語 | 特徴 |
+|-----|------|------|
+| **Prisma** | Node.js/TypeScript | 型安全、モダン |
+| **Sequelize** | Node.js | 歴史がある、柔軟 |
+| **TypeORM** | TypeScript | デコレータベース |
+| **Drizzle** | TypeScript | 軽量、SQLに近い |
+
+## Prismaの例
+
+```javascript
+// モデル定義（schema.prisma）
+// model Shop {
+//   id       Int    @id @default(autoincrement())
+//   name     String
+//   category String
+//   city     String
+// }
+
+// 検索（安全 — 自動パラメータ化）
+const shops = await prisma.shop.findMany({
+  where: {
+    name: { contains: query },
+    city: 'naha'
+  }
+});
+
+// 挿入
+const newShop = await prisma.shop.create({
+  data: {
+    name: '海風テラス',
+    category: 'カフェ',
+    city: '那覇'
+  }
+});
+
+// 更新
+await prisma.shop.update({
+  where: { id: shopId },
+  data: { name: newName }
+});
+```
+
+内部では自動的にパラメータ化クエリが生成されます。
+
+## ORMでも注意が必要な場面
+
+ORMを使っていても、**生のSQLを実行する機能**を使うとSQLインジェクションが起きます。
+
+```javascript
+// 危険: ORMの生SQL機能で文字列結合
+const result = await prisma.$queryRawUnsafe(
+  `SELECT * FROM shops WHERE name = '${userInput}'` // 危険！
+);
+
+// 安全: ORMの生SQL機能でもパラメータを使う
+const result = await prisma.$queryRaw`
+  SELECT * FROM shops WHERE name = ${userInput}
+`;
+```
+
+```javascript
+// Sequelizeの場合
+// 危険
+const shops = await Shop.findAll({
+  where: sequelize.literal(`name = '${userInput}'`) // 危険！
+});
+
+// 安全
+const shops = await Shop.findAll({
+  where: { name: userInput } // 自動パラメータ化
+});
+```
+
+> **Yuki:** 「ORMを使ってるから安全、じゃないよ。`raw` とか `literal` とか `unsafe` という名前が付いた機能は要注意だ。」
+
+## プリペアドステートメントの内部動作
+
+パラメータ化クエリの内部では、以下のステップが行われます。
+
+```
+Step 1: PREPARE（準備）
+  DB: "SELECT * FROM shops WHERE name = ?" という構造を解析・コンパイル
+  → SQLの「骨格」が確定（ここにデータは含まれない）
+
+Step 2: BIND（バインド）
+  DB: ?の部分にデータをバインド
+  → データは文字列値としてのみ扱われる
+
+Step 3: EXECUTE（実行）
+  DB: バインドされたデータを使ってクエリを実行
+```
+
+構造が先に確定するため、データが構造を変えることは物理的に不可能です。
+
+## ShimaLinkの検索機能を書き直す
+
+```javascript
+// Before: 文字列結合（脆弱）
+app.get('/api/search', (req, res) => {
+  const query = req.query.q;
+  const sql = `SELECT * FROM shops WHERE name LIKE '%${query}%'`;
+  db.query(sql);
+});
+
+// After: Prisma ORM（安全）
+app.get('/api/search', async (req, res) => {
+  const query = req.query.q;
+
+  // 入力検証
+  if (typeof query !== 'string' || query.length > 100) {
+    return res.status(400).json({ error: '無効な検索クエリ' });
+  }
+
+  // ORM経由の安全なクエリ
+  const shops = await prisma.shop.findMany({
+    where: {
+      name: { contains: query }
+    },
+    take: 20 // 結果数を制限
+  });
+
+  res.json(shops);
+});
+```
+
+## ポイント
+
+- ORMは安全なデータベース操作を簡単に実現する
+- ORMの `raw`、`literal`、`unsafe` 機能は文字列結合と同じ危険がある
+- プリペアドステートメントはSQL構造を先に確定させることで安全を保証
+- ORM + 入力検証の組み合わせが最も安全
+
+## 多層防御でSQLインジェクションを完封する
+
+パラメータ化クエリは最も重要な対策ですが、それだけに頼らず複数の防御層を構築しましょう。
+
+> **Yuki:** 「パラメータ化クエリは"正面玄関の鍵"。でも窓には別の鍵、裏口にはセンサー、家全体には警報装置が必要だよね。」
+
+## 防御レイヤー
+
+```
+Layer 1: 入力検証（バリデーション）
+    ↓ 不正な入力を事前にブロック
+Layer 2: パラメータ化クエリ / ORM
+    ↓ SQLインジェクションを根本的に防止
+Layer 3: 最小権限のDBユーザー
+    ↓ 万が一侵入されても被害を限定
+Layer 4: エラーハンドリング
+    ↓ 内部情報の漏洩を防止
+Layer 5: WAF（Web Application Firewall）
+    ↓ 既知の攻撃パターンをブロック
+Layer 6: 監視・アラート
+    ↓ 異常を即座に検知
+```
+
+## Layer 1: 入力検証
+
+SQLに渡す前に、入力そのものを検証します。
+
+```javascript
+// 検索クエリのバリデーション
+function validateSearchQuery(query) {
+  // 型チェック
+  if (typeof query !== 'string') return false;
+
+  // 長さ制限
+  if (query.length === 0 || query.length > 100) return false;
+
+  // 制御文字の除外
+  if (/[\x00-\x1f]/.test(query)) return false;
+
+  return true;
+}
+
+// 数値IDのバリデーション
+function validateId(id) {
+  const num = parseInt(id, 10);
+  return Number.isInteger(num) && num > 0;
+}
+```
+
+## Layer 3: 最小権限のDBユーザー
+
+アプリケーションが使うデータベースユーザーに、必要最小限の権限だけを付与します。
+
+```sql
+-- 悪い例: アプリがrootユーザーでDB接続
+-- → DROP TABLE, CREATE USER など何でもできる
+
+-- 良い例: 専用ユーザーに必要な権限だけ付与
+CREATE USER 'shimalink_app'@'localhost' IDENTIFIED BY 'strong_password';
+
+-- 読み取り・挿入・更新のみ許可（削除は不可）
+GRANT SELECT, INSERT, UPDATE ON shimalink.shops TO 'shimalink_app'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON shimalink.comments TO 'shimalink_app'@'localhost';
+
+-- DROPやALTERは許可しない
+-- → 万が一SQLiが成功しても、テーブル削除は不可能
+```
+
+> **Yuki:** 「アプリがDROP TABLEの権限を持っていなければ、攻撃者がDROP文を注入しても実行されない。これが最小権限の威力だ。」
+
+## Layer 4: エラーハンドリング
+
+SQLエラーメッセージには、テーブル名やカラム名などの内部情報が含まれます。これを攻撃者に見せてはいけません。
+
+```javascript
+// 悪い例: エラーの詳細をユーザーに返す
+app.get('/api/search', async (req, res) => {
+  try {
+    const result = await db.query(sql, params);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    // → "Table 'shimalink.users' doesn't exist" が露出する
+  }
+});
+
+// 良い例: 一般的なエラーメッセージを返す
+app.get('/api/search', async (req, res) => {
+  try {
+    const result = await db.query(sql, params);
+    res.json(result);
+  } catch (error) {
+    console.error('DB Error:', error); // ログには詳細を記録
+    res.status(500).json({ error: '内部エラーが発生しました' }); // ユーザーには一般的なメッセージ
+  }
+});
+```
+
+## Layer 6: 監視とアラート
+
+異常なクエリパターンを検知してアラートを発するシステムを構築します。
+
+```javascript
+// 簡易的な異常検知ミドルウェア
+const suspiciousPatterns = [
+  /UNION\s+SELECT/i,
+  /OR\s+['"]?\d+['"]?\s*=\s*['"]?\d+/i,
+  /;\s*DROP\s/i,
+  /;\s*DELETE\s/i,
+  /--\s*$/,
+  /\/\*.*\*\//
+];
+
+function detectSqlInjection(req, res, next) {
+  const params = Object.values(req.query).concat(Object.values(req.body || {}));
+
+  for (const param of params) {
+    if (typeof param !== 'string') continue;
+    for (const pattern of suspiciousPatterns) {
+      if (pattern.test(param)) {
+        console.warn(`[SECURITY] SQLi attempt detected: ${req.ip} - ${param}`);
+        // アラートを送信（Slack通知など）
+        return res.status(400).json({ error: '不正なリクエストです' });
+      }
+    }
+  }
+  next();
+}
+
+app.use(detectSqlInjection);
+```
+
+> **Yuki:** 「パラメータ化クエリがあれば攻撃は成功しない。でも攻撃の"試み"を検知することで、早期に対処できる。」
+
+## チェックリスト
+
+ShimaLinkのSQLインジェクション対策チェックリスト：
+
+```markdown
+- [x] すべてのSQLクエリをパラメータ化に変更
+- [x] ORMの導入（Prisma）
+- [x] DBユーザーの権限を最小限に設定
+- [x] エラーメッセージに内部情報を含めない
+- [x] 入力値のバリデーション実装
+- [x] SQLインジェクション検知ミドルウェア導入
+- [x] アクセスログの監視体制を構築
+```
+
+## ポイント
+
+- パラメータ化クエリを軸に、複数の防御層を構築する
+- DBユーザーの権限を最小限にすることで被害を限定
+- エラーメッセージから内部情報を漏洩させない
+- 攻撃の「試み」を検知・監視する体制も重要
+
+<StoryPanel variant="conclusion">
+
+パラメータ化クエリへの書き換え、ORMの導入、入力検証の強化——SQLインジェクションへの対策がすべて完了した。
+
+```javascript
+// Before: 文字列結合（脆弱）
+const sql = `SELECT * FROM shops WHERE name LIKE '%${query}%'`;
+
+// After: パラメータ化クエリ（安全）
+const sql = 'SELECT * FROM shops WHERE name LIKE ?';
+db.query(sql, [`%${query}%`]);
+```
+
+---
+
+**あなた:** 「テスト用のSQLインジェクションペイロードをすべて試しました。全部ブロックされています。」
+
+**Yuki:** 「よくやった。これでXSSとSQLインジェクション、2つの最大の脅威を封じた。」
+
+**あなた:** 「じゃあ、もう安全ってこと？」
+
+**Yuki:** 「...まだ残ってる問題がある。Shadowがデータベースから抜き取ったデータの中にパスワードがあった。」
+
+**あなた:** 「はい...。平文で保存していたので、そのまま読めてしまいます。」
+
+**Yuki:** 「仮にSQLインジェクションが防げなかったとしても、パスワードが暗号化されていれば被害は軽減できた。これが"多層防御"の考え方だよ。」
+
+Yukiがホワイトボードに書く。
+
+```
+データベースが漏洩したとき:
+  平文パスワード → すべてのアカウントが即座に乗っ取られる
+  ハッシュ化パスワード → 解読に膨大な時間がかかる（実質不可能）
+```
+
+**Yuki:** 「次は暗号化とハッシュについて学ぶ。データが盗まれても"読めない"状態にする——最後の砦を築こう。」
+
+---
+
+XSSとSQLインジェクションの穴は塞いだ。しかし、すでに漏洩したデータは取り戻せない。
+
+二度と同じ被害を出さないために、暗号化という鎧を身にまとう。
+
+> **次のチャプター**: *Chapter 14: 暗号という鎧* — パスワードのハッシュ化、HTTPS、暗号化の基本を学ぶ。
+
+</StoryPanel>
+
+<ChapterQuiz chapterId="13-sql-injection" />
+
+<ChapterFaq chapterId="13-sql-injection" />
+
+<SeriesNav current={13} />

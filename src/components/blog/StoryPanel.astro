@@ -1,0 +1,27 @@
+---
+interface Props {
+  variant?: "intro" | "conclusion";
+}
+
+const { variant = "intro" } = Astro.props;
+const isConclusion = variant === "conclusion";
+---
+
+<div
+  class:list={[
+    "story-panel relative rounded-2xl p-6 sm:p-8 my-8",
+    isConclusion
+      ? "bg-gradient-to-br from-navy/5 to-teal/10 border border-teal/20"
+      : "bg-gradient-to-br from-navy/5 to-navy/10 border border-navy/10",
+  ]}
+>
+  <div class="flex items-center gap-2 mb-4">
+    <span class="text-lg">{isConclusion ? "📖" : "🎬"}</span>
+    <span class="text-xs font-bold tracking-widest uppercase text-text-secondary">
+      {isConclusion ? "Story — Conclusion" : "Story — Introduction"}
+    </span>
+  </div>
+  <div class="story-content prose-blog">
+    <slot />
+  </div>
+</div>
