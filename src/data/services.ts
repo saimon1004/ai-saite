@@ -65,6 +65,7 @@ export interface CaseStudy {
   number: string;
   titleEn: string;
   titleJa: string;
+  image: string;
   description: string;
   url?: string;
   tools: string[];
@@ -240,6 +241,7 @@ export const aiImpactLab = {
       number: "01",
       titleEn: "Recruitment Website",
       titleJa: "採用サイトの制作",
+      image: "case-site-image.jpg",
       description:
         "AIがPC内のファイルを直接操作し、React/Next.jsの本格的な採用サイトを環境構築から公開まで一貫して制作。エンジニアがいなくても、プロ品質のWebサイトを現場主導で完成させられます。",
       url: "https://recruit.nash-holdings.com",
@@ -278,6 +280,52 @@ export const aiImpactLab = {
         company: "株式会社NASH",
         image: "interview-01.jpg",
         quote: "採用サイトのリニューアルを任されたとき、最初は制作会社への外注を考えていました。でも見積もりは数百万円、修正のたびに追加費用がかかると聞いて悩んでいたところ、この研修を知りました。受講後はClaude Codeに日本語で指示するだけでサイトが形になっていくのが衝撃的で、デザイン修正も「ここをもう少し明るく」と伝えるだけ。外注と比べてトータルコストは大幅に抑えられましたし、自分たちで即座に更新できるのも大きいです。公開後は応募数が前年比1.8倍に増え、今では他部署からも「うちのページも作って」と相談が来ています。",
+      },
+    },
+    {
+      number: "02",
+      titleEn: "Service Site Renewal",
+      titleJa: "サービスサイトのリニューアル",
+      image: "case-site-image-02.png",
+      description:
+        "ノーコードツールBubbleとAIを組み合わせ、サービスサイト「worktalk」をリニューアル。AIによるUI/UX改善提案とBubbleでの高速実装で、外注に頼らず自社でプロ品質のサイト刷新を実現しました。",
+      url: "https://work-talk.jp/hp_top/mycareer",
+      tools: ["Claude Code", "VS Code", "Bubble", "Git"],
+      steps: [
+        {
+          title: "現状分析",
+          description: "既存サイトの課題を洗い出し、改善方針をAIと策定",
+        },
+        {
+          title: "デザイン設計",
+          description: "AIにリニューアル案を相談し、UI/UXの方向性を決定",
+        },
+        {
+          title: "Bubbleで実装",
+          description: "ノーコードで新デザインを構築、AIがロジック設計をサポート",
+        },
+        {
+          title: "テスト・改善",
+          description: "動作確認しながらAIに改善点を指示して即修正",
+        },
+        {
+          title: "公開・運用開始",
+          description: "本番公開、運用マニュアルもAIで作成",
+        },
+      ],
+      highlights: [
+        "外注費を大幅削減、社内完結でサイトリニューアル",
+        "ノーコード×AIで開発期間を大幅短縮",
+        "社内で即座にコンテンツ更新・改善が可能に",
+      ],
+      color: "from-blue-600 to-indigo-600",
+      interview: {
+        name: "小野 様",
+        role: "",
+        company: "マイキャリア株式会社",
+        image: "interview-02.jpg",
+        quote:
+          "サービスサイトのリニューアルは以前から課題でしたが、制作会社に依頼すると費用も時間もかかるため後回しにしていました。この研修でBubbleとClaude Codeの組み合わせを学んだことで、自分たちで短期間にリニューアルを完了できました。AIに「この部分をもっと見やすくして」と伝えるだけで具体的な改善案が返ってくるので、デザインの知識がなくても迷わず進められます。リニューアル後はサイト経由の問い合わせが増え、採用活動にも好影響が出ています。今後も自社で継続的に改善していける体制ができたことが何より大きいです。",
       },
     },
   ] as CaseStudy[],

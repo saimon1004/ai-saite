@@ -264,7 +264,7 @@ export default function RecruitPage() {
                     {cs.url ? (
                       <a href={cs.url} target="_blank" rel="noopener noreferrer" class="block rounded-xl overflow-hidden shadow-sm border border-border hover:shadow-md transition-shadow duration-300 group/img">
                         <img
-                          src={`${base}case-site-image.jpg`}
+                          src={`${base}${cs.image}`}
                           alt="サイト完成イメージ"
                           class="w-full h-auto object-cover group-hover/img:scale-105 transition-transform duration-300"
                           loading="lazy"
@@ -273,7 +273,7 @@ export default function RecruitPage() {
                     ) : (
                       <div class="rounded-xl overflow-hidden shadow-sm border border-border">
                         <img
-                          src={`${base}case-site-image.jpg`}
+                          src={`${base}${cs.image}`}
                           alt="サイト完成イメージ"
                           class="w-full h-auto object-cover"
                           loading="lazy"
