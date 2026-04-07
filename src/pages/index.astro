@@ -1,9 +1,12 @@
 ---
 import SinglePageLayout from "../layouts/SinglePageLayout.astro";
 import HeroSection from "../components/sections/HeroSection.astro";
+import SolutionOverviewSection from "../components/sections/SolutionOverviewSection.astro";
+import TrainingModulesSection from "../components/sections/TrainingModulesSection.astro";
+import ResultsSection from "../components/sections/ResultsSection.astro";
+import CaseStudySection from "../components/sections/CaseStudySection.astro";
+import PricingSection from "../components/sections/PricingSection.astro";
 import AboutSection from "../components/sections/AboutSection.astro";
-import SolutionSection from "../components/sections/SolutionSection.astro";
-
 import TeamSection from "../components/sections/TeamSection.astro";
 import CompanySection from "../components/sections/CompanySection.astro";
 import ContactSection from "../components/sections/ContactSection.astro";
@@ -54,14 +57,17 @@ const jsonLd = {
 ---
 
 <SinglePageLayout
-  title="株式会社SAIMON | 面白いを実現させる"
+  title="株式会社SAIMON | AI研修・リスキリング | AI IMPACT LAB"
   description={siteConfig.defaultDescription}
   jsonLd={jsonLd}
 >
   <HeroSection />
+  <SolutionOverviewSection />
+  <TrainingModulesSection />
+  <ResultsSection />
+  <CaseStudySection />
+  <PricingSection />
   <AboutSection />
-  <SolutionSection />
-
   <TeamSection />
   <CompanySection />
   <ContactSection />

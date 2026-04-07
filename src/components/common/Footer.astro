@@ -5,6 +5,12 @@ import { navigation } from "../../data/navigation";
 
 const base = import.meta.env.BASE_URL;
 const currentYear = new Date().getFullYear();
+
+const footerOnlyLinks = [
+  { label: "私たちについて", labelEn: "ABOUT", href: "#about" },
+  { label: "代表プロフィール", labelEn: "TEAM", href: "#team" },
+  { label: "会社概要", labelEn: "COMPANY", href: "#company" },
+];
 ---
 
 <footer class="bg-navy text-text-on-dark">
@@ -28,7 +34,7 @@ const currentYear = new Date().getFullYear();
       <!-- Nav -->
       <nav aria-label="フッターナビゲーション">
         <ul class="flex flex-wrap gap-x-6 gap-y-2">
-          {navigation.map((item) => (
+          {[...navigation, ...footerOnlyLinks].map((item) => (
             <li>
               <a
                 href={item.href.startsWith("/") ? item.href : `${base}${item.href}`}

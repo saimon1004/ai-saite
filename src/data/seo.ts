@@ -1,7 +1,7 @@
 export const siteConfig = {
   siteName: "株式会社SAIMON",
   defaultDescription:
-    "株式会社SAIMONは「面白い」を実現させる経営コンサルティング会社です。採用定着プログラム、AI研修（AI IMPACT LAB）、バックオフィス構築支援を通じて、企業の成長をサポートします。",
+    "株式会社SAIMONは、企業向けAI研修プログラム「AI IMPACT LAB」を提供。LLM・AIエージェント・ノーコード・クリエイティブの4モジュールで、現場のAIリスキリングを支援します。",
   defaultOgImage: "/og-image.png",
   locale: "ja_JP",
   twitterCard: "summary_large_image" as const,

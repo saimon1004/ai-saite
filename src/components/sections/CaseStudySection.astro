@@ -1,0 +1,284 @@
+---
+import { aiImpactLab, interviews, type Interview } from "../../data/services";
+
+const base = import.meta.env.BASE_URL;
+const { caseStudies } = aiImpactLab;
+---
+
+<section id="cases" class="py-10 sm:py-14" data-particles>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Case Studies -->
+    <div>
+      <h3 class="font-heading text-sm tracking-wider text-teal uppercase font-bold mb-2 text-center">
+        導入事例
+      </h3>
+      <p class="text-center text-lg sm:text-xl font-bold text-text-primary mb-2">
+        研修で実際にこんなものが作れます
+      </p>
+      <p class="text-center text-text-secondary text-sm mb-10 max-w-2xl mx-auto">
+        Claude Codeを使えば、専門知識がなくても日本語の指示だけで本格的な成果物を現場で制作できます。
+      </p>
+
+      <div class="space-y-8">
+        {caseStudies.map((cs) => (
+          <div class="bg-surface rounded-2xl border border-border overflow-hidden">
+            <!-- Header with gradient -->
+            <div class={`bg-gradient-to-r ${cs.color} px-6 sm:px-10 py-6 sm:py-8`}>
+              <div class="flex items-center gap-3 mb-2">
+                <span class="font-heading text-xs tracking-wider uppercase font-bold text-white/60">
+                  Case {cs.number}
+                </span>
+                <span class="text-xs font-medium bg-white/20 text-white px-2.5 py-0.5 rounded-full">
+                  {cs.titleEn}
+                </span>
+              </div>
+              <h4 class="text-2xl sm:text-3xl font-black text-white">
+                {cs.titleJa}
+              </h4>
+            </div>
+
+            {/* Code background + content */}
+            <div class="relative px-6 sm:px-10 py-8 overflow-hidden">
+              {/* Animated code background */}
+              <div class="absolute inset-0 opacity-[0.09] pointer-events-none select-none overflow-hidden" aria-hidden="true">
+                <pre class="font-mono text-[11px] leading-[1.6] text-navy whitespace-pre animate-code-scroll"><code>{`import { createApp } from 'vue'
+const response = await fetch('/api/recruit')
+const data = await response.json()
+
+export default function RecruitPage() {
+  const [jobs, setJobs] = useState([])
+  useEffect(() => {
+    fetchJobs().then(setJobs)
+  }, [])
+  return (
+    <main className="container mx-auto">
+      <Hero title="Join Our Team" />
+      <JobList items={jobs} />
+    </main>
+  )
+}
+
+async function deploy(config) {
+  const build = await exec('npm run build')
+  await uploadToServer(build.output, {
+    host: config.server,
+    path: '/var/www/recruit',
+  })
+  console.log('Deployed successfully!')
+}
+
+const theme = {
+  colors: { primary: '#0D0084', accent: '#00C9A7' },
+  fonts: { heading: 'Inter', body: 'Noto Sans JP' },
+}
+
+router.get('/api/positions', async (req, res) => {
+  const positions = await db.query('SELECT * FROM positions WHERE active = true')
+  res.json({ data: positions })
+})
+
+import { createApp } from 'vue'
+const response = await fetch('/api/recruit')
+const data = await response.json()
+
+export default function RecruitPage() {
+  const [jobs, setJobs] = useState([])
+  useEffect(() => {
+    fetchJobs().then(setJobs)
+  }, [])
+  return (
+    <main className="container mx-auto">
+      <Hero title="Join Our Team" />
+      <JobList items={jobs} />
+    </main>
+  )
+}`}</code></pre>
+              </div>
+
+              <div class="relative z-10">
+                {/* Description + Image */}
+                <div class="flex flex-col lg:flex-row gap-6 mb-6">
+                  <!-- Left: Site image -->
+                  <div class="lg:w-1/3 shrink-0">
+                    {cs.url ? (
+                      <a href={cs.url} target="_blank" rel="noopener noreferrer" class="block rounded-xl overflow-hidden shadow-sm border border-border hover:shadow-md transition-shadow duration-300 group/img">
+                        <img
+                          src={`${base}${cs.image}`}
+                          alt="サイト完成イメージ"
+                          class="w-full h-auto object-cover group-hover/img:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      </a>
+                    ) : (
+                      <div class="rounded-xl overflow-hidden shadow-sm border border-border">
+                        <img
+                          src={`${base}${cs.image}`}
+                          alt="サイト完成イメージ"
+                          class="w-full h-auto object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <!-- Right: Description + Tools -->
+                  <div class="flex-1 flex flex-col justify-center">
+                    <p class="text-sm text-text-secondary leading-relaxed mb-4">
+                      {cs.description}
+                    </p>
+                    <div class="flex flex-wrap items-center gap-2">
+                      {cs.tools.map((tool) => (
+                        <span class="text-xs font-medium bg-navy/5 text-navy px-3 py-1.5 rounded-full">
+                          {tool}
+                        </span>
+                      ))}
+                      {cs.url && (
+                        <a
+                          href={cs.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="inline-flex items-center gap-1.5 bg-teal text-white font-bold text-xs px-4 py-1.5 rounded-full hover:bg-teal/85 transition-colors duration-200 shadow-sm hover:shadow-md"
+                        >
+                          サイトを見る
+                          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                          </svg>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Steps -->
+                <div class="mb-6">
+                  <p class="text-xs font-heading tracking-wider uppercase font-bold text-text-secondary mb-4">
+                    制作ステップ
+                  </p>
+                  <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+                    {cs.steps.map((step, sIdx) => (
+                      <div class="flex sm:flex-col items-start sm:items-center gap-3 sm:gap-2 sm:text-center">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-navy text-white flex items-center justify-center shrink-0">
+                          <span class="font-heading text-xs sm:text-sm font-black">{sIdx + 1}</span>
+                        </div>
+                        <div class="sm:text-center">
+                          <p class="text-sm font-bold text-text-primary">{step.title}</p>
+                          <p class="text-[11px] text-text-secondary mt-0.5 leading-snug">{step.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <!-- Highlights -->
+                <div class="bg-teal/5 border border-teal/15 rounded-xl p-5">
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {cs.highlights.map((hl) => (
+                      <div class="flex items-start gap-2">
+                        <svg class="w-4 h-4 text-teal shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-sm text-text-primary font-medium">{hl}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Interview */}
+                {cs.interview && (
+                  <div class="mt-6 bg-navy/5 rounded-xl p-6 sm:p-8">
+                    <p class="font-heading text-xs tracking-wider uppercase font-bold text-teal mb-5">
+                      受講者の声
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-6">
+                      {/* Avatar */}
+                      <div class="shrink-0 flex sm:flex-col items-center sm:items-center gap-4 sm:gap-2">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-navy/10 flex items-center justify-center shrink-0">
+                          <img
+                            src={`${base}${cs.interview.image}`}
+                            alt={cs.interview.name}
+                            class="w-full h-full object-cover"
+                            loading="lazy"
+                            onerror="this.style.display='none';this.parentElement.innerHTML='<svg class=\'w-8 h-8 text-navy/30\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\' stroke-width=\'1.5\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z\' /></svg>'"
+                          />
+                        </div>
+                        <div class="sm:text-center">
+                          <p class="text-sm font-bold text-text-primary">{cs.interview.name}</p>
+                          <p class="text-[11px] text-text-secondary leading-tight mt-0.5">{cs.interview.company}</p>
+                          {cs.interview.role && <p class="text-[11px] text-text-secondary leading-tight">{cs.interview.role}</p>}
+                        </div>
+                      </div>
+
+                      {/* Quote */}
+                      <div class="flex-1 relative">
+                        <span class="absolute -top-2 -left-1 text-5xl font-heading font-black text-teal/15 leading-none select-none" aria-hidden="true">"</span>
+                        <p class="text-sm text-text-secondary leading-relaxed pl-6 sm:pl-8 pt-2">
+                          {cs.interview.quote}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* Standalone Interviews (導入インタビュー) */}
+    {interviews.length > 0 && (
+      <div class="mt-16">
+        <h3 class="font-heading text-sm tracking-wider text-teal uppercase font-bold mb-2 text-center">
+          導入インタビュー
+        </h3>
+        <p class="text-center text-lg sm:text-xl font-bold text-text-primary mb-10">
+          お客様の声
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {interviews.map((iv) => (
+            <div class="bg-surface rounded-2xl border border-border p-6 sm:p-8">
+              <div class="flex items-start gap-4 mb-4">
+                <div class="w-14 h-14 rounded-full overflow-hidden bg-navy/10 flex items-center justify-center shrink-0">
+                  {iv.image ? (
+                    <img
+                      src={`${base}${iv.image}`}
+                      alt={iv.name}
+                      class="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <svg class="w-7 h-7 text-navy/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                    </svg>
+                  )}
+                </div>
+                <div>
+                  <p class="text-sm font-bold text-text-primary">{iv.name}</p>
+                  <p class="text-[11px] text-text-secondary">{iv.company}</p>
+                  {iv.role && <p class="text-[11px] text-text-secondary">{iv.role}</p>}
+                </div>
+              </div>
+              <div class="relative">
+                <span class="absolute -top-1 -left-1 text-4xl font-heading font-black text-teal/15 leading-none select-none" aria-hidden="true">"</span>
+                <p class="text-sm text-text-secondary leading-relaxed pl-5 pt-1">
+                  {iv.quote}
+                </p>
+              </div>
+              {iv.highlights.length > 0 && (
+                <div class="mt-4 flex flex-wrap gap-2">
+                  {iv.highlights.map((hl) => (
+                    <span class="text-xs font-medium bg-teal/5 text-teal px-3 py-1 rounded-full">
+                      {hl}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+  </div>
+</section>

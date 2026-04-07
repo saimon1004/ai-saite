@@ -81,11 +81,22 @@ export interface CaseStudy {
   };
 }
 
+export interface Interview {
+  company: string;
+  name: string;
+  role: string;
+  image: string;
+  quote: string;
+  highlights: string[];
+}
+
+export const interviews: Interview[] = [];
+
 export const aiImpactLab = {
   nameEn: "AI IMPACT LAB",
-  tagline: "「つくりたい」を、現場の手で。",
+  tagline: "内製化を実現するAI研修プログラム",
   description:
-    "スピード不足、ミスコミュニケーション——<br class='hidden sm:inline'>思い描いた成果物が形にならないもどかしさ。<br>現場が自らつくれる力を持つことが、最も確実な解決策だと私たちは考えます。<br>その信念から生まれた研修プログラムです。",
+    "外注していたサイト制作、資料作成、業務自動化——<br class='hidden sm:inline'>AIを活用すれば、現場の社員が自分たちでつくれる時代です。<br>外に出していた仕事を社内に取り戻し、スピードとコストの両方を改善する。<br>そのための実践型AI研修プログラムです。",
 
   pillars: [
     {
@@ -213,7 +224,7 @@ export const aiImpactLab = {
   pricing: {
     startPrice: "100,000",
     priceNote: "円〜（税抜）",
-    description: "貴社の課題やレベル感に合わせて、研修内容・時間・回数を柔軟にカスタマイズ。まずはお気軽にご相談ください。",
+    description: "貴社の課題やレベル感に合わせて、研修内容・時間・回数を柔軟にカスタマイズいたします。<br>まずはお気軽にご相談ください。",
     includes: [
       "社内レベルに合わせた研修内容のカスタマイズ",
       "AI研修（オンライン or 対面）",
