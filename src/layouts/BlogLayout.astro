@@ -6,6 +6,7 @@ import SkillBadge from "../components/blog/SkillBadge.astro";
 import TableOfContents from "../components/blog/TableOfContents.astro";
 import ReadingProgress from "../components/blog/ReadingProgress.astro";
 import TrainingCta from "../components/blog/TrainingCta.astro";
+import AiTutor from "../components/ai-tutor/AiTutor.astro";
 import { getArcByChapter } from "../data/blog-meta";
 
 interface Heading {
@@ -157,6 +158,13 @@ const jsonLd = {
       </article>
     </div>
   </main>
+
+  <AiTutor
+    chapterId={post.id}
+    chapterNumber={data.chapter}
+    chapterTitle={data.title}
+    arcName={data.arcName}
+  />
 
   <Footer />
 </BaseLayout>

@@ -1,0 +1,287 @@
+---
+interface Props {
+  chapterId: string;
+  chapterNumber: number;
+  chapterTitle: string;
+  arcName: string;
+}
+
+const { chapterId, chapterNumber, chapterTitle, arcName } = Astro.props;
+---
+
+<!-- FAB trigger button -->
+<button
+  id="tutor-trigger"
+  aria-label="AI チューターを開く"
+  class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-[#0d0084] text-white shadow-lg hover:bg-[#1a10a0] transition-all hover:scale-105 flex items-center justify-center cursor-pointer"
+  style="box-shadow: 0 4px 20px rgba(13,0,132,0.3);"
+>
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    <circle cx="12" cy="10" r="1" fill="currentColor" />
+    <circle cx="8" cy="10" r="1" fill="currentColor" />
+    <circle cx="16" cy="10" r="1" fill="currentColor" />
+  </svg>
+</button>
+
+<!-- Chat panel -->
+<div
+  id="tutor-panel"
+  class="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-4rem)] bg-white rounded-2xl shadow-2xl flex-col overflow-hidden border border-gray-200"
+  style="display: none;"
+  data-chapter-id={chapterId}
+  data-chapter-number={chapterNumber}
+  data-chapter-title={chapterTitle}
+  data-arc-name={arcName}
+>
+  <!-- Header -->
+  <div class="flex items-center justify-between px-4 py-3 bg-[#0d0084] text-white rounded-t-2xl shrink-0">
+    <div class="flex items-center gap-2">
+      <span class="text-lg">🎓</span>
+      <span class="font-bold text-sm">Sensei — AI チューター</span>
+    </div>
+    <button id="tutor-close" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors cursor-pointer" aria-label="閉じる">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Messages -->
+  <div id="tutor-messages" class="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+    <div class="flex justify-start">
+      <div class="max-w-[85%] px-3 py-2 rounded-2xl text-sm leading-relaxed bg-gray-100 text-gray-800 rounded-bl-md">
+        こんにちは！CodeQuestのAIチューター「Sensei」です。この章について質問があればなんでも聞いてくださいね。
+      </div>
+    </div>
+  </div>
+
+  <!-- Suggestions -->
+  <div id="tutor-suggestions" class="px-4 pb-2 flex flex-wrap gap-1.5 shrink-0">
+    <button class="tutor-suggest text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-[#31b9b5] hover:text-[#31b9b5] transition-colors cursor-pointer" data-text="この章の要点を教えて">この章の要点を教えて</button>
+    <button class="tutor-suggest text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-[#31b9b5] hover:text-[#31b9b5] transition-colors cursor-pointer" data-text="コードの意味を解説して">コードの意味を解説して</button>
+    <button class="tutor-suggest text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-[#31b9b5] hover:text-[#31b9b5] transition-colors cursor-pointer" data-text="クイズのヒントがほしい">クイズのヒントがほしい</button>
+  </div>
+
+  <!-- Input -->
+  <form id="tutor-form" class="px-4 py-3 border-t border-gray-100 shrink-0">
+    <div class="flex items-center gap-2">
+      <input
+        id="tutor-input"
+        type="text"
+        placeholder="質問を入力..."
+        class="flex-1 px-3 py-2 text-sm rounded-full border border-gray-200 focus:outline-none focus:border-[#31b9b5] focus:ring-1 focus:ring-[#31b9b5]/30"
+      />
+      <button
+        type="submit"
+        id="tutor-send"
+        class="w-9 h-9 flex items-center justify-center rounded-full bg-[#0d0084] text-white disabled:opacity-40 hover:bg-[#1a10a0] transition-colors cursor-pointer"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+        </svg>
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Highlight overlay -->
+<div id="tutor-highlight" class="pointer-events-none fixed inset-0 z-30" style="display: none;">
+  <div id="tutor-highlight-ring" class="absolute rounded-lg" style="box-shadow: 0 0 0 3px #31b9b5, 0 0 20px rgba(49,185,181,0.3);"></div>
+  <div id="tutor-highlight-label" class="absolute pointer-events-auto">
+    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#31b9b5] text-white text-xs font-bold rounded-full shadow-lg">
+      <span>📍</span>
+      <span id="tutor-highlight-text"></span>
+      <button id="tutor-highlight-dismiss" class="ml-1 hover:bg-white/20 rounded-full w-4 h-4 flex items-center justify-center cursor-pointer">×</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes tutor-pulse {
+    0%, 100% { box-shadow: 0 0 0 3px #31b9b5, 0 0 20px rgba(49,185,181,0.3); }
+    50% { box-shadow: 0 0 0 5px #31b9b5, 0 0 30px rgba(49,185,181,0.5); }
+  }
+  #tutor-highlight-ring {
+    animation: tutor-pulse 1.5s ease-in-out infinite;
+  }
+  #tutor-panel {
+    flex-direction: column;
+  }
+  @media (max-width: 640px) {
+    #tutor-panel {
+      width: calc(100vw - 1rem) !important;
+      height: calc(100vh - 2rem) !important;
+      bottom: 0.5rem !important;
+      right: 0.5rem !important;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const trigger = document.getElementById("tutor-trigger")!;
+    const panel = document.getElementById("tutor-panel")!;
+    const closeBtn = document.getElementById("tutor-close")!;
+    const form = document.getElementById("tutor-form")! as HTMLFormElement;
+    const input = document.getElementById("tutor-input")! as HTMLInputElement;
+    const messagesEl = document.getElementById("tutor-messages")!;
+    const suggestionsEl = document.getElementById("tutor-suggestions")!;
+    const highlightEl = document.getElementById("tutor-highlight")!;
+    const highlightRing = document.getElementById("tutor-highlight-ring")!;
+    const highlightLabel = document.getElementById("tutor-highlight-label")!;
+    const highlightText = document.getElementById("tutor-highlight-text")!;
+    const highlightDismiss = document.getElementById("tutor-highlight-dismiss")!;
+
+    const chapterId = panel.dataset.chapterId!;
+    let isLoading = false;
+    const chatHistory: { role: string; content: string }[] = [];
+
+    // Open/Close
+    trigger.addEventListener("click", () => {
+      trigger.style.display = "none";
+      panel.style.display = "flex";
+      input.focus();
+    });
+
+    closeBtn.addEventListener("click", () => {
+      panel.style.display = "none";
+      trigger.style.display = "flex";
+    });
+
+    // Suggestions
+    document.querySelectorAll<HTMLButtonElement>(".tutor-suggest").forEach((btn) => {
+      btn.addEventListener("click", () => sendMessage(btn.dataset.text!));
+    });
+
+    // Form submit
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (input.value.trim()) {
+        sendMessage(input.value.trim());
+      }
+    });
+
+    // Highlight
+    function showHighlight(selector: string, label: string) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      setTimeout(() => {
+        const rect = el.getBoundingClientRect();
+        highlightRing.style.top = `${rect.top + window.scrollY - 8}px`;
+        highlightRing.style.left = `${rect.left + window.scrollX - 8}px`;
+        highlightRing.style.width = `${rect.width + 16}px`;
+        highlightRing.style.height = `${rect.height + 16}px`;
+
+        highlightLabel.style.top = `${rect.top + window.scrollY - 36}px`;
+        highlightLabel.style.left = `${rect.left + window.scrollX}px`;
+        highlightText.textContent = label;
+
+        highlightEl.style.display = "block";
+        highlightEl.style.position = "absolute";
+      }, 500);
+
+      setTimeout(() => dismissHighlight(), 5000);
+    }
+
+    function dismissHighlight() {
+      highlightEl.style.display = "none";
+    }
+
+    highlightDismiss.addEventListener("click", dismissHighlight);
+
+    // Add message bubble
+    function addMessage(role: string, content: string) {
+      const wrapper = document.createElement("div");
+      wrapper.className = `flex ${role === "user" ? "justify-end" : "justify-start"}`;
+
+      const bubble = document.createElement("div");
+      bubble.className = `max-w-[85%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${
+        role === "user"
+          ? "bg-[#0d0084] text-white rounded-br-md"
+          : "bg-gray-100 text-gray-800 rounded-bl-md"
+      }`;
+      bubble.textContent = content;
+
+      wrapper.appendChild(bubble);
+      messagesEl.appendChild(wrapper);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      return bubble;
+    }
+
+    // Send message
+    async function sendMessage(text: string) {
+      if (isLoading) return;
+      isLoading = true;
+      input.value = "";
+      suggestionsEl.style.display = "none";
+
+      // Add user message
+      addMessage("user", text);
+      chatHistory.push({ role: "user", content: text });
+
+      // Add empty assistant bubble
+      const bubble = addMessage("assistant", "...");
+      let assistantContent = "";
+
+      try {
+        const response = await fetch("/api/tutor/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chapterId,
+            messages: chatHistory.slice(-10),
+          }),
+        });
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const reader = response.body?.getReader();
+        if (!reader) throw new Error("No reader");
+
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() || "";
+
+          for (const line of lines) {
+            if (!line.startsWith("data: ")) continue;
+            try {
+              const event = JSON.parse(line.slice(6));
+              if (event.type === "text" && event.content) {
+                assistantContent += event.content;
+                bubble.textContent = assistantContent;
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+              } else if (event.type === "highlight" && event.selector && event.label) {
+                showHighlight(event.selector, event.label);
+                // Add clickable highlight link in bubble
+                const link = document.createElement("button");
+                link.className = "block mt-1 text-xs text-[#31b9b5] hover:underline cursor-pointer";
+                link.textContent = `📍 ${event.label}`;
+                link.addEventListener("click", () => showHighlight(event.selector, event.label));
+                bubble.appendChild(link);
+              }
+            } catch {
+              // Skip parse errors
+            }
+          }
+        }
+
+        chatHistory.push({ role: "assistant", content: assistantContent });
+      } catch {
+        bubble.textContent = "すみません、エラーが発生しました。もう一度お試しください。";
+      } finally {
+        isLoading = false;
+      }
+    }
+  });
+</script>
