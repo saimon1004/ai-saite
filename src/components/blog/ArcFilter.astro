@@ -2,9 +2,9 @@
 import { arcs } from "../../data/blog-meta";
 ---
 
-<div class="arc-filter flex flex-wrap gap-2 mb-8" data-arc-filter>
+<div class="arc-filter flex flex-wrap justify-center gap-3 mb-8" data-arc-filter>
   <button
-    class="arc-filter-btn px-4 py-2 rounded-full text-sm font-medium border transition-all bg-navy text-white border-navy"
+    class="arc-filter-btn px-5 py-2 rounded-md text-sm font-bold border transition-all bg-navy text-white border-navy"
     data-arc="all"
     aria-pressed="true"
   >
@@ -12,7 +12,7 @@ import { arcs } from "../../data/blog-meta";
   </button>
   {arcs.map((arc) => (
     <button
-      class="arc-filter-btn px-4 py-2 rounded-full text-sm font-medium border transition-all bg-surface text-text-secondary border-border hover:border-navy/30"
+      class="arc-filter-btn px-5 py-2 rounded-md text-sm font-bold border transition-all bg-surface text-text-secondary border-border hover:border-navy/30"
       data-arc={arc.id}
       aria-pressed="false"
     >

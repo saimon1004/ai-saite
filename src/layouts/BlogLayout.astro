@@ -7,6 +7,7 @@ import TableOfContents from "../components/blog/TableOfContents.astro";
 import ReadingProgress from "../components/blog/ReadingProgress.astro";
 import TrainingCta from "../components/blog/TrainingCta.astro";
 import AiTutor from "../components/ai-tutor/AiTutor.astro";
+import BlogIllustration from "../components/blog/BlogIllustration.astro";
 import { getArcByChapter } from "../data/blog-meta";
 
 interface Heading {
@@ -36,16 +37,7 @@ interface Props {
 const { post, headings } = Astro.props;
 const { data } = post;
 const arc = getArcByChapter(data.chapter);
-
-// Arc-specific accent colors for hero decoration
-const arcAccents: Record<string, { blur1: string; blur2: string; border: string }> = {
-  founding: { blur1: "rgba(49,185,181,0.18)", blur2: "rgba(13,0,132,0.12)", border: "rgba(49,185,181,0.15)" },
-  growth:  { blur1: "rgba(59,130,246,0.18)", blur2: "rgba(13,0,132,0.10)", border: "rgba(59,130,246,0.15)" },
-  crisis:  { blur1: "rgba(239,68,68,0.15)",  blur2: "rgba(13,0,132,0.12)", border: "rgba(239,68,68,0.12)" },
-  scale:   { blur1: "rgba(168,85,247,0.16)", blur2: "rgba(49,185,181,0.10)", border: "rgba(168,85,247,0.12)" },
-  beyond:  { blur1: "rgba(234,179,8,0.16)",  blur2: "rgba(13,0,132,0.10)", border: "rgba(234,179,8,0.12)" },
-};
-const accent = arcAccents[data.arc] || arcAccents.founding;
+const base = import.meta.env.BASE_URL;
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -78,23 +70,9 @@ const jsonLd = {
   <ReadingProgress />
 
   <main class="min-h-screen">
-    <!-- Article Hero -->
-    <div class="relative overflow-hidden pt-8 pb-14" style={`background: linear-gradient(180deg, rgba(13,0,132,0.04) 0%, transparent 100%);`}>
-      <!-- Dot grid pattern -->
-      <div class="absolute inset-0 opacity-[0.35]" style="background-image: radial-gradient(circle, rgba(13,0,132,0.15) 1px, transparent 1px); background-size: 24px 24px;" />
-
-      <!-- Decorative blur shapes (arc-colored) -->
-      <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full blur-[100px] pointer-events-none" style={`background: ${accent.blur1};`} />
-      <div class="absolute -bottom-16 -left-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none" style={`background: ${accent.blur2};`} />
-
-      <!-- Chapter number watermark -->
-      <div class="absolute top-8 right-6 sm:right-12 font-heading font-black text-[8rem] sm:text-[12rem] leading-none text-navy/[0.03] pointer-events-none select-none">
-        {String(data.chapter).padStart(2, "0")}
-      </div>
-
-      <div class="relative max-w-4xl mx-auto px-4 sm:px-6">
-        <!-- Breadcrumb -->
-        <nav class="flex items-center gap-2 text-xs text-text-secondary mb-6" aria-label="パンくず">
+    <section class="bg-white border-b border-border">
+      <div class="saimon-shell py-6">
+        <nav class="flex flex-wrap items-center gap-2 text-xs text-text-secondary mb-5" aria-label="パンくず">
           <a href="/" class="hover:text-navy transition-colors">ホーム</a>
           <span>/</span>
           <a href="/blog/" class="hover:text-navy transition-colors">無料研修</a>
@@ -104,55 +82,80 @@ const jsonLd = {
           <span class="text-text-primary">Ch.{data.chapter}</span>
         </nav>
 
-        <!-- Arc & Chapter -->
-        <div class="flex items-center gap-3 mb-4">
-          <span class="px-3 py-1.5 rounded-full text-xs font-bold text-navy" style={`background: ${accent.border}; border: 1px solid ${accent.border};`}>
-            {arc?.emoji} {data.arcName}
-          </span>
-          <span class="text-sm font-medium text-text-secondary">
-            Chapter {String(data.chapter).padStart(2, "0")}
-          </span>
-        </div>
+        <div class="grid gap-6 lg:grid-cols-[1fr_300px] lg:items-start">
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <span class="px-3 py-1.5 rounded-md text-xs font-bold text-navy bg-teal/10 border border-teal/20">
+                {arc?.emoji} {data.arcName}
+              </span>
+              <span class="text-sm font-bold text-text-secondary">
+                Ch.{String(data.chapter).padStart(2, "0")}
+              </span>
+            </div>
 
-        <!-- Title -->
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-heading font-black text-navy leading-tight mb-3">
-          {data.title}
-        </h1>
-        <p class="text-lg text-text-secondary mb-6">{data.subtitle}</p>
+            <h1 class="text-3xl sm:text-4xl font-heading font-black text-navy leading-tight">
+              {data.title}
+            </h1>
+            <p class="mt-2 text-lg text-text-secondary">{data.subtitle}</p>
 
-        <!-- Meta -->
-        <div class="flex flex-wrap items-center gap-4 text-sm text-text-secondary mb-6">
-          <span class="flex items-center gap-1.5">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            約{data.estimatedMinutes}分
-          </span>
-          <time datetime={data.pubDate.toISOString()}>
-            {data.pubDate.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" })}
-          </time>
-        </div>
+            <div class="mt-5 flex flex-wrap items-center gap-4 text-sm text-text-secondary">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                約{data.estimatedMinutes}分
+              </span>
+              <time datetime={data.pubDate.toISOString()}>
+                {data.pubDate.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" })}
+              </time>
+            </div>
 
-        <!-- Skills -->
-        <div class="flex flex-wrap gap-2">
-          {data.skills.map((skill) => (
-            <SkillBadge category={skill.category} name={skill.name} level={skill.level} />
-          ))}
+            <div class="mt-5 flex flex-wrap gap-2">
+              {data.skills.map((skill) => (
+                <SkillBadge category={skill.category} name={skill.name} level={skill.level} />
+              ))}
+            </div>
+
+            <div class="image-frame mt-6 aspect-[16/7] overflow-hidden rounded-md">
+              <BlogIllustration chapter={data.chapter} size="hero" />
+            </div>
+          </div>
+
+          <aside class="saimon-card p-5 lg:sticky lg:top-24">
+            <p class="text-xs font-heading font-black text-teal">AIチューターからのアドバイス</p>
+            <div class="mt-4 flex justify-center">
+              <div class="relative h-28 w-28 rounded-[1.2rem] border border-navy/15 bg-white shadow-card">
+                <div class="absolute left-1/2 top-7 h-14 w-20 -translate-x-1/2 rounded-[1rem] bg-navy">
+                  <span class="absolute left-4 top-5 h-3 w-3 rounded-full bg-teal"></span>
+                  <span class="absolute right-4 top-5 h-3 w-3 rounded-full bg-teal"></span>
+                </div>
+                <span class="absolute left-1/2 top-2 h-5 w-px -translate-x-1/2 bg-navy/40"></span>
+                <span class="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 rounded-full bg-teal"></span>
+                <span class="absolute bottom-3 left-5 h-5 w-5 rounded-full border border-navy/20"></span>
+                <span class="absolute bottom-3 right-5 h-5 w-5 rounded-full border border-navy/20"></span>
+              </div>
+            </div>
+            <p class="mt-4 text-sm text-text-secondary leading-relaxed">
+              見出しタグは、ページの構造をクローラーにも大切な受講者にも伝える目印です。分からない箇所はチューターに質問できます。
+            </p>
+            <button
+              type="button"
+              data-open-tutor
+              class="mt-5 w-full rounded-md border border-navy px-4 py-3 text-sm font-bold text-navy hover:bg-navy hover:text-white transition-colors"
+            >
+              質問する
+            </button>
+          </aside>
         </div>
       </div>
-
-      <!-- Bottom wave separator -->
-      <div class="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-8 sm:h-12" preserveAspectRatio="none">
-          <path d="M0 48h1440V24C1320 4 1200 0 1080 8 960 16 840 40 720 44 600 48 480 32 360 24 240 16 120 16 60 20L0 24z" fill="white"/>
-        </svg>
-      </div>
-    </div>
+    </section>
 
     <!-- Content Area -->
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
-      <TableOfContents headings={headings} />
-      <article class="prose-blog">
+    <div class="saimon-shell grid gap-8 py-10 lg:grid-cols-[240px_1fr]">
+      <div class="lg:sticky lg:top-24 lg:h-fit">
+        <TableOfContents headings={headings} />
+      </div>
+      <article class="prose-blog min-w-0">
         <slot />
         <TrainingCta />
       </article>

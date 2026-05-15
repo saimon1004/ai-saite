@@ -18,6 +18,8 @@ const allPosts = await getCollection("blog");
 const arcPosts = allPosts
   .filter((p) => p.data.arc === arc.id)
   .sort((a, b) => a.data.chapter - b.data.chapter);
+
+const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout
@@ -28,24 +30,56 @@ const arcPosts = allPosts
 
   <main class="min-h-screen">
     <!-- Hero -->
-    <section class="bg-gradient-to-b from-navy to-navy-light py-16 sm:py-20">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-        <a href="/blog/" class="inline-flex items-center gap-1 text-xs text-white/50 hover:text-white/80 transition-colors mb-6">
-          ← 無料研修一覧に戻る
-        </a>
-        <span class="block text-4xl mb-4">{arc.emoji}</span>
-        <h1 class="text-3xl sm:text-4xl font-heading font-black text-white mb-3">
-          {arc.name}
-        </h1>
-        <p class="text-base text-white/60 max-w-lg mx-auto">{arc.description}</p>
-        <p class="text-sm text-white/40 mt-3">{arcPosts.length}章</p>
+    <section class="bg-white py-10 sm:py-14 border-b border-border">
+      <div class="saimon-shell grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div>
+          <a href="/blog/" class="inline-flex items-center gap-1 text-xs font-bold text-text-secondary hover:text-navy transition-colors mb-5">
+            ← 無料研修一覧に戻る
+          </a>
+          <p class="text-sm font-bold text-teal">CodeQuest</p>
+          <h1 class="mt-2 text-4xl sm:text-5xl font-heading font-black text-navy">
+            {arc.name}
+          </h1>
+          <p class="mt-4 text-base text-text-secondary max-w-lg leading-relaxed">{arc.description}</p>
+          <p class="mt-4 text-sm font-bold text-navy">{arcPosts.length}章</p>
+        </div>
+        <div class="image-frame aspect-[16/6] lg:aspect-[16/7]">
+          <img src={`${base}case-site-image-02.png`} alt="" loading="lazy" />
+        </div>
       </div>
     </section>
 
     <!-- Posts -->
-    <section class="py-12">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6">
-        <div class="grid gap-4 sm:gap-6">
+    <section class="py-10 sm:py-12 bg-surface-dim">
+      <div class="saimon-shell grid gap-6 lg:grid-cols-[260px_1fr]">
+        <aside class="saimon-card p-5 h-fit">
+          <h2 class="text-sm font-heading font-black text-navy">シリーズの進捗</h2>
+          <ol class="mt-5 space-y-4">
+            {arcPosts.map((post, index) => (
+              <li class="flex items-center gap-3">
+                <span class:list={[
+                  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-heading font-black",
+                  index === 0 ? "border-teal bg-teal text-white" : "border-border bg-white text-text-secondary",
+                ]}>
+                  {index + 1}
+                </span>
+                <div class="min-w-0">
+                  <a href={`/blog/${post.id}/`} class="block truncate text-sm font-bold text-text-primary hover:text-navy">
+                    {post.data.title}
+                  </a>
+                  <p class="text-xs text-text-secondary">{post.data.estimatedMinutes}分</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <div class="mt-6 flex items-center gap-3 border-t border-border pt-4 text-xs text-text-secondary">
+            <span class="inline-flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-teal"></span>未完了</span>
+            <span class="inline-flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-teal/40"></span>進行中</span>
+            <span class="inline-flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-navy"></span>完了</span>
+          </div>
+        </aside>
+
+        <div class="grid gap-3 sm:gap-4">
           {arcPosts.map((post) => (
             <BlogCard
               id={post.id}
@@ -56,9 +90,21 @@ const arcPosts = allPosts
               arcName={post.data.arcName}
               skills={post.data.skills}
               estimatedMinutes={post.data.estimatedMinutes}
+              variant="row"
             />
           ))}
         </div>
+      </div>
+    </section>
+
+    <section class="bg-white pb-12">
+      <div class="saimon-shell">
+        <a href={`/blog/${arcPosts[0]?.id}/`} class="mx-auto flex max-w-xl items-center justify-center gap-2 rounded-md bg-teal px-7 py-4 text-sm font-bold text-white hover:bg-teal-dark transition-colors">
+          {arc.name}を最初から学ぶ
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
       </div>
     </section>
   </main>

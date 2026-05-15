@@ -2,7 +2,7 @@
 const base = import.meta.env.BASE_URL;
 ---
 
-<section class="relative h-[67vh] flex items-center justify-center overflow-hidden">
+<section class="relative min-h-[560px] sm:min-h-[620px] flex items-center overflow-hidden">
   <!-- Video background -->
   <video
     class="absolute inset-0 w-full h-full object-cover"
@@ -16,62 +16,62 @@ const base = import.meta.env.BASE_URL;
     <source src={`${base}hero.mp4`} type="video/mp4" />
   </video>
 
-  <!-- Dark overlay -->
-  <div class="absolute inset-0 bg-black/50" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-navy/92 via-navy/55 to-black/20" aria-hidden="true"></div>
+  <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-navy/60 to-transparent" aria-hidden="true"></div>
 
   <!-- Content -->
-  <div class="hero-content relative z-10 text-center px-6 sm:px-8 lg:px-12">
-    <!-- Sub text -->
+  <div class="relative z-10 saimon-shell py-16 sm:py-20">
     <p
-      class="text-xs sm:text-sm tracking-[0.25em] uppercase text-white/70 font-heading font-bold mb-5 sm:mb-6 animate-fade-up"
+      class="inline-flex items-center rounded-full bg-white/12 px-4 py-2 text-xs font-heading font-black text-teal-light border border-white/20 mb-5 animate-fade-up"
       data-animate
     >
       AI IMPACT LAB — 実践型AIリスキリング研修
     </p>
 
-    <!-- Main heading -->
     <h1
-      class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-[1.08] tracking-tight animate-fade-up"
+      class="max-w-2xl text-4xl sm:text-5xl md:text-6xl font-heading font-black text-white leading-[1.1] animate-fade-up"
       data-animate
       style="transition-delay: 0.1s;"
     >
       自社でつくれる、を<br />当たり前に。
     </h1>
 
-    <!-- Sub message -->
     <p
-      class="text-sm sm:text-base tracking-[0.15em] text-white/60 font-heading font-bold mt-6 sm:mt-8 animate-fade-up"
+      class="max-w-xl text-base sm:text-lg text-white/86 font-bold mt-5 leading-relaxed animate-fade-up"
       data-animate
       style="transition-delay: 0.2s;"
     >
       内製化を実現するAI研修プログラム
     </p>
+    <p class="max-w-xl text-sm text-white/72 mt-3 leading-relaxed animate-fade-up" data-animate style="transition-delay: 0.25s;">
+      AIを「使える」だけでなく「つくれる」へ。サイト制作、業務改善、採用広報まで現場で動かせるチームを育てます。
+    </p>
 
-    <!-- CTA Button -->
     <div
-      class="mt-8 sm:mt-10 animate-fade-up"
+      class="mt-8 flex flex-col sm:flex-row gap-3 animate-fade-up"
       data-animate
       style="transition-delay: 0.3s;"
     >
       <a
-        href="#solution"
-        class="inline-flex items-center gap-2 bg-teal text-white font-bold text-sm px-8 py-4 rounded-full hover:bg-teal/85 transition-colors duration-200 shadow-lg hover:shadow-xl"
+        href="#modules"
+        class="inline-flex items-center justify-center gap-2 bg-teal text-white font-bold text-sm px-6 py-3 rounded-md hover:bg-teal-dark transition-colors duration-200 shadow-lg shadow-teal/20"
       >
         研修内容を見る
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
         </svg>
       </a>
-    </div>
-  </div>
-
-  <!-- Scroll indicator -->
-  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-white/30" aria-hidden="true">
-    <span class="text-[9px] font-heading tracking-[0.3em] uppercase">Scroll</span>
-    <div class="scroll-indicator">
-      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-      </svg>
+      <a
+        href="/ishigaki/saimon-ishigaki-proposal.pdf"
+        download
+        class="relative inline-flex items-center justify-center gap-2 border border-white/45 bg-white/10 text-white font-bold text-sm px-6 py-3 rounded-md hover:bg-white/20 transition-colors duration-200"
+      >
+        <span class="absolute -top-2 -right-2 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-heading font-black tracking-widest rounded-full bg-amber-400 text-navy shadow-md ring-2 ring-navy/40">NEW</span>
+        石垣島研修資料ダウンロード
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0l4-4m-4 4l-4-4M5 21h14" />
+        </svg>
+      </a>
     </div>
   </div>
 </section>

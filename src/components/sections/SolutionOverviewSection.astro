@@ -1,91 +1,71 @@
 ---
-import SectionHeading from "../common/SectionHeading.astro";
-import { aiImpactLab } from "../../data/services";
-
 const base = import.meta.env.BASE_URL;
-const { pillars } = aiImpactLab;
+
+const solutions = [
+  {
+    title: "AI研修",
+    description: "実務に必要なAIスキルを、体系的に学べる研修プログラム。",
+    image: "pillar-genba.jpg",
+    href: "#modules",
+    isNew: false,
+  },
+  {
+    title: "制作実績",
+    description: "研修を通じて生まれた成果・プロジェクト事例をご紹介。",
+    image: "case-site-image-02.png",
+    href: "#cases",
+    isNew: false,
+  },
+  {
+    title: "石垣島研修",
+    description: "石垣島の自然のなかで、AI実践研修とチームビルディングを4日間で。",
+    image: "ishigaki/cover.jpg",
+    href: "/ishigaki/",
+    isNew: true,
+  },
+];
 ---
 
-<section id="solution" class="pt-20 sm:pt-28 pb-10 sm:pb-14" data-particles>
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-    <!-- Header -->
-    <SectionHeading titleEn="SOLUTION" titleJa="ソリューション" />
-    <div class="text-center mt-4 mb-16">
-      <p class="text-2xl sm:text-3xl font-black text-text-primary">
-        {aiImpactLab.tagline}
-      </p>
-      <p class="text-base sm:text-lg text-text-primary/85 mt-6 max-w-2xl mx-auto leading-loose font-medium" set:html={aiImpactLab.description}>
+<section id="solution" class="saimon-section bg-white">
+  <div class="saimon-shell">
+    <div class="text-center mb-10 sm:mb-12">
+      <p class="saimon-eyebrow">SAIMONのソリューション</p>
+      <h2 class="mt-3 text-2xl sm:text-4xl font-heading font-black text-navy leading-tight">
+        AIの力を、チームの力に変える。
+      </h2>
+      <p class="mt-4 max-w-2xl mx-auto text-sm sm:text-base text-text-secondary leading-relaxed">
+        SAIMONは、AIを「使える」だけでなく「つくれる」人材を社内に増やすことで、業務効率化・制作内製化・組織変革を加速させる研修プログラムを提供します。
       </p>
     </div>
 
-    <!-- Why AI Reskilling: Two Pillars -->
-    <div>
-      <h3 class="font-heading text-sm tracking-wider text-teal uppercase font-bold mb-2 text-center">
-        なぜ、AIリスキリングが必要なのか？
-      </h3>
-      <p class="text-center text-text-secondary text-sm mb-8">
-        AIリテラシーの向上は、現場力の強化と採用ブランディングの両方に寄与します。
-      </p>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {pillars.map((pillar, pIdx) => {
-          const accentLight = pillar.overlayColor.replace(/[\d.]+\)$/, '0.15)');
-          return (
-            <div class="relative rounded-2xl overflow-hidden hover:shadow-card-hover transition-shadow duration-300 group">
-              {/* 背景画像 */}
-              <img
-                src={`${base}${pillar.image}`}
-                alt=""
-                aria-hidden="true"
-                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-110"
-                loading="lazy"
-              />
-
-              {/* 白系オーバーレイ */}
-              <div
-                class="absolute inset-0"
-                style={`background: linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0.95));`}
-                aria-hidden="true"
-              />
-
-              {/* テーマカラーのアクセント帯（上部） */}
-              <div
-                class="absolute inset-x-0 top-0 h-1.5 rounded-t-2xl"
-                style={`background: ${pillar.overlayColor};`}
-                aria-hidden="true"
-              />
-
-              {/* コンテンツ */}
-              <div class="relative z-10 p-6 sm:p-8">
-                <p class="text-xs tracking-wider uppercase font-heading font-bold text-gray-500">{pillar.subtitle}</p>
-                <h4 class="text-xl sm:text-2xl font-black text-gray-900 mt-1 mb-5">{pillar.title}</h4>
-
-                <div class="space-y-5">
-                  {pillar.points.map((point) => (
-                    <div class="flex items-start gap-3">
-                      <svg class:list={["w-5 h-5 shrink-0 mt-0.5", pIdx === 0 ? "text-navy" : "text-teal"]} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                      </svg>
-                      <div>
-                        <p class="text-sm font-bold text-gray-900">{point.metric}</p>
-                        <p class="text-xs text-gray-600 mt-0.5">{point.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div class:list={[
-                  "mt-6 px-4 py-3 rounded-lg text-center text-sm font-bold",
-                  pIdx === 0 ? "bg-navy/8 text-navy" : "bg-teal/8 text-teal",
-                ]}>
-                  {pillar.outcome}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+    <div class="grid gap-5 md:grid-cols-3">
+      {solutions.map((item) => (
+        <a href={item.href} class="group relative saimon-card overflow-hidden hover:border-navy/25 hover:shadow-card-hover transition-all duration-300">
+          {item.isNew && (
+            <span class="absolute top-3 right-3 z-10 inline-flex items-center justify-center px-2 py-0.5 text-[10px] font-heading font-black tracking-widest rounded-full bg-amber-400 text-navy shadow-md ring-2 ring-white">
+              NEW
+            </span>
+          )}
+          <div class="aspect-[4/2.65] overflow-hidden">
+            <img
+              src={`${base}${item.image}`}
+              alt=""
+              class="h-full w-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
+              loading="lazy"
+            />
+          </div>
+          <div class="p-5">
+            <h3 class="text-lg font-heading font-black text-navy">{item.title}</h3>
+            <p class="mt-2 min-h-[3rem] text-sm text-text-secondary leading-relaxed">{item.description}</p>
+            <span class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-teal">
+              詳しく見る
+              <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </span>
+          </div>
+        </a>
+      ))}
     </div>
-
   </div>
 </section>

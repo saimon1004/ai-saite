@@ -1,5 +1,6 @@
 ---
 import SkillBadge from "./SkillBadge.astro";
+import BlogIllustration from "./BlogIllustration.astro";
 import { getArcByChapter } from "../../data/blog-meta";
 
 interface Props {
@@ -11,49 +12,85 @@ interface Props {
   arcName: string;
   skills: { category: string; name: string; level: string }[];
   estimatedMinutes: number;
+  variant?: "grid" | "row";
 }
 
-const { id, title, subtitle, chapter, arc, arcName, skills, estimatedMinutes } = Astro.props;
+const { id, title, subtitle, chapter, arcName, skills, estimatedMinutes, variant = "grid" } = Astro.props;
 const arcData = getArcByChapter(chapter);
 ---
 
-<a
-  href={`/blog/${id}/`}
-  class="group block rounded-2xl border border-border bg-surface hover:shadow-card-hover hover:border-navy/20 transition-all duration-300 overflow-hidden"
->
-  <div class="p-5 sm:p-6">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-3">
-      <div class="flex items-center gap-2">
+{variant === "row" ? (
+  <a
+    href={`/blog/${id}/`}
+    class="group grid gap-4 rounded-md border border-border bg-white p-3 hover:border-navy/25 hover:shadow-card-hover transition-all duration-300 sm:grid-cols-[150px_1fr_auto] sm:items-center"
+  >
+    <div class="image-frame aspect-[16/9] sm:aspect-[5/3] overflow-hidden rounded-md">
+      <BlogIllustration chapter={chapter} size="card" showLabel={false} />
+    </div>
+    <div class="min-w-0">
+      <div class="flex flex-wrap items-center gap-2">
         <span class="text-xs font-bold text-navy bg-navy/5 px-2 py-0.5 rounded-md">
           Ch.{String(chapter).padStart(2, "0")}
         </span>
-        <span class="text-xs font-medium text-text-secondary">
-          {arcData?.emoji} {arcName}
+        <span class="text-xs font-medium text-text-secondary">{arcData?.emoji} {arcName}</span>
+        <span class="text-xs text-text-secondary flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          {estimatedMinutes}分
         </span>
       </div>
-      <span class="text-xs text-text-secondary flex items-center gap-1">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        {estimatedMinutes}分
-      </span>
+      <h3 class="mt-2 text-base font-heading font-black text-navy group-hover:text-teal transition-colors">{title}</h3>
+      <p class="mt-1 text-sm text-text-secondary line-clamp-2">{subtitle}</p>
+      <div class="mt-3 flex flex-wrap gap-1.5">
+        {skills.slice(0, 3).map((skill) => (
+          <SkillBadge category={skill.category} name={skill.name} level={skill.level} />
+        ))}
+      </div>
     </div>
-
-    <!-- Title -->
-    <h3 class="text-lg font-bold text-text-primary group-hover:text-navy transition-colors mb-1">
-      {title}
-    </h3>
-    <p class="text-sm text-text-secondary mb-4">{subtitle}</p>
-
-    <!-- Skills -->
-    <div class="flex flex-wrap gap-1.5">
-      {skills.slice(0, 3).map((skill) => (
-        <SkillBadge category={skill.category} name={skill.name} level={skill.level} />
-      ))}
-      {skills.length > 3 && (
-        <span class="text-xs text-text-secondary self-center">+{skills.length - 3}</span>
-      )}
+    <span class="inline-flex items-center justify-center rounded-md bg-teal px-4 py-2 text-xs font-bold text-white sm:whitespace-nowrap">
+      学習を始める
+    </span>
+  </a>
+) : (
+  <a
+    href={`/blog/${id}/`}
+    class="group block rounded-md border border-border bg-surface hover:shadow-card-hover hover:border-navy/20 transition-all duration-300 overflow-hidden"
+  >
+    <div class="relative aspect-[16/9] overflow-hidden">
+      <BlogIllustration chapter={chapter} size="card" showTopBar />
     </div>
-  </div>
-</a>
+    <div class="p-4">
+      <div class="flex items-center justify-between gap-3 mb-3">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="text-[11px] font-bold text-navy bg-navy/5 px-2 py-0.5 rounded-md">
+            Ch.{String(chapter).padStart(2, "0")}
+          </span>
+          <span class="text-[11px] font-medium text-text-secondary truncate">
+            {arcData?.emoji} {arcName}
+          </span>
+        </div>
+        <span class="text-[11px] text-text-secondary flex items-center gap-1 shrink-0">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          {estimatedMinutes}分
+        </span>
+      </div>
+
+      <h3 class="text-lg font-heading font-black text-navy group-hover:text-teal transition-colors mb-1">
+        {title}
+      </h3>
+      <p class="text-sm text-text-secondary mb-4 min-h-[2.5rem] leading-relaxed">{subtitle}</p>
+
+      <div class="flex flex-wrap gap-1.5">
+        {skills.slice(0, 3).map((skill) => (
+          <SkillBadge category={skill.category} name={skill.name} level={skill.level} />
+        ))}
+        {skills.length > 3 && (
+          <span class="text-xs text-text-secondary self-center">+{skills.length - 3}</span>
+        )}
+      </div>
+    </div>
+  </a>
+)}

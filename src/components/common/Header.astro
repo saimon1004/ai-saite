@@ -10,17 +10,17 @@ const menuItems = navItems.slice(0, -1);
 
 <header
   id="site-header"
-  class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+  class="fixed top-0 left-0 right-0 z-50 bg-white/95 border-b border-slate-200/80 backdrop-blur-md transition-all duration-300"
 >
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-20">
+    <div class="flex items-center justify-between h-16">
       <!-- Logo -->
       <a
-        href={`${base}#`}
+        href={`${base}`}
         class="hover:opacity-80 transition-opacity"
         aria-label="SAIMON - ページトップへ"
       >
-        <Logo variant="dark" class="text-2xl" />
+        <Logo variant="dark" class="text-xl" />
       </a>
 
       <!-- Desktop Navigation -->
@@ -29,7 +29,7 @@ const menuItems = navItems.slice(0, -1);
           item.href === "/blog/" ? (
             <a
               href={item.href}
-              class="ml-2 px-4 py-2 text-sm font-bold text-navy border-2 border-navy rounded-lg hover:bg-navy hover:text-white transition-colors"
+              class="ml-1 px-3 py-2 text-xs font-bold text-navy border border-navy rounded-md hover:bg-navy hover:text-white transition-colors"
               data-nav-link
             >
               {item.labelEn}
@@ -37,7 +37,7 @@ const menuItems = navItems.slice(0, -1);
           ) : (
             <a
               href={item.href.startsWith("/") ? item.href : `${base}${item.href}`}
-              class="nav-link px-4 py-2 text-sm font-medium text-text-primary hover:text-navy transition-colors"
+              class="nav-link px-3 py-2 text-xs font-heading font-bold text-text-primary hover:text-navy transition-colors"
               data-nav-link
             >
               {item.labelEn}
@@ -46,7 +46,7 @@ const menuItems = navItems.slice(0, -1);
         ))}
         <a
           href={contactItem.href.startsWith("/") ? contactItem.href : `${base}${contactItem.href}`}
-          class="ml-4 px-6 py-2.5 bg-teal text-white text-sm font-bold rounded-lg hover:bg-teal-dark transition-colors"
+          class="ml-2 px-5 py-2.5 bg-teal text-white text-xs font-bold rounded-md hover:bg-teal-dark transition-colors shadow-sm shadow-teal/20"
           data-nav-link
         >
           {contactItem.labelEn}
@@ -92,14 +92,14 @@ const menuItems = navItems.slice(0, -1);
 </header>
 
 <!-- Spacer for fixed header -->
-<div class="h-20"></div>
+<div class="h-16"></div>
 
 <style>
   /* Header scroll state */
   #site-header.scrolled {
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(8px);
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+    box-shadow: 0 1px 18px 0 rgb(13 0 132 / 0.08);
   }
 
   /* Mobile menu open state */

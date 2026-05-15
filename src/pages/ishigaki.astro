@@ -1,0 +1,740 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/common/Header.astro";
+import Footer from "../components/common/Footer.astro";
+import { company } from "../data/company";
+
+const base = import.meta.env.BASE_URL;
+const img = (name: string) => `${base}ishigaki/${name}`;
+const deckPdf = `${base}ishigaki/saimon-ishigaki-proposal.pdf`;
+
+const stats = [
+  { label: "研修期間", value: "3泊4日", note: "石垣島での合宿型" },
+  { label: "研修時間", value: "11時間", note: "助成金要件10h以上クリア" },
+  { label: "コース", value: "オーダーメイド", note: "3コース＋独自構成も対応" },
+  { label: "助成金", value: "最大75%", note: "1人あたり¥30万円補助" },
+];
+
+const whyNow = [
+  {
+    badge: "差 01",
+    emoji: "🚀",
+    title: "生産性の差",
+    body: "AIを使いこなす社員は、そうでない社員の<strong>最大3倍のアウトプット</strong>。少人数で回せる筋肉質な組織へ。",
+    image: "productivity.jpg",
+    overlay: "rgba(13,0,132,0.85)",
+  },
+  {
+    badge: "差 02",
+    emoji: "🎯",
+    title: "人材の差",
+    body: "<strong>「AIを学べる会社」</strong>が選ばれる時代。採用競争力と離職防止の両方に効く、最強の成長環境を提供。",
+    image: "talent.jpg",
+    overlay: "rgba(49,185,181,0.78)",
+  },
+  {
+    badge: "差 03",
+    emoji: "💡",
+    title: "未来の差",
+    body: "社員のAIリテラシーは<strong>新規事業・新サービスの源泉</strong>。業務効率化の先にある、事業モデルの変革へ。",
+    image: "future.jpg",
+    overlay: "rgba(13,0,132,0.85)",
+  },
+];
+
+const features = [
+  { num: "01", label: "実践特化", body: "11時間のハンズオン<br />翌日から使えるAIスキル", image: "workshop2.jpg" },
+  { num: "02", label: "没入環境", body: "日常業務から離れ<br />石垣島で集中学習", image: "kabira.jpg" },
+  { num: "03", label: "チームビルド", body: "午後のアクティビティで<br />チームの絆を深める", image: "sup.jpg" },
+  { num: "04", label: "ワンストップ", body: "航空券・宿・AT・研修<br />すべて一括手配", image: "workation.jpg" },
+  { num: "05", label: "助成金対応", body: "申請テンプレを無償提供<br />事務負荷を最小化", image: "discussion.jpg" },
+];
+
+const schedule = [
+  {
+    day: "DAY 1",
+    sub: "移動日",
+    accent: false,
+    rows: [
+      { time: "午前", text: "各地→石垣空港", detail: "" },
+      { time: "午後", text: "チェックイン", detail: "ホテル案内・自由" },
+      { time: "夜", text: "自由行動", detail: "" },
+    ],
+  },
+  {
+    day: "DAY 2",
+    sub: "集中研修 8h",
+    accent: true,
+    rows: [
+      { time: "午前", text: "研修 4h", detail: "" },
+      { time: "午後", text: "研修 4h", detail: "" },
+      { time: "夜", text: "会食（自由）", detail: "" },
+    ],
+  },
+  {
+    day: "DAY 3",
+    sub: "研修＋アクティビティ",
+    accent: false,
+    rows: [
+      { time: "午前", text: "研修 3h", detail: "+ 修了式" },
+      { time: "午後", text: "アクティビティ", detail: "SUP・シュノーケル等" },
+      { time: "夜", text: "自由", detail: "" },
+    ],
+  },
+  {
+    day: "DAY 4",
+    sub: "帰京",
+    accent: false,
+    rows: [
+      { time: "午前", text: "自由時間", detail: "島内散策・川平湾等" },
+      { time: "午後", text: "石垣空港発", detail: "" },
+    ],
+  },
+];
+
+const courses = [
+  {
+    code: "Course A",
+    level: "BEGINNER",
+    title: "ビギナーコース",
+    target: "全社員・バックオフィス・営業",
+    image: "workshop.jpg",
+    days: [
+      ["2日目 午前 (4h)", "生成AI基礎・ChatGPT/Claude/Gemini比較"],
+      ["2日目 午後 (4h)", "バックオフィス効率化・人事・CS活用"],
+      ["3日目 午前 (3h)", "実践ワークショップ — 自社業務へのAI実装"],
+    ],
+    color: "navy",
+  },
+  {
+    code: "Course B",
+    level: "ADVANCED",
+    title: "アドバンスドコース",
+    target: "ビギナー修了者・DX推進担当・部門リーダー",
+    image: "discussion.jpg",
+    days: [
+      ["2日目 午前 (4h)", "最新AIトレンド総ざらい・他社事例ショーケース"],
+      ["2日目 午後 (4h)", "自社業務の棚卸し・AI適用ポイント設計"],
+      ["3日目 午前 (3h)", "自社向けAI実装ハンズオン・社内展開ロードマップ"],
+    ],
+    color: "navy",
+  },
+  {
+    code: "Course C",
+    level: "SPECIALIZED",
+    title: "HP制作の内製化コース",
+    target: "Web担当・情報システム・広報",
+    image: "workshop2.jpg",
+    days: [
+      ["2日目 午前 (4h)", "Claude Code基礎・AI共創開発概論"],
+      ["2日目 午後 (4h)", "React/Next.jsサイト設計・構築"],
+      ["3日目 午前 (3h)", "CMS連携・自社HPプロトタイプ制作"],
+    ],
+    color: "teal",
+  },
+];
+
+const activitiesMain = [
+  { title: "SUP（スタンドアップパドル）", note: "透き通る海を滑るチーム体験", image: "sup.jpg" },
+  { title: "マングローブカヌー", note: "木漏れ日のマングローブトンネル", image: "canoe.jpg" },
+  { title: "青の洞窟シュノーケル", note: "神秘的な青の光に包まれる", image: "snorkel.jpg" },
+];
+
+const activitiesAll = [
+  ["川平湾SUP", "半日"],
+  ["青の洞窟", "半日"],
+  ["幻の島 上陸", "半日"],
+  ["マングローブ", "半日"],
+  ["星空ナイト", "夜"],
+  ["体験ダイビング", "半日〜1日"],
+];
+
+const subsidyFlow = [
+  { num: 1, title: "お申込み", note: "日程・人数確定", accent: false },
+  { num: 2, title: "書類受領", note: "SAIMONから申請テンプレ一式", accent: false },
+  { num: 3, title: "訓練計画届", note: "開催30日前までに提出", accent: false },
+  { num: 4, title: "研修実施", note: "石垣島3泊4日", accent: true },
+  { num: 5, title: "支給申請", note: "受給（約3-6ヶ月後）", accent: true },
+];
+
+const subsidyPerks = [
+  { icon: "📋", title: "申請テンプレ一式", note: "訓練計画届・受講者名簿・実施報告書の雛形を完備" },
+  { icon: "📦", title: "使用コンテンツお渡し", note: "研修で使用した資料・プロンプト集・ハンズオン素材を研修後に一式お渡し" },
+  { icon: "🎓", title: "修了証", note: "全受講者分を発行。助成金申請の証跡" },
+];
+
+const reasons = [
+  {
+    big: "75%",
+    title: "助成金カバー率",
+    body: "人材開発支援助成金のリスキリング支援コースに完全準拠。研修費 ¥400,000／人のうち <strong>¥300,000／人</strong> が戻ります。",
+    accent: "navy",
+  },
+  {
+    big: "1社",
+    title: "窓口一本化",
+    body: "研修・旅行手配・アクティビティまで、SAIMONが全て取りまとめ。企業様は発注先を探す手間ゼロ。",
+    accent: "teal",
+  },
+  {
+    big: "3-in-1",
+    title: "価値の複合",
+    body: "社員旅行・研修・福利厚生を1つのプログラムで実現。経理処理もシンプル（研修費＋旅費の2本）。",
+    accent: "navy",
+  },
+];
+
+const process = [
+  { step: 1, title: "お問い合わせ・初回ヒアリング", body: "貴社の課題・人数・希望時期をお伺いします（オンライン30分）", day: "Day 1" },
+  { step: 2, title: "お見積もり・日程確定", body: "SAIMON研修見積＋旅行代理店旅行見積の2本をご提示", day: "Day 7" },
+  { step: 3, title: "ご契約・助成金申請サポート", body: "契約締結後、申請テンプレ一式をお渡し。訓練計画届の記入を支援", day: "Day 14" },
+  { step: 4, title: "研修実施（石垣島3泊4日）", body: "事前オリエン → 現地研修 → 修了式までSAIMONが全て運営", day: "Day 45〜", accent: true },
+];
+
+const faqs = [
+  {
+    q: "助成金が不支給になった場合は？",
+    a: "助成金の申請・受給は企業様の責任において行うものです。万一不支給となった場合もSAIMON研修費の返金はできませんが、申請前に中小企業判定・要件確認を徹底します。",
+  },
+  {
+    q: "経営者や役員は助成金対象になりますか？",
+    a: "経営者・役員は雇用保険被保険者ではないため対象外です。社長が同行できる「経営者オブザーバー枠」をご用意しているので、社員研修と同時開催でご参加いただけます。",
+  },
+  {
+    q: "最低催行人数・催行時期は？",
+    a: "最低5名から催行可能。通年受付ですが、10〜3月（閑散期）は旅費が抑えられるため推奨しています。",
+  },
+  {
+    q: "台風などで催行中止の場合は？",
+    a: "振替日程への変更またはオンライン研修への変更をご選択いただけます。契約書に明記しており、旅費のキャンセル規定は旅行代理店の旅行約款に準拠します。",
+  },
+  {
+    q: "スケジュールや研修内容のカスタマイズは？",
+    a: "<strong>スケジュール・研修内容ともに完全オーダーメイド対応可能</strong>です。業種別事例の差し替え、特定ツール特化、部門別カリキュラム、日程配分の調整まで、事前ヒアリングで貴社に最適化した構成をご提案します。",
+  },
+  {
+    q: "研修後のフォローはありますか？",
+    a: "3ヶ月後のオンラインフォローアップ研修や、月次のAI顧問契約プランをご用意しています。詳細はお問い合わせください。",
+  },
+];
+
+const pricing = {
+  perEmployee: 400_000,
+  subsidy: 300_000,
+  net: 100_000,
+  observer: 200_000,
+  observerTraining: 150_000,
+  observerTravel: 50_000,
+};
+---
+
+<BaseLayout
+  title="石垣島で学ぶAI実践研修 | 株式会社SAIMON"
+  description="3泊4日11時間の集中研修で、AIに強い会社と絆の強いチームを作る。人材開発支援助成金で最大75%カバー、研修・旅行・アクティビティまでSAIMONが一括手配する合宿型AI研修プログラム。"
+>
+  <Header />
+
+  <main>
+    <!-- ============== 1. HERO ============== -->
+    <section
+      class="relative min-h-[640px] overflow-hidden flex items-end"
+      style={`background-image: linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(13,0,132,0.32) 45%, rgba(0,0,0,0.05) 100%), url(${img("cover.jpg")}); background-size: cover; background-position: center 35%; background-color: #0d0084;`}
+    >
+      <div class="saimon-shell pt-32 pb-14 sm:pb-20 w-full">
+        <div class="mb-3 flex items-center gap-3 text-[11px] font-bold tracking-[0.4em] text-white/95">
+          <span>NATURE</span>
+          <span class="text-teal">✕</span>
+          <span>CULTURE</span>
+          <span class="text-teal">✕</span>
+          <span>FUTURE</span>
+        </div>
+        <p class="inline-flex rounded-full bg-white px-4 py-1.5 text-[11px] font-heading font-black tracking-widest text-navy uppercase">
+          AI Workation Program
+        </p>
+        <h1 class="mt-4 max-w-3xl text-4xl sm:text-6xl font-heading font-black text-white leading-[1.05] drop-shadow-md">
+          石垣島で学ぶ<br />AI実践研修
+        </h1>
+        <p class="mt-5 max-w-2xl text-lg sm:text-xl font-bold text-white/95 leading-relaxed">
+          "AIに強い会社"と"絆の強いチーム"を、<br class="hidden sm:block" />石垣島の4日で作る。
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+          <a href="#schedule" class="inline-flex items-center justify-center gap-2 bg-teal text-white font-bold text-sm px-6 py-3 rounded-md hover:bg-teal-dark transition-colors shadow-lg shadow-teal/30">
+            プログラム詳細を見る
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+          </a>
+          <a href={deckPdf} download class="inline-flex items-center justify-center gap-2 bg-white text-navy font-bold text-sm px-6 py-3 rounded-md hover:bg-white/90 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" /></svg>
+            提案資料をダウンロード（PDF）
+          </a>
+          <a href="#contact-ishigaki" class="inline-flex items-center justify-center gap-2 border border-white/45 bg-white/10 text-white font-bold text-sm px-6 py-3 rounded-md hover:bg-white/20 transition-colors">
+            お問い合わせ
+          </a>
+        </div>
+        <p class="mt-6 text-xs text-white/65 tracking-wider">SAIMON ISHIGAKI AI WORKATION ｜ 株式会社SAIMON</p>
+      </div>
+    </section>
+
+    <!-- ============== 2. STATS ============== -->
+    <section class="bg-navy text-white">
+      <div class="saimon-shell grid gap-px bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map((s) => (
+          <div class="bg-navy px-6 py-7">
+            <p class="text-[11px] tracking-widest uppercase text-teal-light font-bold">{s.label}</p>
+            <p class="mt-2 text-3xl font-heading font-black text-white">{s.value}</p>
+            <p class="mt-1 text-xs text-white/68">{s.note}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ============== 3. WHY NOW ============== -->
+    <section class="saimon-section bg-white">
+      <div class="saimon-shell">
+        <div class="text-center mb-10">
+          <p class="saimon-eyebrow">なぜ今、石垣島でAI研修か</p>
+          <h2 class="mt-3 text-3xl sm:text-4xl font-heading font-black text-navy leading-tight">
+            AIを学ぶ会社と、学ばない会社に、<br />分かれる3年。
+          </h2>
+          <p class="mt-4 max-w-2xl mx-auto text-sm text-text-secondary leading-relaxed">
+            生成AI導入企業は1年で <strong class="text-navy">33.8% → 44.8%</strong> に急増。AIを社員の武器にできるか否かで、会社の競争力そのものが変わる。
+          </p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-3">
+          {whyNow.map((w) => (
+            <article class="relative rounded-2xl overflow-hidden h-[300px]">
+              <img src={img(w.image)} alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+              <div class="absolute inset-0" style={`background: linear-gradient(to top, ${w.overlay} 0%, ${w.overlay.replace(/0\.\d+/, '0.5')} 40%, transparent 100%);`}></div>
+              <div class="absolute top-3 left-4">
+                <span class="inline-block px-2 py-0.5 text-[10px] font-bold tracking-widest uppercase rounded-full bg-white/20 text-teal-light">{w.badge}</span>
+              </div>
+              <div class="absolute bottom-0 left-0 right-0 p-5">
+                <p class="text-xl font-heading font-extrabold text-white mb-2">{w.emoji} {w.title}</p>
+                <p class="text-xs text-white/95 leading-snug" set:html={w.body}></p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div class="mt-6 p-4 rounded-xl text-center bg-surface-dim">
+          <span class="text-sm font-bold text-navy">"学ばない" という選択の機会損失は、3年後に顕在化する。</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 4. 5 FEATURES ============== -->
+    <section class="saimon-section bg-surface-dim">
+      <div class="saimon-shell">
+        <div class="text-center mb-10">
+          <p class="saimon-eyebrow">プログラムの5つの特徴</p>
+          <h2 class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">
+            非日常の4日が、AIスキルとチームの絆を、<span class="text-teal">"会社の資産"</span>に変える。
+          </h2>
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {features.map((f) => (
+            <article class="relative rounded-xl overflow-hidden h-[280px]">
+              <img src={img(f.image)} alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+              <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 40%, transparent 70%);"></div>
+              <div class="absolute bottom-0 left-0 right-0 p-4">
+                <p class="text-xs font-bold text-teal-light tracking-wider mb-1">{f.num} {f.label}</p>
+                <p class="text-sm font-bold text-white leading-snug" set:html={f.body}></p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 5. SCHEDULE ============== -->
+    <section id="schedule" class="saimon-section bg-white">
+      <div class="saimon-shell">
+        <div class="text-center mb-10">
+          <p class="saimon-eyebrow">3泊4日のスケジュール</p>
+          <h2 class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">
+            朝のAI研修、午後のアクティビティ、夜の対話。
+          </h2>
+          <p class="mt-4 max-w-2xl mx-auto text-sm text-text-secondary leading-relaxed">
+            Day 2 に集中研修 8 時間（午前 4h ＋午後 4h）＋ Day 3 午前 3 時間の合計 <strong class="text-navy">11 時間</strong>。助成金要件（10時間以上）を効率的に消化します。
+          </p>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {schedule.map((d) => (
+            <article class="saimon-card overflow-hidden flex flex-col">
+              <header class={`px-4 py-3 text-center text-white text-sm font-bold ${d.accent ? "bg-teal" : "bg-navy"}`}>
+                {d.day} <span class="block text-[10px] font-normal mt-0.5 opacity-80">{d.sub}</span>
+              </header>
+              <div class="p-4 space-y-2 flex-1">
+                {d.rows.map((r) => (
+                  <div class="p-3 rounded-lg bg-surface-dim">
+                    <p class="text-[10px] font-bold tracking-wider text-teal uppercase">{r.time}</p>
+                    <p class="text-sm font-bold text-text-primary mt-1">{r.text}</p>
+                    {r.detail && <p class="text-xs text-text-secondary mt-0.5">{r.detail}</p>}
+                  </div>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div class="mt-6 p-4 rounded-xl bg-teal/8 text-center">
+          <span class="text-sm font-bold text-teal">合計研修時間: 11時間</span>
+          <span class="mx-3 text-text-secondary/40">|</span>
+          <span class="text-sm text-text-secondary">助成金要件（10時間以上）クリア</span>
+        </div>
+
+        <div class="mt-3 p-4 rounded-xl flex items-start gap-3" style="background: linear-gradient(135deg, rgba(13,0,132,0.04), rgba(49,185,181,0.08)); border-left: 4px solid #31b9b5;">
+          <span class="text-xl shrink-0">✏️</span>
+          <p class="text-xs text-text-primary leading-relaxed">
+            <strong class="text-navy">スケジュールは貴社のご希望に合わせて完全オーダーメイド可能。</strong>
+            日程・時間配分・アクティビティの種類など、<strong class="text-teal">研修時間 11 時間（助成金要件クリア）</strong>を満たす範囲でご要望に応じて組み替えます。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 6. COURSES ============== -->
+    <section class="saimon-section bg-surface-dim">
+      <div class="saimon-shell">
+        <div class="text-center mb-10">
+          <p class="saimon-eyebrow">研修コンテンツ ／ 3 コース選択制</p>
+          <h2 class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">
+            業種・課題・レベルに合わせて、<br class="sm:hidden" />事例差し替え＆独自カリキュラムも対応。
+          </h2>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {courses.map((c) => (
+            <article class={`saimon-card overflow-hidden border-2 ${c.color === "navy" ? "border-navy" : "border-teal"} flex flex-col`}>
+              <div class="relative aspect-[16/8] overflow-hidden">
+                <img src={img(c.image)} alt={c.title} class="w-full h-full object-cover" loading="lazy" />
+                <span class={`absolute top-3 left-3 inline-flex items-center px-2 py-0.5 text-[10px] font-heading font-black tracking-widest rounded-full ${c.color === "navy" ? "bg-navy text-white" : "bg-teal text-white"}`}>{c.level}</span>
+              </div>
+              <div class="p-6 flex-1 flex flex-col">
+                <p class="text-xs font-bold tracking-widest uppercase text-text-secondary">{c.code}</p>
+                <h3 class={`mt-1 text-lg font-heading font-black ${c.color === "navy" ? "text-navy" : "text-teal"}`}>{c.title}</h3>
+                <p class="mt-1 text-xs text-text-secondary">対象: {c.target}</p>
+                <ul class="mt-4 space-y-2 flex-1">
+                  {c.days.map(([day, content]) => (
+                    <li class="flex gap-3 items-start text-sm">
+                      <span class="shrink-0 px-2 py-0.5 rounded bg-teal/10 text-teal text-[11px] font-heading font-bold tracking-wider">{day}</span>
+                      <span class="text-text-primary leading-snug">{content}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div class="mt-6 p-4 rounded-xl flex items-start gap-3" style="background: linear-gradient(135deg, rgba(13,0,132,0.04), rgba(49,185,181,0.08)); border-left: 4px solid #31b9b5;">
+          <span class="text-xl shrink-0">🎨</span>
+          <p class="text-xs text-text-primary leading-relaxed">
+            <strong class="text-navy">3 コースをベースに、貴社の課題に合わせたオリジナル構成も可能。</strong>
+            業種別事例の差し替え・特定ツール特化・部門別カリキュラム設計まで <strong class="text-teal">事前ヒアリングで最適化</strong>します。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 7. ACTIVITIES ============== -->
+    <section class="saimon-section bg-white">
+      <div class="saimon-shell">
+        <div class="text-center mb-10">
+          <p class="saimon-eyebrow">現地アクティビティ</p>
+          <h2 class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">
+            石垣島を遊び尽くす。
+          </h2>
+          <p class="mt-4 max-w-2xl mx-auto text-sm text-text-secondary leading-relaxed">
+            島内の人気ツアーから選択。研修後のリフレッシュ＆チームビルディングに最適です。
+          </p>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-3 mb-5">
+          {activitiesMain.map((a) => (
+            <article class="relative rounded-xl overflow-hidden h-[260px]">
+              <img src={img(a.image)} alt={a.title} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+              <div class="absolute bottom-0 left-0 right-0 px-4 py-3" style="background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);">
+                <p class="text-sm font-bold text-white">{a.title}</p>
+                <p class="text-[11px] text-white/85 mt-0.5">{a.note}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div class="grid gap-2 grid-cols-3 sm:grid-cols-6">
+          {activitiesAll.map(([title, dur]) => (
+            <div class="p-3 rounded-lg text-center bg-teal/8">
+              <p class="text-xs font-bold text-teal">{title}</p>
+              <p class="text-[10px] text-text-secondary mt-0.5">{dur}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 8. PRICING ============== -->
+    <section class="saimon-section bg-surface-dim">
+      <div class="saimon-shell">
+        <div class="text-center mb-10">
+          <p class="saimon-eyebrow">料金</p>
+          <h2 class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">
+            助成金後、実質 <span class="text-teal">¥{pricing.net.toLocaleString()}</span> ／人。
+          </h2>
+          <p class="mt-4 max-w-2xl mx-auto text-sm text-text-secondary leading-relaxed">
+            研修費はSAIMONへ、旅費は旅行代理店へ。請求書は2本でシンプル。経営者同行はオブザーバー枠でご参加いただけます。
+          </p>
+        </div>
+
+        <div class="grid gap-5 lg:grid-cols-2">
+          <div class="saimon-card p-6">
+            <p class="text-xs font-bold tracking-widest uppercase text-text-secondary">社員 1 名あたり</p>
+            <p class="mt-1 text-sm font-bold text-navy">研修費（SAIMONへ）</p>
+            <div class="mt-4 space-y-3">
+              <div class="flex justify-between items-baseline pb-3 border-b border-border">
+                <span class="text-sm text-text-secondary">研修費</span>
+                <span class="text-2xl font-heading font-black text-navy">¥{pricing.perEmployee.toLocaleString()}</span>
+              </div>
+              <div class="flex justify-between items-baseline pb-3 border-b border-border">
+                <span class="text-sm text-teal font-bold">助成金（厚労省から後日受給）</span>
+                <span class="text-2xl font-heading font-black text-teal">−¥{pricing.subsidy.toLocaleString()}</span>
+              </div>
+              <div class="flex justify-between items-baseline pt-1">
+                <span class="text-sm font-bold text-text-primary">実質負担</span>
+                <span class="text-3xl font-heading font-black text-navy">¥{pricing.net.toLocaleString()}</span>
+              </div>
+            </div>
+            <p class="mt-4 text-xs text-text-secondary leading-relaxed">
+              ※ 旅費（航空券・宿泊・アクティビティ込み）は旅行代理店から別途特別料金でご案内。1人あたり目安 ¥120,000〜¥180,000（時期・出発地により変動）。
+            </p>
+          </div>
+
+          <div class="rounded-md p-6 bg-navy text-white shadow-card">
+            <p class="text-xs font-bold tracking-widest uppercase text-teal-light">経営者オブザーバー枠</p>
+            <p class="mt-1 text-sm font-bold text-white">経営者・役員 1 名あたり</p>
+            <div class="mt-4 space-y-3">
+              <div class="flex justify-between items-baseline pb-3 border-b border-white/15">
+                <span class="text-sm text-white/76">研修費</span>
+                <span class="text-xl font-heading font-black text-white">¥{pricing.observerTraining.toLocaleString()}</span>
+              </div>
+              <div class="flex justify-between items-baseline pb-3 border-b border-white/15">
+                <span class="text-sm text-white/76">旅費（特別料金）</span>
+                <span class="text-xl font-heading font-black text-white">¥{pricing.observerTravel.toLocaleString()}</span>
+              </div>
+              <div class="flex justify-between items-baseline pt-1">
+                <span class="text-sm font-bold text-teal-light">合計</span>
+                <span class="text-3xl font-heading font-black text-teal-light">¥{pricing.observer.toLocaleString()}</span>
+              </div>
+            </div>
+            <ul class="mt-5 space-y-2 text-xs text-white/85">
+              <li class="flex items-start gap-2"><span class="text-teal-light">✅</span><span>研修への自由参加（覗きのみ〜フル参加まで）</span></li>
+              <li class="flex items-start gap-2"><span class="text-teal-light">✅</span><span>社員と同じ研修コンテンツを体験</span></li>
+              <li class="flex items-start gap-2"><span class="text-teal-light">✅</span><span>御社AI活用ロードマップ納品</span></li>
+              <li class="flex items-start gap-2"><span class="text-teal-light">✅</span><span>AI顧問契約の初月無料トライアル</span></li>
+            </ul>
+            <p class="mt-4 text-[11px] text-white/55 leading-relaxed">
+              ※ 経営者・役員は雇用保険被保険者ではないため助成金対象外。専用の特別料金プランです。
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-5 p-4 rounded-xl flex items-center justify-between gap-4 bg-teal/8">
+          <div class="text-xs text-text-primary leading-relaxed">
+            <strong class="text-navy">価格シミュレーション・人数別の正確なお見積もりはお問い合わせ後にご提示します。</strong>
+          </div>
+          <a href={deckPdf} download class="shrink-0 inline-flex items-center gap-2 text-xs font-bold text-teal whitespace-nowrap">
+            提案資料を見る
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 9. SUBSIDY SUPPORT ============== -->
+    <section class="saimon-section bg-white">
+      <div class="saimon-shell">
+        <div class="text-center mb-10">
+          <p class="saimon-eyebrow">助成金活用サポート</p>
+          <h2 class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">
+            申請テンプレ一式を無償提供。<br class="sm:hidden" />事務負荷を最小化します。
+          </h2>
+        </div>
+
+        <div class="grid gap-3 grid-cols-2 lg:grid-cols-5 mb-6">
+          {subsidyFlow.map((f) => (
+            <div class={`p-4 rounded-xl text-center ${f.accent ? "bg-teal/10" : "bg-surface-dim"}`}>
+              <div class={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 text-white font-heading font-extrabold ${f.accent ? "bg-teal" : "bg-navy"}`}>
+                {f.num}
+              </div>
+              <p class={`text-sm font-bold ${f.accent ? "text-teal" : "text-navy"}`}>{f.title}</p>
+              <p class="text-xs text-text-secondary mt-1">{f.note}</p>
+            </div>
+          ))}
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-3 mb-5">
+          {subsidyPerks.map((p) => (
+            <div class="p-4 rounded-xl bg-surface-dim border-l-4 border-teal">
+              <p class="text-sm font-bold text-navy mb-1">{p.icon} {p.title}</p>
+              <p class="text-xs text-text-secondary leading-relaxed">{p.note}</p>
+            </div>
+          ))}
+        </div>
+
+        <div class="p-4 rounded-xl flex items-center justify-between gap-4" style="background: linear-gradient(135deg, rgba(13,0,132,0.04), rgba(49,185,181,0.08)); border-left: 4px solid #31b9b5;">
+          <div class="flex-1">
+            <p class="text-xs font-bold text-navy mb-1">🔍 制度概要（参考）</p>
+            <p class="text-xs text-text-primary leading-relaxed">
+              <strong>人材開発支援助成金 事業展開等リスキリング支援コース</strong>：中小企業の経費助成率 <strong class="text-teal">75%</strong>、1人あたり上限 <strong class="text-teal">30万円</strong>（10時間以上 100 時間未満）。賃金助成 1,000 円／時間も併用可能。
+            </p>
+          </div>
+          <div class="text-right shrink-0">
+            <p class="text-[10px] text-text-secondary">受給までの目安</p>
+            <p class="text-lg font-heading font-extrabold text-navy">3〜6ヶ月</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 10. 3 REASONS ============== -->
+    <section class="saimon-section bg-surface-dim">
+      <div class="saimon-shell">
+        <div class="text-center mb-10">
+          <p class="saimon-eyebrow">選ばれる 3 つの理由</p>
+          <h2 class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">
+            SAIMON 石垣島 AI 研修が選ばれる理由
+          </h2>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-3">
+          {reasons.map((r) => (
+            <article class={`p-7 rounded-2xl ${r.accent === "teal" ? "" : ""}`} style={`background: ${r.accent === "teal" ? "linear-gradient(135deg, rgba(49,185,181,0.10), rgba(49,185,181,0.18))" : "linear-gradient(135deg, rgba(13,0,132,0.04), rgba(49,185,181,0.08))"};`}>
+              <p class={`text-5xl font-heading font-black mb-3 ${r.accent === "teal" ? "text-teal" : "text-navy"}`}>{r.big}</p>
+              <p class={`text-base font-heading font-black mb-2 ${r.accent === "teal" ? "text-teal" : "text-navy"}`}>{r.title}</p>
+              <p class="text-xs text-text-secondary leading-relaxed" set:html={r.body}></p>
+            </article>
+          ))}
+        </div>
+
+        <div class="mt-5 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-xl overflow-hidden h-40">
+            <img src={img("beach.jpg")} alt="" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="rounded-xl overflow-hidden h-40">
+            <img src={img("dinner.jpg")} alt="" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 11. PROCESS ============== -->
+    <section class="saimon-section bg-white">
+      <div class="saimon-shell">
+        <div class="text-center mb-10">
+          <p class="saimon-eyebrow">導入までの流れ</p>
+          <h2 class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">
+            お問い合わせから研修実施まで、<span class="text-teal">最短 1.5 ヶ月</span>。
+          </h2>
+        </div>
+
+        <div class="space-y-3">
+          {process.map((p) => (
+            <div class={`flex gap-4 items-center p-4 rounded-xl ${p.accent ? "bg-teal/8" : "bg-surface-dim"}`}>
+              <div class={`shrink-0 w-14 h-14 rounded-full flex flex-col items-center justify-center text-white font-bold leading-none ${p.accent ? "bg-teal" : "bg-navy"}`}>
+                <span class="text-[9px] tracking-wider">STEP</span>
+                <span class="text-lg mt-0.5">{p.step}</span>
+              </div>
+              <div class="flex-1">
+                <p class={`text-sm font-bold ${p.accent ? "text-teal" : "text-navy"}`}>{p.title}</p>
+                <p class="text-xs text-text-secondary mt-0.5 leading-relaxed">{p.body}</p>
+              </div>
+              <span class="text-xs font-bold text-teal whitespace-nowrap">{p.day}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 12. FAQ ============== -->
+    <section class="saimon-section bg-surface-dim">
+      <div class="saimon-shell">
+        <div class="text-center mb-10">
+          <p class="saimon-eyebrow">よくあるご質問</p>
+          <h2 class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">
+            FAQ
+          </h2>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          {faqs.map((f) => (
+            <details class="p-5 rounded-xl bg-white border border-border group">
+              <summary class="cursor-pointer list-none flex items-start justify-between gap-3">
+                <p class="text-sm font-bold text-navy">Q. {f.q}</p>
+                <span class="shrink-0 text-teal transition-transform group-open:rotate-180">
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                </span>
+              </summary>
+              <p class="mt-3 pt-3 border-t border-border text-xs text-text-primary leading-relaxed" set:html={f.a}></p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 13. CTA ============== -->
+    <section
+      id="contact-ishigaki"
+      class="relative overflow-hidden text-white"
+      style={`background-image: linear-gradient(135deg, rgba(13,0,132,0.92) 0%, rgba(6,0,66,0.95) 100%), url(${img("cover.jpg")}); background-size: cover; background-position: center;`}
+    >
+      <div class="saimon-shell py-20 sm:py-24 text-center relative z-10">
+        <p class="inline-flex rounded-full bg-teal/25 px-4 py-1.5 text-[11px] font-heading font-black tracking-widest text-teal-light uppercase">
+          Get Started
+        </p>
+        <h2 class="mt-5 text-3xl sm:text-4xl font-heading font-extrabold text-white leading-tight">
+          まずは 30 分のヒアリングから。
+        </h2>
+        <p class="mt-5 max-w-2xl mx-auto text-base text-teal-light leading-relaxed">
+          貴社の人数・ご希望時期・課題をお伺いし、最適な催行プランとお見積もりをご提案します。<br />助成金の適用可否も初回で確認します。
+        </p>
+
+        <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+          <a
+            href="/#contact"
+            class="inline-flex items-center justify-center gap-2 bg-teal text-white font-bold text-sm px-7 py-3 rounded-md hover:bg-teal-dark transition-colors shadow-lg shadow-teal/30"
+          >
+            お問い合わせフォーム
+          </a>
+          <a
+            href={deckPdf}
+            download
+            class="inline-flex items-center justify-center gap-2 bg-white text-navy font-bold text-sm px-7 py-3 rounded-md hover:bg-white/90 transition-colors"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" /></svg>
+            提案資料 PDF（15MB）
+          </a>
+          <a
+            href={`mailto:${company.email}`}
+            class="inline-flex items-center justify-center gap-2 border border-white/45 bg-white/10 text-white font-bold text-sm px-7 py-3 rounded-md hover:bg-white/20 transition-colors"
+          >
+            {company.email}
+          </a>
+        </div>
+
+        <div class="mt-12 flex items-center justify-center gap-3 text-sm font-bold tracking-[0.45em] text-white/95">
+          <span>NATURE</span>
+          <span class="text-teal-light">✕</span>
+          <span>CULTURE</span>
+          <span class="text-teal-light">✕</span>
+          <span>FUTURE</span>
+        </div>
+        <div class="mx-auto mt-3 w-12 h-px bg-teal/60"></div>
+        <p class="mt-3 text-xs text-white/55 tracking-[0.2em]">SAIMON ISHIGAKI AI WORKATION</p>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>

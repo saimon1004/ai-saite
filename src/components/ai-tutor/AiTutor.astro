@@ -13,8 +13,8 @@ const { chapterId, chapterNumber, chapterTitle, arcName } = Astro.props;
 <button
   id="tutor-trigger"
   aria-label="AI チューターを開く"
-  class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-[#0d0084] text-white shadow-lg hover:bg-[#1a10a0] transition-all hover:scale-105 flex items-center justify-center cursor-pointer"
-  style="box-shadow: 0 4px 20px rgba(13,0,132,0.3);"
+  class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-white text-[#0d0084] border border-[#0d0084]/20 shadow-lg hover:bg-[#0d0084] hover:text-white transition-all hover:scale-105 flex items-center justify-center cursor-pointer"
+  style="box-shadow: 0 4px 20px rgba(13,0,132,0.18);"
 >
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -27,7 +27,7 @@ const { chapterId, chapterNumber, chapterTitle, arcName } = Astro.props;
 <!-- Chat panel -->
 <div
   id="tutor-panel"
-  class="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-4rem)] bg-white rounded-2xl shadow-2xl flex-col overflow-hidden border border-gray-200"
+  class="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-4rem)] bg-white rounded-md shadow-2xl flex-col overflow-hidden border border-gray-200"
   style="display: none;"
   data-chapter-id={chapterId}
   data-chapter-number={chapterNumber}
@@ -35,10 +35,10 @@ const { chapterId, chapterNumber, chapterTitle, arcName } = Astro.props;
   data-arc-name={arcName}
 >
   <!-- Header -->
-  <div class="flex items-center justify-between px-4 py-3 bg-[#0d0084] text-white rounded-t-2xl shrink-0">
+  <div class="flex items-center justify-between px-4 py-3 bg-[#0d0084] text-white shrink-0">
     <div class="flex items-center gap-2">
-      <span class="text-lg">🎓</span>
-      <span class="font-bold text-sm">Sensei — AI チューター</span>
+      <span class="flex h-7 w-7 items-center justify-center rounded-md bg-white text-[#0d0084] text-sm font-black">AI</span>
+      <span class="font-bold text-sm">AIチューターからのアドバイス</span>
     </div>
     <button id="tutor-close" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors cursor-pointer" aria-label="閉じる">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -51,7 +51,7 @@ const { chapterId, chapterNumber, chapterTitle, arcName } = Astro.props;
   <div id="tutor-messages" class="flex-1 overflow-y-auto px-4 py-3 space-y-3">
     <div class="flex justify-start">
       <div class="max-w-[85%] px-3 py-2 rounded-2xl text-sm leading-relaxed bg-gray-100 text-gray-800 rounded-bl-md">
-        こんにちは！CodeQuestのAIチューター「Sensei」です。この章について質問があればなんでも聞いてくださいね。
+        こんにちは！この章の理解を手伝います。コードの意味、クイズの考え方、次に読むべきポイントを質問できます。
       </div>
     </div>
   </div>
@@ -137,11 +137,16 @@ const { chapterId, chapterNumber, chapterTitle, arcName } = Astro.props;
     let isLoading = false;
     const chatHistory: { role: string; content: string }[] = [];
 
-    // Open/Close
-    trigger.addEventListener("click", () => {
+    function openTutor() {
       trigger.style.display = "none";
       panel.style.display = "flex";
       input.focus();
+    }
+
+    // Open/Close
+    trigger.addEventListener("click", openTutor);
+    document.querySelectorAll<HTMLButtonElement>("[data-open-tutor]").forEach((btn) => {
+      btn.addEventListener("click", openTutor);
     });
 
     closeBtn.addEventListener("click", () => {

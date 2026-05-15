@@ -1,0 +1,142 @@
+---
+import { getArcByChapter } from "../../data/blog-meta";
+
+interface Props {
+  chapter: number;
+  size?: "card" | "hero";
+  showLabel?: boolean;
+  showTopBar?: boolean;
+  class?: string;
+}
+
+const {
+  chapter,
+  size = "card",
+  showLabel = true,
+  showTopBar = false,
+  class: extraClass = "",
+} = Astro.props;
+
+const arc = getArcByChapter(chapter);
+
+// Arc-color gradient pairs (Tailwind v4 tokens via globals)
+const arcGradients: Record<string, string> = {
+  teal: "from-teal to-teal-dark",
+  blue: "from-blue-500 to-blue-900",
+  red: "from-rose-500 to-rose-900",
+  purple: "from-violet-500 to-violet-900",
+  gold: "from-amber-500 to-amber-800",
+};
+const accent: Record<string, string> = {
+  teal: "bg-teal",
+  blue: "bg-blue-600",
+  red: "bg-rose-600",
+  purple: "bg-violet-600",
+  gold: "bg-amber-600",
+};
+const gradient = arcGradients[arc?.color ?? "teal"] ?? arcGradients.teal;
+const accentBar = accent[arc?.color ?? "teal"] ?? accent.teal;
+
+// Per-chapter theme: emoji + concept label
+const themes: Record<number, { emoji: string; label: string }> = {
+  1: { emoji: "💡", label: "Spark" },
+  2: { emoji: "🤝", label: "First Client" },
+  3: { emoji: "🎨", label: "Design" },
+  4: { emoji: "✨", label: "Alive" },
+  5: { emoji: "🚀", label: "Go Live" },
+  6: { emoji: "⚡", label: "JS Power" },
+  7: { emoji: "🛡️", label: "TS Safety" },
+  8: { emoji: "🔌", label: "API" },
+  9: { emoji: "🗄️", label: "Database" },
+  10: { emoji: "🔑", label: "Auth" },
+  11: { emoji: "⚠️", label: "Breach" },
+  12: { emoji: "🚧", label: "XSS" },
+  13: { emoji: "💉", label: "SQL Injection" },
+  14: { emoji: "🔐", label: "Encryption" },
+  15: { emoji: "📋", label: "Audit" },
+  16: { emoji: "📦", label: "Containers" },
+  17: { emoji: "⚙️", label: "CI / CD" },
+  18: { emoji: "☁️", label: "Cloud" },
+  19: { emoji: "🏗️", label: "IaC" },
+  20: { emoji: "📊", label: "Monitoring" },
+  21: { emoji: "🐍", label: "Python" },
+  22: { emoji: "🧪", label: "Testing" },
+  23: { emoji: "🏎️", label: "Performance" },
+  24: { emoji: "🤖", label: "AI" },
+  25: { emoji: "🌅", label: "Future" },
+};
+const theme = themes[chapter] ?? { emoji: "📖", label: `Ch.${chapter}` };
+
+const emojiSize =
+  size === "hero"
+    ? "text-7xl sm:text-8xl md:text-9xl"
+    : "text-5xl sm:text-6xl";
+const cornerSize = size === "hero" ? "text-sm" : "text-[10px] sm:text-xs";
+const labelSize = size === "hero" ? "text-base" : "text-[11px]";
+---
+
+<div
+  class:list={[
+    "relative w-full h-full overflow-hidden bg-gradient-to-br",
+    gradient,
+    "flex items-center justify-center select-none",
+    extraClass,
+  ]}
+  aria-hidden="true"
+>
+  {/* dotted texture */}
+  <div
+    class="absolute inset-0 opacity-20"
+    style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 22px 22px;"
+  ></div>
+
+  {/* soft blob */}
+  <div
+    class="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-white/15 blur-2xl"
+  ></div>
+  <div
+    class="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-white/10 blur-2xl"
+  ></div>
+
+  {showTopBar && (
+    <div class:list={["absolute top-0 left-0 right-0 h-1", accentBar]}></div>
+  )}
+
+  {/* Top-left meta */}
+  <span
+    class:list={[
+      "absolute top-3 left-4 font-heading font-black tracking-[0.2em] text-white/85 uppercase",
+      cornerSize,
+    ]}
+  >
+    Ch.{String(chapter).padStart(2, "0")}
+    {arc && (
+      <>
+        <span class="mx-1 opacity-50">／</span>
+        <span>{arc.nameEn}</span>
+      </>
+    )}
+  </span>
+
+  {/* Big emoji */}
+  <div
+    class:list={[
+      emojiSize,
+      "leading-none drop-shadow-[0_4px_18px_rgba(0,0,0,0.35)] motion-safe:transition-transform motion-safe:duration-500 group-hover:scale-110",
+    ]}
+  >
+    {theme.emoji}
+  </div>
+
+  {/* Bottom-left concept label */}
+  {showLabel && (
+    <span
+      class:list={[
+        "absolute bottom-3 left-4 font-heading font-black tracking-[0.18em] text-white uppercase",
+        labelSize,
+      ]}
+    >
+      {theme.label}
+    </span>
+  )}
+</div>

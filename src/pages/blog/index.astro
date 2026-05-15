@@ -5,7 +5,6 @@ import Footer from "../../components/common/Footer.astro";
 import BlogCard from "../../components/blog/BlogCard.astro";
 import ArcFilter from "../../components/blog/ArcFilter.astro";
 import { getCollection } from "astro:content";
-import { arcs } from "../../data/blog-meta";
 
 const allPosts = await getCollection("blog");
 const sortedPosts = allPosts.sort((a, b) => a.data.chapter - b.data.chapter);
@@ -36,19 +35,31 @@ const jsonLd = {
 
   <main class="min-h-screen">
     <!-- Hero -->
-    <section class="bg-gradient-to-b from-navy to-navy-light py-20 sm:py-28">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-        <span class="inline-block px-4 py-1.5 rounded-full text-xs font-bold tracking-wider bg-teal/20 text-teal-light mb-6">
+    <section class="night-sky relative overflow-hidden py-16 sm:py-20">
+      <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/35 to-transparent" aria-hidden="true"></div>
+      <div class="absolute bottom-0 right-8 hidden h-64 w-64 rounded-t-full border border-teal/30 bg-white/5 lg:block" aria-hidden="true">
+        <div class="absolute left-1/2 top-10 h-32 w-36 -translate-x-1/2 rounded-md border border-teal/30 bg-navy-dark/90 shadow-2xl shadow-black/30">
+          <div class="m-3 h-2 rounded bg-teal/80"></div>
+          <div class="mx-3 mt-3 space-y-2">
+            <div class="h-1.5 w-24 rounded bg-white/40"></div>
+            <div class="h-1.5 w-28 rounded bg-teal/60"></div>
+            <div class="h-1.5 w-20 rounded bg-white/30"></div>
+            <div class="h-1.5 w-32 rounded bg-teal/45"></div>
+          </div>
+        </div>
+      </div>
+      <div class="relative saimon-shell">
+        <span class="inline-block px-4 py-1.5 rounded-full text-xs font-bold bg-teal text-white mb-5">
           FREE COURSE
         </span>
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-heading font-black text-white leading-tight mb-4">
+        <h1 class="text-5xl sm:text-6xl lg:text-7xl font-heading font-black text-white leading-tight mb-4">
           CodeQuest
         </h1>
-        <p class="text-lg sm:text-xl text-white/70 mb-2">物語で学ぶプログラミング <span class="text-teal-light font-bold">無料研修</span></p>
-        <p class="text-sm text-white/50 max-w-lg mx-auto mb-8">
+        <p class="text-lg sm:text-xl text-white/82 mb-3 font-bold">物語で学ぶプログラミング <span class="text-teal-light">無料研修</span></p>
+        <p class="text-sm text-white/68 max-w-xl mb-8 leading-relaxed">
           架空のスタートアップ「ShimaLink」を立ち上げる物語を通じて、Web開発・セキュリティ・インフラを実践的に学ぶ全25章のカリキュラム。SAIMONが提供する無料のプログラミング研修です。
         </p>
-        <div class="flex flex-wrap items-center justify-center gap-4">
+        <div class="flex flex-wrap items-center gap-4">
           <span class="flex items-center gap-1.5 text-xs text-white/60">
             <svg class="w-4 h-4 text-teal-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             全25章・約20時間
@@ -65,31 +76,9 @@ const jsonLd = {
       </div>
     </section>
 
-    <!-- Arc Overview -->
-    <section class="py-12 border-b border-border">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {arcs.map((arc) => (
-            <a
-              href={`/blog/series/${arc.id}/`}
-              class="group flex flex-col items-center p-4 rounded-xl border border-border hover:border-navy/20 hover:bg-surface-dim transition-all text-center"
-            >
-              <span class="text-2xl mb-2">{arc.emoji}</span>
-              <span class="text-sm font-bold text-text-primary group-hover:text-navy transition-colors">
-                {arc.name}
-              </span>
-              <span class="text-xs text-text-secondary mt-1">
-                {arc.chapters.length}章
-              </span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-
     <!-- Posts Grid -->
-    <section class="py-12">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <section class="py-10 sm:py-12 bg-white">
+      <div class="saimon-shell">
         <ArcFilter />
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -108,6 +97,31 @@ const jsonLd = {
             </div>
           ))}
         </div>
+
+        <div class="mt-9 text-center">
+          <a href="/blog/01-the-spark/" class="inline-flex items-center gap-2 rounded-md bg-navy px-7 py-3 text-sm font-bold text-white hover:bg-navy-light transition-colors">
+            最初の章から始める
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-navy py-12 text-white">
+      <div class="saimon-shell grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+        <div>
+          <p class="saimon-eyebrow">この研修で身につくこと</p>
+          <h2 class="mt-3 text-2xl font-heading font-black text-white">実践的なスキルを、物語の中で自然に習得</h2>
+          <p class="mt-3 text-sm text-white/66">無料で学べる全25章。今すぐ始められます。</p>
+        </div>
+        <a href="/blog/01-the-spark/" class="inline-flex items-center justify-center gap-2 rounded-md bg-teal px-7 py-3 text-sm font-bold text-white hover:bg-teal-dark transition-colors">
+          今すぐ無料で始める
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
       </div>
     </section>
   </main>

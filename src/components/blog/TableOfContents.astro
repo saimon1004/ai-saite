@@ -14,7 +14,7 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
 ---
 
 {tocHeadings.length > 0 && (
-  <details class="toc mb-10 rounded-xl border border-border bg-surface-dim/50 group" data-toc>
+  <details class="toc mb-10 rounded-md border border-border bg-white group" data-toc open>
     <summary class="flex items-center justify-between gap-3 px-5 py-4 cursor-pointer list-none select-none">
       <div class="flex items-center gap-2">
         <svg class="w-4 h-4 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -27,7 +27,7 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
     </summary>
-    <div class="accordion-content" data-open="false">
+    <div class="accordion-content" data-open="true">
       <div>
         <ul class="px-5 pb-4 columns-1 sm:columns-2 gap-x-8">
           {tocHeadings.map((heading, i) => (

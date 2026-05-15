@@ -23,7 +23,7 @@
   --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
   --shadow-card-hover: 0 10px 15px -3px rgb(0 0 0 / 0.06), 0 4px 6px -4px rgb(0 0 0 / 0.06);
 
-  --radius-card: 0.75rem;
+  --radius-card: 0.5rem;
   --radius-button: 0.5rem;
 }
 
@@ -39,6 +39,59 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.saimon-shell {
+  width: min(100% - 2rem, 72rem);
+  margin-inline: auto;
+}
+
+.saimon-eyebrow {
+  font-family: var(--font-heading);
+  font-size: 0.74rem;
+  font-weight: 900;
+  color: var(--color-teal);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.saimon-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.saimon-section {
+  padding-block: clamp(3rem, 7vw, 5.5rem);
+}
+
+.soft-grid {
+  background-image:
+    linear-gradient(rgba(13, 0, 132, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 0, 132, 0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.night-sky {
+  background:
+    radial-gradient(circle at 18% 24%, rgba(49, 185, 181, 0.28) 0 2px, transparent 3px),
+    radial-gradient(circle at 64% 18%, rgba(255, 255, 255, 0.75) 0 1px, transparent 2px),
+    radial-gradient(circle at 82% 32%, rgba(255, 255, 255, 0.65) 0 1px, transparent 2px),
+    radial-gradient(circle at 40% 36%, rgba(255, 255, 255, 0.55) 0 1px, transparent 2px),
+    linear-gradient(180deg, #0d0084 0%, #070040 100%);
+}
+
+.image-frame {
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  border: 1px solid rgb(226 232 240 / 0.9);
+}
+
+.image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* Heading font utility */
 @utility font-heading {
   font-family: var(--font-heading);
@@ -49,22 +102,35 @@ body {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: scroll-anim-fallback 0.8s 2s forwards;
 }
 
 @utility animate-fade-in {
   opacity: 0;
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: scroll-anim-fallback 0.8s 2s forwards;
 }
 
 @utility animate-scale-in {
   opacity: 0;
   transform: scale(0.96);
   transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  animation: scroll-anim-fallback 0.8s 2s forwards;
 }
 
 @utility animate-visible {
   opacity: 1;
   transform: translateY(0) scale(1);
+  animation: none;
+}
+
+/* Safety fallback: ensures content is visible even if IntersectionObserver
+   never fires (Playwright fullPage screenshots, SEO crawlers, blocked JS) */
+@keyframes scroll-anim-fallback {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* Reduced motion */
@@ -185,31 +251,11 @@ body {
 }
 
 #about::after {
-  content: "";
-  position: absolute;
-  top: -80px;
-  right: -120px;
-  width: 400px;
-  height: 400px;
-  background: rgb(49 185 181 / 0.14);
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
-  z-index: 0;
+  content: none;
 }
 
 #company::after {
-  content: "";
-  position: absolute;
-  bottom: -60px;
-  left: -100px;
-  width: 350px;
-  height: 350px;
-  background: rgb(13 0 132 / 0.14);
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
-  z-index: 0;
+  content: none;
 }
 
 /* ===================================

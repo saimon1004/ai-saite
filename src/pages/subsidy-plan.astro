@@ -6,537 +6,520 @@ import { company } from "../data/company";
 
 const base = import.meta.env.BASE_URL;
 
-// === コース1: AI業務活用コース ===
-const goals = [
+interface DaySchedule {
+  day: string;
+  title: string;
+  duration: string; // ex. "13:00 - 16:30（3.5時間）"
+  goals: string[];
+  schedule: { time: string; topic: string }[];
+}
+
+interface Course {
+  id: string;
+  label: string;
+  level?: string;
+  summary: string;
+  totalHours: string;
+  hoursBreakdown: string;
+  practiceRatio?: string;
+  practiceRatioNote?: string;
+  purposes: string[];
+  targets: string[];
+  tools: string[];
+  days: DaySchedule[];
+}
+
+const courses: Course[] = [
   {
-    icon: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>`,
-    title: "AI実践体験とアクションプラン策定",
-    description: "AIの実践的な活用を体験し、具体的なアクションプランを策定します。",
+    id: "ai",
+    label: "ビギナーコース",
+    level: "BEGINNER",
+    summary: "生成AIを初めて本格的に業務で扱う方を対象とした、実践的な入門プログラム。マーケティング・人事・CS・管理業務など、部門横断で即日使えるスキルを習得します。",
+    totalHours: "計11時間 / 3日間",
+    hoursBreakdown: "3.5h ＋ 3.5h ＋ 4h",
+    practiceRatio: "30 ： 70",
+    practiceRatioNote: "実習中心の構成。受講当日から業務に持ち帰れる成果物を作ります。",
+    purposes: [
+      "AIの実践的な活用を体験し、具体的なアクションプランを策定",
+      "組織内でDXを推進できるリーダー人材を育成",
+      "全社的な取り組みを通じて、組織の結束力を高める",
+    ],
+    targets: ["中小企業の社員・チーム", "AI活用で業務改善を目指す方"],
+    tools: ["ChatGPT", "Claude", "Gemini", "NotebookLM", "Manus", "Make"],
+    days: [
+      {
+        day: "DAY 1",
+        title: "生成AI基礎",
+        duration: "13:00 - 16:30（3.5時間）",
+        goals: [
+          "AI導入の可能性を理解する",
+          "主要ツールの特徴と使い分けをマスターする",
+          "マーケティング業務への即時応用を学ぶ",
+        ],
+        schedule: [
+          { time: "13:00 - 13:30", topic: "オリエンテーション・ゴール設定" },
+          { time: "13:30 - 14:30", topic: "AIツール比較（ChatGPT / Claude / Gemini / NotebookLM）" },
+          { time: "14:30 - 14:45", topic: "休憩" },
+          { time: "14:45 - 15:30", topic: "企業導入事例の紹介" },
+          { time: "15:30 - 16:30", topic: "マーケティングワークフロー自動化（コピーライティング・アイデア創出・画像生成）" },
+        ],
+      },
+      {
+        day: "DAY 2",
+        title: "バックオフィス効率化",
+        duration: "13:00 - 16:30（3.5時間）",
+        goals: [
+          "バックオフィス業務の自動化手法を習得する",
+          "NotebookLMでナレッジ管理を実践する",
+          "音声テキスト処理スキルを身につける",
+        ],
+        schedule: [
+          { time: "13:00 - 13:15", topic: "振り返り・体験共有" },
+          { time: "13:15 - 14:15", topic: "人事活用（面接書き起こし・評価支援）" },
+          { time: "14:15 - 14:30", topic: "休憩" },
+          { time: "14:30 - 15:30", topic: "管理業務自動化（会議録・文書作成）" },
+          { time: "15:30 - 16:30", topic: "カスタマーサービス改善（FAQ自動化・対応品質向上）" },
+        ],
+      },
+      {
+        day: "DAY 3",
+        title: "実践ワークショップ — 自社業務への AI 実装",
+        duration: "13:00 - 17:00（4時間）",
+        goals: [
+          "DAY 1〜2 で学んだ AI ツールを自社の実務課題に適用する",
+          "チームで業務改善プロトタイプを設計・実装する",
+          "研修後すぐに展開できるアクションプランを策定する",
+        ],
+        schedule: [
+          { time: "13:00 - 13:30", topic: "イントロダクション・自社課題の整理" },
+          { time: "13:30 - 14:15", topic: "業務課題のヒアリング & AI活用案ブレスト（DAY 1〜2 の学びを棚卸し）" },
+          { time: "14:15 - 14:30", topic: "休憩" },
+          { time: "14:30 - 15:30", topic: "チーム別プロトタイプ制作（プロンプト・ワークフロー設計）" },
+          { time: "15:30 - 16:15", topic: "成果物の実装・検証（実データを使ったハンズオン）" },
+          { time: "16:15 - 16:45", topic: "チーム発表・相互フィードバック" },
+          { time: "16:45 - 17:00", topic: "社内展開ロードマップ策定・Q&A" },
+        ],
+      },
+    ],
   },
   {
-    icon: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>`,
-    title: "社内DX推進人材の育成",
-    description: "組織内でDXを推進できるリーダー人材を育成します。",
+    id: "advanced",
+    label: "アドバンスドコース",
+    level: "ADVANCED",
+    summary: "ビギナーコース修了者、または既にAIツールを業務で活用している方向けの実装フォーカス型プログラム。最新トレンドのキャッチアップから自社業務への組み込み・実装までを2日間で完結します。",
+    totalHours: "計10時間 / 2日間",
+    hoursBreakdown: "5h ＋ 5h",
+    practiceRatio: "20 ： 80",
+    practiceRatioNote: "実装ハンズオン中心。研修内で動く成果物を完成させます。",
+    purposes: [
+      "既存のAI活用を一段階引き上げ、業務の本格的な改善・自動化を実現する",
+      "自社固有の業務課題にAIを組み込み、実装まで手を動かして完了する",
+      "社内展開・運用設計まで含む、実装リーダー人材を育成する",
+    ],
+    targets: ["ビギナーコース修了者", "既にAIを業務活用している方・DX推進担当者・部門リーダー"],
+    tools: ["Claude Code", "Manus", "Make", "n8n", "Dify", "MCP", "NotebookLM", "Notion AI"],
+    days: [
+      {
+        day: "DAY 1",
+        title: "知る ＋ 考える — 最新トレンドのキャッチアップと自社業務への適用設計",
+        duration: "13:00 - 18:15（5時間 ／ 休憩15分）",
+        goals: [
+          "最新のAIツール・トレンドを体系的にキャッチアップする",
+          "他社の活用事例から自社への応用ポイントを抽出する",
+          "自社業務に対するAI適用案を構造化し、優先順位付けする",
+        ],
+        schedule: [
+          { time: "13:00 - 13:15", topic: "オリエンテーション・自社状況のシェア" },
+          { time: "13:15 - 14:15", topic: "【知る】最新AIトレンド総ざらい（LLM最新動向・AIエージェント・MCP・ノーコード統合）" },
+          { time: "14:15 - 15:00", topic: "【知る】業界・職種別の他社活用事例ショーケース" },
+          { time: "15:00 - 15:15", topic: "休憩" },
+          { time: "15:15 - 16:15", topic: "【考える】自社業務の棚卸しワーク（バリューチェーン・タスクマッピング）" },
+          { time: "16:15 - 17:15", topic: "【考える】AI適用ポイントの抽出・優先順位付け（インパクト × 実現性）" },
+          { time: "17:15 - 18:15", topic: "【考える】改善プロトタイプの企画書化（プロンプト設計・ツール選定まで）" },
+        ],
+      },
+      {
+        day: "DAY 2",
+        title: "実践する — 自社向けAI実装ハンズオン",
+        duration: "13:00 - 18:15（5時間 ／ 休憩15分）",
+        goals: [
+          "DAY 1 で設計したプランを実装し、動く成果物を完成させる",
+          "LLM・エージェント・ノーコード・統合ツールを駆使して業務に組み込む",
+          "社内展開・運用設計まで落とし込んだロードマップを持ち帰る",
+        ],
+        schedule: [
+          { time: "13:00 - 13:30", topic: "DAY 1 振り返り・実装プラン最終確認" },
+          { time: "13:30 - 15:00", topic: "【実践】実装ハンズオン①（基本ワークフロー構築・プロンプト・データ接続）" },
+          { time: "15:00 - 15:15", topic: "休憩" },
+          { time: "15:15 - 16:30", topic: "【実践】実装ハンズオン②（AIエージェント・自動化フロー組み込み）" },
+          { time: "16:30 - 17:30", topic: "【実践】検証・チューニング・成果物の磨き込み" },
+          { time: "17:30 - 18:00", topic: "チーム発表・相互フィードバック" },
+          { time: "18:00 - 18:15", topic: "社内展開ロードマップ策定・Q&A" },
+        ],
+      },
+    ],
   },
   {
-    icon: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>`,
-    title: "企業理解の深化と組織結束力の強化",
-    description: "全社的な取り組みを通じて、組織の結束力を高めます。",
+    id: "web",
+    label: "HP制作の内製化コース",
+    level: "SPECIALIZED",
+    summary: "AI共創開発で、社内メンバーがWebサイトの制作・更新を担える体制をつくります。Claude Codeを使ってサイト設計・構築・運用までを習得します。",
+    totalHours: "計11時間 / 3日間",
+    hoursBreakdown: "3.5h ＋ 3.5h ＋ 4h",
+    practiceRatio: "30 ： 70",
+    practiceRatioNote: "実習中心の構成。受講当日から業務に持ち帰れる成果物を作ります。",
+    purposes: [
+      "Claude Codeを活用し、自社でHP制作・更新ができる体制を構築",
+      "AIと協働してWebサイトを構築できるリーダー人材を育成",
+      "CMS連携とデプロイ手法を習得し、継続的な運用体制を確立",
+    ],
+    targets: ["広報・採用・営業チーム", "Web制作を内製化したい企業"],
+    tools: ["Claude Code", "VS Code", "React / Next.js", "MicroCMS", "Git", "Xserver"],
+    days: [
+      {
+        day: "DAY 1",
+        title: "Claude Code基礎と環境構築",
+        duration: "13:00 - 16:30（3.5時間）",
+        goals: [
+          "Claude Codeの仕組みと操作方法を理解する",
+          "AI共創開発の基本概念を習得する",
+          "開発環境のセットアップを完了する",
+        ],
+        schedule: [
+          { time: "13:00 - 13:30", topic: "オリエンテーション・ゴール設定" },
+          { time: "13:30 - 14:30", topic: "Claude Code概論（AI共創開発の考え方・役割分担）" },
+          { time: "14:30 - 14:45", topic: "休憩" },
+          { time: "14:45 - 15:30", topic: "環境構築実習（VS Code・Claude Code・Git導入）" },
+          { time: "15:30 - 16:30", topic: "Claude Code基本操作（Planモード・権限設定・プロジェクト初期化）" },
+        ],
+      },
+      {
+        day: "DAY 2",
+        title: "サイト設計・構築実践",
+        duration: "13:00 - 16:30（3.5時間）",
+        goals: [
+          "要件定義からサイト構築までの流れを体験する",
+          "React / Next.jsでのサイト構築をAIと実践する",
+          "デザイン修正・機能実装の手法を習得する",
+        ],
+        schedule: [
+          { time: "13:00 - 13:15", topic: "振り返り・体験共有" },
+          { time: "13:15 - 14:15", topic: "要件定義と技術選定（参考サイト分析・プロンプト設計）" },
+          { time: "14:15 - 14:30", topic: "休憩" },
+          { time: "14:30 - 15:30", topic: "サイト構築ハンズオン（React / Next.jsプロジェクト作成）" },
+          { time: "15:30 - 16:30", topic: "デザイン修正・機能追加（CTA・レスポンシブ対応）" },
+        ],
+      },
+      {
+        day: "DAY 3",
+        title: "デプロイ・運用と実践ワークショップ — 自社HPのプロトタイプ制作",
+        duration: "13:00 - 17:00（4時間）",
+        goals: [
+          "CMS連携による運用体制を構築する",
+          "サーバーデプロイの手順を習得する",
+          "自社HP制作のアクションプランを策定する",
+        ],
+        schedule: [
+          { time: "13:00 - 13:30", topic: "イントロダクション・DAY2の復習" },
+          { time: "13:30 - 14:15", topic: "CMS導入（MicroCMS連携・動的コンテンツ管理）" },
+          { time: "14:15 - 14:30", topic: "休憩" },
+          { time: "14:30 - 15:15", topic: "デプロイ実践（サーバー設定・ドメイン設定）" },
+          { time: "15:15 - 16:15", topic: "実践ワークショップ（自社HPのプロトタイプ制作）" },
+          { time: "16:15 - 16:30", topic: "プレゼンテーション・まとめ" },
+          { time: "16:30 - 17:00", topic: "Q&A・アクションプラン策定" },
+        ],
+      },
+    ],
   },
 ];
 
-const tools = ["ChatGPT", "Claude", "Gemini", "NotebookLM", "Manus", "Make"];
-
-const days = [
-  {
-    day: "DAY 1",
-    title: "生成AI基礎",
-    time: "13:00 - 16:30（3.5時間）",
-    color: "bg-blue-50 border-blue-200",
-    accentColor: "text-blue-600",
-    objectives: [
-      "AI導入の可能性を理解する",
-      "主要ツールの特徴と使い分けをマスターする",
-      "マーケティング業務への即時応用を学ぶ",
-    ],
-    schedule: [
-      { time: "13:00 - 13:30", content: "オリエンテーション・ゴール設定" },
-      { time: "13:30 - 14:30", content: "AIツール比較（ChatGPT / Claude / Gemini / NotebookLM）" },
-      { time: "14:30 - 14:45", content: "休憩" },
-      { time: "14:45 - 15:30", content: "企業導入事例の紹介" },
-      { time: "15:30 - 16:30", content: "マーケティングワークフロー自動化（コピーライティング・アイデア創出・画像生成）" },
-    ],
-  },
-  {
-    day: "DAY 2",
-    title: "バックオフィス効率化",
-    time: "13:00 - 16:30（3.5時間）",
-    color: "bg-green-50 border-green-200",
-    accentColor: "text-green-600",
-    objectives: [
-      "バックオフィス業務の自動化手法を習得する",
-      "NotebookLMでナレッジ管理を実践する",
-      "音声テキスト処理スキルを身につける",
-    ],
-    schedule: [
-      { time: "13:00 - 13:15", content: "振り返り・体験共有" },
-      { time: "13:15 - 14:15", content: "人事活用（面接書き起こし・評価支援）" },
-      { time: "14:15 - 14:30", content: "休憩" },
-      { time: "14:30 - 15:30", content: "管理業務自動化（会議録・文書作成）" },
-      { time: "15:30 - 16:30", content: "カスタマーサービス改善（FAQ自動化・対応品質向上）" },
-    ],
-  },
-  {
-    day: "DAY 3",
-    title: "実践ワークショップ",
-    time: "13:00 - 17:00（4時間）",
-    color: "bg-purple-50 border-purple-200",
-    accentColor: "text-purple-600",
-    subtitle: "Claude Code × Remotion を使った実践動画制作",
-    objectives: [
-      "Claude Codeを使ってRemotionプロジェクトを独自に構築する",
-      "自然言語での指示で動画を修正する",
-      "30秒の完成動画をエクスポートする",
-    ],
-    schedule: [
-      { time: "13:00 - 13:30", content: "イントロダクション・環境構築" },
-      { time: "13:30 - 14:15", content: "Claude Code基礎" },
-      { time: "14:15 - 14:30", content: "休憩" },
-      { time: "14:30 - 15:15", content: "Remotionの概念（コンポジション・シーケンス・アニメーション）" },
-      { time: "15:15 - 16:15", content: "自己紹介動画の制作（ハンズオン）" },
-      { time: "16:15 - 16:30", content: "プレゼンテーション・まとめ" },
-      { time: "16:30 - 17:00", content: "Q&A・最終ディスカッション" },
-    ],
-  },
+const features = [
+  "実際に活用できるスキル習得",
+  "内製化によるコスト削減",
+  "助成金で最大75%を支援",
+  "伴走サポートで定着・活用",
 ];
 
-// === コース2: HP制作の内製化コース ===
-const goals2 = [
-  {
-    icon: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>`,
-    title: "HP制作の内製化スキル習得",
-    description: "Claude Codeを活用し、自社でHP制作・更新ができる体制を構築します。",
-  },
-  {
-    icon: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>`,
-    title: "AI共創開発人材の育成",
-    description: "AIと協働してWebサイトを構築できるリーダー人材を育成します。",
-  },
-  {
-    icon: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`,
-    title: "運用・保守体制の確立",
-    description: "CMS連携とデプロイ手法を習得し、継続的な運用体制を確立します。",
-  },
-];
-
-const tools2 = ["Claude Code", "VS Code", "React / Next.js", "MicroCMS", "Git", "XServer"];
-
-const days2 = [
-  {
-    day: "DAY 1",
-    title: "Claude Code基礎と環境構築",
-    time: "13:00 - 16:30（3.5時間）",
-    color: "bg-blue-50 border-blue-200",
-    accentColor: "text-blue-600",
-    objectives: [
-      "Claude Codeの仕組みと操作方法を理解する",
-      "AI共創開発の基本概念を習得する",
-      "開発環境のセットアップを完了する",
-    ],
-    schedule: [
-      { time: "13:00 - 13:30", content: "オリエンテーション・ゴール設定" },
-      { time: "13:30 - 14:30", content: "Claude Code概論（AI共創開発の考え方・役割分担）" },
-      { time: "14:30 - 14:45", content: "休憩" },
-      { time: "14:45 - 15:30", content: "環境構築実習（VS Code・Claude Code・Git導入）" },
-      { time: "15:30 - 16:30", content: "Claude Code基本操作（Planモード・権限設定・プロジェクト初期化）" },
-    ],
-  },
-  {
-    day: "DAY 2",
-    title: "サイト設計・構築実践",
-    time: "13:00 - 16:30（3.5時間）",
-    color: "bg-green-50 border-green-200",
-    accentColor: "text-green-600",
-    objectives: [
-      "要件定義からサイト構築までの流れを体験する",
-      "React/Next.jsでのサイト構築をAIと実践する",
-      "デザイン修正・機能実装の手法を習得する",
-    ],
-    schedule: [
-      { time: "13:00 - 13:15", content: "振り返り・体験共有" },
-      { time: "13:15 - 14:15", content: "要件定義と技術選定（参考サイト分析・プロンプト設計）" },
-      { time: "14:15 - 14:30", content: "休憩" },
-      { time: "14:30 - 15:30", content: "サイト構築ハンズオン（React/Next.jsプロジェクト作成）" },
-      { time: "15:30 - 16:30", content: "デザイン修正・機能追加（CTA・レスポンシブ対応）" },
-    ],
-  },
-  {
-    day: "DAY 3",
-    title: "デプロイ・運用と実践ワークショップ",
-    time: "13:00 - 17:00（4時間）",
-    color: "bg-purple-50 border-purple-200",
-    accentColor: "text-purple-600",
-    subtitle: "自社HPのプロトタイプ制作",
-    objectives: [
-      "CMS連携による運用体制を構築する",
-      "サーバーデプロイの手順を習得する",
-      "自社HP制作のアクションプランを策定する",
-    ],
-    schedule: [
-      { time: "13:00 - 13:30", content: "イントロダクション・DAY2の復習" },
-      { time: "13:30 - 14:15", content: "CMS導入（MicroCMS連携・動的コンテンツ管理）" },
-      { time: "14:15 - 14:30", content: "休憩" },
-      { time: "14:30 - 15:15", content: "デプロイ実践（サーバー設定・ドメイン設定）" },
-      { time: "15:15 - 16:15", content: "実践ワークショップ（自社HPのプロトタイプ制作）" },
-      { time: "16:15 - 16:30", content: "プレゼンテーション・まとめ" },
-      { time: "16:30 - 17:00", content: "Q&A・アクションプラン策定" },
-    ],
-  },
-];
-
-// === 共通データ ===
-const overview = [
-  { label: "研修時間", value: "計11時間 / 3日間", detail: "3.5h + 3.5h + 4h" },
-  { label: "形式", value: "オンライン（Zoom）or 対面" },
-  { label: "比率", value: "講義30% : 実習70%" },
-  { label: "料金", value: "¥400,000 /人", detail: "税抜" },
-];
+function buildOverview(course: Course): [string, string, string][] {
+  return [
+    ["研修時間", course.totalHours, course.hoursBreakdown],
+    ["実施形式", "オンライン or 対面", "Google Meet またはご訪問"],
+    ["講義 ：実習", course.practiceRatio ?? "30 ： 70", "実習中心の構成"],
+    ["研修費", "¥400,000 / 人", "助成金活用で実質 ¥100,000〜"],
+  ];
+}
 ---
 
 <BaseLayout
   title="助成金活用プラン | AI IMPACT LAB | 株式会社SAIMON"
-  description="人材開発支援助成金を活用したAI研修パッケージ。3日間・計11時間の実践型AI研修プログラムで、社内DX推進人材を育成します。"
+  description="人材開発支援助成金（リスキリング支援コース）を活用したAI研修パッケージ。計11時間／3日間で、実践型AI研修とHP制作内製化研修により社内DX推進人材を育成します。"
 >
   <Header />
 
-  <!-- Hero Banner -->
-  <section class="bg-navy py-20 sm:py-28">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <p class="font-heading text-sm font-bold tracking-[0.3em] uppercase text-teal mb-4">Subsidy Plan</p>
-      <h1 class="font-heading text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-wider uppercase">
-        AI IMPACT LAB
-      </h1>
-      <p class="mt-4 text-lg text-white/60">助成金活用 研修パッケージ</p>
-    </div>
-  </section>
-
-  <!-- Course Tab Selector -->
-  <section class="bg-surface border-b border-border">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-center gap-2 py-6">
-        <button
-          data-tab-btn="1"
-          class="px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 bg-navy text-white"
-        >
-          AI業務活用コース
-        </button>
-        <button
-          data-tab-btn="2"
-          class="px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 bg-navy/5 text-navy hover:bg-navy/10"
-        >
-          HP制作の内製化コース
-        </button>
+  <main class="bg-white">
+    <!-- Hero -->
+    <section class="relative overflow-hidden bg-navy text-white">
+      <div class="absolute inset-y-0 right-0 hidden w-1/2 lg:block" aria-hidden="true">
+        <img src={`${base}pillar-genba.jpg`} alt="" class="h-full w-full object-cover opacity-78" />
+        <div class="absolute inset-0 bg-gradient-to-r from-navy via-navy/40 to-transparent"></div>
       </div>
-    </div>
-  </section>
+      <div class="relative saimon-shell py-16 sm:py-20">
+        <p class="saimon-eyebrow">Subsidy Plan</p>
+        <h1 class="mt-4 max-w-2xl text-4xl sm:text-5xl font-heading font-black leading-tight text-white">
+          AI IMPACT LAB<br />助成金活用プラン
+        </h1>
+        <p class="mt-5 max-w-xl text-sm sm:text-base text-white/76 leading-relaxed">
+          人材開発支援助成金（リスキリング支援コース）を活用して、AI人材の育成と業務変革を無理なく推進。<br class="hidden sm:block" />
+          <strong class="text-white">レベル別の3コース</strong>から、貴社の状況に最適な実践型プログラムをお選びいただけます。
+        </p>
+      </div>
+    </section>
 
-  <!-- Goals -->
-  <section class="py-20 sm:py-24 bg-surface">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="font-heading text-xs tracking-wider text-teal uppercase font-bold mb-2 text-center">OBJECTIVES</h2>
-      <p class="text-center text-2xl sm:text-3xl font-black text-text-primary mb-12">研修の目的</p>
+    <!-- Tabs + Features -->
+    <section class="border-b border-border bg-white">
+      <div class="saimon-shell -mt-7 relative z-10">
+        <div class="grid sm:grid-cols-3 rounded-md overflow-hidden shadow-card">
+          {courses.map((course, index) => (
+            <button
+              type="button"
+              data-tab-btn={course.id}
+              class:list={[
+                "px-5 py-4 text-sm font-bold transition-colors",
+                index === 0 ? "bg-teal text-white" : "bg-white text-navy hover:bg-surface-dim",
+              ]}
+              aria-pressed={index === 0 ? "true" : "false"}
+            >
+              {course.label}
+            </button>
+          ))}
+        </div>
 
-      <!-- コース1: AI業務活用 -->
-      <div data-tab-content="1" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {goals.map((goal, idx) => (
-          <div class="bg-surface-dim rounded-2xl p-8 text-center">
-            <div class="w-14 h-14 rounded-2xl bg-navy/5 flex items-center justify-center text-navy mx-auto mb-5">
-              <Fragment set:html={goal.icon} />
+        <div class="grid gap-3 py-6 sm:grid-cols-2 lg:grid-cols-4">
+          {features.map((feature) => (
+            <div class="saimon-card px-4 py-4 text-center">
+              <div class="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-md bg-navy/5 text-navy">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p class="text-xs font-bold text-text-primary">{feature}</p>
             </div>
-            <span class="font-heading text-4xl font-black text-navy/10 leading-none" aria-hidden="true">
-              {String(idx + 1).padStart(2, "0")}
-            </span>
-            <h3 class="text-lg font-bold text-text-primary mt-2">{goal.title}</h3>
-            <p class="text-sm text-text-secondary mt-2 leading-relaxed">{goal.description}</p>
-          </div>
-        ))}
-      </div>
-
-      <!-- コース2: HP制作の内製化 -->
-      <div data-tab-content="2" class="grid grid-cols-1 md:grid-cols-3 gap-6 hidden">
-        {goals2.map((goal, idx) => (
-          <div class="bg-surface-dim rounded-2xl p-8 text-center">
-            <div class="w-14 h-14 rounded-2xl bg-navy/5 flex items-center justify-center text-navy mx-auto mb-5">
-              <Fragment set:html={goal.icon} />
-            </div>
-            <span class="font-heading text-4xl font-black text-navy/10 leading-none" aria-hidden="true">
-              {String(idx + 1).padStart(2, "0")}
-            </span>
-            <h3 class="text-lg font-bold text-text-primary mt-2">{goal.title}</h3>
-            <p class="text-sm text-text-secondary mt-2 leading-relaxed">{goal.description}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Overview -->
-  <section class="py-20 sm:py-24 bg-surface-dim">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="font-heading text-xs tracking-wider text-teal uppercase font-bold mb-2 text-center">OVERVIEW</h2>
-      <p class="text-center text-2xl sm:text-3xl font-black text-text-primary mb-12">研修概要</p>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-        {overview.map((item) => (
-          <div class="bg-surface rounded-2xl border border-border p-6 text-center">
-            <p class="text-xs font-bold text-teal uppercase tracking-wider mb-2">{item.label}</p>
-            <p class="text-lg font-black text-text-primary">{item.value}</p>
-            {item.detail && <p class="text-xs text-text-secondary mt-1">{item.detail}</p>}
-          </div>
-        ))}
-      </div>
-
-      <!-- Tools: コース1 -->
-      <div data-tab-content="1" class="bg-surface rounded-2xl border border-border p-6 sm:p-8">
-        <p class="text-sm font-bold text-text-primary mb-4 text-center">使用ツール</p>
-        <div class="flex flex-wrap justify-center gap-3">
-          {tools.map((tool) => (
-            <span class="text-sm font-medium bg-navy/5 text-navy px-4 py-2 rounded-full">{tool}</span>
           ))}
         </div>
       </div>
+    </section>
 
-      <!-- Tools: コース2 -->
-      <div data-tab-content="2" class="bg-surface rounded-2xl border border-border p-6 sm:p-8 hidden">
-        <p class="text-sm font-bold text-text-primary mb-4 text-center">使用ツール</p>
-        <div class="flex flex-wrap justify-center gap-3">
-          {tools2.map((tool) => (
-            <span class="text-sm font-medium bg-navy/5 text-navy px-4 py-2 rounded-full">{tool}</span>
-          ))}
+    <!-- Course content -->
+    <section class="saimon-section">
+      <div class="saimon-shell">
+        {courses.map((course, index) => (
+          <div data-tab-content={course.id} class:list={[index !== 0 && "hidden"]}>
+            <div class="text-center mb-9">
+              <p class="saimon-eyebrow">プラン概要</p>
+              <h2 class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">{course.label}</h2>
+              <p class="mt-4 max-w-2xl mx-auto text-sm text-text-secondary leading-relaxed">{course.summary}</p>
+            </div>
+
+            <!-- Overview stats -->
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {buildOverview(course).map(([label, value, note]) => (
+                <div class="saimon-card p-5 text-center">
+                  <p class="text-xs font-bold text-teal">{label}</p>
+                  <p class="mt-2 text-base sm:text-lg font-heading font-black text-navy">{value}</p>
+                  {note && <p class="mt-1 text-[11px] text-text-secondary">{note}</p>}
+                </div>
+              ))}
+            </div>
+
+            <!-- Purpose + Tools -->
+            <div class="mt-8 grid gap-5 lg:grid-cols-[1.2fr_1fr]">
+              <div class="saimon-card p-6">
+                <p class="saimon-eyebrow">研修の目的</p>
+                <ul class="mt-4 space-y-3">
+                  {course.purposes.map((p, i) => (
+                    <li class="flex gap-3 items-start">
+                      <span class="shrink-0 flex h-6 w-6 items-center justify-center rounded-full bg-teal/12 text-teal text-xs font-heading font-black">{i + 1}</span>
+                      <span class="text-sm text-text-primary leading-relaxed">{p}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div class="mt-5 pt-5 border-t border-border">
+                  <p class="text-xs font-bold text-teal">対象</p>
+                  <p class="mt-2 text-sm font-bold text-text-primary">{course.targets.join(" ／ ")}</p>
+                </div>
+              </div>
+
+              <div class="saimon-card p-6">
+                <p class="saimon-eyebrow">使用ツール（一例）</p>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  {course.tools.map((tool) => (
+                    <span class="rounded-md border border-border bg-surface-dim px-3 py-2 text-xs font-bold text-text-primary">{tool}</span>
+                  ))}
+                  <span class="rounded-md border border-dashed border-teal/40 bg-teal/5 px-3 py-2 text-xs font-bold text-teal">ほか</span>
+                </div>
+                <p class="mt-3 text-[11px] text-text-secondary leading-relaxed">
+                  ※ 上記は代表的なツールの一部です。生成AI領域は進化が速いため、<strong class="text-navy">研修実施タイミングで最も実用的かつ最新のツール</strong>に随時アップデートしてご提供します。
+                </p>
+                <div class="mt-6 rounded-md bg-teal/10 border border-teal/20 p-4">
+                  <p class="text-xs font-bold text-teal">講義 ： 実習</p>
+                  <p class="mt-1 text-2xl font-heading font-black text-navy">{course.practiceRatio ?? "30 ： 70"}</p>
+                  <p class="mt-1 text-xs text-text-secondary">{course.practiceRatioNote ?? "実習中心の構成。受講当日から業務に持ち帰れる成果物を作ります。"}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Full curriculum -->
+            <div class="mt-10">
+              <div class="text-center mb-7">
+                <p class="saimon-eyebrow">カリキュラム（{course.totalHours}）</p>
+                <h3 class="mt-2 text-xl sm:text-2xl font-heading font-black text-navy">研修スケジュール</h3>
+              </div>
+
+              <div class="space-y-5">
+                {course.days.map((d, i) => (
+                  <article class="saimon-card overflow-hidden">
+                    <header class="grid gap-2 sm:grid-cols-[auto_1fr_auto] items-baseline px-5 sm:px-6 py-4 bg-navy text-white">
+                      <p class="font-heading font-black text-teal-light tracking-wider text-sm">{d.day}</p>
+                      <h4 class="font-heading font-black text-base sm:text-lg leading-tight">{d.title}</h4>
+                      <p class="text-xs font-bold text-white/85 sm:text-right">{d.duration}</p>
+                    </header>
+                    <div class="grid gap-0 lg:grid-cols-[1fr_1.4fr] divide-y lg:divide-y-0 lg:divide-x divide-border">
+                      <!-- Goals -->
+                      <div class="p-5 sm:p-6">
+                        <p class="text-xs font-bold text-teal mb-3">学習目標</p>
+                        <ul class="space-y-2">
+                          {d.goals.map((g) => (
+                            <li class="flex gap-2 items-start">
+                              <svg class="w-4 h-4 text-teal shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                              <span class="text-sm text-text-primary leading-snug">{g}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <!-- Schedule -->
+                      <div class="p-5 sm:p-6">
+                        <p class="text-xs font-bold text-teal mb-3">タイムスケジュール</p>
+                        <ul class="space-y-2">
+                          {d.schedule.map((s) => {
+                            const isBreak = /休憩/.test(s.topic);
+                            return (
+                              <li class="flex gap-3 items-baseline">
+                                <span class="shrink-0 w-[110px] text-xs font-heading font-bold tabular-nums text-navy">{s.time}</span>
+                                <span class:list={["text-sm leading-snug", isBreak ? "text-text-secondary italic" : "text-text-primary"]}>{s.topic}</span>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Pricing & Subsidy -->
+    <section class="saimon-section bg-surface-dim">
+      <div class="saimon-shell">
+        <div class="text-center mb-10">
+          <p class="saimon-eyebrow">料金 ／ 助成金</p>
+          <h2 class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">
+            助成金活用で、実質 <span class="text-teal">¥100,000〜／人</span>。
+          </h2>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Curriculum -->
-  <section class="py-20 sm:py-24 bg-surface">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="font-heading text-xs tracking-wider text-teal uppercase font-bold mb-2 text-center">CURRICULUM</h2>
-      <p class="text-center text-2xl sm:text-3xl font-black text-text-primary mb-12">カリキュラム</p>
-
-      <!-- コース1: AI業務活用 -->
-      <div data-tab-content="1" class="space-y-8">
-        {days.map((day) => (
-          <div class:list={["rounded-2xl border overflow-hidden", day.color]}>
-            <!-- Day header -->
-            <div class="px-6 sm:px-8 py-5 border-b border-inherit">
-              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <div>
-                  <span class:list={["font-heading text-xs tracking-wider uppercase font-bold", day.accentColor]}>{day.day}</span>
-                  <h3 class="text-xl sm:text-2xl font-black text-text-primary mt-1">{day.title}</h3>
-                  {day.subtitle && <p class="text-sm text-text-secondary mt-1">{day.subtitle}</p>}
-                </div>
-                <span class="text-sm font-medium text-text-secondary whitespace-nowrap">{day.time}</span>
+        <div class="grid gap-5 lg:grid-cols-2">
+          <div class="saimon-card p-7">
+            <p class="text-xs font-bold tracking-widest uppercase text-text-secondary">通常料金</p>
+            <p class="mt-1 text-sm font-bold text-text-primary">1 名あたり（税抜）</p>
+            <div class="mt-4 space-y-3">
+              <div class="flex justify-between items-baseline pb-3 border-b border-border">
+                <span class="text-sm text-text-secondary">研修費</span>
+                <span class="text-2xl font-heading font-black text-navy">¥400,000</span>
+              </div>
+              <div class="flex justify-between items-baseline pb-3 border-b border-border">
+                <span class="text-sm text-teal font-bold">助成金（厚労省から後日受給）</span>
+                <span class="text-2xl font-heading font-black text-teal">−¥300,000</span>
+              </div>
+              <div class="flex justify-between items-baseline pt-1">
+                <span class="text-sm font-bold text-text-primary">実質負担</span>
+                <span class="text-3xl font-heading font-black text-navy">¥100,000〜</span>
               </div>
             </div>
-
-            <div class="px-6 sm:px-8 py-6 grid grid-cols-1 lg:grid-cols-5 gap-6">
-              <!-- Learning objectives -->
-              <div class="lg:col-span-2">
-                <p class="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3">学習目標</p>
-                <div class="space-y-2">
-                  {day.objectives.map((obj) => (
-                    <div class="flex items-start gap-2">
-                      <svg class="w-4 h-4 text-teal shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span class="text-sm text-text-primary">{obj}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <!-- Schedule -->
-              <div class="lg:col-span-3">
-                <p class="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3">タイムスケジュール</p>
-                <div class="space-y-2">
-                  {day.schedule.map((s) => (
-                    <div class:list={[
-                      "flex items-start gap-3 text-sm",
-                      s.content === "休憩" ? "opacity-50" : "",
-                    ]}>
-                      <span class="font-mono text-xs text-text-secondary whitespace-nowrap pt-0.5 w-28 shrink-0">{s.time}</span>
-                      <span class="text-text-primary">{s.content}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <p class="mt-4 text-[11px] text-text-secondary leading-relaxed">
+              ※ 助成金額は企業規模・申請内容により異なります。中小企業の場合、経費助成率 75%、1人あたり上限 30万円が目安です。
+            </p>
           </div>
-        ))}
-      </div>
 
-      <!-- コース2: HP制作の内製化 -->
-      <div data-tab-content="2" class="space-y-8 hidden">
-        {days2.map((day) => (
-          <div class:list={["rounded-2xl border overflow-hidden", day.color]}>
-            <!-- Day header -->
-            <div class="px-6 sm:px-8 py-5 border-b border-inherit">
-              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <div>
-                  <span class:list={["font-heading text-xs tracking-wider uppercase font-bold", day.accentColor]}>{day.day}</span>
-                  <h3 class="text-xl sm:text-2xl font-black text-text-primary mt-1">{day.title}</h3>
-                  {day.subtitle && <p class="text-sm text-text-secondary mt-1">{day.subtitle}</p>}
-                </div>
-                <span class="text-sm font-medium text-text-secondary whitespace-nowrap">{day.time}</span>
-              </div>
-            </div>
-
-            <div class="px-6 sm:px-8 py-6 grid grid-cols-1 lg:grid-cols-5 gap-6">
-              <!-- Learning objectives -->
-              <div class="lg:col-span-2">
-                <p class="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3">学習目標</p>
-                <div class="space-y-2">
-                  {day.objectives.map((obj) => (
-                    <div class="flex items-start gap-2">
-                      <svg class="w-4 h-4 text-teal shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span class="text-sm text-text-primary">{obj}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <!-- Schedule -->
-              <div class="lg:col-span-3">
-                <p class="text-xs font-bold text-text-secondary uppercase tracking-wider mb-3">タイムスケジュール</p>
-                <div class="space-y-2">
-                  {day.schedule.map((s) => (
-                    <div class:list={[
-                      "flex items-start gap-3 text-sm",
-                      s.content === "休憩" ? "opacity-50" : "",
-                    ]}>
-                      <span class="font-mono text-xs text-text-secondary whitespace-nowrap pt-0.5 w-28 shrink-0">{s.time}</span>
-                      <span class="text-text-primary">{s.content}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Subsidy Info -->
-  <section class="py-20 sm:py-24 bg-surface-dim">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="font-heading text-xs tracking-wider text-teal uppercase font-bold mb-2 text-center">SUBSIDY</h2>
-      <p class="text-center text-2xl sm:text-3xl font-black text-text-primary mb-12">助成金について</p>
-
-      <div class="bg-surface rounded-2xl border border-border p-8 sm:p-10">
-        <div class="flex items-start gap-4 mb-8">
-          <div class="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center shrink-0">
-            <svg class="w-6 h-6 text-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="text-xl font-bold text-text-primary">人材開発支援助成金</h3>
-            <p class="text-sm text-text-secondary mt-1 leading-relaxed">
-              厚生労働省の「人材開発支援助成金」を活用することで、研修費用の大幅な削減が可能です。事業展開等リスキリング支援コースでは、中小企業の場合、経費の最大75%が助成されます。
+          <div class="rounded-md p-7 bg-navy text-white shadow-card">
+            <p class="text-xs font-bold tracking-widest uppercase text-teal-light">人材開発支援助成金</p>
+            <p class="mt-1 text-sm font-bold text-white">事業展開等リスキリング支援コース</p>
+            <ul class="mt-5 space-y-3 text-sm">
+              <li class="flex justify-between items-baseline pb-3 border-b border-white/15">
+                <span class="text-white/76">中小企業の経費助成率</span>
+                <span class="text-xl font-heading font-black text-teal-light">75%</span>
+              </li>
+              <li class="flex justify-between items-baseline pb-3 border-b border-white/15">
+                <span class="text-white/76">1 人あたり上限</span>
+                <span class="text-xl font-heading font-black text-teal-light">30 万円</span>
+              </li>
+              <li class="flex justify-between items-baseline">
+                <span class="text-white/76">研修時間の要件</span>
+                <span class="text-xl font-heading font-black text-teal-light">10h 以上</span>
+              </li>
+            </ul>
+            <p class="mt-5 text-xs text-white/76 leading-relaxed">
+              本研修は <strong class="text-white">計 11 時間／3 日間</strong> の構成で、助成金要件（10時間以上）を満たします。賃金助成 1,000 円／時間も併用可能です。
+            </p>
+            <p class="mt-3 text-xs text-white/55">
+              申請テンプレ一式（訓練計画届・受講者名簿・実施報告書）を無償提供し、事務負荷を最小化します。
             </p>
           </div>
         </div>
+      </div>
+    </section>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div class="bg-teal/5 border border-teal/15 rounded-xl p-5 text-center">
-            <p class="text-xs font-bold text-teal uppercase tracking-wider mb-2">助成率（中小企業）</p>
-            <p class="text-3xl font-black text-navy">最大75%</p>
-          </div>
-          <div class="bg-teal/5 border border-teal/15 rounded-xl p-5 text-center">
-            <p class="text-xs font-bold text-teal uppercase tracking-wider mb-2">通常料金</p>
-            <p class="text-3xl font-black text-navy">¥400,000<span class="text-sm font-bold text-text-secondary">/人</span></p>
-          </div>
-          <div class="bg-navy rounded-xl p-5 text-center">
-            <p class="text-xs font-bold text-teal uppercase tracking-wider mb-2">助成金活用後</p>
-            <p class="text-3xl font-black text-white">実質¥100,000〜<span class="text-sm font-bold text-white/60">/人</span></p>
-          </div>
-        </div>
-
-        <p class="text-xs text-text-secondary text-center leading-relaxed">
-          ※ 助成金額は企業規模・申請内容により異なります。詳しくはお問い合わせください。<br />
-          ※ 申請手続きのサポートも承ります。
+    <!-- CTA -->
+    <section class="saimon-section bg-navy text-white">
+      <div class="saimon-shell text-center">
+        <p class="saimon-eyebrow">CONTACT</p>
+        <h2 class="mt-3 text-2xl sm:text-3xl font-heading font-black text-white">まずはお気軽にご相談ください</h2>
+        <p class="mt-4 text-sm text-white/68">
+          助成金の申請手続きサポートから、貴社に最適な研修プランのご提案まで丁寧にご対応します。<br />
+          スケジュール・カリキュラムは業種・レベルに合わせて柔軟にカスタマイズ可能です。
         </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Note -->
-  <section class="py-16 bg-surface">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="bg-surface-dim rounded-2xl p-8 sm:p-10 border border-border">
-        <div class="flex items-start gap-3 mb-4">
-          <svg class="w-5 h-5 text-text-secondary shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-          </svg>
-          <p class="text-sm font-bold text-text-primary">備考</p>
+        <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="/#contact" class="inline-flex items-center justify-center rounded-md bg-teal px-7 py-3 text-sm font-bold text-white hover:bg-teal-dark transition-colors">
+            お問い合わせ
+          </a>
+          <a href={`mailto:${company.email}`} class="inline-flex items-center justify-center rounded-md border border-white/25 px-7 py-3 text-sm font-bold text-white hover:bg-white/10 transition-colors">
+            {company.email}
+          </a>
         </div>
-        <ul class="space-y-2 text-sm text-text-secondary">
-          <li class="flex items-start gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2 shrink-0" aria-hidden="true"></span>
-            <span>スケジュールは業種・レベルに合わせて柔軟にカスタマイズ可能です。</span>
-          </li>
-          <li class="flex items-start gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2 shrink-0" aria-hidden="true"></span>
-            <span>実習70%の構成で、受講者が即日業務に活かせるスキルを習得します。</span>
-          </li>
-          <li class="flex items-start gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-teal mt-2 shrink-0" aria-hidden="true"></span>
-            <span>研修後のフォローアップや伴走サポートもご相談いただけます。</span>
-          </li>
-        </ul>
       </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="py-20 sm:py-24 bg-navy">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <p class="font-heading text-sm font-bold tracking-[0.3em] uppercase text-teal mb-4">CONTACT</p>
-      <h2 class="text-2xl sm:text-3xl font-black text-white mb-4">まずはお気軽にご相談ください</h2>
-      <p class="text-sm text-white/60 mb-8 leading-relaxed">
-        助成金の申請手続きサポートから、貴社に最適な研修プランのご提案まで、丁寧にご対応いたします。
-      </p>
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a
-          href={`${base}#contact`}
-          class="inline-flex items-center gap-2 bg-teal text-white px-8 py-4 rounded-full font-bold hover:bg-teal-dark transition-colors duration-300"
-        >
-          お問い合わせ
-          <span aria-hidden="true">&rarr;</span>
-        </a>
-        <a
-          href={`mailto:${company.email}`}
-          class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white border border-white/30 px-8 py-4 rounded-full font-bold hover:bg-white/20 transition-all duration-300"
-        >
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-          {company.email}
-        </a>
-      </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
   <Footer />
 </BaseLayout>
 
 <script>
-  document.querySelectorAll('[data-tab-btn]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const tab = (btn as HTMLElement).dataset.tabBtn;
-
-      // Update button styles
-      document.querySelectorAll('[data-tab-btn]').forEach((b) => {
-        const el = b as HTMLElement;
-        if (el.dataset.tabBtn === tab) {
-          el.className = 'px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 bg-navy text-white';
-        } else {
-          el.className = 'px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 bg-navy/5 text-navy hover:bg-navy/10';
-        }
+  document.querySelectorAll<HTMLButtonElement>("[data-tab-btn]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const tab = btn.dataset.tabBtn;
+      document.querySelectorAll<HTMLButtonElement>("[data-tab-btn]").forEach((item) => {
+        const active = item.dataset.tabBtn === tab;
+        item.classList.toggle("bg-teal", active);
+        item.classList.toggle("text-white", active);
+        item.classList.toggle("bg-white", !active);
+        item.classList.toggle("text-navy", !active);
+        item.setAttribute("aria-pressed", active ? "true" : "false");
       });
-
-      // Toggle content visibility
-      document.querySelectorAll('[data-tab-content]').forEach((el) => {
-        const content = el as HTMLElement;
-        if (content.dataset.tabContent === tab) {
-          content.classList.remove('hidden');
-        } else {
-          content.classList.add('hidden');
-        }
+      document.querySelectorAll<HTMLElement>("[data-tab-content]").forEach((content) => {
+        content.classList.toggle("hidden", content.dataset.tabContent !== tab);
       });
     });
   });
