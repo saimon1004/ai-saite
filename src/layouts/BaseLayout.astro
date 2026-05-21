@@ -84,9 +84,35 @@ const resolvedCanonical = canonicalUrl || Astro.url.href;
         </script>
       </>
     )}
+
+    <slot name="head" />
   </head>
   <body class="min-h-screen flex flex-col bg-surface text-text-primary font-sans antialiased">
     <slot />
+
+    <!-- ハッシュ遷移の位置補正: 画像ロード等で全高が変わった後に再スクロール -->
+    <script is:inline>
+      (function () {
+        function scrollToHash() {
+          if (!window.location.hash) return;
+          var id = decodeURIComponent(window.location.hash.slice(1));
+          var el = document.getElementById(id);
+          if (!el) return;
+          el.scrollIntoView({ behavior: "auto", block: "start" });
+        }
+        function schedule() {
+          // 画像等のレイアウト確定を待つため、複数回タイミングを取る
+          requestAnimationFrame(scrollToHash);
+          setTimeout(scrollToHash, 150);
+          setTimeout(scrollToHash, 600);
+        }
+        if (document.readyState === "complete") {
+          schedule();
+        } else {
+          window.addEventListener("load", schedule, { once: true });
+        }
+      })();
+    </script>
 
     <!-- FAQ動画チャットボット -->
     <link rel="stylesheet" href={`${import.meta.env.BASE_URL}faq-chatbot.css`} />

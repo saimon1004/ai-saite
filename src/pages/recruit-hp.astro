@@ -1,0 +1,596 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/common/Header.astro";
+import Footer from "../components/common/Footer.astro";
+
+const base = import.meta.env.BASE_URL;
+const heroImg = `${base}recruit-hp/assets/hero-ai-jitsumu-poster.png`;
+const cssHref = `${base}recruit-hp/styles.css`;
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "未経験でも参加できますか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "はい。PC操作ができれば参加可能です。専門的なプログラミング経験は不要です。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "オンラインでも受講できますか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "はい。オンライン・対面どちらにも対応しています。",
+      },
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="採用HP内製化プログラム"
+  description="SAIMONの採用HP内製化プログラム。外注待ちで遅れがちな採用HP更新を、採用担当者がAIと一緒に社内で改善できる体制へ変える3日間の実践型研修です。"
+  jsonLd={faqJsonLd}
+>
+  <link rel="preload" as="image" href={heroImg} slot="head" />
+  <link rel="stylesheet" href={cssHref} slot="head" />
+
+  <Header />
+
+  <main class="recruit-lp-scope">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">AI IMPACT LAB — 採用HP内製化研修</p>
+        <h1 id="hero-title">
+          採用HPの<br />
+          <span class="hero-highlight">「ちょっと<span class="mobile-line">修正」が</span></span><br />
+          遅すぎる。
+        </h1>
+        <p class="hero-lead">
+          求人内容は今日変わるのに、会社HPの更新は来週。
+          その外注待ちをなくし、採用担当者がAIと一緒に更新できる体制をつくる3日間の実践型研修です。
+        </p>
+        <div class="hero-pain-quotes" aria-label="採用HP外注で起きがちな悩み">
+          <span>こんな小さな修正に何日かかるの？</span>
+          <span>募集条件を変えたいのに、また見積と確認待ち</span>
+          <span>出来上がったけど、全然イメージと違う</span>
+        </div>
+        <div class="hero-actions">
+          <a class="primary-cta" href="/#contact">
+            今の採用HPを無料で相談する
+            <span aria-hidden="true">→</span>
+          </a>
+          <p>未経験OK / <span class="no-break">オンライン・対面対応</span></p>
+        </div>
+      </div>
+
+      <div class="hero-media">
+        <img src={heroImg} alt="外注していた採用HPの修正作業をAI実務担当に任せて社内で進めるイメージ" />
+      </div>
+
+      <dl class="hero-metrics" aria-label="プログラム概要">
+        <div>
+          <dt>料金</dt>
+          <dd>1社<br /><strong>80万円〜</strong></dd>
+        </div>
+        <div>
+          <dt>参加人数</dt>
+          <dd><strong>2名</strong>まで</dd>
+        </div>
+        <div>
+          <dt>期間</dt>
+          <dd><strong>3日間</strong><br />計11時間</dd>
+        </div>
+        <div>
+          <dt>対象</dt>
+          <dd><strong>未経験OK</strong></dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="problem section-block" aria-labelledby="problem-title">
+      <div class="section-number">02</div>
+      <div class="section-grid">
+        <div class="problem-intro">
+          <p class="section-kicker">Problem</p>
+          <h2 id="problem-title">応募を増やしたいのに、<span class="no-break">採用HPだけ</span>更新が止まっていませんか？</h2>
+          <div class="problem-stall-visual" aria-hidden="true">
+            <div class="stall-page">
+              <span>採用HP</span>
+              <strong>募集要項の<br />修正待ち</strong>
+              <i></i>
+            </div>
+            <div class="stall-clock">
+              <b></b>
+              <span>外注待ち</span>
+              <strong>今日直したいのに<br />数日も止まる</strong>
+            </div>
+            <div class="stall-tags">
+              <span>見積</span>
+              <span>確認</span>
+              <span>再依頼</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="large-text">
+            求人票、媒体、スカウト文面はすぐ直せる。けれど会社HPだけは、外注・見積・確認待ちで遅れる。
+            その数日の遅れが、候補者の不安や応募前離脱につながります。
+          </p>
+          <ul class="check-list">
+            <li>募集要項・給与・勤務時間を変えたいのに反映が遅い</li>
+            <li>社員写真やインタビューを追加したいが、依頼が面倒</li>
+            <li>求人媒体やスカウト文面と、HPの情報がズレている</li>
+            <li>小さな修正でも、説明・見積・確認戻しが毎回発生する</li>
+            <li>採用現場の温度感が、サイトに反映されない</li>
+          </ul>
+          <div class="quick-fix-panel" aria-label="研修後に社内で直せる採用HP更新の例">
+            <p>研修後に社内で直せること</p>
+            <div>
+              <span>募集要項</span>
+              <span>採用メッセージ</span>
+              <span>社員写真</span>
+              <span>インタビュー</span>
+              <span>CTA文言</span>
+              <span>スマホ表示</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="feature" class="structure section-block" aria-labelledby="structure-title">
+      <div class="section-number">03</div>
+      <div class="section-grid structure-intro">
+        <div>
+          <p class="section-kicker">Core Value</p>
+          <h2 id="structure-title">
+            採用担当者と<br />
+            更新作業の距離が<br />
+            近いほど、<br />
+            改善は速くなる。
+          </h2>
+        </div>
+        <div>
+          <p class="value-box-title">現場の声を、その日のうちに採用HPへ</p>
+          <p class="large-text">
+            新規制作で外注が必要な場面はあります。けれど採用HPは、公開後の改善が成果を左右します。
+            採用したい人物像が変わったとき、募集条件が変わったとき、採用担当者がすぐ反映できる距離の近さが武器になります。
+          </p>
+          <ul class="value-points">
+            <li>募集条件の変更をすぐ反映できる</li>
+            <li>現場写真や社員の声を自社で追加できる</li>
+            <li>採用改善の判断軸が社内に残る</li>
+          </ul>
+        </div>
+      </div>
+      <div class="route-visual" aria-label="外注と内製化の進み方の比較">
+        <article class="route-card route-card-outsource">
+          <div class="route-illustration route-workflow-illustration" aria-hidden="true">
+            <div class="workflow-laptop workflow-laptop-wait">
+              <div class="workflow-bezel">
+                <div class="workflow-screen">
+                  <div class="workflow-toolbar">
+                    <span>外注待ちの流れ</span>
+                    <strong>修正依頼が社外を往復</strong>
+                    <b></b>
+                  </div>
+                  <div class="wait-dashboard">
+                    <div class="wait-request">
+                      <span>採用担当者</span>
+                      <strong>「募集要項を今日直したい」</strong>
+                    </div>
+                    <ol class="wait-pipeline">
+                      <li><span>01</span><strong>依頼</strong><em>意図を説明</em></li>
+                      <li><span>02</span><strong>確認・見積</strong><em>返事待ち</em></li>
+                      <li><span>03</span><strong>作業調整</strong><em>日程待ち</em></li>
+                      <li><span>04</span><strong>確認戻し</strong><em>再修正</em></li>
+                    </ol>
+                    <div class="wait-loop">
+                      <span>説明し直し</span>
+                      <span>見積待ち</span>
+                      <span>確認戻し</span>
+                      <span>修正待ち</span>
+                    </div>
+                    <div class="wait-result">
+                      <span>外注の待ち時間</span>
+                      <strong>一つの修正でも数日〜数週間</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <i class="workflow-base"></i>
+            </div>
+          </div>
+          <div class="route-copy">
+            <p class="route-label">外注した場合</p>
+            <h3>作業指示が何度も行き来し、更新のたびに時間がかかる。</h3>
+            <p>
+              採用担当者、社内確認者、外注先窓口、実務者の間で指示と確認が往復します。
+              小さな修正でも、説明・見積・日程調整・確認戻しが発生し、改善スピードが落ちます。
+            </p>
+          </div>
+        </article>
+
+        <article class="route-card route-card-inhouse route-card-future">
+          <div class="route-copy">
+            <p class="route-label">内製化した場合</p>
+            <h3>
+              採用HPが、現場の声で<br class="lp-break-md" />
+              <span class="future-emphasis">「毎週育つ」</span>資産になる。
+            </h3>
+            <p>
+              採用担当者が要望を伝え、AI実務担当が修正作業を実行。人は確認と公開に集中できるから、
+              採用HPは「作って終わり」ではなく、応募を増やすために育て続けられる場所になります。
+            </p>
+            <div class="future-stats" aria-label="内製化で得られる未来">
+              <span><strong>即日</strong>修正を反映</span>
+              <span><strong>毎週</strong>改善できる</span>
+              <span><strong>社内</strong>知見が残る</span>
+            </div>
+            <ul class="future-list">
+              <li>採用ターゲットが変わっても、すぐに訴求を直せる</li>
+              <li>現場のリアルな魅力を、社内の言葉で発信できる</li>
+              <li>更新のたびに、採用HPの改善ノウハウが蓄積される</li>
+            </ul>
+          </div>
+          <div class="route-illustration route-workflow-illustration route-workflow-inhouse" aria-hidden="true">
+            <div class="workflow-laptop workflow-laptop-ai">
+              <div class="workflow-bezel">
+                <div class="workflow-screen">
+                  <div class="workflow-toolbar">
+                    <span>AI実務担当</span>
+                    <strong>更新作業を社内で進行</strong>
+                    <b></b>
+                  </div>
+                  <div class="ai-dashboard">
+                    <div class="ai-agent">
+                      <i></i>
+                      <span>
+                        <strong>AI実務担当</strong>
+                        が採用HPの修正作業を実行します
+                      </span>
+                    </div>
+                    <div class="ai-board">
+                      <section>
+                        <p>1 指示する</p>
+                        <strong>採用ページを更新して</strong>
+                        <em>あなた</em>
+                      </section>
+                      <section>
+                        <p>2 実行中</p>
+                        <strong>修正作業を進める</strong>
+                        <ul>
+                          <li>募集要項修正</li>
+                          <li>写真追加</li>
+                          <li>CTA変更</li>
+                        </ul>
+                      </section>
+                      <section>
+                        <p>3 完了報告</p>
+                        <strong>修正完了</strong>
+                        <em>プレビュー更新</em>
+                      </section>
+                      <section>
+                        <p>4 確認・公開</p>
+                        <strong>見て決める</strong>
+                        <em>人が承認</em>
+                      </section>
+                    </div>
+                    <div class="ai-preview">
+                      <div class="preview-page">
+                        <span>更新後プレビュー</span>
+                        <strong>共に、未来をつくる。</strong>
+                        <b></b>
+                      </div>
+                      <div class="preview-mobile">
+                        <span>スマホ</span>
+                        <b></b>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <i class="workflow-base"></i>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="comparison section-block" aria-labelledby="comparison-title">
+      <div class="section-number">04</div>
+      <div class="section-heading">
+        <p class="section-kicker">Comparison</p>
+        <h2 id="comparison-title">外注と内製化の違い</h2>
+        <p class="comparison-lead">
+          外注は「作る」には有効です。けれど採用HPは、公開後にどれだけ速く直せるかが成果を左右します。
+        </p>
+      </div>
+      <div class="comparison-summary" aria-label="比較の要約">
+        <article class="summary-card summary-outsource">
+          <p>通常の外注</p>
+          <h3>制作のたびに、費用と待ち時間が発生する。</h3>
+          <span>依頼 → 見積 → 制作 → 確認 → 修正</span>
+        </article>
+        <article class="summary-card summary-inhouse">
+          <p>採用HP内製化</p>
+          <h3>改善できる人と仕組みが、社内に残る。</h3>
+          <span>相談 → その場で修正 → 検証 → 改善</span>
+        </article>
+      </div>
+      <div class="comparison-board" role="table" aria-label="外注と内製化の比較表">
+        <div class="compare-head" role="row">
+          <span role="columnheader">比較項目</span>
+          <span role="columnheader">外注で制作・運用</span>
+          <span role="columnheader">採用HPを内製化</span>
+        </div>
+        <div class="compare-row" role="row">
+          <div class="compare-axis" role="rowheader"><span>¥</span>費用</div>
+          <div class="compare-cell outsource-cell" role="cell">
+            <strong>数十万〜数百万円</strong>
+            <p>制作・改修のたびに都度見積。</p>
+            <em>都度費用</em>
+          </div>
+          <div class="compare-cell inhouse-cell" role="cell">
+            <strong>1社80万円〜</strong>
+            <p>制作体制と更新ノウハウを社内に残す。</p>
+            <em>資産化</em>
+          </div>
+        </div>
+        <div class="compare-row" role="row">
+          <div class="compare-axis" role="rowheader"><span>⏱</span>納期</div>
+          <div class="compare-cell outsource-cell" role="cell">
+            <strong>1〜6ヶ月程度</strong>
+            <p>依頼・設計・制作・確認の工程が長い。</p>
+            <em>待ち時間</em>
+          </div>
+          <div class="compare-cell inhouse-cell" role="cell">
+            <strong>3日間でプロトタイプ</strong>
+            <p>研修内で公開可能な形まで制作。</p>
+            <em>短期集中</em>
+          </div>
+        </div>
+        <div class="compare-row" role="row">
+          <div class="compare-axis" role="rowheader"><span>↻</span>更新</div>
+          <div class="compare-cell outsource-cell" role="cell">
+            <strong>依頼・見積・順番待ち</strong>
+            <p>小さな修正でも外部とのやり取りが必要。</p>
+            <em>修正待ち</em>
+          </div>
+          <div class="compare-cell inhouse-cell" role="cell">
+            <strong>社内で即改善</strong>
+            <p>募集内容や現場の変化をすぐ反映。</p>
+            <em>即反映</em>
+          </div>
+        </div>
+        <div class="compare-row" role="row">
+          <div class="compare-axis" role="rowheader"><span>⇄</span>意図</div>
+          <div class="compare-cell outsource-cell" role="cell">
+            <strong>伝言ゲームになりやすい</strong>
+            <p>採用現場のニュアンスが複数人を経由して薄まる。</p>
+            <em>認識ズレ</em>
+          </div>
+          <div class="compare-cell inhouse-cell" role="cell">
+            <strong>近い距離で反映</strong>
+            <p>採用担当者の判断を制作・更新に直結させる。</p>
+            <em>意図通り</em>
+          </div>
+        </div>
+        <div class="compare-row" role="row">
+          <div class="compare-axis" role="rowheader"><span>✓</span>知見</div>
+          <div class="compare-cell outsource-cell" role="cell">
+            <strong>外部に残りやすい</strong>
+            <p>改善理由や制作ノウハウが社内に残りにくい。</p>
+            <em>リセット</em>
+          </div>
+          <div class="compare-cell inhouse-cell" role="cell">
+            <strong>社内に蓄積</strong>
+            <p>採用改善の判断軸と制作知見が育つ。</p>
+            <em>継続改善</em>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="outcomes section-block" aria-labelledby="outcomes-title">
+      <div class="section-number">05</div>
+      <div class="section-grid">
+        <div class="outcomes-intro">
+          <p class="section-kicker">Outcomes</p>
+          <h2 id="outcomes-title">3日間で、<br />採用担当者が直せる<br class="lp-break-md" />土台をつくる。</h2>
+          <p class="outcomes-lead">
+            研修で終わらせず、採用HPを日々改善するためのプロトタイプと更新判断を社内に残します。
+          </p>
+          <div class="outcomes-build-visual" aria-hidden="true">
+            <div class="build-screen">
+              <span>採用HP prototype</span>
+              <strong>更新の土台が<br />社内に残る</strong>
+              <b></b>
+            </div>
+            <ol>
+              <li><b>DAY 1</b>設計</li>
+              <li><b>DAY 2</b>試作</li>
+              <li><b>DAY 3</b>運用</li>
+            </ol>
+          </div>
+        </div>
+        <div class="outcome-grid">
+          <article class="outcome-card outcome-web" data-index="01">
+            <span class="outcome-icon" aria-hidden="true"></span>
+            <p class="outcome-step">01 / Prototype</p>
+            <h3>自社HPのプロトタイプ</h3>
+            <p>採用ターゲット、募集条件、現場の魅力を反映した、公開可能なWebプロトタイプを制作します。</p>
+            <em>現場の魅力を形にする</em>
+          </article>
+          <article class="outcome-card outcome-lp" data-index="02">
+            <span class="outcome-icon" aria-hidden="true"></span>
+            <p class="outcome-step">02 / Landing Page</p>
+            <h3>採用LPのプロトタイプ</h3>
+            <p>募集職種や採用メッセージに合わせたLP構成・コピー・見せ方を実践します。</p>
+            <em>応募導線を設計する</em>
+          </article>
+          <article class="outcome-card outcome-cms" data-index="03">
+            <span class="outcome-icon" aria-hidden="true"></span>
+            <p class="outcome-step">03 / CMS</p>
+            <h3>CMS更新体制</h3>
+            <p>募集要項・社員紹介・採用メッセージを社内で直すための基本フローと、CMS運用の基礎を学びます。</p>
+            <em>更新を止めない</em>
+          </article>
+          <article class="outcome-card outcome-ai" data-index="04">
+            <span class="outcome-icon" aria-hidden="true"></span>
+            <p class="outcome-step">04 / AI Workflow</p>
+            <h3>AI共創制作の進め方</h3>
+            <p>Claude CodeやCodex等を活用し、未経験でも制作を進める考え方を身につけます。</p>
+            <em>内製化を続ける</em>
+          </article>
+          <div class="outcome-center" aria-hidden="true">
+            <strong>社内に残る資産</strong>
+            <span>採用担当者が迷わず直せる更新判断</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="curriculum" class="curriculum section-block" aria-labelledby="curriculum-title">
+      <div class="section-number">06</div>
+      <div class="section-heading">
+        <p class="section-kicker">Curriculum</p>
+        <h2 id="curriculum-title">3日間・計11時間の実践カリキュラム</h2>
+        <p class="curriculum-lead">
+          採用現場の課題整理から、プロトタイプ制作、更新体制づくりまでを一気通貫で進めます。
+        </p>
+        <div class="curriculum-meta" aria-label="カリキュラム概要">
+          <span><strong>3日間</strong>短期集中</span>
+          <span><strong>11時間</strong>実践型</span>
+          <span><strong>1社2名</strong>参加目安</span>
+        </div>
+      </div>
+      <div class="days">
+        <article class="day-card day-design">
+          <p class="day-label">DAY 1</p>
+          <span class="day-verb">Strategy</span>
+          <h3>設計する</h3>
+          <p>採用HPの役割、採用ターゲット、現場の魅力、応募導線を整理します。</p>
+          <ul>
+            <li>採用戦略とターゲットの明確化</li>
+            <li>現場の強み・ストーリーの言語化</li>
+            <li>応募につながるサイト構成・コンテンツ設計</li>
+          </ul>
+          <div class="day-output">
+            <span>Output</span>
+            採用HP構成案
+          </div>
+        </article>
+        <article class="day-card day-build">
+          <p class="day-label">DAY 2</p>
+          <span class="day-verb">Build</span>
+          <h3>つくる</h3>
+          <p>Claude CodeやCodex等を活用し、採用LP・HPプロトタイプを制作します。</p>
+          <ul>
+            <li>ページ制作とデザイン調整</li>
+            <li>募集要項・社員写真・採用コピーの反映</li>
+            <li>スマホ表示の確認</li>
+          </ul>
+          <div class="day-output">
+            <span>Output</span>
+            公開可能なプロトタイプ
+          </div>
+        </article>
+        <article class="day-card day-grow">
+          <p class="day-label">DAY 3</p>
+          <span class="day-verb">Grow</span>
+          <h3>育てる</h3>
+          <p>CMS運用、更新フロー、公開前チェック、採用改善の次アクションを整理します。</p>
+          <ul>
+            <li>CMSの基本と更新体制</li>
+            <li>公開前チェックと改善視点</li>
+            <li>内製化の定着プラン策定</li>
+          </ul>
+          <div class="day-output">
+            <span>Output</span>
+            更新・改善フロー
+          </div>
+        </article>
+      </div>
+      <p class="note">※研修内で制作するものは公開可能なプロトタイプです。最終公開には内容確認・必要に応じた調整が必要です。貴社状況に応じて、内容のカスタマイズは可能です。AIツール選定も、最良のものを随時選定いたします。</p>
+    </section>
+
+    <section id="price" class="price section-block" aria-labelledby="price-title">
+      <div class="section-number">07</div>
+      <div class="price-layout">
+        <div>
+          <p class="section-kicker">Price</p>
+          <h2 id="price-title">料金・<span class="no-break">助成金のご案内</span></h2>
+          <p class="large-text">
+            1社2名まで参加できる法人研修です。3名以上の参加、内容カスタマイズはご相談ください。
+          </p>
+        </div>
+        <div class="price-panel">
+          <p>1社</p>
+          <p class="price-main"><strong>80</strong>万円〜</p>
+          <p class="price-detail"><span class="no-break">2名まで</span> / <span class="no-break">3日間・計11時間</span> / <span class="no-break">オンライン・対面対応</span></p>
+        </div>
+        <div class="subsidy-panel">
+          <p class="subsidy-tag">助成金の活用で</p>
+          <p><strong>最大75%</strong>助成の可能性</p>
+          <span>
+            人材開発支援助成金などの対象となる可能性があります。活用可否・助成額は、企業条件・申請内容・審査結果により異なります。
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-band" aria-labelledby="cta-title">
+      <p class="section-kicker">Contact</p>
+      <h2 id="cta-title">
+        <span class="cta-title-line">外注待ちの採用HPから、</span>
+        <span class="cta-title-line">採用担当者が直せる採用HPへ。</span>
+      </h2>
+      <p>
+        まずは現在のHP状況、更新に詰まっている箇所、<br class="lp-break-md" />
+        助成金活用の可能性を無料でご相談ください。
+      </p>
+      <a class="primary-cta" href="/#contact">
+        今の採用HPを無料で相談する
+        <span aria-hidden="true">→</span>
+      </a>
+    </section>
+
+    <section id="faq" class="faq section-block" aria-labelledby="faq-title">
+      <div class="section-number">08</div>
+      <div class="section-heading">
+        <p class="section-kicker">FAQ</p>
+        <h2 id="faq-title">よくある質問</h2>
+      </div>
+      <div class="faq-list">
+        <details>
+          <summary>未経験でも参加できますか？</summary>
+          <p>はい。PC操作ができれば参加可能です。専門的なプログラミング経験は不要です。</p>
+        </details>
+        <details>
+          <summary>研修内で完成版サイトまで公開できますか？</summary>
+          <p>研修内では公開可能なプロトタイプ制作を目指します。最終公開には内容確認や必要な調整が必要です。</p>
+        </details>
+        <details>
+          <summary>オンラインでも受講できますか？</summary>
+          <p>はい。オンライン・対面どちらにも対応しています。</p>
+        </details>
+        <details>
+          <summary>既存HPがWordPressでも対応できますか？</summary>
+          <p>既存環境を確認したうえで、更新体制やCMS運用の進め方をご提案します。</p>
+        </details>
+        <details>
+          <summary>助成金は必ず使えますか？</summary>
+          <p>助成金の活用可否・助成額は、企業条件・申請内容・審査結果により異なります。無料相談時に確認ポイントをご案内します。</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>

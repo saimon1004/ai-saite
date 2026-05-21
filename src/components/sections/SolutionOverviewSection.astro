@@ -1,29 +1,41 @@
 ---
 const base = import.meta.env.BASE_URL;
 
-const solutions = [
+interface Solution {
+  title: string;
+  description: string;
+  image: string;
+  href: string;
+  badge?: { label: string; tone: "new" | "popular" };
+}
+
+const solutions: Solution[] = [
   {
     title: "AI研修",
     description: "実務に必要なAIスキルを、体系的に学べる研修プログラム。",
     image: "pillar-genba.jpg",
     href: "#modules",
-    isNew: false,
   },
   {
-    title: "制作実績",
-    description: "研修を通じて生まれた成果・プロジェクト事例をご紹介。",
-    image: "case-site-image-02.png",
-    href: "#cases",
-    isNew: false,
+    title: "HP制作の内製化",
+    description: "採用HPを採用担当者がAIと一緒に更新できる体制をつくる3日間。外注待ちをなくし、改善を社内資産に。",
+    image: "recruit-hp/assets/hero-ai-jitsumu-poster.png",
+    href: "/recruit-hp/",
+    badge: { label: "人気", tone: "popular" },
   },
   {
     title: "石垣島研修",
     description: "石垣島の自然のなかで、AI実践研修とチームビルディングを4日間で。",
     image: "ishigaki/cover.jpg",
     href: "/ishigaki/",
-    isNew: true,
+    badge: { label: "NEW", tone: "new" },
   },
 ];
+
+const badgeStyles: Record<"new" | "popular", string> = {
+  new: "bg-amber-400 text-navy ring-2 ring-white",
+  popular: "bg-teal text-white ring-2 ring-white",
+};
 ---
 
 <section id="solution" class="saimon-section bg-white">
@@ -41,9 +53,12 @@ const solutions = [
     <div class="grid gap-5 md:grid-cols-3">
       {solutions.map((item) => (
         <a href={item.href} class="group relative saimon-card overflow-hidden hover:border-navy/25 hover:shadow-card-hover transition-all duration-300">
-          {item.isNew && (
-            <span class="absolute top-3 right-3 z-10 inline-flex items-center justify-center px-2 py-0.5 text-[10px] font-heading font-black tracking-widest rounded-full bg-amber-400 text-navy shadow-md ring-2 ring-white">
-              NEW
+          {item.badge && (
+            <span class:list={[
+              "absolute top-3 right-3 z-10 inline-flex items-center justify-center px-2 py-0.5 text-[10px] font-heading font-black tracking-widest rounded-full shadow-md",
+              badgeStyles[item.badge.tone],
+            ]}>
+              {item.badge.label}
             </span>
           )}
           <div class="aspect-[4/2.65] overflow-hidden">
