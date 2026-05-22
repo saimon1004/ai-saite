@@ -60,10 +60,16 @@ const faqJsonLd = {
           <span>出来上がったけど、全然イメージと違う</span>
         </div>
         <div class="hero-actions">
-          <a class="primary-cta" href="/#contact">
-            今の採用HPを無料で相談する
-            <span aria-hidden="true">→</span>
-          </a>
+          <div class="cta-pair">
+            <a class="primary-cta" href="#contact-form" data-cta-source="hero-primary">
+              今の採用HPを無料で相談する
+              <span aria-hidden="true">→</span>
+            </a>
+            <a class="secondary-cta" href="?type=download#contact-form" data-cta-source="hero-secondary">
+              資料を無料ダウンロード
+              <span aria-hidden="true">↓</span>
+            </a>
+          </div>
           <p>未経験OK / <span class="no-break">オンライン・対面対応</span></p>
         </div>
       </div>
@@ -555,10 +561,78 @@ const faqJsonLd = {
         まずは現在のHP状況、更新に詰まっている箇所、<br class="lp-break-md" />
         助成金活用の可能性を無料でご相談ください。
       </p>
-      <a class="primary-cta" href="/#contact">
-        今の採用HPを無料で相談する
-        <span aria-hidden="true">→</span>
-      </a>
+      <div class="cta-pair cta-pair-band">
+        <a class="primary-cta" href="#contact-form" data-cta-source="band-primary">
+          今の採用HPを無料で相談する
+          <span aria-hidden="true">→</span>
+        </a>
+        <a class="secondary-cta" href="?type=download#contact-form" data-cta-source="band-secondary">
+          資料を無料ダウンロード
+          <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </section>
+
+    <section id="contact-form" class="contact-form-section section-block" aria-labelledby="contact-form-title">
+      <div class="section-number">09</div>
+      <div class="section-heading">
+        <p class="section-kicker">Form</p>
+        <h2 id="contact-form-title">無料相談・資料請求フォーム</h2>
+        <p class="contact-form-lead">
+          ご記入いただいた内容をもとに、1営業日以内に担当よりご連絡いたします。
+          「助成金が使えるか先に知りたい」「まずは資料だけ欲しい」もお気軽にどうぞ。
+        </p>
+      </div>
+
+      <form id="lead-form" class="lead-form" novalidate>
+        <div class="lead-form-row lead-form-row-double">
+          <label class="form-field">
+            <span class="form-label">会社名<em aria-hidden="true">*</em></span>
+            <input type="text" name="company" required autocomplete="organization" placeholder="株式会社サンプル" />
+          </label>
+          <label class="form-field">
+            <span class="form-label">お名前<em aria-hidden="true">*</em></span>
+            <input type="text" name="name" required autocomplete="name" placeholder="山田 太郎" />
+          </label>
+        </div>
+
+        <div class="lead-form-row">
+          <label class="form-field">
+            <span class="form-label">メールアドレス<em aria-hidden="true">*</em></span>
+            <input type="email" name="email" required autocomplete="email" placeholder="taro@example.com" />
+          </label>
+        </div>
+
+        <div class="lead-form-row">
+          <label class="form-field">
+            <span class="form-label">ご相談内容（任意）</span>
+            <textarea name="challenges" rows="4" placeholder="例：採用HPを最後に更新したのが2年前で、応募が減っている。AIで内製化できるか相談したい。"></textarea>
+          </label>
+        </div>
+
+        <div class="lead-form-row form-field-checkbox form-field-consent">
+          <label>
+            <input type="checkbox" name="consent" required value="yes" />
+            <span>
+              <a href="/privacy-policy/" target="_blank" rel="noopener">個人情報の取り扱い</a>に同意の上、送信します<em aria-hidden="true">*</em>
+            </span>
+          </label>
+        </div>
+
+        <div aria-hidden="true" class="form-honeypot">
+          <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <div class="lead-form-actions">
+          <button type="submit" class="primary-cta lead-form-submit">
+            送信する
+            <span aria-hidden="true">→</span>
+          </button>
+          <p class="lead-form-note">送信後、1営業日以内に担当よりご連絡いたします。</p>
+        </div>
+
+        <p id="form-feedback" class="form-feedback" role="status" aria-live="polite"></p>
+      </form>
     </section>
 
     <section id="faq" class="faq section-block" aria-labelledby="faq-title">
@@ -593,4 +667,100 @@ const faqJsonLd = {
   </main>
 
   <Footer />
+
+  <script is:inline>
+    (function () {
+      const FORM_ENDPOINT = "https://mycareer-recruit-hp-insourcing-lp.vercel.app/api/contact";
+
+      const form = document.getElementById("lead-form");
+      if (!form) return;
+
+      const feedback = document.getElementById("form-feedback");
+      const submitBtn = form.querySelector(".lead-form-submit");
+
+      function resolveSource() {
+        try {
+          const url = new URL(window.location.href);
+          return url.searchParams.get("type") === "download"
+            ? "LP資料DL"
+            : "LP無料相談";
+        } catch (_) {
+          return "LP無料相談";
+        }
+      }
+
+      function collectUtm() {
+        try {
+          const url = new URL(window.location.href);
+          return {
+            utmSource: url.searchParams.get("utm_source") || "",
+            utmCampaign: url.searchParams.get("utm_campaign") || "",
+          };
+        } catch (_) {
+          return { utmSource: "", utmCampaign: "" };
+        }
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "送信中...";
+        feedback.className = "form-feedback";
+        feedback.textContent = "";
+
+        const data = new FormData(form);
+        const utm = collectUtm();
+        const payload = {
+          source: resolveSource(),
+          company: data.get("company"),
+          name: data.get("name"),
+          email: data.get("email"),
+          challenges: data.get("challenges"),
+          consent: data.get("consent") === "yes",
+          website: data.get("website") || "",
+          utmSource: utm.utmSource,
+          utmCampaign: utm.utmCampaign,
+        };
+
+        try {
+          const res = await fetch(FORM_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const body = await res.json().catch(() => ({}));
+
+          if (!res.ok) {
+            throw new Error(body.error || "送信に失敗しました");
+          }
+
+          feedback.classList.add("is-success");
+          feedback.textContent =
+            body.message || "お問い合わせを受け付けました。1営業日以内にご連絡いたします。";
+          form.reset();
+          submitBtn.textContent = "送信完了";
+
+          if (typeof window.gtag === "function") {
+            window.gtag("event", "generate_lead", {
+              event_category: "form",
+              event_label: payload.source,
+            });
+          }
+        } catch (err) {
+          feedback.classList.add("is-error");
+          feedback.textContent =
+            err.message ||
+            "送信に失敗しました。お手数ですが info@sai-mon.co.jp まで直接ご連絡ください。";
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '送信する <span aria-hidden="true">→</span>';
+        }
+      });
+    })();
+  </script>
 </BaseLayout>
