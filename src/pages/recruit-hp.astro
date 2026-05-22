@@ -5,7 +5,9 @@ import Footer from "../components/common/Footer.astro";
 
 const base = import.meta.env.BASE_URL;
 const heroImg = `${base}recruit-hp/assets/hero-ai-jitsumu-poster.png`;
-const cssHref = `${base}recruit-hp/styles.css`;
+// CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
+const cssVersion = "20260522-form";
+const cssHref = `${base}recruit-hp/styles.css?v=${cssVersion}`;
 
 const faqJsonLd = {
   "@context": "https://schema.org",
