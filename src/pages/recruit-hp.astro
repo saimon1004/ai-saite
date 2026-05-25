@@ -6,7 +6,7 @@ import Footer from "../components/common/Footer.astro";
 const base = import.meta.env.BASE_URL;
 const heroImg = `${base}recruit-hp/assets/hero-ai-jitsumu-poster.png`;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260522-form";
+const cssVersion = "20260525-h3line";
 const cssHref = `${base}recruit-hp/styles.css?v=${cssVersion}`;
 
 const faqJsonLd = {
@@ -105,7 +105,11 @@ const faqJsonLd = {
       <div class="section-grid">
         <div class="problem-intro">
           <p class="section-kicker">Problem</p>
-          <h2 id="problem-title">応募を増やしたいのに、<span class="no-break">採用HPだけ</span>更新が止まっていませんか？</h2>
+          <h2 id="problem-title">
+            応募を増やしたいのに、<br />
+            採用HPだけ更新が<br />
+            止まっていませんか？
+          </h2>
           <div class="problem-stall-visual" aria-hidden="true">
             <div class="stall-page">
               <span>採用HP</span>
@@ -157,9 +161,8 @@ const faqJsonLd = {
         <div>
           <p class="section-kicker">Core Value</p>
           <h2 id="structure-title">
-            採用担当者と<br />
-            更新作業の距離が<br />
-            近いほど、<br />
+            採用担当者と更新作業の<br />
+            距離が近いほど、<br />
             改善は速くなる。
           </h2>
         </div>
@@ -228,8 +231,8 @@ const faqJsonLd = {
           <div class="route-copy">
             <p class="route-label">内製化した場合</p>
             <h3>
-              採用HPが、現場の声で<br class="lp-break-md" />
-              <span class="future-emphasis">「毎週育つ」</span>資産になる。
+              <span class="rc-h3-line">採用HPが、現場の声で</span>
+              <span class="rc-h3-line"><span class="future-emphasis">「毎週育つ」</span>資産になる。</span>
             </h3>
             <p>
               採用担当者が要望を伝え、AI実務担当が修正作業を実行。人は確認と公開に集中できるから、
@@ -410,7 +413,10 @@ const faqJsonLd = {
       <div class="section-grid">
         <div class="outcomes-intro">
           <p class="section-kicker">Outcomes</p>
-          <h2 id="outcomes-title">3日間で、<br />採用担当者が直せる<br class="lp-break-md" />土台をつくる。</h2>
+          <h2 id="outcomes-title">
+            3日間で、採用担当者が<br />
+            直せる土台をつくる。
+          </h2>
           <p class="outcomes-lead">
             研修で終わらせず、採用HPを日々改善するためのプロトタイプと更新判断を社内に残します。
           </p>
