@@ -78,6 +78,7 @@ export interface CaseStudy {
     company: string;
     image: string;
     quote: string;
+    imagePosition?: string;
   };
 }
 
@@ -338,6 +339,53 @@ export const aiImpactLab = {
         image: "interview-02.jpg",
         quote:
           "サービスサイトのリニューアルは以前から課題でしたが、制作会社に依頼すると費用も時間もかかるため後回しにしていました。この研修でBubbleとClaude Codeの組み合わせを学んだことで、自分たちで短期間にリニューアルを完了できました。AIに「この部分をもっと見やすくして」と伝えるだけで具体的な改善案が返ってくるので、デザインの知識がなくても迷わず進められます。リニューアル後はサイト経由の問い合わせが増え、採用活動にも好影響が出ています。何より、社長のイメージを社内でいち早く具現化できる体制が整ったことが、弊社の事業戦略上もっともインパクトが大きいと感じています。",
+      },
+    },
+    {
+      number: "03",
+      titleEn: "Website Renewal",
+      titleJa: "HPのリニューアル",
+      image: "case-site-image-03.jpg",
+      description:
+        "AIを活用して、自社コーポレートサイトをゼロから刷新。専門知識がなくても、日本語の指示だけでデザインからページ構築までを進め、自分たちの手でHPをリニューアルできる体制を実現しました。",
+      url: "https://ir-estate.jp/",
+      tools: ["OpenAI Codex", "VS Code", "React / Next.js", "Git"],
+      steps: [
+        {
+          title: "現状把握",
+          description: "既存HPの課題をCodexと一緒に洗い出し、リニューアルの方針を整理",
+        },
+        {
+          title: "構成・デザイン設計",
+          description: "サイト構成とデザインの方向性をCodexに相談しながら決定",
+        },
+        {
+          title: "Codexで実装",
+          description: "Codexに日本語で指示し、ページを一つずつ構築",
+        },
+        {
+          title: "修正・調整",
+          description: "ブラウザでプレビューしながら「ここをこう直して」と指示して微調整",
+        },
+        {
+          title: "公開・運用",
+          description: "本番公開後も、社内で自由に更新・改善できる体制を整備",
+        },
+      ],
+      highlights: [
+        "AI初心者でも自社HPを自分の手でリニューアル",
+        "Codexに「伝えるだけ」で本格的なサイト制作",
+        "公開後も社内で自由に更新・改善できる",
+      ],
+      color: "from-violet-600 to-fuchsia-600",
+      interview: {
+        name: "岡村 様",
+        role: "",
+        company: "株式会社IR estate",
+        image: "interview-03.jpg",
+        imagePosition: "70% 22%",
+        quote:
+          "正直なところ、普段ChatGPTもそこまで使ったことがなく、自分にWebサイトの制作なんてできるとは思っていませんでした。専門的な知識もないので、最初は『本当に自分にできるのか』と半信半疑で受講しました。ところが、Codexに日本語で指示するだけでページがどんどん形になっていくのを目の当たりにして、『自分にもできるんだ』と一気に世界が広がった感覚でした。今では会社のHPを自分の手で更新でき、伝えたいことをすぐ形にできます。できないと思い込んでいたことが、こんなに身近になるとは思いませんでした。",
       },
     },
   ] as CaseStudy[],
