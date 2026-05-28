@@ -6,7 +6,7 @@ import Footer from "../components/common/Footer.astro";
 const base = import.meta.env.BASE_URL;
 const heroImg = `${base}recruit-hp/assets/hero-ai-jitsumu-poster.png`;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260525-h3line";
+const cssVersion = "20260528-eyecatchcrop";
 const cssHref = `${base}recruit-hp/styles.css?v=${cssVersion}`;
 
 const faqJsonLd = {
@@ -52,6 +52,9 @@ const faqJsonLd = {
           <span class="hero-highlight">「ちょっと<span class="mobile-line">修正」が</span></span><br />
           遅すぎる。
         </h1>
+        <div class="hero-eyecatch" aria-hidden="true">
+          <img src={heroImg} alt="" />
+        </div>
         <p class="hero-lead">
           求人内容は今日変わるのに、会社HPの更新は来週。
           その外注待ちをなくし、採用担当者がAIと一緒に更新できる体制をつくる3日間の実践型研修です。
