@@ -3935,6 +3935,7 @@ details p {
 
 .recruit-lp-scope .form-field input[type="text"],
 .recruit-lp-scope .form-field input[type="email"],
+.recruit-lp-scope .form-field input[type="tel"],
 .recruit-lp-scope .form-field input[type="date"],
 .recruit-lp-scope .form-field select,
 .recruit-lp-scope .form-field textarea {

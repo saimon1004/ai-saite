@@ -6,7 +6,7 @@ import Footer from "../components/common/Footer.astro";
 const base = import.meta.env.BASE_URL;
 const heroImg = `${base}recruit-hp/assets/hero-ai-jitsumu-poster.png`;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260603-caselead";
+const cssVersion = "20260605-phone2";
 const cssHref = `${base}recruit-hp/styles.css?v=${cssVersion}`;
 
 const faqJsonLd = {
@@ -496,7 +496,7 @@ const faqJsonLd = {
       <div class="section-heading">
         <p class="section-kicker">Case Study</p>
         <h2 id="case-title">
-          応募が<span class="case-emphasis">前年比1.8倍</span>に。<br />
+          応募が<span class="case-emphasis">前年比137%</span>に。<br />
           <span class="no-break">採用HPを内製化した、</span><span class="no-break">実際の成果。</span>
         </h2>
         <p class="case-lead">
@@ -509,7 +509,7 @@ const faqJsonLd = {
         <article class="case-stat case-stat-hero">
           <p class="case-stat-label">応募数</p>
           <p class="case-stat-value">
-            <strong>1.8</strong><span class="case-stat-unit">倍</span>
+            <strong>137</strong><span class="case-stat-unit">%</span>
           </p>
           <p class="case-stat-note">前年比（公開後）</p>
         </article>
@@ -538,10 +538,10 @@ const faqJsonLd = {
         <div class="case-card-copy">
           <p class="case-card-company">株式会社NASH ／ 上本 様</p>
           <h3 class="case-card-title">
-            <span class="no-break">採用サイトを内製化し、</span><span class="no-break">応募数1.8倍に。</span>
+            <span class="no-break">採用サイトを内製化し、</span><span class="no-break">応募数137%に。</span>
           </h3>
           <p class="case-card-quote">
-            「採用サイトのリニューアルを任されたとき、最初は制作会社への外注を考えていました。見積もりは数百万円、修正のたびに追加費用がかかると聞いて悩んでいたところ、この研修を知りました。受講後は<strong>AIに日本語で指示するだけでサイトが形になっていく</strong>のが衝撃的で、デザイン修正も『ここをもう少し明るく』と伝えるだけ。公開後は<strong>応募数が前年比1.8倍</strong>に増え、今では他部署からも『うちのページも作って』と相談が来ています。」
+            「採用サイトのリニューアルを任されたとき、最初は制作会社への外注を考えていました。見積もりは数百万円、修正のたびに追加費用がかかると聞いて悩んでいたところ、この研修を知りました。受講後は<strong>AIに日本語で指示するだけでサイトが形になっていく</strong>のが衝撃的で、デザイン修正も『ここをもう少し明るく』と伝えるだけ。公開後は<strong>応募数が前年比137%</strong>に増え、今では他部署からも『うちのページも作って』と相談が来ています。」
           </p>
           <ul class="case-card-tools" aria-label="使用ツール">
             <li>Claude Code</li>
@@ -691,10 +691,14 @@ const faqJsonLd = {
           </label>
         </div>
 
-        <div class="lead-form-row">
+        <div class="lead-form-row lead-form-row-double">
           <label class="form-field">
             <span class="form-label">メールアドレス<em aria-hidden="true">*</em></span>
             <input type="email" name="email" required autocomplete="email" placeholder="taro@example.com" />
+          </label>
+          <label class="form-field">
+            <span class="form-label">電話番号<em aria-hidden="true">*</em></span>
+            <input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="0312345678" />
           </label>
         </div>
 
@@ -819,6 +823,7 @@ const faqJsonLd = {
           company: data.get("company"),
           name: data.get("name"),
           email: data.get("email"),
+          phone: data.get("phone"),
           challenges: data.get("challenges"),
           consent: data.get("consent") === "yes",
           website: data.get("website") || "",
