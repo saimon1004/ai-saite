@@ -92,8 +92,10 @@
   /* ===== セクション共通 ===== */
   section.block{padding:84px 0}
   .eyebrow{display:inline-block;color:var(--teal-dark);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
-  .sec-title{font-size:clamp(24px,4.4vw,38px);font-weight:900;color:var(--navy);letter-spacing:.01em}
-  .sec-lead{margin-top:16px;color:var(--gray);font-size:16px;max-width:640px}
+  .sec-title{font-size:clamp(24px,4.4vw,38px);font-weight:900;color:var(--navy);letter-spacing:.01em;text-wrap:balance}
+  .sec-lead{margin-top:16px;color:var(--gray);font-size:16px;max-width:640px;text-wrap:balance}
+  /* 日本語の折り返しを自然に（孤立文字・語中改行を抑制）。未対応ブラウザは無視 */
+  .hero .sub,.pain-card p,.pain-card span,.offer-card p,.offer-card .note,.persona p,.persona span,.plan .for,.plan .term,.ba li,.step p,.founder p,.faq .a,.final p,.price-note{text-wrap:pretty;word-break:auto-phrase}
   .center{text-align:center}
   .center .sec-lead{margin-left:auto;margin-right:auto}
   .bg-light{background:var(--light)}
@@ -164,7 +166,7 @@
   .plan .for{font-size:13px;color:var(--gray);background:var(--light);border-radius:10px;padding:10px 14px;margin-bottom:22px}
   .plan .btn{width:100%}
   .plan-sub{background:var(--navy);color:#fff}
-  .price-note{text-align:center;margin-top:26px;color:var(--gray);font-size:13px}
+  .price-note{text-align:left;max-width:620px;margin:26px auto 0;color:var(--gray);font-size:13px;line-height:1.85}
 
   /* ===== 流れ ===== */
   .flow{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px}
