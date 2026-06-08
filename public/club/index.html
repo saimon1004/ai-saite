@@ -565,7 +565,7 @@
       </details>
       <details>
         <summary>途中で解約はできますか？</summary>
-        <div class="a">月額制の自動更新サブスクリプションです。3ヶ月／6ヶ月プランは「その期間を目安に継続いただく」ことをおすすめしていますが、<b>解約はいつでも可能</b>です。次回の更新日の前日までに<a href="#" data-portal style="color:var(--teal-dark);font-weight:700">カスタマーポータル</a>から解約手続きをすれば、以降の請求は発生しません（解約後も、お支払い済み期間の終了日まではご利用いただけます）。サービスの性質上、決済済み期間の日割り返金はいたしかねます。詳しくは<a href="tokushoho.html" style="color:var(--teal-dark);font-weight:700">特定商取引法に基づく表記</a>をご覧ください。</div>
+        <div class="a">月額制の自動更新サブスクリプションです。3ヶ月／6ヶ月プランは「その期間を目安に継続いただく」ことをおすすめしていますが、<b>解約はいつでも可能</b>です。解約をご希望の場合は、<b>次回更新日の前日までにチャット、またはメール（<a href="mailto:info@sai-mon.co.jp" style="color:var(--teal-dark);font-weight:700">info@sai-mon.co.jp</a>）でご連絡ください</b>。運営が解約手続きを行い、以降の請求は発生しません（解約後も、お支払い済み期間の終了日まではご利用いただけます）。サービスの性質上、決済済み期間の日割り返金はいたしかねます。詳しくは<a href="tokushoho.html" style="color:var(--teal-dark);font-weight:700">特定商取引法に基づく表記</a>をご覧ください。</div>
       </details>
     </div>
   </div>
@@ -588,7 +588,7 @@
     <div>
       <a href="tokushoho.html">特定商取引法に基づく表記</a>　／
       <a href="privacy.html">プライバシーポリシー</a>　／
-      <a href="#" data-portal>ご契約の管理・解約</a>
+      <a href="#" data-portal>お支払い方法の変更・請求履歴</a>
       <span style="display:block;margin-top:8px">© 2026 SAIMON. All rights reserved.</span>
     </div>
   </div>
@@ -621,7 +621,7 @@
     // 未設定時は href="#plan"（料金表アンカー）のまま＝安全側
   });
 
-  /* Stripe カスタマーポータル（ご契約の管理・解約）のログインリンク。
+  /* Stripe カスタマーポータル（お支払い方法の変更・請求履歴）のログインリンク。解約はメール/チャットで運営が手続き。
      ダッシュボードで有効化して得られる https://billing.stripe.com/p/login/... を貼る。 */
   const STRIPE_PORTAL_URL = "https://billing.stripe.com/p/login/7sYbJ05iG8OYflK4j11RC00";
   document.querySelectorAll('a[data-portal]').forEach(function (a) {

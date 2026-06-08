@@ -12,6 +12,9 @@
   :root{--navy:#0d0084;--navy-dark:#09005c;--teal:#31b9b5;--teal-dark:#238e8b;--ink:#1a1a2e;--gray:#5b5b6b;--line:#e6e6ef;--light:#f5f5f8}
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:"Noto Sans JP",sans-serif;color:var(--ink);line-height:1.9;background:var(--light)}
+  /* 日本語の折り返し品質（CLAUDE.md 標準ルール） */
+  h1,h2,h3,.head h1{text-wrap:balance}
+  p,li,td,th,small,.note{text-wrap:pretty;word-break:auto-phrase}
   .head{background:linear-gradient(160deg,var(--navy),var(--navy-dark));color:#fff;padding:48px 0}
   .wrap{max-width:860px;margin:0 auto;padding:0 24px}
   .brand{font-family:"Inter";font-weight:900;font-size:16px;letter-spacing:.02em;opacity:.9}
@@ -51,7 +54,7 @@
         <tr><th>お支払い方法</th><td>クレジットカード（Stripe決済）</td></tr>
         <tr><th>お支払い時期</th><td>お申し込み時に初回分を決済し、以降は毎月同日に自動更新で決済されます。</td></tr>
         <tr><th>サービスの提供時期</th><td>決済完了後、運営より初回90分オンボーディングの日程を3営業日以内にご案内します。チャットでのサポートは伴走期間中ご利用いただけます。</td></tr>
-        <tr><th>解約・キャンセル</th><td>毎月自動更新です。<b>解約はいつでも可能</b>です。次回更新日の前日までにカスタマーポータルより解約手続きを行うと、以降の課金は発生しません（お支払い済み期間の終了日まではご利用いただけます）。サービスの性質上、決済済み期間の日割り返金はいたしかねます。</td></tr>
+        <tr><th>解約・キャンセル</th><td>毎月自動更新です。<b>解約はいつでも可能</b>です。解約をご希望の場合は、次回更新日の前日までにメール（info@sai-mon.co.jp）またはチャットでご連絡ください。運営が解約手続きを行い、以降の課金は発生しません（お支払い済み期間の終了日まではご利用いただけます）。サービスの性質上、決済済み期間の日割り返金はいたしかねます。</td></tr>
         <tr><th>動作環境</th><td>インターネットに接続できるPCまたはスマートフォン。各AIツールの利用には、それぞれのサービスの利用環境・規約が適用されます。</td></tr>
       </table>
     </div>
