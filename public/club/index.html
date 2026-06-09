@@ -167,6 +167,10 @@
   .plan .btn{width:100%}
   .plan-sub{background:var(--navy);color:#fff}
   .price-note{text-align:left;max-width:620px;margin:26px auto 0;color:var(--gray);font-size:13px;line-height:1.85}
+  /* 複数名まとめ払い・請求書/銀行振込の案内 */
+  .bulk-note{max-width:620px;margin:16px auto 0;text-align:left;font-size:13.5px;color:var(--gray);background:rgba(13,0,132,.045);border:1px solid var(--line);border-radius:12px;padding:14px 18px;line-height:1.85;text-wrap:pretty;word-break:auto-phrase}
+  .bulk-note b{color:var(--navy)}
+  .bulk-note a{color:var(--teal-dark);font-weight:700}
   /* 単発セミナー枠 */
   .seminar-card{display:flex;align-items:center;justify-content:space-between;gap:26px;flex-wrap:wrap;background:#fff;border:1px dashed var(--teal);border-radius:18px;padding:26px 30px;max-width:820px;margin:30px auto 0;box-shadow:var(--shadow)}
   .seminar-card .s-main{flex:1;min-width:240px}
@@ -484,6 +488,7 @@
     </div>
 
     <p class="price-note">※表示の月額は税抜です。実際のお支払いは税込（3ヶ月プラン=月8,800円／6ヶ月プラン=月5,500円）。単発セミナーは税込11,000円（1回かぎり）。クレジットカード（Stripe）でのお支払い・月額プランは毎月自動更新で、いつでも解約できます。</p>
+    <p class="bulk-note">💼 <b>複数名分をまとめてお支払いの場合（法人・チーム）</b><br>代表の方がまとめてお支払いされるケースでは、<b>個別の請求書発行・銀行振込</b>にも対応します。人数やご希望をそえて <a href="mailto:info@sai-mon.co.jp">info@sai-mon.co.jp</a> までお気軽にお問い合わせください。</p>
   </div>
 </section>
 
@@ -566,6 +571,10 @@
       <details>
         <summary>途中で解約はできますか？</summary>
         <div class="a">月額制の自動更新サブスクリプションです。3ヶ月／6ヶ月プランは「その期間を目安に継続いただく」ことをおすすめしていますが、<b>解約はいつでも可能</b>です。解約をご希望の場合は、<b>次回更新日の前日までにチャット、またはメール（<a href="mailto:info@sai-mon.co.jp" style="color:var(--teal-dark);font-weight:700">info@sai-mon.co.jp</a>）でご連絡ください</b>。運営が解約手続きを行い、以降の請求は発生しません（解約後も、お支払い済み期間の終了日まではご利用いただけます）。サービスの性質上、決済済み期間の日割り返金はいたしかねます。詳しくは<a href="tokushoho.html" style="color:var(--teal-dark);font-weight:700">特定商取引法に基づく表記</a>をご覧ください。</div>
+      </details>
+      <details>
+        <summary>複数人分をまとめて支払えますか？（法人・チーム）</summary>
+        <div class="a">はい、可能です。代表の方が複数名分をまとめてお支払いされる場合は、<b>個別の請求書発行・銀行振込</b>にも対応いたします。ご参加人数やご希望のプランをそえて、<a href="mailto:info@sai-mon.co.jp" style="color:var(--teal-dark);font-weight:700">info@sai-mon.co.jp</a> までお問い合わせください。</div>
       </details>
     </div>
   </div>
