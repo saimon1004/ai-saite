@@ -6,7 +6,7 @@ import Footer from "../components/common/Footer.astro";
 const base = import.meta.env.BASE_URL;
 const heroImg = `${base}recruit-hp/assets/hero-ai-jitsumu-poster.png`;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260605-phone2";
+const cssVersion = "20260614-cro1";
 const cssHref = `${base}recruit-hp/styles.css?v=${cssVersion}`;
 
 const faqJsonLd = {
@@ -88,12 +88,8 @@ const faqJsonLd = {
               今の採用HPを無料で相談する
               <span aria-hidden="true">→</span>
             </a>
-            <a class="secondary-cta" href="?type=download#contact-form" data-cta-source="hero-secondary">
-              資料を無料ダウンロード
-              <span aria-hidden="true">↓</span>
-            </a>
           </div>
-          <p>未経験OK / <span class="no-break">オンライン・対面対応</span></p>
+          <p>相談無料・しつこい営業なし / 未経験OK / <span class="no-break">オンライン・対面対応</span></p>
         </div>
       </div>
 
@@ -429,6 +425,14 @@ const faqJsonLd = {
       </div>
     </section>
 
+    <div class="inline-cta">
+      <a class="primary-cta" href="#contact-form" data-cta-source="mid-comparison">
+        まずは無料で相談してみる
+        <span aria-hidden="true">→</span>
+      </a>
+      <p class="inline-cta-note">相談無料・しつこい営業なし・1営業日以内に返信</p>
+    </div>
+
     <section class="outcomes section-block" aria-labelledby="outcomes-title">
       <div class="section-number">05</div>
       <div class="section-grid">
@@ -621,6 +625,14 @@ const faqJsonLd = {
       <p class="note">※研修内で制作するものは公開可能なプロトタイプです。最終公開には内容確認・必要に応じた調整が必要です。貴社状況に応じて、内容のカスタマイズは可能です。AIツール選定も、最良のものを随時選定いたします。</p>
     </section>
 
+    <div class="inline-cta">
+      <a class="primary-cta" href="#contact-form" data-cta-source="mid-curriculum">
+        助成金が使えるか無料で相談する
+        <span aria-hidden="true">→</span>
+      </a>
+      <p class="inline-cta-note">相談無料・しつこい営業なし・1営業日以内に返信</p>
+    </div>
+
     <section id="price" class="price section-block" aria-labelledby="price-title">
       <div class="section-number">08</div>
       <div class="price-layout">
@@ -661,10 +673,6 @@ const faqJsonLd = {
           今の採用HPを無料で相談する
           <span aria-hidden="true">→</span>
         </a>
-        <a class="secondary-cta" href="?type=download#contact-form" data-cta-source="band-secondary">
-          資料を無料ダウンロード
-          <span aria-hidden="true">↓</span>
-        </a>
       </div>
     </section>
 
@@ -672,10 +680,10 @@ const faqJsonLd = {
       <div class="section-number">09</div>
       <div class="section-heading">
         <p class="section-kicker">Form</p>
-        <h2 id="contact-form-title">無料相談・資料請求フォーム</h2>
+        <h2 id="contact-form-title">無料相談フォーム</h2>
         <p class="contact-form-lead">
           ご記入いただいた内容をもとに、1営業日以内に担当よりご連絡いたします。
-          「助成金が使えるか先に知りたい」「まずは資料だけ欲しい」もお気軽にどうぞ。
+          入力は30秒。「助成金が使えるか先に知りたい」だけでもお気軽にどうぞ。しつこい営業はいたしません。
         </p>
       </div>
 
@@ -697,8 +705,8 @@ const faqJsonLd = {
             <input type="email" name="email" required autocomplete="email" placeholder="taro@example.com" />
           </label>
           <label class="form-field">
-            <span class="form-label">電話番号<em aria-hidden="true">*</em></span>
-            <input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="0312345678" />
+            <span class="form-label">電話番号<span class="form-optional">（任意）</span></span>
+            <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="0312345678（任意）" />
           </label>
         </div>
 
@@ -763,13 +771,20 @@ const faqJsonLd = {
         </details>
       </div>
     </section>
+
+    <div class="mobile-sticky-cta" id="mobile-sticky-cta" aria-hidden="false">
+      <a class="primary-cta" href="#contact-form" data-cta-source="sticky-mobile">
+        今の採用HPを無料で相談する
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
   </main>
 
   <Footer />
 
   <script is:inline>
     (function () {
-      const FORM_ENDPOINT = "https://mycareer-recruit-hp-insourcing-lp.vercel.app/api/contact";
+      const FORM_ENDPOINT = "https://recruit-hp-form-api.vercel.app/api/contact";
 
       const form = document.getElementById("lead-form");
       if (!form) return;
@@ -778,14 +793,7 @@ const faqJsonLd = {
       const submitBtn = form.querySelector(".lead-form-submit");
 
       function resolveSource() {
-        try {
-          const url = new URL(window.location.href);
-          return url.searchParams.get("type") === "download"
-            ? "LP資料DL"
-            : "LP無料相談";
-        } catch (_) {
-          return "LP無料相談";
-        }
+        return "LP無料相談";
       }
 
       function collectUtm() {
@@ -875,6 +883,18 @@ const faqJsonLd = {
           submitBtn.innerHTML = '送信する <span aria-hidden="true">→</span>';
         }
       });
+
+      // フォームが画面内にあるときは追従CTAを隠す（送信ボタンと重ならないように）
+      var stickyCta = document.getElementById("mobile-sticky-cta");
+      var formSection = document.getElementById("contact-form");
+      if (stickyCta && formSection && "IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            stickyCta.classList.toggle("is-hidden", e.isIntersecting);
+          });
+        }, { threshold: 0.01 });
+        io.observe(formSection);
+      }
     })();
   </script>
 </BaseLayout>

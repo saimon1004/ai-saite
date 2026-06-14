@@ -4301,3 +4301,63 @@ details p {
     font-size: 0.9rem;
   }
 }
+
+/* === CRO追加: 任意ラベル / 中間CTA / モバイル追従CTAバー（2026-06-14 cro1） === */
+.recruit-lp-scope .form-optional {
+  margin-left: 6px;
+  font-size: 0.8em;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.recruit-lp-scope .inline-cta {
+  text-align: center;
+  margin: clamp(28px, 5vw, 48px) auto;
+  padding-inline: 18px;
+}
+.recruit-lp-scope .inline-cta .primary-cta {
+  font-size: 1.02rem;
+}
+.recruit-lp-scope .inline-cta-note {
+  margin: 12px 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-wrap: pretty;
+  word-break: auto-phrase;
+}
+
+/* モバイル追従CTAバー（PCでは非表示） */
+.mobile-sticky-cta { display: none; }
+
+@media (max-width: 720px) {
+  .mobile-sticky-cta {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: rgba(255, 255, 255, 0.96);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 -6px 18px rgba(7, 0, 64, 0.12);
+    transition: transform 240ms ease, opacity 240ms ease;
+  }
+  .mobile-sticky-cta .primary-cta {
+    display: flex;
+    width: 100%;
+    min-height: 54px;
+    font-size: 1.04rem;
+    box-shadow: 0 8px 18px rgba(49, 185, 181, 0.28);
+  }
+  .mobile-sticky-cta.is-hidden {
+    transform: translateY(120%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* 追従バーでコンテンツ末尾が隠れないよう余白を確保 */
+  body { padding-bottom: 78px; }
+  /* FAQチャットボットの起動ボタンを追従バーの上へ逃がす */
+  #faq-chatbot-root .fixed.bottom-4.right-4 { bottom: 5.75rem; }
+}
