@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI IMPACT CLUB｜"知ってる"を、"使いこなす"へ。AI伴走コミュニティ</title>
-<meta name="description" content="月額制で、AIのプロが隣で伴走する個人向けコミュニティ。ChatGPT・Gemini・Claudeを"自分の仕事"で動かせるように。初回60分オンボーディング＋チャット質問し放題。">
+<meta name="description" content="AI初心者の社会人のための伴走コミュニティ。まずは初回90分セミナーから、続けたい方は月額でチャット質問し放題。ChatGPT・Gemini・Claudeを"自分の仕事"で動かせるように。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -151,7 +151,7 @@
 
   /* ===== 料金 ===== */
   .price-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:48px;max-width:820px;margin-left:auto;margin-right:auto}
-  .plan{background:#fff;border:1px solid var(--line);border-radius:20px;padding:38px 32px;position:relative;box-shadow:var(--shadow)}
+  .plan{background:#fff;border:1px solid var(--line);border-radius:20px;padding:38px 32px;position:relative;box-shadow:var(--shadow);display:flex;flex-direction:column}
   .plan.best{border:2px solid var(--teal);box-shadow:var(--shadow-lg);transform:translateY(-6px)}
   .plan-flag{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--teal);color:#fff;font-size:12px;font-weight:800;padding:6px 18px;border-radius:999px;letter-spacing:.04em;white-space:nowrap}
   .plan h3{font-size:20px;color:var(--navy)}
@@ -171,6 +171,11 @@
   .bulk-note{max-width:620px;margin:16px auto 0;text-align:left;font-size:13.5px;color:var(--gray);background:rgba(13,0,132,.045);border:1px solid var(--line);border-radius:12px;padding:14px 18px;line-height:1.85;text-wrap:pretty;word-break:auto-phrase}
   .bulk-note b{color:var(--navy)}
   .bulk-note a{color:var(--teal-dark);font-weight:700}
+  /* STEP見出し・月額プランの「受講後ご案内」注記 */
+  .step-head{max-width:820px;margin:42px auto 18px;text-align:center;font-weight:800;color:var(--navy);font-size:15px;letter-spacing:.02em;text-wrap:balance}
+  .step-head .num-badge{display:inline-block;background:var(--teal);color:#fff;border-radius:999px;padding:2px 12px;margin-right:8px;font-family:"Inter";font-size:13px}
+  .plan .for{margin-bottom:16px}
+  .plan .plan-after{margin-top:auto;background:var(--light);border:1px dashed var(--teal);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--navy);font-weight:700;text-align:center;line-height:1.7;text-wrap:pretty}
   /* 単発セミナー枠 */
   .seminar-card{display:flex;align-items:center;justify-content:space-between;gap:26px;flex-wrap:wrap;background:#fff;border:1px dashed var(--teal);border-radius:18px;padding:26px 30px;max-width:820px;margin:30px auto 0;box-shadow:var(--shadow)}
   .seminar-card .s-main{flex:1;min-width:240px}
@@ -295,10 +300,10 @@
     <p class="sub">月額制で、AIのプロがあなたの隣で伴走する個人向けコミュニティ。<br>ChatGPT・Gemini・Claudeを<b>"自分の仕事"</b>で動かせるように。</p>
     <p class="tools">学べるツール：ChatGPT ／ Gemini ／ Claude ／（発展）Codex・Claude Code</p>
     <div class="hero-cta">
-      <a href="#plan" class="btn btn-primary">プランを見て申し込む →</a>
-      <a href="#plan" class="btn btn-ghost">料金プランを見る</a>
+      <a href="#plan" class="btn btn-primary">まずは初回セミナーから →</a>
+      <a href="#plan" class="btn btn-ghost">料金・流れを見る</a>
     </div>
-    <p class="hero-note">月額5,000円〜（税抜）／ 初回60分のオンボーディング込み ／ チャットで質問し放題</p>
+    <p class="hero-note">まずは初回90分セミナー（¥10,000・税抜）から ／ 受講後、継続したい方は月額でチャット質問し放題（月¥5,000・税抜〜）</p>
   </div>
 </section>
 
@@ -368,28 +373,28 @@
   <div class="wrap center">
     <span class="eyebrow">What you get</span>
     <h2 class="sec-title">あなたがやるのは、続けるだけ。</h2>
-    <p class="sec-lead">むずかしい教材も、ひとりで進めるカリキュラムもありません。最初の60分で土台をつくり、あとは"質問し放題"で詰まりをゼロに。</p>
+    <p class="sec-lead">むずかしい教材も、ひとりで進めるカリキュラムもありません。まずは初回90分セミナーで土台づくり。続けたい方は、月額でチャット質問し放題。</p>
   </div>
   <div class="wrap">
     <div class="offer-grid">
       <div class="offer-card">
         <div class="offer-icon">🚀</div>
-        <span class="offer-tag">プラン込み</span>
-        <h3>初回60分オンボーディング</h3>
-        <p style="color:var(--gray);font-size:15px;">伴走のスタートを設計する60分のキックオフ。ここで土台をつくり、<b>この後はチャットでずっと伴走</b>します。</p>
+        <span class="offer-tag">STEP 1・必須</span>
+        <h3>初回90分セミナー</h3>
+        <p style="color:var(--gray);font-size:15px;"><b>まずは全員ここから。</b>あなたの目標に合わせて、AI活用の土台を90分でつくります。</p>
         <ul>
           <li>目標とお仕事内容をヒアリング</li>
           <li>ChatGPT・Gemini・Claudeのセットアップと使い分け</li>
           <li>あなたの業務で"最初の勝ちパターン"を一緒に作る</li>
           <li>希望者にはCodex・Claude Codeの導入もサポート</li>
         </ul>
-        <p class="note">※座学より実践重視。じっくり1回だけ試したい方には、単発の<b>90分セミナー</b>（伴走なし・税込11,000円）もご用意しています。</p>
+        <p class="note">※受講後、継続したい方は月額クラブ（STEP 2）でチャット質問し放題に進めます。</p>
       </div>
       <div class="offer-card">
         <div class="offer-icon">💬</div>
-        <span class="offer-tag">期間中ずっと</span>
+        <span class="offer-tag">STEP 2・月額</span>
         <h3>チャットで質問し放題</h3>
-        <p style="color:var(--gray);font-size:15px;">伴走期間中はいつでも質問OK。ひとりで悩む時間をなくします。</p>
+        <p style="color:var(--gray);font-size:15px;">セミナー受講後、継続したい方へ。期間中はいつでも質問OK、ひとりで悩む時間をなくします。</p>
         <ul>
           <li>「この作業AIでできる？」をその場で解決</li>
           <li>プロンプトの作り方・直し方を具体的にアドバイス</li>
@@ -443,22 +448,33 @@
   <div class="wrap center">
     <span class="eyebrow">Price</span>
     <h2 class="sec-title">料金プラン</h2>
-    <p class="sec-lead">どちらも初回60分オンボーディングと、チャットでの質問し放題が含まれます。<br><b class="em">長く続けるほど、月額はおトクになります。</b></p>
+    <p class="sec-lead">まずは初回90分セミナーから。受講後、継続したい方は月額クラブ（チャット質問し放題）へお進みいただけます。<br><b class="em">月額は、長く続けるほどおトク。</b></p>
   </div>
   <div class="wrap">
+    <p class="step-head"><span class="num-badge">STEP 1</span>まずは全員ここから（必須）</p>
+    <div class="seminar-card">
+      <div class="s-main">
+        <span class="s-tag">STEP 1・必須</span>
+        <h3>初回90分セミナー</h3>
+        <p>1回完結の<b>90分</b>セッション。目標ヒアリング＋ChatGPT・Gemini・Claude のセットアップ＆使い分け、最初の"勝ちパターン"づくりまで。<br>※<b>まずは全員このセミナーから</b>。受講後、継続したい方だけ月額クラブ（下記 STEP 2）へお進みいただけます。</p>
+        <div class="s-price"><span style="white-space:nowrap"><b>10,000</b>円（税抜）</span> ／ <span style="white-space:nowrap">税込11,000円</span>・<span style="white-space:nowrap">1回かぎり</span></div>
+      </div>
+      <a href="#plan" data-plan="seminar" class="btn btn-primary">セミナーに申し込む →</a>
+    </div>
+
+    <p class="step-head"><span class="num-badge">STEP 2</span>セミナー受講後、継続したい方へ（月額・チャット質問し放題）</p>
     <div class="price-grid">
       <div class="plan">
         <h3>3ヶ月プラン</h3>
-        <p class="term">まずは試してみたい方へ</p>
+        <p class="term">まずは続けてみたい方へ</p>
         <div class="price"><span class="num">8,000</span><span class="unit">円 / 月（税抜）</span></div>
         <p class="total">3ヶ月の総額 24,000円（税抜・税込26,400円）</p>
         <ul>
-          <li>初回60分オンボーディング</li>
           <li>チャットで質問し放題</li>
           <li>ChatGPT・Gemini・Claude の習得サポート</li>
         </ul>
         <p class="for">こんな方に：まずはAIを"使える"感覚を掴みたい</p>
-        <a href="#plan" data-plan="plan3" class="btn btn-ghost" style="color:var(--navy);border-color:var(--navy)">このプランに申し込む</a>
+        <p class="plan-after">初回セミナー受講後、運営より<br>お申し込みリンクをご案内します</p>
       </div>
       <div class="plan best">
         <span class="plan-flag">おすすめ・最安月額</span>
@@ -467,27 +483,16 @@
         <div class="price"><span class="num">5,000</span><span class="unit">円 / 月（税抜）</span></div>
         <p class="total">6ヶ月の総額 30,000円（税抜・税込33,000円）</p>
         <ul>
-          <li>初回60分オンボーディング</li>
           <li>チャットで質問し放題</li>
           <li>ChatGPT・Gemini・Claude の習得サポート</li>
           <li>Codex・Claude Code まで挑戦できる時間的余裕</li>
         </ul>
         <p class="for">こんな方に：習慣化して、仕事の成果までつなげたい</p>
-        <a href="#plan" data-plan="plan6" class="btn btn-primary">このプランに申し込む</a>
+        <p class="plan-after">初回セミナー受講後、運営より<br>お申し込みリンクをご案内します</p>
       </div>
     </div>
 
-    <div class="seminar-card">
-      <div class="s-main">
-        <span class="s-tag">まずは1回だけ試したい方へ</span>
-        <h3>初回90分セミナー（単発）</h3>
-        <p>1回完結の<b>90分</b>セッション。目標ヒアリング＋ChatGPT・Gemini・Claude のセットアップ＆使い分け、最初の"勝ちパターン"づくりまで。<br>※月額クラブの初回オンボーディング（60分）と違い、<b>その後のチャット伴走は含みません</b>（継続して伴走が必要な方はクラブへ）。</p>
-        <div class="s-price"><span style="white-space:nowrap"><b>10,000</b>円（税抜）</span> ／ <span style="white-space:nowrap">税込11,000円</span>・<span style="white-space:nowrap">1回かぎり</span></div>
-      </div>
-      <a href="#plan" data-plan="seminar" class="btn btn-primary">セミナーに申し込む →</a>
-    </div>
-
-    <p class="price-note">※表示の月額は税抜です。実際のお支払いは税込（3ヶ月プラン=月8,800円／6ヶ月プラン=月5,500円）。単発セミナーは税込11,000円（1回かぎり）。クレジットカード（Stripe）でのお支払い・月額プランは毎月自動更新で、いつでも解約できます。</p>
+    <p class="price-note">※表示の月額は税抜です。実際のお支払いは税込（3ヶ月プラン=月8,800円／6ヶ月プラン=月5,500円）。初回セミナーは税込11,000円（1回かぎり）。<b>月額クラブは初回90分セミナー受講後のお申し込み</b>となります（運営よりご案内）。クレジットカード（Stripe）でのお支払い・月額プランは毎月自動更新で、いつでも解約できます。</p>
     <p class="bulk-note">💼 <b>複数名分をまとめてお支払いの場合（法人・チーム）</b><br>代表の方がまとめてお支払いされるケースでは、<b>個別の請求書発行・銀行振込</b>にも対応します。人数やご希望をそえて <a href="mailto:info@sai-mon.co.jp">info@sai-mon.co.jp</a> までお気軽にお問い合わせください。</p>
   </div>
 </section>
@@ -502,18 +507,18 @@
     <div class="flow">
       <div class="step">
         <div class="n">1</div>
-        <h3>オンラインでお申し込み</h3>
-        <p>プラン（3ヶ月／6ヶ月）を選んで、クレジットカードでお手続き。最短その場で参加できます。</p>
+        <h3>初回90分セミナーに申込・受講</h3>
+        <p>まずはここから。オンラインで申し込み → クレジットカードで決済（¥10,000・税抜）→ 90分セミナーを受講し、AI活用の土台をつくります。</p>
       </div>
       <div class="step">
         <div class="n">2</div>
-        <h3>初回60分オンボーディング</h3>
-        <p>最初の60分で土台づくり。基本ツールのセットアップと、最初の"勝ちパターン"づくりをサポートします。</p>
+        <h3>継続する方へ月額クラブをご案内</h3>
+        <p>受講後、続けたい方には運営から月額クラブ（3ヶ月／6ヶ月）のお申し込みリンクをお送りします。もちろん単発受講だけでもOKです。</p>
       </div>
       <div class="step">
         <div class="n">3</div>
-        <h3>伴走スタート</h3>
-        <p>あとはチャットで質問し放題。詰まりをゼロにしながら、AIをあなたの戦力に育てていきます。</p>
+        <h3>チャットで質問し放題スタート</h3>
+        <p>月額クラブに参加したら、あとはチャットでいつでも質問。詰まりをゼロにしながら、AIをあなたの戦力に育てていきます。</p>
       </div>
     </div>
   </div>
@@ -535,7 +540,7 @@
         <div class="stats">
           <div class="stat"><b>4.8<span style="font-size:14px">/5.0</span></b><span>法人研修の満足度</span></div>
           <div class="stat"><b>10+</b><span>扱う主要AIツール</span></div>
-          <div class="stat"><b>90<span style="font-size:14px">分</span></b><span>初回オンボーディング</span></div>
+          <div class="stat"><b>90<span style="font-size:14px">分</span></b><span>初回セミナー</span></div>
         </div>
       </div>
     </div>
@@ -554,7 +559,7 @@
     <div class="faq">
       <details open>
         <summary>本当に初心者でも大丈夫ですか？</summary>
-        <div class="a">はい、AIをこれから触る方を想定したコミュニティです。初回60分でセットアップから一緒に進めるので、「何から始めれば…」という段階からで問題ありません。</div>
+        <div class="a">はい、AIをこれから触る方を想定したコミュニティです。まずは初回90分セミナーでセットアップから一緒に進めるので、「何から始めれば…」という段階からで問題ありません。</div>
       </details>
       <details>
         <summary>チャットではどのくらい質問できますか？</summary>
@@ -563,6 +568,10 @@
       <details>
         <summary>有料のAIツール契約は必要ですか？</summary>
         <div class="a">無料プランでもしっかり始められます。より高度な使い方を目指す場合は有料プランをおすすめすることもありますが、必要かどうかも含めてあなたの目的に合わせてご案内します。</div>
+      </details>
+      <details>
+        <summary>いきなり月額プランに申し込めますか？</summary>
+        <div class="a">いいえ。<b>まず初回90分セミナーを受けていただく</b>のが全員共通のスタートです。セミナー受講後、継続したい方に運営から月額クラブ（3ヶ月／6ヶ月）のお申し込みリンクをご案内します。単発のセミナー受講だけでも、もちろんOKです。</div>
       </details>
       <details>
         <summary>3ヶ月と6ヶ月、どちらを選べばいい？</summary>
