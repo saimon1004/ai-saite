@@ -1,0 +1,1093 @@
+/* ============================================================
+   SAIMONサブスクデザイン LP styles
+   scope: .subsc-lp-scope（他ページへの影響を避けるため全て接頭辞付き）
+   palette: navy #122a46 / ink #1b2430 / gold #b98a2f / paper #f7f5f0
+   ============================================================ */
+
+.subsc-lp-scope {
+  --navy: #122a46;
+  --navy-deep: #0c1e33;
+  --ink: #1b2430;
+  --gold: #b98a2f;
+  --gold-soft: #d9b25e;
+  --paper: #f7f5f0;
+  --white: #ffffff;
+  --line: #dcd6ca;
+  --muted: #5d6672;
+  --ok: #1f7a4d;
+  --err: #b3261e;
+  color: var(--ink);
+  background: var(--paper);
+  font-feature-settings: "palt";
+  line-height: 1.85;
+  overflow-x: clip;
+}
+
+/* ---- 日本語折り返し品質（全ページ共通の標準） ---- */
+/* balance は見出し専用（本文に使うと行が均等に短くなり右側が空く） */
+.subsc-lp-scope h1,
+.subsc-lp-scope h2,
+.subsc-lp-scope h3 {
+  text-wrap: balance;
+  word-break: auto-phrase;
+}
+.subsc-lp-scope .section-lead,
+.subsc-lp-scope .hero-lead {
+  text-wrap: pretty;
+  word-break: auto-phrase;
+}
+.subsc-lp-scope p,
+.subsc-lp-scope li,
+.subsc-lp-scope figcaption,
+.subsc-lp-scope small,
+.subsc-lp-scope .note,
+.subsc-lp-scope dd,
+.subsc-lp-scope summary {
+  text-wrap: pretty;
+  word-break: auto-phrase;
+}
+.subsc-lp-scope .no-break { white-space: nowrap; }
+.subsc-lp-scope .sp-br { display: none; }
+@media (max-width: 640px) {
+  .subsc-lp-scope .sp-br { display: inline; }
+}
+
+/* ---- 基本 ---- */
+.subsc-lp-scope section { position: relative; }
+
+.subsc-lp-scope .section-block {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+.subsc-lp-scope .section-number {
+  position: absolute;
+  top: 28px;
+  right: 24px;
+  font-size: 13px;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.subsc-lp-scope .section-kicker {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+
+.subsc-lp-scope h2 {
+  font-size: clamp(26px, 4.2vw, 38px);
+  font-weight: 800;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  color: var(--navy);
+  margin: 0 0 18px;
+}
+
+.subsc-lp-scope h3 {
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.5;
+}
+
+.subsc-lp-scope .section-heading {
+  max-width: 760px;
+  margin-bottom: 32px;
+}
+
+.subsc-lp-scope .section-lead,
+.subsc-lp-scope .large-text {
+  font-size: 16.5px;
+  color: var(--ink);
+}
+.subsc-lp-scope .section-lead strong { color: var(--gold); font-weight: 800; }
+
+.subsc-lp-scope .section-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 48px;
+  align-items: start;
+}
+
+/* ---- CTAボタン ---- */
+.subsc-lp-scope .primary-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
+  color: var(--navy-deep);
+  font-weight: 800;
+  font-size: 16px;
+  padding: 18px 34px;
+  border-radius: 999px;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(185, 138, 47, 0.35);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.subsc-lp-scope .primary-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(185, 138, 47, 0.45);
+}
+
+.subsc-lp-scope .inline-cta {
+  text-align: center;
+  padding: 4px 24px 52px;
+}
+.subsc-lp-scope .inline-cta-note {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ============================================================
+   01 Hero
+   ============================================================ */
+.subsc-lp-scope .hero {
+  background:
+    radial-gradient(1100px 520px at 85% -10%, rgba(185, 138, 47, 0.22), transparent 60%),
+    radial-gradient(800px 500px at -10% 110%, rgba(217, 178, 94, 0.12), transparent 55%),
+    linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 62%, #1a3a5e 100%);
+  color: var(--white);
+  padding: 72px 24px 56px;
+}
+
+.subsc-lp-scope .hero-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 56px;
+  align-items: center;
+}
+
+.subsc-lp-scope .eyebrow {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--gold-soft);
+  border: 1px solid rgba(217, 178, 94, 0.5);
+  border-radius: 999px;
+  padding: 7px 16px;
+  margin-bottom: 16px;
+}
+
+/* 業界特化バッジ（ヒーローの主訴求） */
+.subsc-lp-scope .industry-badge {
+  display: flex;
+  align-items: stretch;
+  width: fit-content;
+  margin-bottom: 22px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(185, 138, 47, 0.35);
+}
+.subsc-lp-scope .industry-badge strong {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
+  color: var(--navy-deep);
+  font-size: clamp(17px, 2.4vw, 22px);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  padding: 10px 18px;
+}
+.subsc-lp-scope .industry-badge span {
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(217, 178, 94, 0.6);
+  border-left: none;
+  border-radius: 0 12px 12px 0;
+  color: var(--gold-soft);
+  font-size: clamp(14px, 1.8vw, 17px);
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  padding: 10px 16px 10px 20px;
+}
+.subsc-lp-scope .hero-lead .lead-em {
+  color: var(--gold-soft);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* 受入枠バナー（月額・依頼回数などの指標とは別枠で表示） */
+.subsc-lp-scope .slots-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  max-width: 100%;
+  background: rgba(185, 138, 47, 0.14);
+  border: 1px solid rgba(217, 178, 94, 0.55);
+  border-radius: 12px;
+  padding: 12px 18px;
+  margin: 0 auto 24px;
+}
+.subsc-lp-scope .slots-banner p {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.92);
+}
+.subsc-lp-scope .slots-banner strong {
+  color: var(--gold-soft);
+  font-size: 17px;
+  font-weight: 900;
+  padding: 0 2px;
+}
+.subsc-lp-scope .slots-dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  box-shadow: 0 0 0 0 rgba(217, 178, 94, 0.6);
+  animation: subsc-slots-pulse 2s ease-out infinite;
+}
+@keyframes subsc-slots-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(217, 178, 94, 0.55); }
+  70% { box-shadow: 0 0 0 9px rgba(217, 178, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(217, 178, 94, 0); }
+}
+
+.subsc-lp-scope .hero h1 {
+  font-size: clamp(34px, 5.6vw, 54px);
+  font-weight: 900;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  margin: 0 0 22px;
+  color: var(--white);
+}
+
+.subsc-lp-scope .hero-highlight {
+  color: var(--gold-soft);
+  background: linear-gradient(transparent 68%, rgba(185, 138, 47, 0.45) 68%);
+  padding: 0 2px;
+}
+
+.subsc-lp-scope .hero-lead {
+  font-size: 16.5px;
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 560px;
+  margin-bottom: 24px;
+}
+
+.subsc-lp-scope .hero-pain-quotes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 560px;
+  margin-bottom: 32px;
+}
+.subsc-lp-scope .hero-pain-quotes span {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.subsc-lp-scope .hero-actions {
+  margin-bottom: 8px;
+  text-align: center;
+}
+.subsc-lp-scope .hero-cta-note {
+  margin-top: 14px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* チャットモック */
+.subsc-lp-scope .chat-mock {
+  background: var(--white);
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  transform: rotate(1.2deg);
+}
+.subsc-lp-scope .chat-mock-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--navy);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 12px 16px;
+}
+.subsc-lp-scope .chat-mock-head i {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: #57d98a;
+  box-shadow: 0 0 0 3px rgba(87, 217, 138, 0.25);
+}
+.subsc-lp-scope .chat-mock-body {
+  padding: 16px 14px 18px;
+  display: grid;
+  gap: 9px;
+  background: linear-gradient(180deg, #f2f5f9 0%, #e9eef5 100%);
+}
+.subsc-lp-scope .chat-msg { max-width: 88%; }
+.subsc-lp-scope .chat-msg em {
+  display: block;
+  font-style: normal;
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.subsc-lp-scope .chat-msg p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  padding: 9px 13px;
+  border-radius: 14px;
+}
+.subsc-lp-scope .chat-msg-client { justify-self: end; text-align: right; }
+.subsc-lp-scope .chat-msg-client p {
+  background: var(--navy);
+  color: var(--white);
+  border-bottom-right-radius: 4px;
+  text-align: left;
+}
+.subsc-lp-scope .chat-msg-designer { justify-self: start; }
+.subsc-lp-scope .chat-msg-designer p {
+  background: var(--white);
+  color: var(--ink);
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 2px 8px rgba(18, 42, 70, 0.08);
+}
+.subsc-lp-scope .chat-msg-deliver {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(185, 138, 47, 0.12);
+  border: 1px dashed rgba(185, 138, 47, 0.6);
+  border-radius: 12px;
+  padding: 9px 13px;
+}
+.subsc-lp-scope .chat-msg-deliver span {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.subsc-lp-scope .chat-msg-deliver p {
+  padding: 0;
+  background: none;
+  font-size: 12px;
+  color: var(--ink);
+}
+
+/* Heroメトリクス */
+.subsc-lp-scope .hero-metrics {
+  max-width: 1120px;
+  margin: 40px auto 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.subsc-lp-scope .hero-metrics > div {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  padding: 18px 20px;
+  text-align: center;
+}
+.subsc-lp-scope .hero-metrics dt {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--gold-soft);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.subsc-lp-scope .hero-metrics dd {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
+}
+.subsc-lp-scope .hero-metrics dd strong {
+  font-size: 20px;
+  color: var(--white);
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   02 Problem
+   ============================================================ */
+.subsc-lp-scope .check-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+  display: grid;
+  gap: 12px;
+}
+.subsc-lp-scope .check-list li {
+  position: relative;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 15px 18px 15px 48px;
+  font-size: 15px;
+}
+.subsc-lp-scope .check-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px; height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--gold-soft);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ============================================================
+   03 Service（ループ図）
+   ============================================================ */
+.subsc-lp-scope .service { background: var(--white); }
+.subsc-lp-scope .service.section-block { max-width: none; }
+.subsc-lp-scope .service > * { max-width: 1120px; margin-left: auto; margin-right: auto; }
+
+.subsc-lp-scope .loop-visual {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 28px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  counter-reset: loop;
+}
+.subsc-lp-scope .loop-visual li {
+  position: relative;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px 20px;
+}
+.subsc-lp-scope .loop-visual li:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  right: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold);
+  font-weight: 800;
+  z-index: 1;
+}
+.subsc-lp-scope .loop-visual .loop-step {
+  display: inline-grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--gold-soft);
+  font-weight: 800;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+.subsc-lp-scope .loop-visual h3 { font-size: 17px; margin: 0 0 6px; }
+.subsc-lp-scope .loop-visual p { margin: 0; font-size: 13.5px; color: var(--muted); }
+.subsc-lp-scope .loop-return { border-style: dashed; border-color: var(--gold); }
+.subsc-lp-scope .loop-return .loop-step { background: var(--gold); color: var(--white); }
+
+.subsc-lp-scope .service-terms {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  max-width: 860px;
+  margin-inline: auto;
+}
+.subsc-lp-scope .service-terms > div {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 10px 14px;
+  text-align: center;
+}
+.subsc-lp-scope .service-terms dt {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.subsc-lp-scope .service-terms dd {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--navy);
+}
+
+/* ============================================================
+   04 Reasons
+   ============================================================ */
+.subsc-lp-scope .reason-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+.subsc-lp-scope .reason-card {
+  position: relative;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 30px 28px 26px;
+  overflow: hidden;
+}
+.subsc-lp-scope .reason-card::before {
+  content: attr(data-index);
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-size: 30px;
+  font-weight: 900;
+  color: rgba(185, 138, 47, 0.18);
+  letter-spacing: 0.05em;
+}
+.subsc-lp-scope .reason-card h3 {
+  font-size: 19px;
+  margin: 0 0 10px;
+  padding-right: 48px;
+}
+.subsc-lp-scope .reason-card p { margin: 0 0 14px; font-size: 14.5px; }
+.subsc-lp-scope .reason-card em {
+  font-style: normal;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--gold);
+  border-top: 1px solid var(--line);
+  display: block;
+  padding-top: 12px;
+}
+
+/* ============================================================
+   05 Works
+   ============================================================ */
+.subsc-lp-scope .works { background: var(--white); }
+.subsc-lp-scope .works.section-block { max-width: none; }
+.subsc-lp-scope .works > * { max-width: 1120px; margin-left: auto; margin-right: auto; }
+
+.subsc-lp-scope .works-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: 0 auto 20px;
+}
+.subsc-lp-scope .work-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 26px 24px;
+}
+.subsc-lp-scope .work-tag {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  border: 1px solid rgba(185, 138, 47, 0.45);
+  border-radius: 999px;
+  padding: 4px 12px;
+  margin-bottom: 14px;
+}
+.subsc-lp-scope .work-card h3 { font-size: 17px; margin: 0 0 8px; }
+.subsc-lp-scope .work-card p:last-child { margin: 0; font-size: 14px; color: var(--muted); }
+
+.subsc-lp-scope .works-note {
+  font-size: 12.5px;
+  color: var(--muted);
+  text-align: left;
+  max-width: 640px;
+  margin-inline: auto;
+  line-height: 1.85;
+}
+
+/* ============================================================
+   06 Price
+   ============================================================ */
+.subsc-lp-scope .plan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  align-items: stretch;
+  margin-bottom: 36px;
+}
+.subsc-lp-scope .plan-card {
+  position: relative;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 34px 28px 28px;
+  display: flex;
+  flex-direction: column;
+}
+.subsc-lp-scope .plan-card-featured {
+  border: 2px solid var(--gold);
+  box-shadow: 0 18px 44px rgba(185, 138, 47, 0.18);
+}
+.subsc-lp-scope .plan-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--white);
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  border-radius: 999px;
+  padding: 5px 18px;
+  white-space: nowrap;
+}
+.subsc-lp-scope .plan-name {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.subsc-lp-scope .plan-price { margin: 0 0 6px; color: var(--navy); }
+.subsc-lp-scope .plan-price strong {
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+}
+.subsc-lp-scope .plan-price span { font-size: 14px; font-weight: 700; margin-left: 4px; }
+.subsc-lp-scope .plan-desc {
+  font-size: 13.5px;
+  color: var(--muted);
+  margin: 0 0 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.subsc-lp-scope .plan-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 auto;
+  display: grid;
+  gap: 9px;
+}
+.subsc-lp-scope .plan-card ul li {
+  position: relative;
+  font-size: 14px;
+  padding-left: 24px;
+}
+.subsc-lp-scope .plan-card ul li::before {
+  content: "◆";
+  position: absolute;
+  left: 2px;
+  color: var(--gold);
+  font-size: 10px;
+  top: 5px;
+}
+.subsc-lp-scope .plan-card ul li.plan-na { color: var(--muted); }
+.subsc-lp-scope .plan-card ul li.plan-na::before { content: "—"; color: var(--line); top: 0; font-size: 13px; }
+.subsc-lp-scope .plan-note {
+  margin: 18px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold);
+  background: rgba(185, 138, 47, 0.1);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+/* シェアパネル */
+.subsc-lp-scope .share-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 36px;
+  align-items: center;
+  background: var(--navy);
+  border-radius: 22px;
+  padding: 44px 44px;
+  color: var(--white);
+}
+.subsc-lp-scope .share-kicker {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  margin-bottom: 10px;
+}
+.subsc-lp-scope .share-panel h3 {
+  font-size: clamp(20px, 2.6vw, 26px);
+  color: var(--white);
+  margin: 0 0 14px;
+  line-height: 1.5;
+}
+.subsc-lp-scope .share-copy p {
+  margin: 0 0 10px;
+  font-size: 14.5px;
+  color: rgba(255, 255, 255, 0.85);
+}
+.subsc-lp-scope .share-caveat {
+  font-size: 12.5px !important;
+  color: rgba(255, 255, 255, 0.68) !important;
+  margin-bottom: 0 !important;
+}
+.subsc-lp-scope .share-example {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(217, 178, 94, 0.4);
+  border-radius: 16px;
+  padding: 26px 26px;
+  text-align: center;
+}
+.subsc-lp-scope .share-example > p {
+  font-size: 13px;
+  color: var(--gold-soft);
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+.subsc-lp-scope .share-math span {
+  display: block;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 4px;
+}
+.subsc-lp-scope .share-math strong {
+  display: block;
+  font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.subsc-lp-scope .share-example em {
+  font-style: normal;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ============================================================
+   07 Comparison
+   ============================================================ */
+.subsc-lp-scope .compare-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+.subsc-lp-scope .compare-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.subsc-lp-scope .compare-table th,
+.subsc-lp-scope .compare-table td {
+  padding: 16px 18px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  line-height: 1.6;
+}
+.subsc-lp-scope .compare-table thead th {
+  background: var(--paper);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--navy);
+  border-bottom: 2px solid var(--line);
+}
+.subsc-lp-scope .compare-table tbody th {
+  font-weight: 700;
+  color: var(--navy);
+  white-space: nowrap;
+  background: var(--paper);
+}
+.subsc-lp-scope .compare-table td { color: var(--muted); }
+.subsc-lp-scope .compare-table .compare-ours {
+  background: rgba(185, 138, 47, 0.07);
+  color: var(--ink);
+}
+.subsc-lp-scope .compare-table thead .compare-ours {
+  background: var(--navy);
+  color: var(--gold-soft);
+}
+.subsc-lp-scope .compare-table tbody tr:last-child th,
+.subsc-lp-scope .compare-table tbody tr:last-child td { border-bottom: none; }
+
+/* ============================================================
+   08 Flow
+   ============================================================ */
+.subsc-lp-scope .flow { background: var(--white); }
+.subsc-lp-scope .flow.section-block { max-width: none; }
+.subsc-lp-scope .flow > * { max-width: 1120px; margin-left: auto; margin-right: auto; }
+
+.subsc-lp-scope .flow-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.subsc-lp-scope .flow-steps li {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 26px 22px;
+}
+.subsc-lp-scope .flow-num {
+  display: block;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.subsc-lp-scope .flow-steps h3 { font-size: 17px; margin: 0 0 8px; }
+.subsc-lp-scope .flow-steps p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+/* ============================================================
+   09 FAQ
+   ============================================================ */
+.subsc-lp-scope .faq-list {
+  display: grid;
+  gap: 12px;
+  max-width: 860px;
+  margin-inline: auto;
+}
+.subsc-lp-scope .faq .section-heading {
+  margin-inline: auto;
+  text-align: center;
+}
+.subsc-lp-scope .faq-list details {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0 22px;
+}
+.subsc-lp-scope .faq-list summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--navy);
+  font-size: 15.5px;
+  padding: 18px 28px 18px 0;
+  position: relative;
+  list-style: none;
+}
+.subsc-lp-scope .faq-list summary::-webkit-details-marker { display: none; }
+.subsc-lp-scope .faq-list summary::after {
+  content: "+";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--gold);
+  transition: transform 0.2s ease;
+}
+.subsc-lp-scope .faq-list details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+.subsc-lp-scope .faq-list details p {
+  margin: 0;
+  padding: 0 0 20px;
+  font-size: 14.5px;
+  color: var(--muted);
+}
+
+/* ============================================================
+   10 CTAバンド・フォーム
+   ============================================================ */
+.subsc-lp-scope .cta-band {
+  background:
+    radial-gradient(900px 420px at 80% -20%, rgba(185, 138, 47, 0.25), transparent 60%),
+    linear-gradient(150deg, var(--navy-deep) 0%, var(--navy) 70%);
+  color: var(--white);
+  text-align: center;
+  padding: 60px 24px;
+}
+.subsc-lp-scope .cta-band .section-kicker { color: var(--gold-soft); }
+.subsc-lp-scope .cta-band h2 {
+  color: var(--white);
+  margin-bottom: 16px;
+}
+.subsc-lp-scope .cta-title-line { display: inline-block; }
+.subsc-lp-scope .cta-band > p {
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 640px;
+  margin: 0 auto 30px;
+  font-size: 15.5px;
+}
+
+.subsc-lp-scope .contact-form-lead { font-size: 15px; color: var(--muted); }
+
+.subsc-lp-scope .contact-form-section .section-heading {
+  margin-inline: auto;
+  text-align: center;
+}
+.subsc-lp-scope .lead-form {
+  max-width: 720px;
+  margin-inline: auto;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 40px 36px;
+  display: grid;
+  gap: 20px;
+}
+.subsc-lp-scope .lead-form-row-double {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.subsc-lp-scope .form-field { display: grid; gap: 7px; }
+.subsc-lp-scope .form-label {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.subsc-lp-scope .form-label em {
+  color: var(--err);
+  font-style: normal;
+  margin-left: 3px;
+}
+.subsc-lp-scope .form-optional {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 12px;
+}
+.subsc-lp-scope .lead-form input[type="text"],
+.subsc-lp-scope .lead-form input[type="email"],
+.subsc-lp-scope .lead-form input[type="tel"],
+.subsc-lp-scope .lead-form textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 13px 15px;
+  font-size: 15px;
+  font-family: inherit;
+  background: var(--paper);
+  color: var(--ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.subsc-lp-scope .lead-form input:focus,
+.subsc-lp-scope .lead-form textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(185, 138, 47, 0.18);
+  background: var(--white);
+}
+.subsc-lp-scope .form-field-consent label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+.subsc-lp-scope .form-field-consent input { margin-top: 4px; }
+.subsc-lp-scope .form-field-consent a {
+  color: var(--navy);
+  text-decoration: underline;
+}
+.subsc-lp-scope .form-field-consent em { color: var(--err); font-style: normal; }
+.subsc-lp-scope .form-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px; height: 1px;
+  overflow: hidden;
+}
+.subsc-lp-scope .lead-form-actions { text-align: center; }
+.subsc-lp-scope .lead-form-submit { width: 100%; max-width: 380px; }
+.subsc-lp-scope .lead-form-note {
+  margin-top: 12px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.subsc-lp-scope .form-feedback {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  min-height: 1em;
+}
+.subsc-lp-scope .form-feedback.is-success { color: var(--ok); }
+.subsc-lp-scope .form-feedback.is-error { color: var(--err); }
+
+/* ---- モバイル追従CTA ---- */
+.subsc-lp-scope .mobile-sticky-cta {
+  display: none;
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+  background: rgba(12, 30, 51, 0.92);
+  backdrop-filter: blur(8px);
+  z-index: 60;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.subsc-lp-scope .mobile-sticky-cta.is-hidden {
+  transform: translateY(110%);
+  opacity: 0;
+  pointer-events: none;
+}
+.subsc-lp-scope .mobile-sticky-cta .primary-cta {
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 15px;
+}
+
+/* ============================================================
+   レスポンシブ
+   ============================================================ */
+@media (max-width: 960px) {
+  .subsc-lp-scope .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+  .subsc-lp-scope .hero-visual { max-width: 480px; margin: 0 auto; width: 100%; }
+  .subsc-lp-scope .section-grid { grid-template-columns: 1fr; gap: 28px; }
+  .subsc-lp-scope .reason-grid { grid-template-columns: 1fr; }
+  .subsc-lp-scope .works-grid { grid-template-columns: 1fr; }
+  .subsc-lp-scope .plan-grid { grid-template-columns: 1fr; max-width: 480px; margin-inline: auto; }
+  .subsc-lp-scope .plan-card-featured { order: -1; }
+  .subsc-lp-scope .share-panel { grid-template-columns: 1fr; padding: 34px 26px; gap: 24px; }
+  .subsc-lp-scope .loop-visual { grid-template-columns: 1fr 1fr; }
+  .subsc-lp-scope .loop-visual li:not(:last-child)::after { display: none; }
+  .subsc-lp-scope .flow-steps { grid-template-columns: 1fr 1fr; }
+  .subsc-lp-scope .hero-metrics { grid-template-columns: repeat(2, 1fr); }
+  .subsc-lp-scope .service-terms { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  /* 短い行長では文節折り返し(auto-phrase)が右側の空きを生むため、本文は通常折り返しに戻す（見出しは文節維持） */
+  /* 大きく目立つリード文は文節折り返しを維持（語中分割の方が悪目立ちするため） */
+  .subsc-lp-scope p,
+  .subsc-lp-scope li,
+  .subsc-lp-scope dd,
+  .subsc-lp-scope summary {
+    word-break: normal;
+  }
+  .subsc-lp-scope .hero-lead,
+  .subsc-lp-scope .section-lead,
+  .subsc-lp-scope .large-text {
+    word-break: auto-phrase;
+  }
+  .subsc-lp-scope .section-block { padding: 44px 20px; }
+  .subsc-lp-scope .hero { padding: 56px 20px 44px; }
+  .subsc-lp-scope .hero h1 { font-size: clamp(30px, 8.6vw, 38px); }
+  .subsc-lp-scope .lead-form { padding: 28px 20px; }
+  .subsc-lp-scope .lead-form-row-double { grid-template-columns: 1fr; }
+  .subsc-lp-scope .loop-visual { grid-template-columns: 1fr; }
+  .subsc-lp-scope .flow-steps { grid-template-columns: 1fr; }
+  .subsc-lp-scope .mobile-sticky-cta { display: block; }
+  .subsc-lp-scope .section-number { top: 18px; right: 20px; font-size: 11px; }
+  .subsc-lp-scope .lp-break-md { display: none; }
+  .subsc-lp-scope .hero-pain-quotes { grid-template-columns: 1fr; gap: 8px; }
+  .subsc-lp-scope .primary-cta { width: 100%; max-width: 420px; }
+  .subsc-lp-scope .inline-cta { padding-bottom: 40px; }
+}

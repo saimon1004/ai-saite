@@ -1,0 +1,738 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/common/Header.astro";
+import Footer from "../components/common/Footer.astro";
+
+const base = import.meta.env.BASE_URL;
+// CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
+const cssVersion = "20260707-v2";
+const cssHref = `${base}subsc-design/styles.css?v=${cssVersion}`;
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "「頼み放題」に上限はありますか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "依頼回数・修正回数に上限はありません。ただし制作は同時進行1件ずつで、いただいた依頼リストの上から順にお届けします。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "複数社でのシェア利用はできますか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "できます。1つの契約を複数の会社・個人事業主で共有し、共通チャットから各社が依頼できます。費用の分担方法は自由です。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "契約を一時停止できますか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "可能です。依頼が少ない月は一時停止し、残りの契約期間を持ち越せます。",
+      },
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="SAIMONサブスクデザイン | 月額定額・頼み放題のデザイン制作"
+  description="保険・互助会業界に特化した月額定額のデザイン制作サービス。バナー・チラシからLP・Webサイトの実装まで、業界経験のある専属デザイナーに何度でも依頼できます。複数社でのシェア利用OK・同時受入10社限定。"
+  jsonLd={faqJsonLd}
+>
+  <Fragment slot="head">
+    <!-- Meta Pixel -->
+    <script is:inline>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '2033821807210209');
+      fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=2033821807210209&ev=PageView&noscript=1"/></noscript>
+    <!-- End Meta Pixel -->
+    <!-- 研修LP向けのFAQ動画チャットボット（BaseLayout共通）はこのLPでは文脈が合わないため非表示 -->
+    <style is:global>#faq-chatbot-root { display: none !important; }</style>
+  </Fragment>
+  <link rel="stylesheet" href={cssHref} slot="head" />
+
+  <Header />
+
+  <main class="subsc-lp-scope">
+    <!-- 01 Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">SAIMON サブスクデザイン</p>
+          <p class="industry-badge"><strong>保険・互助会業界</strong><span>特化</span></p>
+          <h1 id="hero-title">
+            月額定額、<span class="hero-highlight">頼み放題</span>の<br />
+            専属デザイナー。</h1>
+          <p class="hero-lead">
+            バナー・チラシからLP・Webサイトまで、月額定額で何度でも依頼できるサブスク型のデザイン制作サービスです。<strong class="lead-em">保険・互助会業界</strong>での勤務経験と制作実績を持つデザイナーが、御社専属で対応します。</p>
+          <div class="hero-pain-quotes" aria-label="デザイン外注で起きがちな悩み">
+            <span>バナー1枚でも、また見積もりと発注書…</span>
+            <span>業界の表現ルールを毎回イチから説明</span>
+            <span>LPとチラシで外注先がバラバラ</span>
+            <span>仕上がりの品質が担当者しだい</span>
+          </div>
+          <div class="slots-banner" aria-label="同時受入の上限">
+            <span class="slots-dot" aria-hidden="true"></span>
+            <p>専属品質を保つため、同時受入は<strong>10社限定</strong>です。空き枠は無料相談時にご案内します。</p>
+          </div>
+          <div class="hero-actions">
+            <a class="primary-cta" href="#contact-form" data-cta-source="hero-primary">
+              空き枠を確認して無料相談する<span aria-hidden="true">→</span>
+            </a>
+            <p class="hero-cta-note">相談無料・しつこい営業なし／オンライン対応／1営業日以内に返信</p>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="chat-mock">
+            <div class="chat-mock-head">
+              <i></i>
+              <span>専用チャット — SAIMONサブスクデザイン</span>
+            </div>
+            <div class="chat-mock-body">
+              <div class="chat-msg chat-msg-client">
+                <em>御社</em>
+                <p>来月のキャンペーンLPと、告知バナーを3種お願いします</p>
+              </div>
+              <div class="chat-msg chat-msg-designer">
+                <em>専属デザイナー</em>
+                <p>承知しました。まずバナー3種を今週中に、LPは来週初稿をお送りします</p>
+              </div>
+              <div class="chat-msg chat-msg-deliver">
+                <span>納品</span>
+                <p>banner_A.png / banner_B.png / banner_C.png</p>
+              </div>
+              <div class="chat-msg chat-msg-client">
+                <em>御社</em>
+                <p>早い…！Bのコピーだけ、少し柔らかい言い回しにできますか？</p>
+              </div>
+              <div class="chat-msg chat-msg-designer">
+                <em>専属デザイナー</em>
+                <p>修正しました。気になる点があれば何度でもどうぞ</p>
+              </div>
+              <div class="chat-msg chat-msg-deliver">
+                <span>納品</span>
+                <p>banner_B_v2.png</p>
+              </div>
+              <div class="chat-msg chat-msg-client">
+                <em>御社</em>
+                <p>完璧です！では次はチラシの改訂をお願いします</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <dl class="hero-metrics" aria-label="サービス概要">
+        <div>
+          <dt>月額</dt>
+          <dd><strong>11万円〜</strong><br />（税込）</dd>
+        </div>
+        <div>
+          <dt>依頼回数</dt>
+          <dd><strong>無制限</strong></dd>
+        </div>
+        <div>
+          <dt>修正</dt>
+          <dd><strong>何度でも</strong></dd>
+        </div>
+        <div>
+          <dt>シェア利用</dt>
+          <dd><strong>複数社OK</strong></dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- 02 Problem -->
+    <section class="problem section-block" aria-labelledby="problem-title">
+      <div class="section-number">02</div>
+      <div class="section-grid">
+        <div>
+          <p class="section-kicker">Problem</p>
+          <h2 id="problem-title">
+            デザインを頼むたびに、<br />こんな手間が発生していませんか？</h2>
+        </div>
+        <div>
+          <p class="large-text">
+            単発の外注は、依頼のたびに「探す・説明する・見積もる・検収する」のコストがかかります。とくに保険・互助会の販促物は、商品理解や表現の配慮が欠かせないため、外注先への説明だけでひと仕事になりがちです。</p>
+          <ul class="check-list">
+            <li>バナー1枚でも、見積もり・発注書・請求書のやりとりが発生する</li>
+            <li>保険・互助会特有の表現ルールを、毎回イチから説明している</li>
+            <li>制作会社は高く、クラウドソーシングは品質と管理が不安</li>
+            <li>LP・チラシ・SNS画像で外注先を使い分けていて、管理が大変</li>
+            <li>キャンペーンの立ち上げに、制作が間に合わない</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 Service -->
+    <section class="service section-block" aria-labelledby="service-title">
+      <div class="section-number">03</div>
+      <div class="section-heading">
+        <p class="section-kicker">Service</p>
+        <h2 id="service-title">月額定額で「頼んで、受け取って、<span class="no-break">また頼む」だけ。</span></h2>
+        <p class="section-lead">
+          ご契約後は、専用チャットに依頼を送るだけ。見積もりも発注書も、もう必要ありません。制作は同時進行1件ずつ、依頼リストの上から順に丁寧にお届けします。</p>
+      </div>
+      <ol class="loop-visual" aria-label="依頼から納品までのループ">
+        <li>
+          <span class="loop-step">1</span>
+          <h3>依頼を送る</h3>
+          <p>チャットに要望を書くだけ。丸投げでもOK。</p>
+        </li>
+        <li>
+          <span class="loop-step">2</span>
+          <h3>制作</h3>
+          <p>業界経験のある専属デザイナーがスピーディーに制作。</p>
+        </li>
+        <li>
+          <span class="loop-step">3</span>
+          <h3>納品・修正</h3>
+          <p>確認して修正依頼。修正回数は無制限。</p>
+        </li>
+        <li class="loop-return">
+          <span class="loop-step">↻</span>
+          <h3>次の依頼へ</h3>
+          <p>完了したら、そのまま次の制作に着手します。</p>
+        </li>
+      </ol>
+      <dl class="service-terms" aria-label="共通条件">
+        <div>
+          <dt>依頼回数</dt>
+          <dd>無制限</dd>
+        </div>
+        <div>
+          <dt>修正</dt>
+          <dd>何度でも</dd>
+        </div>
+        <div>
+          <dt>一時停止</dt>
+          <dd>OK</dd>
+        </div>
+        <div>
+          <dt>最低契約</dt>
+          <dd>6ヶ月</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- 04 Reasons -->
+    <section class="reasons section-block" aria-labelledby="reasons-title">
+      <div class="section-number">04</div>
+      <div class="section-heading">
+        <p class="section-kicker">Why SAIMON</p>
+        <h2 id="reasons-title">選ばれる理由</h2>
+      </div>
+      <div class="reason-grid">
+        <article class="reason-card" data-index="01">
+          <h3>保険業界の<span class="no-break">「中の人」</span>だった経験</h3>
+          <p>
+            代表デザイナーは、保険業界でWEBマーケティング担当として勤務した経歴を持ちます。商品特性・訴求の勘所・表現の配慮を理解しているため、業界説明のコストがかかりません。</p>
+          <em>説明いらずの業界理解</em>
+        </article>
+        <article class="reason-card" data-index="02">
+          <h3>互助会・保険業界での制作実績</h3>
+          <p>
+            大手互助会グループのキャンペーンLPや、葬儀保険のLPなど、業界案件の制作・公開実績があります。実物は無料相談時にご覧いただけます。</p>
+          <em>業界案件の実績多数</em>
+        </article>
+        <article class="reason-card" data-index="03">
+          <h3>制作フローの効率化による<span class="no-break">圧倒的スピード</span></h3>
+          <p>
+            ヒアリングから制作・納品までのフローを徹底的に効率化。品質を保ちながら、バナーは2営業日、LPは3営業日を目安にお届けします。</p>
+          <em>速さと品質の両立</em>
+        </article>
+        <article class="reason-card" data-index="04">
+          <h3>デザインから実装・公開まで一気通貫</h3>
+          <p>
+            デザインデータを渡して終わり、ではありません。プレミアムプランでは、コーディングから公開作業、計測タグの設置まで一貫して担当します。</p>
+          <em>「公開まで」を任せられる</em>
+        </article>
+      </div>
+    </section>
+
+    <!-- 05 Works -->
+    <section class="works section-block" aria-labelledby="works-title">
+      <div class="section-number">05</div>
+      <div class="section-heading">
+        <p class="section-kicker">Works</p>
+        <h2 id="works-title">制作実績</h2>
+        <p class="section-lead">
+          保険・互助会業界を中心に、LP・バナー・営業資料まで幅広く手がけています。その品質を、月額定額で何度でも。</p>
+      </div>
+      <div class="works-grid">
+        <article class="work-card">
+          <p class="work-tag">結婚式場LP</p>
+          <h3>大手冠婚葬祭グループ様</h3>
+          <p>グループが運営する結婚式場のLPを制作。会場の魅力が伝わる写真の見せ方と、お問い合わせにつながる構成を意識して仕上げました。</p>
+        </article>
+        <article class="work-card">
+          <p class="work-tag">葬儀保険LP</p>
+          <h3>少額短期保険様</h3>
+          <p>葬儀保険の商品LPを制作。保険商品ならではの表現の配慮を踏まえながら、お客様に安心感が伝わる誠実なトーンでまとめました。</p>
+        </article>
+        <article class="work-card">
+          <p class="work-tag">イベントチラシ</p>
+          <h3>互助会代理店様</h3>
+          <p>会員様向けイベントの告知チラシを制作。日時や特典などの情報を整理し、ひと目で内容が伝わる紙面構成に仕上げました。</p>
+        </article>
+      </div>
+      <p class="works-note">
+        ※実績の社名・制作物は、掲載許可が取れたものから順次公開します。無料相談では実物をご覧いただけます。</p>
+    </section>
+
+    <!-- 06 Price -->
+    <section id="price" class="price section-block" aria-labelledby="price-title">
+      <div class="section-number">06</div>
+      <div class="section-heading">
+        <p class="section-kicker">Price</p>
+        <h2 id="price-title">料金プラン</h2>
+        <p class="section-lead">
+          全プラン共通で、依頼回数無制限・同時進行1件・一時停止OK・最低契約6ヶ月です。</p>
+      </div>
+      <div class="plan-grid">
+        <article class="plan-card">
+          <p class="plan-name">ライト</p>
+          <p class="plan-price"><strong>11</strong><span>万円/月（税込）</span></p>
+          <p class="plan-desc">画像・印刷物のデザインを定額で。</p>
+          <ul>
+            <li>バナー・SNS画像</li>
+            <li>チラシ・パンフレット</li>
+            <li>営業資料・スライド</li>
+            <li class="plan-na">LP・Webサイトは対象外</li>
+          </ul>
+        </article>
+        <article class="plan-card plan-card-featured">
+          <p class="plan-badge">おすすめ</p>
+          <p class="plan-name">スタンダード</p>
+          <p class="plan-price"><strong>22</strong><span>万円/月（税込）</span></p>
+          <p class="plan-desc">LP・Webサイトまで、デザイン納品を定額で。</p>
+          <ul>
+            <li>ライトプランの全内容</li>
+            <li>LPのデザイン〜データ納品</li>
+            <li>Webサイトのデザイン〜データ納品</li>
+          </ul>
+          <p class="plan-note">単発実績価格（LP1本20万円）なら、<span class="no-break">月1本で元が取れます。</span></p>
+        </article>
+        <article class="plan-card">
+          <p class="plan-name">プレミアム</p>
+          <p class="plan-price"><strong>33</strong><span>万円/月（税込）</span></p>
+          <p class="plan-desc">実装・公開まで、まるごとお任せ。</p>
+          <ul>
+            <li>スタンダードの全内容</li>
+            <li>コーディング・公開作業</li>
+            <li>計測タグ（GA4等）の設置</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="share-panel" aria-labelledby="share-title">
+        <div class="share-copy">
+          <p class="share-kicker">Share</p>
+          <h3 id="share-title">1つの契約を、<br class="sp-br" />複数社でシェアできます。</h3>
+          <p>
+            個人事業主の仲間同士、支部・代理店同士での相乗り契約OK。共通の専用チャットに各社から依頼でき、届いた順に1件ずつ制作します（シェア社数が増えるほど、1社あたりの依頼消化ペースは緩やかになります）。費用の分担方法は自由です。</p>
+          <p class="share-caveat">
+            ※「同時受入10社限定」の枠とは別に、1契約内でシェアする社数・人数は自由です。</p>
+        </div>
+        <div class="share-example" aria-label="シェア利用の例">
+          <p>例：スタンダードプランを5社でシェア</p>
+          <div class="share-math">
+            <span>22万円 ÷ 5社</span>
+            <strong>= 1社あたり 月4.4万円</strong>
+          </div>
+          <em>専属デザイナーを、月4.4万円で持てる計算です。</em>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 Comparison -->
+    <section class="comparison section-block" aria-labelledby="comparison-title">
+      <div class="section-number">07</div>
+      <div class="section-heading">
+        <p class="section-kicker">Comparison</p>
+        <h2 id="comparison-title">外注方法の比較</h2>
+      </div>
+      <div class="compare-scroll">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th scope="col">比較項目</th>
+              <th scope="col">制作会社に都度外注</th>
+              <th scope="col">クラウドソーシング</th>
+              <th scope="col" class="compare-ours">SAIMON<br />サブスクデザイン</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">費用</th>
+              <td>LP1本30〜60万円が相場</td>
+              <td>安いが品質に波がある</td>
+              <td class="compare-ours"><strong>月額定額・依頼し放題</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">発注の手間</th>
+              <td>都度、見積もり・契約</td>
+              <td>都度、募集・選定・検収</td>
+              <td class="compare-ours"><strong>チャットに送るだけ</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">業界理解</th>
+              <td>毎回説明が必要</td>
+              <td>ほぼ期待できない</td>
+              <td class="compare-ours"><strong>業界経験者なので説明不要</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">品質の安定</th>
+              <td>担当者しだい</td>
+              <td>ばらつきが大きい</td>
+              <td class="compare-ours"><strong>専属1人で一貫</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">スピード</th>
+              <td>数週間〜</td>
+              <td>納期管理も自分の仕事</td>
+              <td class="compare-ours"><strong>バナー2営業日・LP3営業日目安</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 08 Flow -->
+    <section class="flow section-block" aria-labelledby="flow-title">
+      <div class="section-number">08</div>
+      <div class="section-heading">
+        <p class="section-kicker">Flow</p>
+        <h2 id="flow-title">ご利用の流れ</h2>
+      </div>
+      <ol class="flow-steps">
+        <li>
+          <span class="flow-num">01</span>
+          <h3>無料相談</h3>
+          <p>現在の外注状況・制作したいものを伺い、最適なプランをご提案します。</p>
+        </li>
+        <li>
+          <span class="flow-num">02</span>
+          <h3>ご契約・チャット開設</h3>
+          <p>専用チャットを開設。最短で当日から依頼いただけます。</p>
+        </li>
+        <li>
+          <span class="flow-num">03</span>
+          <h3>依頼を送る</h3>
+          <p>フォーマットは自由。「こんな感じで」の丸投げでもOKです。</p>
+        </li>
+        <li>
+          <span class="flow-num">04</span>
+          <h3>制作・納品</h3>
+          <p>確認・修正を経て完了。そのまま次の依頼に着手します。</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 09 FAQ -->
+    <section id="faq" class="faq section-block" aria-labelledby="faq-title">
+      <div class="section-number">09</div>
+      <div class="section-heading">
+        <p class="section-kicker">FAQ</p>
+        <h2 id="faq-title">よくある質問</h2>
+      </div>
+      <div class="faq-list">
+        <details>
+          <summary>「頼み放題」に上限はありますか？</summary>
+          <p>依頼回数・修正回数に上限はありません。ただし制作は同時進行1件ずつで、いただいた依頼リストの上から順にお届けします。</p>
+        </details>
+        <details>
+          <summary>複数社でのシェア利用について詳しく教えてください。</summary>
+          <p>1つの契約を複数の会社・個人事業主で共有できます。共通の専用チャットに各社から依頼でき、届いた順に1件ずつ制作します。なお、制作は契約単位で同時進行1件のため、シェア社数が多いほど1社あたりの消化ペースは緩やかになります。費用の分担方法はご自由です（代表者さまとのご契約となります）。</p>
+        </details>
+        <details>
+          <summary>契約を一時停止できますか？</summary>
+          <p>可能です。依頼が少ない月は一時停止し、残りの契約期間を持ち越せます。詳細はご契約時にご案内します。</p>
+        </details>
+        <details>
+          <summary>対応範囲を教えてください。</summary>
+          <p>バナー・SNS画像・チラシ・パンフレット・営業資料・LP・Webサイトなどに対応します。動画編集やロゴ制作はご相談ください。</p>
+        </details>
+        <details>
+          <summary>保険・互助会業界以外でも契約できますか？</summary>
+          <p>ご契約いただけます。ただし同時受入は10社限定のため、状況により業界のお客様を優先させていただく場合があります。</p>
+        </details>
+        <details>
+          <summary>納期の目安はどれくらいですか？</summary>
+          <p>バナー等は2営業日、LPは3営業日が目安です（内容・分量により変動します）。</p>
+        </details>
+        <details>
+          <summary>納品物の著作権はどうなりますか？</summary>
+          <p>納品物の著作権は、原則としてお客様に譲渡します。制作実績としての掲載は、個別に確認のうえ行います。</p>
+        </details>
+        <details>
+          <summary>解約はいつでもできますか？</summary>
+          <p>最低契約期間（6ヶ月）の経過後は、いつでも翌月での更新停止をお申し出いただけます。</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- 10 CTA band + Form -->
+    <section class="cta-band" aria-labelledby="cta-title">
+      <p class="section-kicker">Contact</p>
+      <h2 id="cta-title">
+        <span class="cta-title-line">同時受入は、10社限定です。</span>
+      </h2>
+      <p>
+        専属デザイナーとして品質を保つため、同時にお受けするのは10社までとしています。<br class="lp-break-md" />まずは現在の外注コストと照らし合わせて、お気軽にご相談ください。</p>
+      <a class="primary-cta" href="#contact-form" data-cta-source="band-primary">
+        空き枠を確認して無料相談する<span aria-hidden="true">→</span>
+      </a>
+    </section>
+
+    <section id="contact-form" class="contact-form-section section-block" aria-labelledby="contact-form-title">
+      <div class="section-number">10</div>
+      <div class="section-heading">
+        <p class="section-kicker">Form</p>
+        <h2 id="contact-form-title">無料相談フォーム</h2>
+        <p class="contact-form-lead">
+          ご記入いただいた内容をもとに、1営業日以内に担当よりご連絡いたします。入力は30秒。「空き枠だけ知りたい」「シェア利用の相談」だけでもお気軽にどうぞ。しつこい営業はいたしません。</p>
+      </div>
+
+      <form id="lead-form" class="lead-form" novalidate>
+        <div class="lead-form-row lead-form-row-double">
+          <label class="form-field">
+            <span class="form-label">会社名・屋号<em aria-hidden="true">*</em></span>
+            <input type="text" name="company" required autocomplete="organization" placeholder="株式会社サンプル" />
+          </label>
+          <label class="form-field">
+            <span class="form-label">お名前<em aria-hidden="true">*</em></span>
+            <input type="text" name="name" required autocomplete="name" placeholder="山田 太郎" />
+          </label>
+        </div>
+
+        <div class="lead-form-row lead-form-row-double">
+          <label class="form-field">
+            <span class="form-label">メールアドレス<em aria-hidden="true">*</em></span>
+            <input type="email" name="email" required autocomplete="email" placeholder="taro@example.com" />
+          </label>
+          <label class="form-field">
+            <span class="form-label">電話番号<span class="form-optional">（任意）</span></span>
+            <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="0312345678（任意）" />
+          </label>
+        </div>
+
+        <div class="lead-form-row">
+          <label class="form-field">
+            <span class="form-label">ご相談内容（任意）</span>
+            <textarea name="challenges" rows="4" placeholder="例：毎月バナーやチラシを外注しており、外注費は月20万円ほど。サブスクに切り替えられるか相談したい。"></textarea>
+          </label>
+        </div>
+
+        <div class="lead-form-row form-field-checkbox form-field-consent">
+          <label>
+            <input type="checkbox" name="consent" required value="yes" />
+            <span>
+              <a href="/privacy-policy/" target="_blank" rel="noopener">個人情報の取り扱い</a>に同意の上、送信します<em aria-hidden="true">*</em>
+            </span>
+          </label>
+        </div>
+
+        <div aria-hidden="true" class="form-honeypot">
+          <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <div class="lead-form-actions">
+          <button type="submit" class="primary-cta lead-form-submit">
+            送信する<span aria-hidden="true">→</span>
+          </button>
+          <p class="lead-form-note">送信後、1営業日以内に担当よりご連絡いたします。</p>
+        </div>
+
+        <p id="form-feedback" class="form-feedback" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <div class="mobile-sticky-cta" id="mobile-sticky-cta" aria-hidden="false">
+      <a class="primary-cta" href="#contact-form" data-cta-source="sticky-mobile">
+        空き枠を確認して無料相談する<span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </main>
+
+  <Footer />
+
+  <script is:inline>
+    (function () {
+      const FORM_ENDPOINT = "https://recruit-hp-form-api.vercel.app/api/contact";
+
+      const form = document.getElementById("lead-form");
+      if (!form) return;
+
+      const feedback = document.getElementById("form-feedback");
+      const submitBtn = form.querySelector(".lead-form-submit");
+
+      // API側の獲得経路ホワイトリストに合わせる。LPの識別は UTM_campaign の既定値で行う
+      function resolveSource() {
+        return "LP無料相談";
+      }
+
+      function collectUtm() {
+        try {
+          const url = new URL(window.location.href);
+          return {
+            utmSource: url.searchParams.get("utm_source") || "",
+            utmCampaign: url.searchParams.get("utm_campaign") || "subsc-design-lp",
+          };
+        } catch (_) {
+          return { utmSource: "", utmCampaign: "subsc-design-lp" };
+        }
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "送信中...";
+        feedback.className = "form-feedback";
+        feedback.textContent = "";
+
+        const data = new FormData(form);
+        const utm = collectUtm();
+        const eventId =
+          (window.crypto && crypto.randomUUID && crypto.randomUUID()) ||
+          String(Date.now()) + Math.random().toString(16).slice(2);
+        const payload = {
+          source: resolveSource(),
+          company: data.get("company"),
+          name: data.get("name"),
+          email: data.get("email"),
+          phone: data.get("phone"),
+          challenges: data.get("challenges"),
+          consent: data.get("consent") === "yes",
+          website: data.get("website") || "",
+          utmSource: utm.utmSource,
+          utmCampaign: utm.utmCampaign,
+          eventId: eventId,
+          pageUrl: window.location.href,
+        };
+
+        try {
+          const res = await fetch(FORM_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const body = await res.json().catch(() => ({}));
+
+          if (!res.ok) {
+            throw new Error(body.error || "送信に失敗しました");
+          }
+
+          feedback.classList.add("is-success");
+          feedback.textContent =
+            body.message || "お問い合わせを受け付けました。1営業日以内にご連絡いたします。";
+          form.reset();
+          submitBtn.textContent = "送信完了";
+
+          if (typeof window.gtag === "function") {
+            window.gtag("event", "generate_lead", {
+              event_category: "form",
+              event_label: payload.source,
+            });
+          }
+
+          if (typeof window.fbq === "function") {
+            window.fbq(
+              "track",
+              "Lead",
+              { content_name: payload.source },
+              { eventID: eventId }
+            );
+          }
+        } catch (err) {
+          feedback.classList.add("is-error");
+          feedback.textContent =
+            err.message ||
+            "送信に失敗しました。お手数ですが info@sai-mon.co.jp まで直接ご連絡ください。";
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '送信する <span aria-hidden="true">→</span>';
+        }
+      });
+
+      // ===== 計測: GA4ファネルイベント（既存 gtag / BaseLayout 側で読み込み済み） =====
+      function track(name, params) {
+        try { if (typeof window.gtag === "function") window.gtag("event", name, params || {}); } catch (_) {}
+      }
+
+      var stickyCta = document.getElementById("mobile-sticky-cta");
+      var formSection = document.getElementById("contact-form");
+
+      // フォーム到達（form_view・1回のみ）＋ 追従CTAをフォーム表示時に隠す
+      var formViewed = false;
+      if (formSection && "IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (stickyCta) stickyCta.classList.toggle("is-hidden", e.isIntersecting);
+            if (e.isIntersecting && !formViewed) {
+              formViewed = true;
+              track("lp_form_view", { event_category: "subsc_design_funnel" });
+            }
+          });
+        }, { threshold: 0.01 });
+        io.observe(formSection);
+      }
+
+      // CTAクリック（data-cta-source 別）
+      document.querySelectorAll("[data-cta-source]").forEach(function (el) {
+        el.addEventListener("click", function () {
+          track("lp_cta_click", { event_category: "subsc_design_funnel", event_label: el.getAttribute("data-cta-source") });
+        });
+      });
+
+      // フォーム入力開始（最初のフォーカス・1回のみ）
+      var formStarted = false;
+      if (form) {
+        form.addEventListener("focusin", function () {
+          if (formStarted) return;
+          formStarted = true;
+          track("lp_form_start", { event_category: "subsc_design_funnel" });
+        });
+      }
+
+      // スクロール深度（25/50/75/100% を1回ずつ）
+      var depths = [25, 50, 75, 100];
+      var fired = {};
+      function onScroll() {
+        var doc = document.documentElement;
+        var scrolled = (window.scrollY + window.innerHeight) / doc.scrollHeight * 100;
+        depths.forEach(function (d) {
+          if (!fired[d] && scrolled >= d) {
+            fired[d] = true;
+            track("lp_scroll_depth", { event_category: "subsc_design_funnel", event_label: d + "%", value: d });
+          }
+        });
+        if (fired[100]) window.removeEventListener("scroll", onScroll);
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+    })();
+  </script>
+</BaseLayout>
