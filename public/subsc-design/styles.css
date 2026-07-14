@@ -106,6 +106,7 @@
   color: var(--ink);
 }
 .subsc-lp-scope .section-lead strong { color: var(--gold); font-weight: 800; }
+.subsc-lp-scope .terms-link { color: var(--navy); text-decoration: underline; }
 
 .subsc-lp-scope .section-grid {
   display: grid;
