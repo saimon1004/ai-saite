@@ -863,6 +863,12 @@
   letter-spacing: 0.01em;
 }
 .subsc-lp-scope .shindan-card-diff .shindan-card-value strong { color: var(--gold-soft); }
+.subsc-lp-scope .shindan-sub {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.7);
+}
+.subsc-lp-scope .shindan-card-diff .shindan-sub { color: rgba(217, 178, 94, 0.85); }
 .subsc-lp-scope .shindan-plan {
   display: block;
   font-size: 11.5px;

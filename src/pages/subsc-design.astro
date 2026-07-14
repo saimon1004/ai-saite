@@ -378,7 +378,7 @@ const jsonLd = {
             <input type="number" id="sd-flyer" min="0" max="99" value="0" inputmode="numeric" />
           </label>
           <label class="shindan-field">
-            <span>LP・Webサイト<em>本/年</em></span>
+            <span>LP・Webサイト<em>本/月</em></span>
             <input type="number" id="sd-lp" min="0" max="99" value="0" inputmode="numeric" />
           </label>
           <button type="button" id="sd-run" class="primary-cta shindan-run">診断する<span aria-hidden="true">→</span></button>
@@ -386,16 +386,19 @@ const jsonLd = {
         <div id="sd-result" class="shindan-result" hidden>
           <div class="shindan-cards">
             <div class="shindan-card">
-              <p class="shindan-card-label">現在の年間外注費（概算）</p>
-              <p class="shindan-card-value"><strong id="sd-current">0</strong>万円</p>
+              <p class="shindan-card-label">現在の外注費（概算）</p>
+              <p class="shindan-card-value">月<strong id="sd-current">0</strong>万円</p>
+              <p class="shindan-sub">年間 <span id="sd-current-y">0</span>万円</p>
             </div>
             <div class="shindan-card">
               <p class="shindan-card-label">サブスクに切り替えると</p>
-              <p class="shindan-card-value"><strong id="sd-subsc">0</strong>万円<span id="sd-plan" class="shindan-plan"></span></p>
+              <p class="shindan-card-value">月<strong id="sd-subsc">0</strong>万円</p>
+              <p class="shindan-sub">年間 <span id="sd-subsc-y">0</span>万円<span id="sd-plan" class="shindan-plan"></span></p>
             </div>
             <div class="shindan-card shindan-card-diff">
-              <p class="shindan-card-label" id="sd-diff-label">年間の削減見込み</p>
-              <p class="shindan-card-value"><strong id="sd-diff">0</strong>万円</p>
+              <p class="shindan-card-label" id="sd-diff-label">削減見込み</p>
+              <p class="shindan-card-value">月<strong id="sd-diff">0</strong>万円</p>
+              <p class="shindan-sub">年間 <span id="sd-diff-y">0</span>万円</p>
             </div>
           </div>
           <p id="sd-comment" class="shindan-comment"></p>
@@ -831,7 +834,10 @@ const jsonLd = {
       // ===== コスト診断（リードマグネット） =====
       (function () {
         var UNIT = { banner: 2, flyer: 5, lp: 30 }; // 万円/本（一般的な外注相場の概算）
-        var PLAN = { light: { name: "ライトプラン", annual: 132 }, standard: { name: "スタンダードプラン", annual: 264 } };
+        var PLAN = {
+          light: { name: "ライトプラン", monthly: 11, annual: 132 },
+          standard: { name: "スタンダードプラン", monthly: 22, annual: 264 },
+        };
         var runBtn = document.getElementById("sd-run");
         if (!runBtn) return;
         var last = null;
@@ -845,33 +851,35 @@ const jsonLd = {
           var banner = num("sd-banner");
           var flyer = num("sd-flyer");
           var lp = num("sd-lp");
-          var current = banner * 12 * UNIT.banner + flyer * 12 * UNIT.flyer + lp * UNIT.lp;
+          var monthly = banner * UNIT.banner + flyer * UNIT.flyer + lp * UNIT.lp;
+          var annual = monthly * 12;
           var plan = lp > 0 ? PLAN.standard : PLAN.light;
-          var diff = current - plan.annual;
+          var diffM = monthly - plan.monthly;
+          var diffY = annual - plan.annual;
 
-          document.getElementById("sd-current").textContent = current.toLocaleString();
-          document.getElementById("sd-subsc").textContent = plan.annual.toLocaleString();
+          document.getElementById("sd-current").textContent = monthly.toLocaleString();
+          document.getElementById("sd-current-y").textContent = annual.toLocaleString();
+          document.getElementById("sd-subsc").textContent = plan.monthly.toLocaleString();
+          document.getElementById("sd-subsc-y").textContent = plan.annual.toLocaleString();
           document.getElementById("sd-plan").textContent = "（" + plan.name + "）";
 
-          var diffEl = document.getElementById("sd-diff");
           var diffLabel = document.getElementById("sd-diff-label");
           var comment = document.getElementById("sd-comment");
-          if (diff > 0) {
-            diffLabel.textContent = "年間の削減見込み";
-            diffEl.textContent = diff.toLocaleString();
+          document.getElementById("sd-diff").textContent = Math.abs(diffM).toLocaleString();
+          document.getElementById("sd-diff-y").textContent = Math.abs(diffY).toLocaleString();
+          if (diffM > 0) {
+            diffLabel.textContent = "削減見込み";
             comment.textContent = "外注のたびに発生する見積もり・発注のやりとりもなくなります。診断結果をもとに、最適なプランを無料相談でご案内します。";
-          } else if (diff === 0) {
+          } else if (diffM === 0) {
             diffLabel.textContent = "サブスクとの差額";
-            diffEl.textContent = "0";
             comment.textContent = "外注費はサブスクとほぼ同水準です。依頼のしやすさや品質の安定、納品スピードを重視される場合は、ぜひ一度ご相談ください。";
           } else {
             diffLabel.textContent = "サブスクとの差額";
-            diffEl.textContent = Math.abs(diff).toLocaleString();
             comment.textContent = "現在の本数では単発外注のほうが割安な可能性があります。制作本数を増やしたい場合や、スピード・品質に課題がある場合は、シェア利用も含めてご相談ください。";
           }
-          last = { banner: banner, flyer: flyer, lp: lp, current: current, plan: plan.name, diff: diff };
+          last = { banner: banner, flyer: flyer, lp: lp, monthly: monthly, annual: annual, plan: plan.name, diffM: diffM, diffY: diffY };
           document.getElementById("sd-result").hidden = false;
-          track("lp_shindan_run", { event_category: "subsc_design_funnel", value: current });
+          track("lp_shindan_run", { event_category: "subsc_design_funnel", value: monthly });
         });
 
         document.getElementById("sd-consult").addEventListener("click", function () {
@@ -879,9 +887,9 @@ const jsonLd = {
             var ta = document.querySelector('#lead-form textarea[name="challenges"]');
             if (ta && !ta.value) {
               ta.value =
-                "【外注費診断の結果】バナー" + last.banner + "本/月・チラシ等" + last.flyer + "本/月・LP" + last.lp +
-                "本/年 → 年間外注費 約" + last.current + "万円。" +
-                (last.diff > 0 ? "サブスク切替（" + last.plan + "）で年間約" + last.diff + "万円の削減見込みと診断されました。詳しく相談したいです。" : "最適な利用方法を相談したいです。");
+                "【外注費診断の結果】バナー" + last.banner + "本・チラシ等" + last.flyer + "本・LP" + last.lp +
+                "本（いずれも月間）→ 外注費 月約" + last.monthly + "万円（年約" + last.annual + "万円）。" +
+                (last.diffM > 0 ? "サブスク切替（" + last.plan + "）で月約" + last.diffM + "万円・年約" + last.diffY + "万円の削減見込みと診断されました。詳しく相談したいです。" : "最適な利用方法を相談したいです。");
             }
           }
           track("lp_shindan_cta", { event_category: "subsc_design_funnel" });
