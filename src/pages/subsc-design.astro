@@ -5,11 +5,13 @@ import Footer from "../components/common/Footer.astro";
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260707-v2";
+const cssVersion = "20260714-v3";
 const cssHref = `${base}subsc-design/styles.css?v=${cssVersion}`;
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
+const pageUrl = "https://sai-mon.co.jp/subsc-design/";
+
+// 構造化データ: 運営会社・サービス・料金・パンくず・FAQの関係を検索エンジンに伝える
+const faqEntity = {
   "@type": "FAQPage",
   mainEntity: [
     {
@@ -38,12 +40,71 @@ const faqJsonLd = {
     },
   ],
 };
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://sai-mon.co.jp/#organization",
+      name: "株式会社SAIMON",
+      url: "https://sai-mon.co.jp/",
+      logo: "https://sai-mon.co.jp/logo.png",
+    },
+    {
+      "@type": "Service",
+      "@id": `${pageUrl}#service`,
+      name: "SAIMONサブスクデザイン",
+      serviceType: "月額定額デザイン制作（デザインのサブスクリプション）",
+      description:
+        "保険・互助会業界に特化した月額定額のデザイン制作サービス。バナー・チラシ・営業資料からLP・Webサイトまで、専属デザイナーに定額で何度でも依頼できます。",
+      url: pageUrl,
+      provider: { "@id": "https://sai-mon.co.jp/#organization" },
+      areaServed: "JP",
+      audience: {
+        "@type": "Audience",
+        audienceType: "保険会社・少額短期保険・冠婚葬祭互助会・代理店・個人事業主",
+      },
+      offers: [
+        {
+          "@type": "Offer",
+          name: "ライトプラン",
+          price: "110000",
+          priceCurrency: "JPY",
+          description: "バナー・SNS画像・チラシ・営業資料が月額定額で依頼し放題（LP・Webサイトを除く）",
+        },
+        {
+          "@type": "Offer",
+          name: "スタンダードプラン",
+          price: "220000",
+          priceCurrency: "JPY",
+          description: "ライトの全内容に加え、LP・Webサイトのデザインからデータ納品まで月額定額",
+        },
+        {
+          "@type": "Offer",
+          name: "プレミアムプラン",
+          price: "330000",
+          priceCurrency: "JPY",
+          description: "スタンダードの全内容に加え、コーディング・公開作業・計測タグ設置まで月額定額",
+        },
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "ホーム", item: "https://sai-mon.co.jp/" },
+        { "@type": "ListItem", position: 2, name: "サブスクデザイン", item: pageUrl },
+      ],
+    },
+    faqEntity,
+  ],
+};
 ---
 
 <BaseLayout
-  title="SAIMONサブスクデザイン | 月額定額・頼み放題のデザイン制作"
-  description="保険・互助会業界に特化した月額定額のデザイン制作サービス。バナー・チラシからLP・Webサイトの実装まで、業界経験のある専属デザイナーに何度でも依頼できます。複数社でのシェア利用OK・同時受入10社限定。"
-  jsonLd={faqJsonLd}
+  title="保険・互助会特化のデザインサブスク | 月額定額デザイン制作"
+  description="保険・互助会業界特化の月額定額デザイン制作サブスク「SAIMONサブスクデザイン」。バナー・チラシ・LP・Webサイトを業界経験のある専属デザイナーに定額で何度でも依頼できます。バナー2営業日・LP3営業日目安、同時受入10社限定・複数社シェアOK。"
+  jsonLd={jsonLd}
 >
   <Fragment slot="head">
     <!-- Meta Pixel -->
@@ -296,6 +357,55 @@ const faqJsonLd = {
       </div>
       <p class="works-note">
         ※実績の社名・制作物は、掲載許可が取れたものから順次公開します。無料相談では実物をご覧いただけます。</p>
+    </section>
+
+    <!-- コスト診断（リードマグネット） -->
+    <section id="shindan" class="shindan section-block" aria-labelledby="shindan-title">
+      <div class="shindan-panel">
+        <div class="section-heading shindan-heading">
+          <p class="section-kicker">Simulation</p>
+          <h2 id="shindan-title">30秒でわかる、デザイン外注費かんたん診断</h2>
+          <p class="section-lead">
+            制作本数を入れるだけで、年間の外注費とサブスク切替時の差額をその場で試算できます。</p>
+        </div>
+        <div class="shindan-form" role="group" aria-label="制作本数の入力">
+          <label class="shindan-field">
+            <span>バナー・SNS画像<em>本/月</em></span>
+            <input type="number" id="sd-banner" min="0" max="99" value="0" inputmode="numeric" />
+          </label>
+          <label class="shindan-field">
+            <span>チラシ・パンフレット・営業資料<em>本/月</em></span>
+            <input type="number" id="sd-flyer" min="0" max="99" value="0" inputmode="numeric" />
+          </label>
+          <label class="shindan-field">
+            <span>LP・Webサイト<em>本/年</em></span>
+            <input type="number" id="sd-lp" min="0" max="99" value="0" inputmode="numeric" />
+          </label>
+          <button type="button" id="sd-run" class="primary-cta shindan-run">診断する<span aria-hidden="true">→</span></button>
+        </div>
+        <div id="sd-result" class="shindan-result" hidden>
+          <div class="shindan-cards">
+            <div class="shindan-card">
+              <p class="shindan-card-label">現在の年間外注費（概算）</p>
+              <p class="shindan-card-value"><strong id="sd-current">0</strong>万円</p>
+            </div>
+            <div class="shindan-card">
+              <p class="shindan-card-label">サブスクに切り替えると</p>
+              <p class="shindan-card-value"><strong id="sd-subsc">0</strong>万円<span id="sd-plan" class="shindan-plan"></span></p>
+            </div>
+            <div class="shindan-card shindan-card-diff">
+              <p class="shindan-card-label" id="sd-diff-label">年間の削減見込み</p>
+              <p class="shindan-card-value"><strong id="sd-diff">0</strong>万円</p>
+            </div>
+          </div>
+          <p id="sd-comment" class="shindan-comment"></p>
+          <div class="shindan-cta">
+            <button type="button" id="sd-consult" class="primary-cta">この診断結果をもとに無料相談する<span aria-hidden="true">→</span></button>
+          </div>
+          <p class="shindan-note">
+            ※一般的な外注相場（バナー2万円・チラシ5万円・LPは相場30〜60万円の下限30万円）で控えめに試算した概算です。実際の金額は内容・分量により変動します。</p>
+        </div>
+      </div>
     </section>
 
     <!-- 06 Price -->
@@ -717,6 +827,68 @@ const faqJsonLd = {
           track("lp_form_start", { event_category: "subsc_design_funnel" });
         });
       }
+
+      // ===== コスト診断（リードマグネット） =====
+      (function () {
+        var UNIT = { banner: 2, flyer: 5, lp: 30 }; // 万円/本（一般的な外注相場の概算）
+        var PLAN = { light: { name: "ライトプラン", annual: 132 }, standard: { name: "スタンダードプラン", annual: 264 } };
+        var runBtn = document.getElementById("sd-run");
+        if (!runBtn) return;
+        var last = null;
+
+        function num(id) {
+          var v = parseInt(document.getElementById(id).value, 10);
+          return isNaN(v) || v < 0 ? 0 : Math.min(v, 99);
+        }
+
+        runBtn.addEventListener("click", function () {
+          var banner = num("sd-banner");
+          var flyer = num("sd-flyer");
+          var lp = num("sd-lp");
+          var current = banner * 12 * UNIT.banner + flyer * 12 * UNIT.flyer + lp * UNIT.lp;
+          var plan = lp > 0 ? PLAN.standard : PLAN.light;
+          var diff = current - plan.annual;
+
+          document.getElementById("sd-current").textContent = current.toLocaleString();
+          document.getElementById("sd-subsc").textContent = plan.annual.toLocaleString();
+          document.getElementById("sd-plan").textContent = "（" + plan.name + "）";
+
+          var diffEl = document.getElementById("sd-diff");
+          var diffLabel = document.getElementById("sd-diff-label");
+          var comment = document.getElementById("sd-comment");
+          if (diff > 0) {
+            diffLabel.textContent = "年間の削減見込み";
+            diffEl.textContent = diff.toLocaleString();
+            comment.textContent = "外注のたびに発生する見積もり・発注のやりとりもなくなります。診断結果をもとに、最適なプランを無料相談でご案内します。";
+          } else if (diff === 0) {
+            diffLabel.textContent = "サブスクとの差額";
+            diffEl.textContent = "0";
+            comment.textContent = "外注費はサブスクとほぼ同水準です。依頼のしやすさや品質の安定、納品スピードを重視される場合は、ぜひ一度ご相談ください。";
+          } else {
+            diffLabel.textContent = "サブスクとの差額";
+            diffEl.textContent = Math.abs(diff).toLocaleString();
+            comment.textContent = "現在の本数では単発外注のほうが割安な可能性があります。制作本数を増やしたい場合や、スピード・品質に課題がある場合は、シェア利用も含めてご相談ください。";
+          }
+          last = { banner: banner, flyer: flyer, lp: lp, current: current, plan: plan.name, diff: diff };
+          document.getElementById("sd-result").hidden = false;
+          track("lp_shindan_run", { event_category: "subsc_design_funnel", value: current });
+        });
+
+        document.getElementById("sd-consult").addEventListener("click", function () {
+          if (last) {
+            var ta = document.querySelector('#lead-form textarea[name="challenges"]');
+            if (ta && !ta.value) {
+              ta.value =
+                "【外注費診断の結果】バナー" + last.banner + "本/月・チラシ等" + last.flyer + "本/月・LP" + last.lp +
+                "本/年 → 年間外注費 約" + last.current + "万円。" +
+                (last.diff > 0 ? "サブスク切替（" + last.plan + "）で年間約" + last.diff + "万円の削減見込みと診断されました。詳しく相談したいです。" : "最適な利用方法を相談したいです。");
+            }
+          }
+          track("lp_shindan_cta", { event_category: "subsc_design_funnel" });
+          var formSec = document.getElementById("contact-form");
+          if (formSec) formSec.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      })();
 
       // スクロール深度（25/50/75/100% を1回ずつ）
       var depths = [25, 50, 75, 100];

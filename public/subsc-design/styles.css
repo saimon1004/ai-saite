@@ -777,6 +777,126 @@
 }
 
 /* ============================================================
+   コスト診断（リードマグネット）
+   ============================================================ */
+.subsc-lp-scope .shindan-panel {
+  background:
+    radial-gradient(800px 400px at 85% -10%, rgba(185, 138, 47, 0.2), transparent 60%),
+    linear-gradient(150deg, var(--navy-deep) 0%, var(--navy) 70%);
+  border-radius: 24px;
+  padding: 48px 44px;
+  color: var(--white);
+}
+.subsc-lp-scope .shindan-heading { margin-bottom: 28px; max-width: none; }
+.subsc-lp-scope .shindan-heading h2 { color: var(--white); }
+.subsc-lp-scope .shindan-heading .section-lead { color: rgba(255, 255, 255, 0.85); }
+
+.subsc-lp-scope .shindan-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) auto;
+  gap: 14px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+.subsc-lp-scope .shindan-field { display: grid; gap: 7px; }
+.subsc-lp-scope .shindan-field > span {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+}
+.subsc-lp-scope .shindan-field em {
+  font-style: normal;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 6px;
+  font-size: 11.5px;
+}
+.subsc-lp-scope .shindan-field input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  font-size: 20px;
+  font-weight: 800;
+  text-align: center;
+  padding: 12px 10px;
+}
+.subsc-lp-scope .shindan-field input:focus {
+  outline: none;
+  border-color: var(--gold-soft);
+  box-shadow: 0 0 0 3px rgba(217, 178, 94, 0.25);
+}
+.subsc-lp-scope .shindan-run { padding: 16px 28px; white-space: nowrap; }
+
+.subsc-lp-scope .shindan-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.subsc-lp-scope .shindan-card {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  padding: 18px 20px;
+  text-align: center;
+}
+.subsc-lp-scope .shindan-card-diff {
+  background: rgba(185, 138, 47, 0.18);
+  border-color: rgba(217, 178, 94, 0.6);
+}
+.subsc-lp-scope .shindan-card-label {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+.subsc-lp-scope .shindan-card-value {
+  margin: 0;
+  color: var(--white);
+  font-size: 14px;
+}
+.subsc-lp-scope .shindan-card-value strong {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+}
+.subsc-lp-scope .shindan-card-diff .shindan-card-value strong { color: var(--gold-soft); }
+.subsc-lp-scope .shindan-plan {
+  display: block;
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 2px;
+}
+.subsc-lp-scope .shindan-comment {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 720px;
+  margin: 0 auto 20px;
+  text-align: center;
+}
+.subsc-lp-scope .shindan-cta { text-align: center; margin-bottom: 14px; }
+.subsc-lp-scope .shindan-note {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: left;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+@media (max-width: 960px) {
+  .subsc-lp-scope .shindan-form { grid-template-columns: repeat(3, 1fr); }
+  .subsc-lp-scope .shindan-run { grid-column: 1 / -1; justify-self: center; width: 100%; max-width: 420px; }
+  .subsc-lp-scope .shindan-cards { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .subsc-lp-scope .shindan-panel { padding: 32px 20px; }
+  .subsc-lp-scope .shindan-form { grid-template-columns: 1fr; }
+  .subsc-lp-scope .shindan-heading h2 { font-size: 21px; }
+}
+
+/* ============================================================
    07 Comparison
    ============================================================ */
 .subsc-lp-scope .compare-scroll {
