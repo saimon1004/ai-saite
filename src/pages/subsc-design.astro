@@ -1015,6 +1015,23 @@ const jsonLd = {
         }
 
         msgs.forEach(function (m) { m.classList.add("cm"); });
+
+        // 全メッセージ表示時の高さで枠を固定し、再生中のレイアウトシフトを防ぐ
+        function lockHeight() {
+          var shown = msgs.map(function (m) { return m.classList.contains("cm-show"); });
+          msgs.forEach(function (m) { m.classList.add("cm-show"); });
+          body.style.height = "auto";
+          var h = body.offsetHeight;
+          body.style.height = h + "px";
+          msgs.forEach(function (m, i) { if (!shown[i]) m.classList.remove("cm-show"); });
+        }
+        lockHeight();
+        var rlock;
+        window.addEventListener("resize", function () {
+          clearTimeout(rlock);
+          rlock = setTimeout(lockHeight, 200);
+        });
+
         var chatIO = new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
             if (e.isIntersecting && !started) {

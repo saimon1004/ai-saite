@@ -422,6 +422,8 @@
   padding: 16px 14px 18px;
   display: grid;
   gap: 9px;
+  align-content: start;
+  overflow: hidden;
   background: linear-gradient(180deg, #f2f5f9 0%, #e9eef5 100%);
 }
 .subsc-lp-scope .chat-msg { max-width: 88%; }
