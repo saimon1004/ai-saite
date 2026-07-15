@@ -5,7 +5,7 @@ import Footer from "../components/common/Footer.astro";
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260714-v3";
+const cssVersion = "20260714-v4";
 const cssHref = `${base}subsc-design/styles.css?v=${cssVersion}`;
 
 const pageUrl = "https://sai-mon.co.jp/subsc-design/";
@@ -125,6 +125,13 @@ const jsonLd = {
     <!-- End Meta Pixel -->
     <!-- 研修LP向けのFAQ動画チャットボット（BaseLayout共通）はこのLPでは文脈が合わないため非表示 -->
     <style is:global>#faq-chatbot-root { display: none !important; }</style>
+    <!-- 見出し用ディスプレイ書体（格式のある明朝） -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
   </Fragment>
   <link rel="stylesheet" href={cssHref} slot="head" />
 
@@ -133,6 +140,10 @@ const jsonLd = {
   <main class="subsc-lp-scope">
     <!-- 01 Hero -->
     <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-ambient" aria-hidden="true">
+        <i class="orb orb-a"></i>
+        <i class="orb orb-b"></i>
+      </div>
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">SAIMON サブスクデザイン</p>
@@ -219,6 +230,14 @@ const jsonLd = {
         </div>
       </dl>
     </section>
+
+    <!-- 制作物マーキー（頼み放題の視覚化） -->
+    <div class="mq" aria-hidden="true">
+      <div class="mq-track">
+        <span>バナー</span><i>◆</i><span>チラシ</span><i>◆</i><span>パンフレット</span><i>◆</i><span>LP</span><i>◆</i><span>Webサイト</span><i>◆</i><span>SNS画像</span><i>◆</i><span>営業資料</span><i>◆</i><span>ポスター</span><i>◆</i><span>DM・はがき</span><i>◆</i><span>会報誌</span><i>◆</i><span>のぼり</span><i>◆</i><span>名刺・封筒</span><i>◆</i>
+        <span>バナー</span><i>◆</i><span>チラシ</span><i>◆</i><span>パンフレット</span><i>◆</i><span>LP</span><i>◆</i><span>Webサイト</span><i>◆</i><span>SNS画像</span><i>◆</i><span>営業資料</span><i>◆</i><span>ポスター</span><i>◆</i><span>DM・はがき</span><i>◆</i><span>会報誌</span><i>◆</i><span>のぼり</span><i>◆</i><span>名刺・封筒</span><i>◆</i>
+      </div>
+    </div>
 
     <!-- 02 Problem -->
     <section class="problem section-block" aria-labelledby="problem-title">
@@ -340,23 +359,32 @@ const jsonLd = {
       </div>
       <div class="works-grid">
         <article class="work-card">
-          <p class="work-tag">結婚式場LP</p>
-          <h3>大手冠婚葬祭グループ様</h3>
-          <p>グループが運営する結婚式場のLPを制作。会場の魅力が伝わる写真の見せ方と、お問い合わせにつながる構成を意識して仕上げました。</p>
+          <figure class="work-media"><img src={`${base}subsc-design/assets/work-wedding.jpg`} alt="温かな光に包まれた結婚式場のイメージ" loading="lazy" width="900" height="599" /></figure>
+          <div class="work-body">
+            <p class="work-tag">結婚式場LP</p>
+            <h3>大手冠婚葬祭グループ様</h3>
+            <p>グループが運営する結婚式場のLPを制作。会場の魅力が伝わる写真の見せ方と、お問い合わせにつながる構成を意識して仕上げました。</p>
+          </div>
         </article>
         <article class="work-card">
-          <p class="work-tag">葬儀保険LP</p>
-          <h3>少額短期保険様</h3>
-          <p>葬儀保険の商品LPを制作。保険商品ならではの表現の配慮を踏まえながら、お客様に安心感が伝わる誠実なトーンでまとめました。</p>
+          <figure class="work-media"><img src={`${base}subsc-design/assets/work-flower.jpg`} alt="白い菊とユリの上品なアレンジメントのイメージ" loading="lazy" width="900" height="599" /></figure>
+          <div class="work-body">
+            <p class="work-tag">葬儀保険LP</p>
+            <h3>少額短期保険様</h3>
+            <p>葬儀保険の商品LPを制作。保険商品ならではの表現の配慮を踏まえながら、お客様に安心感が伝わる誠実なトーンでまとめました。</p>
+          </div>
         </article>
         <article class="work-card">
-          <p class="work-tag">イベントチラシ</p>
-          <h3>互助会代理店様</h3>
-          <p>会員様向けイベントの告知チラシを制作。日時や特典などの情報を整理し、ひと目で内容が伝わる紙面構成に仕上げました。</p>
+          <figure class="work-media"><img src={`${base}subsc-design/assets/work-event.jpg`} alt="ネイビーと金の招待状・ギフトのイメージ" loading="lazy" width="900" height="599" /></figure>
+          <div class="work-body">
+            <p class="work-tag">イベントチラシ</p>
+            <h3>互助会代理店様</h3>
+            <p>会員様向けイベントの告知チラシを制作。日時や特典などの情報を整理し、ひと目で内容が伝わる紙面構成に仕上げました。</p>
+          </div>
         </article>
       </div>
       <p class="works-note">
-        ※実績の社名・制作物は、掲載許可が取れたものから順次公開します。無料相談では実物をご覧いただけます。</p>
+        ※写真は世界観のイメージです。実績の社名・制作物の実物は、掲載許可が取れたものから順次公開します（無料相談ではすべてご覧いただけます）。</p>
     </section>
 
     <!-- コスト診断（リードマグネット） -->
@@ -857,16 +885,21 @@ const jsonLd = {
           var diffM = monthly - plan.monthly;
           var diffY = annual - plan.annual;
 
-          document.getElementById("sd-current").textContent = monthly.toLocaleString();
-          document.getElementById("sd-current-y").textContent = annual.toLocaleString();
-          document.getElementById("sd-subsc").textContent = plan.monthly.toLocaleString();
-          document.getElementById("sd-subsc-y").textContent = plan.annual.toLocaleString();
+          function setNum(id, v) {
+            var el = document.getElementById(id);
+            if (window.sdCountUp) window.sdCountUp(el, v);
+            else el.textContent = v.toLocaleString();
+          }
+          setNum("sd-current", monthly);
+          setNum("sd-current-y", annual);
+          setNum("sd-subsc", plan.monthly);
+          setNum("sd-subsc-y", plan.annual);
           document.getElementById("sd-plan").textContent = "（" + plan.name + "）";
 
           var diffLabel = document.getElementById("sd-diff-label");
           var comment = document.getElementById("sd-comment");
-          document.getElementById("sd-diff").textContent = Math.abs(diffM).toLocaleString();
-          document.getElementById("sd-diff-y").textContent = Math.abs(diffY).toLocaleString();
+          setNum("sd-diff", Math.abs(diffM));
+          setNum("sd-diff-y", Math.abs(diffY));
           if (diffM > 0) {
             diffLabel.textContent = "削減見込み";
             comment.textContent = "外注のたびに発生する見積もり・発注のやりとりもなくなります。診断結果をもとに、最適なプランを無料相談でご案内します。";
@@ -913,6 +946,99 @@ const jsonLd = {
         if (fired[100]) window.removeEventListener("scroll", onScroll);
       }
       window.addEventListener("scroll", onScroll, { passive: true });
+    })();
+  </script>
+
+  <script is:inline>
+    // ===== モーション層（reduced-motion 尊重） =====
+    (function () {
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // スクロール連動リビール
+      var targets = document.querySelectorAll(
+        ".subsc-lp-scope .section-heading, .subsc-lp-scope .check-list li, .subsc-lp-scope .loop-visual li, .subsc-lp-scope .service-terms > div, .subsc-lp-scope .reason-card, .subsc-lp-scope .work-card, .subsc-lp-scope .plan-card, .subsc-lp-scope .share-panel, .subsc-lp-scope .shindan-panel, .subsc-lp-scope .compare-scroll, .subsc-lp-scope .flow-steps li, .subsc-lp-scope .faq-list details, .subsc-lp-scope .lead-form, .subsc-lp-scope .section-grid > div"
+      );
+      if (reduce || !("IntersectionObserver" in window)) {
+        targets.forEach(function (el) { el.classList.add("rv-in"); });
+      } else {
+        targets.forEach(function (el, i) {
+          el.classList.add("rv");
+          el.style.transitionDelay = (i % 4) * 70 + "ms";
+        });
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add("rv-in");
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+        targets.forEach(function (el) { io.observe(el); });
+      }
+
+      // ヒーローのチャットをライブ再生（入力中→送信のループ）
+      var body = document.querySelector(".chat-mock-body");
+      if (body && !reduce) {
+        var msgs = Array.prototype.slice.call(body.querySelectorAll(".chat-msg"));
+        var typing = document.createElement("div");
+        typing.className = "chat-typing";
+        typing.innerHTML = "<i></i><i></i><i></i>";
+        var started = false;
+
+        function playLoop() {
+          var idx = 0;
+          msgs.forEach(function (m) { m.classList.remove("cm-show"); });
+          function next() {
+            if (idx >= msgs.length) {
+              setTimeout(playLoop, 4000);
+              return;
+            }
+            var m = msgs[idx];
+            var isDeliver = m.classList.contains("chat-msg-deliver");
+            if (!isDeliver) {
+              typing.className = "chat-typing " + (m.classList.contains("chat-msg-client") ? "t-client" : "t-designer");
+              body.insertBefore(typing, m);
+              typing.style.display = "flex";
+              setTimeout(function () {
+                typing.style.display = "none";
+                m.classList.add("cm-show");
+                idx++;
+                setTimeout(next, 900);
+              }, 750);
+            } else {
+              m.classList.add("cm-show");
+              idx++;
+              setTimeout(next, 900);
+            }
+          }
+          next();
+        }
+
+        msgs.forEach(function (m) { m.classList.add("cm"); });
+        var chatIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting && !started) {
+              started = true;
+              setTimeout(playLoop, 600);
+              chatIO.disconnect();
+            }
+          });
+        }, { threshold: 0.3 });
+        chatIO.observe(body);
+      }
+
+      // 診断結果のカウントアップ
+      window.sdCountUp = function (el, to) {
+        if (reduce || to <= 0) { el.textContent = to.toLocaleString(); return; }
+        var dur = 500, t0 = null;
+        function step(t) {
+          if (!t0) t0 = t;
+          var p = Math.min((t - t0) / dur, 1);
+          el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))).toLocaleString();
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      };
     })();
   </script>
 </BaseLayout>
