@@ -1057,4 +1057,28 @@ const jsonLd = {
       };
     })();
   </script>
+
+  <script>
+    // BudouX: 日本語の文節を自動判定して本文を折り返す（両端揃えと併用で右端をそろえる）
+    import { loadDefaultJapaneseParser } from "budoux";
+    const parser = loadDefaultJapaneseParser();
+    const sel = [
+      ".subsc-lp-scope .section-lead",
+      ".subsc-lp-scope .large-text",
+      ".subsc-lp-scope .hero-lead",
+      ".subsc-lp-scope .reason-card p",
+      ".subsc-lp-scope .work-body p",
+      ".subsc-lp-scope .check-list li",
+      ".subsc-lp-scope .loop-visual p",
+      ".subsc-lp-scope .faq-list details p",
+      ".subsc-lp-scope .works-note",
+      ".subsc-lp-scope .cta-band p",
+      ".subsc-lp-scope .contact-form-lead",
+    ].join(",");
+    document.querySelectorAll(sel).forEach((el) => {
+      try {
+        parser.applyToElement(el);
+      } catch (e) {}
+    });
+  </script>
 </BaseLayout>

@@ -55,6 +55,15 @@
   word-break: auto-phrase;
 }
 .subsc-lp-scope .no-break { white-space: nowrap; }
+/* 両端揃え（BudouXの文節折り返しと併用で右端をそろえ、右側の空きを抑える）。
+   幅の広いリード文のみに適用。狭いカード本文は justify だと文字間隔が広がり間延びするため、
+   BudouXの文節折り返し＋左揃えのまま（語中改行はしない）。
+   中央寄せ要素（診断・CTA・フォーム・注釈）は各自の text-align が優先されるため除外。 */
+.subsc-lp-scope .section-lead,
+.subsc-lp-scope .large-text,
+.subsc-lp-scope .hero-lead {
+  text-align: justify;
+}
 .subsc-lp-scope .sp-br { display: none; }
 @media (max-width: 640px) {
   .subsc-lp-scope .sp-br { display: inline; }
@@ -977,6 +986,7 @@
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
 }
 
 .subsc-lp-scope .shindan-form {
