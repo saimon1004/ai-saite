@@ -1,0 +1,993 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/common/Header.astro";
+import Footer from "../../components/common/Footer.astro";
+
+const base = import.meta.env.BASE_URL;
+// CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
+// styles.css は subsc-design.astro（cssVersion）と共用・無変更。partner側の差分は partner.css / scrub-engine.js / 動画で、
+// それぞれ partnerVersion だけをバンプする（本体LPのキャッシュを道連れにしない）
+const cssVersion = "20260716-v1"; // src/pages/subsc-design.astro L8 と手動同期
+const partnerVersion = "20260720-v1";
+const cssHref = `${base}subsc-design/styles.css?v=${cssVersion}`;
+const partnerCssHref = `${base}subsc-design/partner.css?v=${partnerVersion}`;
+const engineSrc = `${base}subsc-design/partner/scrub-engine.js?v=${partnerVersion}`;
+const heroAsset = `${base}subsc-design/partner/assets/`;
+
+const pageUrl = "https://sai-mon.co.jp/subsc-design/partner/";
+
+// 構造化データ: 運営会社・OEMサービス・料金・パンくず・FAQの関係を検索エンジンに伝える
+const faqEntity = {
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "顧客にSAIMONの名前は出ますか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "出ません。OEM（ホワイトレーベル）方式のため、顧客との契約・請求・納品はすべて御社名義で行えます。SAIMONは制作専門の黒子として御社を支えます。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "顧客への販売価格は自由に決められますか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "自由です。御社が自社の商品として価格を設定し、月額定額の仕入れとの差額がそのまま御社の粗利になります。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "最低契約期間はありますか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "最低契約期間は6ヶ月です。経過後は、いつでも翌月での更新停止をお申し出いただけます。",
+      },
+    },
+  ],
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://sai-mon.co.jp/#organization",
+      name: "株式会社SAIMON",
+      url: "https://sai-mon.co.jp/",
+      logo: "https://sai-mon.co.jp/logo.png",
+    },
+    {
+      "@type": "Service",
+      "@id": `${pageUrl}#service`,
+      name: "SAIMONサブスクデザイン パートナープラン（OEM）",
+      serviceType: "採用サイト制作のOEM・ホワイトレーベル提供（月額定額）",
+      description:
+        "人材紹介会社向けの採用サイト制作OEMサービス。採用サイト・求人LP・採用ピッチ資料の制作を月額定額でSAIMONが巻き取り、パートナーは自社ブランド・自社価格で顧客に販売できます。",
+      url: pageUrl,
+      provider: { "@id": "https://sai-mon.co.jp/#organization" },
+      areaServed: "JP",
+      audience: {
+        "@type": "Audience",
+        audienceType: "人材紹介会社・人材派遣会社・採用支援などのHR事業者",
+      },
+      offers: [
+        {
+          "@type": "Offer",
+          name: "スタンダードプラン",
+          price: "220000",
+          priceCurrency: "JPY",
+          description: "採用サイト・求人LP・採用販促物のデザイン〜データ納品まで月額定額（納品物は御社名義）",
+        },
+        {
+          "@type": "Offer",
+          name: "プレミアムプラン",
+          price: "330000",
+          priceCurrency: "JPY",
+          description: "スタンダードの全内容に加え、コーディング・公開作業・計測タグ設置まで月額定額",
+        },
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "ホーム", item: "https://sai-mon.co.jp/" },
+        { "@type": "ListItem", position: 2, name: "サブスクデザイン", item: "https://sai-mon.co.jp/subsc-design/" },
+        { "@type": "ListItem", position: 3, name: "パートナープラン", item: pageUrl },
+      ],
+    },
+    faqEntity,
+  ],
+};
+---
+
+<BaseLayout
+  title="人材紹介会社向け 採用サイト制作OEM | 自社ブランドで売れる月額定額パートナープラン"
+  description="人材紹介事業のもう一つの柱に、採用サイト・求人LP制作を。制作は月額定額でSAIMONが巻き取り、御社は自社ブランド・自社価格で販売。売るほど粗利が増えるOEMパートナープランです。御社名義で使える採用サイト診断レポートの営業ツール付き。パートナー枠は少数限定。"
+  jsonLd={jsonLd}
+>
+  <Fragment slot="head">
+    <!-- Meta Pixel -->
+    <script is:inline>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '2033821807210209');
+      fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=2033821807210209&ev=PageView&noscript=1"/></noscript>
+    <!-- End Meta Pixel -->
+    <!-- 研修LP向けのFAQ動画チャットボット（BaseLayout共通）はこのLPでは文脈が合わないため非表示 -->
+    <style is:global>#faq-chatbot-root { display: none !important; }</style>
+    <!-- 見出し用ディスプレイ書体（格式のある明朝） -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </Fragment>
+  <link rel="stylesheet" href={cssHref} slot="head" />
+  <link rel="stylesheet" href={partnerCssHref} slot="head" />
+
+  <Header />
+
+  <main class="subsc-lp-scope partner-lp">
+    <!-- 01 Hero: scroll-world（スクロール連動の夜間都市飛行・2シーン） -->
+    <section class="hero-sw" aria-labelledby="hero-title">
+      <div id="hero-world">
+        <!-- クローラー・JS無効環境向けの静的コピー（エンジンがマウント後に非表示化） -->
+        <div data-sw-seo>
+          <h1 id="hero-title">人材紹介事業に、もう一つの柱を。</h1>
+          <p>
+            SAIMONサブスクデザインのパートナープラン（OEM）は、人材紹介会社向けの採用サイト制作サービスです。採用サイト・求人LP・採用ピッチ資料の制作を月額定額でSAIMONが巻き取り、御社は自社ブランド・自社価格で顧客企業に販売できます。売るほど粗利が増える、紹介フィーに次ぐ収益の柱を、御社の手でつくれます。
+          </p>
+          <h2>御社が売る。制作はSAIMONが。</h2>
+          <p>
+            顧客との契約・請求・納品はすべて御社名義。SAIMONの名前は出ません。依頼回数・修正は無制限、最低契約6ヶ月、パートナー枠は少数限定です。
+          </p>
+          <p><a href="#contact-form">無料相談フォームへ</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 制作物マーキー（採用系の対応範囲を視覚化） -->
+    <div class="mq" aria-hidden="true">
+      <div class="mq-track">
+        <span>採用サイト</span><i>◆</i><span>求人LP</span><i>◆</i><span>採用ピッチ資料</span><i>◆</i><span>スカウト用資料</span><i>◆</i><span>求人バナー</span><i>◆</i><span>会社案内</span><i>◆</i><span>社員インタビューページ</span><i>◆</i><span>説明会スライド</span><i>◆</i><span>採用パンフレット</span><i>◆</i><span>SNS採用画像</span><i>◆</i><span>内定者フォロー資料</span><i>◆</i><span>求人原稿デザイン</span><i>◆</i>
+        <span>採用サイト</span><i>◆</i><span>求人LP</span><i>◆</i><span>採用ピッチ資料</span><i>◆</i><span>スカウト用資料</span><i>◆</i><span>求人バナー</span><i>◆</i><span>会社案内</span><i>◆</i><span>社員インタビューページ</span><i>◆</i><span>説明会スライド</span><i>◆</i><span>採用パンフレット</span><i>◆</i><span>SNS採用画像</span><i>◆</i><span>内定者フォロー資料</span><i>◆</i><span>求人原稿デザイン</span><i>◆</i>
+      </div>
+    </div>
+
+    <!-- 02 Problem -->
+    <section class="problem section-block" aria-labelledby="problem-title">
+      <div class="section-number">02</div>
+      <div class="section-grid">
+        <div>
+          <p class="section-kicker">Problem</p>
+          <h2 id="problem-title">
+            <span class="no-break">紹介フィー頼みの</span><wbr /><span class="no-break">収益構造に、</span><br /><span class="no-break">こんな不安は</span><wbr /><span class="no-break">ありませんか？</span></h2>
+        </div>
+        <div>
+          <p class="large-text">
+            人材紹介は、成約ごとのフィーが収益の柱。ただ、成約が出ない月は売上が立たず、早期退職の返金対応や顧客の採用縮小の影響も<span class="no-break">受けやすい</span>構造です。いっぽうで顧客企業の多くは、求人票の前に<span class="no-break">「採用サイトが古い」</span>という課題を抱えています。ここに応えられれば、紹介の前後に<span class="no-break">継続的な</span>接点と収益が生まれます。</p>
+          <ul class="check-list">
+            <li>成約フィー頼みで、月ごとの売上の波が大きい</li>
+            <li>早期退職の返金・リプレイス対応で、利益が消える月がある</li>
+            <li>「応募が来ない」の原因が、求人票ではなく<span class="no-break">採用サイト側</span>にある顧客が多い</li>
+            <li>「採用サイトも作れませんか？」と聞かれて、<span class="no-break">断っている</span></li>
+            <li>制作会社を紹介しても、自社には<span class="no-break">1円も残らない</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 Scheme（OEMの座組） -->
+    <section class="scheme section-block" aria-labelledby="scheme-title">
+      <div class="section-number">03</div>
+      <div class="section-heading">
+        <p class="section-kicker">Scheme</p>
+        <h2 id="scheme-title"><span class="no-break">御社が売る。</span><wbr /><span class="no-break">SAIMONが作る。</span><wbr /><span class="no-break">名前は出しません。</span></h2>
+        <p class="section-lead">
+          OEM（ホワイトレーベル）方式です。顧客との契約・請求・納品はすべて<span class="no-break">御社名義</span>で行い、SAIMONは制作専門の黒子として<span class="no-break">御社の後ろ</span>に立ちます。仕入れは<span class="no-break">月額定額</span>だから、売るほど粗利が増えます。</p>
+      </div>
+      <div class="scheme-figure" aria-label="OEMの三者関係図">
+        <div class="scheme-node scheme-node-client">
+          <p class="scheme-node-kicker">顧客企業</p>
+          <h3>採用に悩む企業</h3>
+          <p>採用サイトの相談は、いつもの担当者＝御社へ。</p>
+        </div>
+        <div class="scheme-arrow" aria-hidden="true">
+          <span>発注・支払い</span>
+          <i>⇄</i>
+          <span>御社名義で納品</span>
+        </div>
+        <div class="scheme-node scheme-node-partner">
+          <p class="scheme-node-kicker">パートナー（御社）</p>
+          <h3>自社ブランド・<wbr />自社価格で販売</h3>
+          <p>契約・請求・窓口は御社。販売価格も御社の自由です。</p>
+        </div>
+        <div class="scheme-arrow" aria-hidden="true">
+          <span>制作依頼（月額定額）</span>
+          <i>⇄</i>
+          <span>制作データ納品</span>
+        </div>
+        <div class="scheme-node scheme-node-saimon">
+          <p class="scheme-node-kicker">SAIMON</p>
+          <h3>黒子として制作</h3>
+          <p>採用サイト・求人LPを制作。納品物に<span class="no-break">SAIMONの名前</span>は出ません。</p>
+        </div>
+      </div>
+      <dl class="service-terms" aria-label="共通条件">
+        <div>
+          <dt>依頼回数</dt>
+          <dd>無制限</dd>
+        </div>
+        <div>
+          <dt>修正</dt>
+          <dd>何度でも</dd>
+        </div>
+        <div>
+          <dt>制作進行</dt>
+          <dd>同時1件ずつ</dd>
+        </div>
+        <div>
+          <dt>最低契約</dt>
+          <dd>6ヶ月</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- 04 収益シミュレーション -->
+    <section id="sim" class="shindan section-block" aria-labelledby="sim-title">
+      <div class="shindan-panel">
+        <div class="section-heading shindan-heading">
+          <p class="section-kicker">Simulation</p>
+          <h2 id="sim-title"><span class="no-break">30秒でわかる、</span><wbr /><span class="no-break">パートナー収益</span><wbr /><span class="no-break">シミュレーション</span></h2>
+          <p class="section-lead"><span class="no-break">御社の販売価格と</span><wbr /><span class="no-break">月間の販売件数を</span><wbr /><span class="no-break">動かすだけで、</span><wbr /><span class="no-break">月間・年間の粗利を</span><wbr /><span class="no-break">その場で試算できます。</span></p>
+        </div>
+        <div class="shindan-form sim-form" role="group" aria-label="販売条件の入力">
+          <label class="shindan-field sim-field-slider">
+            <span>採用サイト1件の販売価格<em>万円</em></span>
+            <div class="sim-slider-row">
+              <input type="range" id="ps-price" min="30" max="80" step="5" value="50" />
+              <output id="ps-price-out" for="ps-price">50<small>万円</small></output>
+            </div>
+          </label>
+          <label class="shindan-field">
+            <span>月間の販売件数<em>件/月</em></span>
+            <input type="number" id="ps-count" min="0" max="9" value="2" inputmode="numeric" />
+          </label>
+          <fieldset class="sim-plan-choice">
+            <legend>仕入れプラン</legend>
+            <label><input type="radio" name="ps-plan" value="standard" /><span>スタンダード 22万<small>デザイン納品まで</small></span></label>
+            <label><input type="radio" name="ps-plan" value="premium" checked /><span>プレミアム 33万<small>実装・公開まで</small></span></label>
+          </fieldset>
+          <button type="button" id="ps-run" class="primary-cta shindan-run">試算する<span aria-hidden="true">→</span></button>
+        </div>
+        <div id="ps-result" class="shindan-result" hidden>
+          <div class="shindan-cards">
+            <div class="shindan-card">
+              <p class="shindan-card-label">御社の月商（制作分）</p>
+              <p class="shindan-card-value">月<strong id="ps-sales">0</strong>万円</p>
+              <p class="shindan-sub">年間 <span id="ps-sales-y">0</span>万円</p>
+            </div>
+            <div class="shindan-card">
+              <p class="shindan-card-label">仕入れ（SAIMON月額）</p>
+              <p class="shindan-card-value">月<strong id="ps-cost">0</strong>万円</p>
+              <p class="shindan-sub">年間 <span id="ps-cost-y">0</span>万円<span id="ps-plan-label" class="shindan-plan"></span></p>
+            </div>
+            <div class="shindan-card shindan-card-diff">
+              <p class="shindan-card-label" id="ps-diff-label">月間の粗利見込み</p>
+              <p class="shindan-card-value">月<strong id="ps-diff">0</strong>万円</p>
+              <p class="shindan-sub">年間 <span id="ps-diff-y">0</span>万円</p>
+            </div>
+          </div>
+          <p id="ps-comment" class="shindan-comment"></p>
+          <div class="shindan-cta">
+            <button type="button" id="ps-consult" class="primary-cta">この試算をもとに無料相談する<span aria-hidden="true">→</span></button>
+          </div>
+          <p class="shindan-note">
+            ※販売価格・件数は御社が自由に設定できる想定値です。制作は同時進行1件ずつのため、納期は内容・分量により変動します。試算は概算であり、成果を保証するものではありません。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 営業ツール特典（採用サイト診断レポート） -->
+    <section class="perk section-block" aria-labelledby="perk-title">
+      <div class="section-number">05</div>
+      <div class="section-heading">
+        <p class="section-kicker">Sales Kit</p>
+        <h2 id="perk-title"><span class="no-break">営業フックは、</span><wbr /><span class="no-break">こちらで用意しました。</span></h2>
+        <p class="section-lead">
+          「何を持って営業すればいいのか」から<span class="no-break">悩ませません。</span>見込み顧客の採用サイトを分析した<span class="no-break">改善提案レポート</span>（15ページ）を、<span class="no-break">御社名義</span>で作成します。渡すだけで課題が可視化され、制作の商談が<span class="no-break">自然に始まります。</span></p>
+      </div>
+      <ol class="perk-steps">
+        <li>
+          <span class="perk-num">01</span>
+          <h3>対象企業のURLを送るだけ</h3>
+          <p>見込み顧客の採用サイトURLを、専用チャットに送ります。</p>
+        </li>
+        <li>
+          <span class="perk-num">02</span>
+          <h3>御社名義のレポートが届く</h3>
+          <p>候補者視点・スマホ閲覧・競合比較の観点で分析した15ページのレポート（PDF）を、御社ブランドで仕上げます。</p>
+        </li>
+        <li>
+          <span class="perk-num">03</span>
+          <h3>渡して、商談する</h3>
+          <p>課題が具体的に見えるので、「では作り直しましょう」の提案が通りやすくなります。</p>
+        </li>
+      </ol>
+      <p class="perk-note">※レポート作成もパートナー契約の月額内です（通常の制作枠で、1件ずつ対応します）。</p>
+    </section>
+
+    <!-- 06 Case（NASH実績） -->
+    <section class="works section-block" aria-labelledby="case-title">
+      <div class="section-number">06</div>
+      <div class="section-heading">
+        <p class="section-kicker">Case</p>
+        <h2 id="case-title"><span class="no-break">SAIMONが支援した採用サイトは、</span><wbr /><span class="no-break">応募数137%に。</span></h2>
+      </div>
+      <article class="work-card partner-case-card">
+        <figure class="work-media"><img src={`${base}case-site-image.jpg`} alt="株式会社NASHの採用サイト" loading="lazy" width="1200" height="675" /></figure>
+        <div class="work-body">
+          <p class="work-tag">採用サイトリニューアル</p>
+          <h3>株式会社NASH様</h3>
+          <ul class="case-kpis" aria-label="リニューアル後の主な成果">
+            <li><strong>137%</strong><span>応募数（前年比）</span></li>
+            <li><strong>即日</strong><span>公開後の更新対応</span></li>
+          </ul>
+          <p>株式会社NASH様の採用サイトは、SAIMONの研修・伴走支援を通じてリニューアルされ、公開後の応募数は前年比137%に伸びました。パートナー契約では、この支援で培った「応募につながる採用サイトの型」を使って、SAIMONが御社ブランドの納品物を制作します。</p>
+          <a class="case-link" href="https://recruit.nash-holdings.com" target="_blank" rel="noopener">公開サイトを見る<span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
+    </section>
+
+    <!-- 07 Price -->
+    <section id="price" class="price section-block" aria-labelledby="price-title">
+      <div class="section-number">07</div>
+      <div class="section-heading">
+        <p class="section-kicker">Price</p>
+        <h2 id="price-title">パートナー料金プラン</h2>
+        <p class="section-lead">
+          全プラン共通で、<span class="no-break">依頼回数無制限</span>・<span class="no-break">修正無制限</span>・<span class="no-break">同時進行1件</span>・<span class="no-break">一時停止OK</span>・<span class="no-break">最低契約6ヶ月です。</span>OEM提供の詳細条件は、無料相談時に<span class="no-break">ご案内します。</span></p>
+      </div>
+      <div class="plan-grid plan-grid-two">
+        <article class="plan-card">
+          <p class="plan-name">スタンダード</p>
+          <p class="plan-price"><strong>22</strong><span>万円/月（税込）</span></p>
+          <p class="plan-desc">デザインデータの納品まで。実装は御社・顧客側で。</p>
+          <ul>
+            <li>採用サイト・求人LPのデザイン〜データ納品</li>
+            <li>採用ピッチ資料・バナー等の採用販促物</li>
+            <li>採用サイト診断レポート（御社名義）</li>
+          </ul>
+        </article>
+        <article class="plan-card plan-card-featured">
+          <p class="plan-badge">おすすめ</p>
+          <p class="plan-name">プレミアム</p>
+          <p class="plan-price"><strong>33</strong><span>万円/月（税込）</span></p>
+          <p class="plan-desc">実装・公開まで、まるごと巻き取り。制作の手離れ最優先。</p>
+          <ul>
+            <li>スタンダードの全内容</li>
+            <li>コーディング・公開作業</li>
+            <li>計測タグ（GA4等）の設置</li>
+          </ul>
+          <p class="plan-note">採用サイト1件50万円×月2件の販売なら、<span class="no-break">月商100万円・粗利67万円</span>（試算例。実際の販売価格・件数により異なります）。</p>
+        </article>
+      </div>
+
+      <div class="slots-banner partner-limit" aria-label="パートナー枠の上限">
+        <span class="slots-dot" aria-hidden="true"></span>
+        <p>専属体制で制作するため、パートナー枠は<strong>少数限定</strong>です。枠が埋まり次第、受付を一時停止します。空き状況は無料相談でご確認ください。</p>
+      </div>
+    </section>
+
+    <!-- 08 Comparison -->
+    <section class="comparison section-block" aria-labelledby="comparison-title">
+      <div class="section-number">08</div>
+      <div class="section-heading">
+        <p class="section-kicker">Comparison</p>
+        <h2 id="comparison-title"><span class="no-break">制作体制の</span><wbr /><span class="no-break">つくり方比較</span></h2>
+      </div>
+      <div class="compare-scroll">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th scope="col">比較項目</th>
+              <th scope="col">デザイナーを雇用</th>
+              <th scope="col">制作会社と都度提携</th>
+              <th scope="col" class="compare-ours">SAIMON<br />パートナー（OEM）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">固定費</th>
+              <td>月40万円〜＋採用コスト</td>
+              <td>案件ごとに見積もり</td>
+              <td class="compare-ours"><strong>月額22万円〜で定額</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">粗利の読みやすさ</th>
+              <td>稼働が埋まらないと赤字</td>
+              <td>卸値が案件ごとに変動</td>
+              <td class="compare-ours"><strong>仕入れ固定・売るほど増える</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">ブランド</th>
+              <td>自社名義</td>
+              <td>制作会社名義になりがち</td>
+              <td class="compare-ours"><strong>自社名義（OEM）</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">修正対応</th>
+              <td>社内リソース次第</td>
+              <td>追加費用になりがち</td>
+              <td class="compare-ours"><strong>無制限</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">立ち上げ</th>
+              <td>採用に数ヶ月</td>
+              <td>提携先探しから</td>
+              <td class="compare-ours"><strong>最短で契約当日から</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 09 Flow -->
+    <section class="flow section-block" aria-labelledby="flow-title">
+      <div class="section-number">09</div>
+      <div class="section-heading">
+        <p class="section-kicker">Flow</p>
+        <h2 id="flow-title">パートナー開始までの流れ</h2>
+      </div>
+      <ol class="flow-steps">
+        <li>
+          <span class="flow-num">01</span>
+          <h3>無料相談</h3>
+          <p>枠の空き状況と座組をご説明し、御社の顧客層に合うかを一緒に確認します。</p>
+        </li>
+        <li>
+          <span class="flow-num">02</span>
+          <h3>販売設計</h3>
+          <p>販売価格・提案の型・診断レポートの使い方を、一緒に設計します。</p>
+        </li>
+        <li>
+          <span class="flow-num">03</span>
+          <h3>ご契約・チャット開設</h3>
+          <p>専用チャットを開設。最短で当日から依頼いただけます。</p>
+        </li>
+        <li>
+          <span class="flow-num">04</span>
+          <h3>販売開始</h3>
+          <p>診断レポートを武器に、まずは既存顧客からご提案いただけます。</p>
+        </li>
+        <li>
+          <span class="flow-num">05</span>
+          <h3>受注のたびに依頼</h3>
+          <p>受注したら専用チャットへ。御社名義の納品物をお届けします。</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 10 FAQ -->
+    <section id="faq" class="faq section-block" aria-labelledby="faq-title">
+      <div class="section-number">10</div>
+      <div class="section-heading">
+        <p class="section-kicker">FAQ</p>
+        <h2 id="faq-title">よくある質問</h2>
+      </div>
+      <div class="faq-list">
+        <details>
+          <summary><span class="no-break">顧客にSAIMONの名前は</span><wbr /><span class="no-break">出ますか？</span></summary>
+          <p>出ません。OEM（ホワイトレーベル）方式のため、顧客との契約・請求・納品はすべて御社名義で行えます。SAIMONは制作専門の黒子として御社を支えます。</p>
+        </details>
+        <details>
+          <summary><span class="no-break">顧客への販売価格は</span><wbr /><span class="no-break">自由に決められますか？</span></summary>
+          <p>自由です。御社が自社の商品として価格を設定し、月額定額の仕入れとの差額がそのまま御社の粗利になります。</p>
+        </details>
+        <details>
+          <summary><span class="no-break">顧客からの修正依頼は</span><wbr /><span class="no-break">どう流れますか？</span></summary>
+          <p>顧客→御社→専用チャットの流れでお送りください。修正回数は無制限です。制作は同時進行1件ずつで、いただいた依頼リストの上から順にお届けします。</p>
+        </details>
+        <details>
+          <summary><span class="no-break">Web制作の知識がなくても</span><wbr /><span class="no-break">販売できますか？</span></summary>
+          <p>販売いただけます。営業フックになる診断レポートを御社名義でご用意するほか、商談で技術的な質問が出た際は、回答や補足資料をSAIMONが用意して御社を後方支援します。</p>
+        </details>
+        <details>
+          <summary><span class="no-break">顧客との契約主体は</span><wbr /><span class="no-break">どこになりますか？</span></summary>
+          <p>御社と顧客企業の契約です。SAIMONは御社とのパートナー契約のみで、顧客と直接の契約関係は持ちません。</p>
+        </details>
+        <details>
+          <summary><span class="no-break">採用系以外の制作物も</span><wbr /><span class="no-break">頼めますか？</span></summary>
+          <p>ご相談いただけます。バナー・チラシ・営業資料など、サブスクデザイン本体で対応している制作物は同じ月額内でご依頼いただけます。</p>
+        </details>
+        <details>
+          <summary>解約はいつでもできますか？</summary>
+          <p>最低契約期間（6ヶ月）の経過後は、いつでも翌月での更新停止をお申し出いただけます。依頼が少ない月は一時停止も可能です。</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- 11 CTA band + Form -->
+    <section class="cta-band" aria-labelledby="cta-title">
+      <p class="section-kicker">Contact</p>
+      <h2 id="cta-title">
+        <span class="cta-title-line"><span class="no-break">パートナー枠は、</span><wbr /><span class="no-break">少数限定です。</span></span>
+      </h2>
+      <p>
+        一社ごとに専属品質で制作するため、<span class="no-break">同時にお受けする</span><wbr /><span class="no-break">パートナー数を絞っています。</span><br class="lp-break-md" />まずは空き状況と収益シミュレーションの詳細を、<span class="no-break">お気軽にご確認ください。</span></p>
+      <a class="primary-cta" href="#contact-form" data-cta-source="band-primary">
+        空き枠を確認して無料相談する<span aria-hidden="true">→</span>
+      </a>
+    </section>
+
+    <section id="contact-form" class="contact-form-section section-block" aria-labelledby="contact-form-title">
+      <div class="section-number">11</div>
+      <div class="section-heading">
+        <p class="section-kicker">Form</p>
+        <h2 id="contact-form-title">無料相談フォーム</h2>
+        <p class="contact-form-lead">
+          ご記入いただいた内容をもとに、1営業日以内に<span class="no-break">担当よりご連絡いたします。</span>入力は30秒。「枠の空きだけ知りたい」「収益モデルを詳しく聞きたい」だけでも<span class="no-break">お気軽にどうぞ。</span><wbr /><span class="no-break">しつこい営業はいたしません。</span></p>
+      </div>
+
+      <form id="lead-form" class="lead-form" novalidate>
+        <div class="lead-form-row lead-form-row-double">
+          <label class="form-field">
+            <span class="form-label">会社名（人材紹介・人材系事業者）<em aria-hidden="true">*</em></span>
+            <input type="text" name="company" required autocomplete="organization" placeholder="株式会社サンプルキャリア" />
+          </label>
+          <label class="form-field">
+            <span class="form-label">お名前<em aria-hidden="true">*</em></span>
+            <input type="text" name="name" required autocomplete="name" placeholder="山田 太郎" />
+          </label>
+        </div>
+
+        <div class="lead-form-row lead-form-row-double">
+          <label class="form-field">
+            <span class="form-label">メールアドレス<em aria-hidden="true">*</em></span>
+            <input type="email" name="email" required autocomplete="email" placeholder="taro@example.com" />
+          </label>
+          <label class="form-field">
+            <span class="form-label">電話番号<span class="form-optional">（任意）</span></span>
+            <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="0312345678" />
+          </label>
+        </div>
+
+        <div class="lead-form-row">
+          <label class="form-field">
+            <span class="form-label">ご相談内容（任意）</span>
+            <textarea name="challenges" rows="4" placeholder="例：人材紹介業を営んでおり、顧客企業から採用サイトの相談を受けることがある。OEMの座組と収益モデルを詳しく聞きたい。"></textarea>
+          </label>
+        </div>
+
+        <div class="lead-form-row form-field-checkbox form-field-consent">
+          <label>
+            <input type="checkbox" name="consent" required value="yes" />
+            <span>
+              <a href="/privacy-policy/" target="_blank" rel="noopener">個人情報の取り扱い</a>に同意の上、送信します<em aria-hidden="true">*</em>
+            </span>
+          </label>
+        </div>
+
+        <div aria-hidden="true" class="form-honeypot">
+          <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <div class="lead-form-actions">
+          <button type="submit" class="primary-cta lead-form-submit">
+            送信する<span aria-hidden="true">→</span>
+          </button>
+          <p class="lead-form-note">送信後、1営業日以内に担当よりご連絡いたします。</p>
+        </div>
+
+        <p id="form-feedback" class="form-feedback" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <div class="mobile-sticky-cta" id="mobile-sticky-cta" aria-hidden="false">
+      <a class="primary-cta" href="#contact-form" data-cta-source="sticky-mobile">
+        空き枠を確認して無料相談する<span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </main>
+
+  <Footer />
+
+  <!-- scroll-world ヒーロー: fork版エンジン（heroMode対応）を同期読み込みしてマウント -->
+  <script is:inline src={engineSrc}></script>
+  <script is:inline define:vars={{ heroAsset }}>
+    (function () {
+      var world = document.getElementById("hero-world");
+      if (!world || typeof window.mountScrollWorld !== "function") return;
+      window.mountScrollWorld(world, {
+        heroMode: true,
+        nav: false,
+        hint: "スクロールで、もう一つの柱へ",
+        diveScroll: 1.5,
+        crossfade: 0.22,
+        sections: [
+          {
+            id: "sky",
+            label: "現在地",
+            still: heroAsset + "scene0-poster.jpg",
+            poster: heroAsset + "scene0-poster.jpg",
+            posterMobile: heroAsset + "scene0-poster-m.jpg",
+            clip: heroAsset + "vid/scene0.mp4",
+            clipMobile: heroAsset + "vid/scene0-m.mp4",
+            accent: "#d9b25e",
+            eyebrow: "SAIMON サブスクデザイン｜人材紹介会社向け",
+            title: "人材紹介事業に、もう一つの柱を。",
+            body: "紹介フィーだけに頼らない。採用サイト制作という新しい収益源を、御社の営業力でつくれます。",
+          },
+          {
+            id: "pillar",
+            label: "もう一つの柱",
+            still: heroAsset + "scene1-poster.jpg",
+            poster: heroAsset + "scene1-poster.jpg",
+            posterMobile: heroAsset + "scene1-poster-m.jpg",
+            clip: heroAsset + "vid/scene1.mp4",
+            clipMobile: heroAsset + "vid/scene1-m.mp4",
+            accent: "#b98a2f",
+            eyebrow: "OEM / ホワイトレーベル",
+            title: "御社が売る。制作はSAIMONが。",
+            body: "採用サイト・求人LPの制作を月額定額で巻き取り。顧客への契約・請求・納品は、すべて御社名義です。",
+            tags: ["自社ブランド販売", "月額定額の仕入れ", "修正無制限"],
+            cta: {
+              primary: { label: "無料相談する", href: "#contact-form" },
+              secondary: { label: "収益を試算する", href: "#sim" },
+            },
+          },
+        ],
+        connectors: [null],
+      });
+    })();
+  </script>
+
+  <script is:inline>
+    (function () {
+      const FORM_ENDPOINT = "https://recruit-hp-form-api.vercel.app/api/contact";
+
+      const form = document.getElementById("lead-form");
+      if (!form) return;
+
+      const feedback = document.getElementById("form-feedback");
+      const submitBtn = form.querySelector(".lead-form-submit");
+
+      // API側の獲得経路ホワイトリストに合わせる。LPの識別は UTM_campaign の既定値で行う
+      function resolveSource() {
+        return "LP無料相談";
+      }
+
+      function collectUtm() {
+        try {
+          const url = new URL(window.location.href);
+          return {
+            utmSource: url.searchParams.get("utm_source") || "",
+            utmCampaign: url.searchParams.get("utm_campaign") || "subsc-design-partner-lp",
+          };
+        } catch (_) {
+          return { utmSource: "", utmCampaign: "subsc-design-partner-lp" };
+        }
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "送信中...";
+        feedback.className = "form-feedback";
+        feedback.textContent = "";
+
+        const data = new FormData(form);
+        const utm = collectUtm();
+        const eventId =
+          (window.crypto && crypto.randomUUID && crypto.randomUUID()) ||
+          String(Date.now()) + Math.random().toString(16).slice(2);
+        const payload = {
+          source: resolveSource(),
+          company: data.get("company"),
+          name: data.get("name"),
+          email: data.get("email"),
+          phone: data.get("phone"),
+          challenges: data.get("challenges"),
+          consent: data.get("consent") === "yes",
+          website: data.get("website") || "",
+          utmSource: utm.utmSource,
+          utmCampaign: utm.utmCampaign,
+          eventId: eventId,
+          pageUrl: window.location.href,
+        };
+
+        try {
+          const res = await fetch(FORM_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const body = await res.json().catch(() => ({}));
+
+          if (!res.ok) {
+            throw new Error(body.error || "送信に失敗しました");
+          }
+
+          feedback.classList.add("is-success");
+          feedback.textContent =
+            body.message || "お問い合わせを受け付けました。1営業日以内にご連絡いたします。";
+          form.reset();
+          submitBtn.textContent = "送信完了";
+
+          if (typeof window.gtag === "function") {
+            window.gtag("event", "generate_lead", {
+              event_category: "form",
+              event_label: payload.source,
+            });
+          }
+
+          if (typeof window.fbq === "function") {
+            window.fbq(
+              "track",
+              "Lead",
+              { content_name: payload.source },
+              { eventID: eventId }
+            );
+          }
+        } catch (err) {
+          feedback.classList.add("is-error");
+          feedback.textContent =
+            err.message ||
+            "送信に失敗しました。お手数ですが info@sai-mon.co.jp まで直接ご連絡ください。";
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '送信する <span aria-hidden="true">→</span>';
+        }
+      });
+
+      // ===== 計測: GA4ファネルイベント（既存 gtag / BaseLayout 側で読み込み済み） =====
+      function track(name, params) {
+        try { if (typeof window.gtag === "function") window.gtag("event", name, params || {}); } catch (_) {}
+      }
+
+      var stickyCta = document.getElementById("mobile-sticky-cta");
+      var formSection = document.getElementById("contact-form");
+
+      // 追従CTAの表示制御: ヒーロー（scroll-world・専用CTAあり）表示中とフォーム表示中は隠す
+      var heroVisible = true;
+      var formVisible = false;
+      function syncStickyCta() {
+        if (stickyCta) stickyCta.classList.toggle("is-hidden", heroVisible || formVisible);
+      }
+      syncStickyCta();
+
+      // フォーム到達（form_view・1回のみ）
+      var formViewed = false;
+      if (formSection && "IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            formVisible = e.isIntersecting;
+            syncStickyCta();
+            if (e.isIntersecting && !formViewed) {
+              formViewed = true;
+              track("lp_form_view", { event_category: "subsc_partner_funnel" });
+            }
+          });
+        }, { threshold: 0.01 });
+        io.observe(formSection);
+      }
+
+      var heroWorld = document.getElementById("hero-world");
+      if (heroWorld && "IntersectionObserver" in window) {
+        var heroIo = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            heroVisible = e.isIntersecting;
+            syncStickyCta();
+          });
+        }, { threshold: 0.01 });
+        heroIo.observe(heroWorld);
+      } else {
+        heroVisible = false;
+        syncStickyCta();
+      }
+
+      // CTAクリック（data-cta-source 別）
+      document.querySelectorAll("[data-cta-source]").forEach(function (el) {
+        el.addEventListener("click", function () {
+          track("lp_cta_click", { event_category: "subsc_partner_funnel", event_label: el.getAttribute("data-cta-source") });
+        });
+      });
+
+      // フォーム入力開始（最初のフォーカス・1回のみ）
+      var formStarted = false;
+      if (form) {
+        form.addEventListener("focusin", function () {
+          if (formStarted) return;
+          formStarted = true;
+          track("lp_form_start", { event_category: "subsc_partner_funnel" });
+        });
+      }
+
+      // ===== パートナー収益シミュレーション =====
+      (function () {
+        var PLAN = {
+          standard: { name: "スタンダードプラン", monthly: 22 },
+          premium: { name: "プレミアムプラン", monthly: 33 },
+        };
+        var runBtn = document.getElementById("ps-run");
+        if (!runBtn) return;
+        var last = null;
+
+        var priceInput = document.getElementById("ps-price");
+        var priceOut = document.getElementById("ps-price-out");
+        priceInput.addEventListener("input", function () {
+          priceOut.innerHTML = priceInput.value + "<small>万円</small>";
+        });
+
+        function count() {
+          var v = parseInt(document.getElementById("ps-count").value, 10);
+          return isNaN(v) || v < 0 ? 0 : Math.min(v, 9);
+        }
+        function plan() {
+          var checked = document.querySelector('input[name="ps-plan"]:checked');
+          return PLAN[checked ? checked.value : "premium"];
+        }
+
+        runBtn.addEventListener("click", function () {
+          var price = parseInt(priceInput.value, 10) || 50;
+          var n = count();
+          var p = plan();
+          var sales = price * n;
+          var diffM = sales - p.monthly;
+
+          function setNum(id, v) {
+            var el = document.getElementById(id);
+            if (window.sdCountUp) window.sdCountUp(el, v);
+            else el.textContent = v.toLocaleString();
+          }
+          setNum("ps-sales", sales);
+          setNum("ps-sales-y", sales * 12);
+          setNum("ps-cost", p.monthly);
+          setNum("ps-cost-y", p.monthly * 12);
+          document.getElementById("ps-plan-label").textContent = "（" + p.name + "）";
+
+          var diffLabel = document.getElementById("ps-diff-label");
+          var comment = document.getElementById("ps-comment");
+          setNum("ps-diff", Math.abs(diffM));
+          setNum("ps-diff-y", Math.abs(diffM) * 12);
+          if (diffM > 0) {
+            diffLabel.textContent = "月間の粗利見込み";
+            comment.textContent =
+              "販売価格も件数も、御社の裁量で伸ばせます。診断レポートを使った販売設計まで含めて、無料相談で具体的にご案内します。";
+          } else if (diffM === 0) {
+            diffLabel.textContent = "仕入れとの差額";
+            comment.textContent =
+              "この条件では月商と仕入れが同水準です。販売価格の設定や件数の伸ばし方を、無料相談で一緒に設計します。";
+          } else {
+            diffLabel.textContent = "仕入れとの差額（不足分）";
+            comment.textContent =
+              "この件数では仕入れを下回ります。販売が少ない月は一時停止も可能です。無理のない立ち上がり方を無料相談でご提案します。";
+          }
+          last = { price: price, count: n, plan: p.name, planMonthly: p.monthly, sales: sales, diffM: diffM };
+          document.getElementById("ps-result").hidden = false;
+          track("lp_partner_sim_run", { event_category: "subsc_partner_funnel", value: diffM });
+        });
+
+        document.getElementById("ps-consult").addEventListener("click", function () {
+          if (last) {
+            var ta = document.querySelector('#lead-form textarea[name="challenges"]');
+            if (ta && !ta.value) {
+              ta.value =
+                "【収益シミュレーション結果】販売価格" + last.price + "万円 × 月" + last.count + "件（" +
+                last.plan + "・仕入れ月額" + last.planMonthly + "万円）→ " +
+                (last.diffM >= 0
+                  ? "月間粗利 約" + last.diffM + "万円（年間約" + last.diffM * 12 + "万円）の試算でした。"
+                  : "月間" + Math.abs(last.diffM) + "万円の不足の試算でした。") +
+                "パートナー契約について詳しく相談したいです。";
+            }
+          }
+          track("lp_partner_sim_cta", { event_category: "subsc_partner_funnel" });
+          var formSec = document.getElementById("contact-form");
+          if (formSec) formSec.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      })();
+
+      // スクロール深度（25/50/75/100% を1回ずつ）
+      var depths = [25, 50, 75, 100];
+      var fired = {};
+      function onScroll() {
+        var doc = document.documentElement;
+        var scrolled = (window.scrollY + window.innerHeight) / doc.scrollHeight * 100;
+        depths.forEach(function (d) {
+          if (!fired[d] && scrolled >= d) {
+            fired[d] = true;
+            track("lp_scroll_depth", { event_category: "subsc_partner_funnel", event_label: d + "%", value: d });
+          }
+        });
+        if (fired[100]) window.removeEventListener("scroll", onScroll);
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+    })();
+  </script>
+
+  <script is:inline>
+    // ===== モーション層（reduced-motion 尊重） =====
+    (function () {
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // スクロール連動リビール
+      var targets = document.querySelectorAll(
+        ".subsc-lp-scope .section-heading, .subsc-lp-scope .check-list li, .subsc-lp-scope .scheme-node, .subsc-lp-scope .scheme-arrow, .subsc-lp-scope .service-terms > div, .subsc-lp-scope .perk-steps li, .subsc-lp-scope .perk-note, .subsc-lp-scope .work-card, .subsc-lp-scope .plan-card, .subsc-lp-scope .slots-banner, .subsc-lp-scope .shindan-panel, .subsc-lp-scope .compare-scroll, .subsc-lp-scope .flow-steps li, .subsc-lp-scope .faq-list details, .subsc-lp-scope .lead-form, .subsc-lp-scope .section-grid > div"
+      );
+      if (reduce || !("IntersectionObserver" in window)) {
+        targets.forEach(function (el) { el.classList.add("rv-in"); });
+      } else {
+        targets.forEach(function (el, i) {
+          el.classList.add("rv");
+          el.style.transitionDelay = (i % 4) * 70 + "ms";
+        });
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add("rv-in");
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+        targets.forEach(function (el) { io.observe(el); });
+      }
+
+      // 診断結果のカウントアップ
+      window.sdCountUp = function (el, to) {
+        if (reduce || to <= 0) { el.textContent = to.toLocaleString(); return; }
+        var dur = 500, t0 = null;
+        function step(t) {
+          if (!t0) t0 = t;
+          var p = Math.min((t - t0) / dur, 1);
+          el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))).toLocaleString();
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      };
+    })();
+  </script>
+
+  <script>
+    // BudouX: 日本語の文節を自動判定して本文を折り返す（両端揃えと併用で右端をそろえる）
+    import { loadDefaultJapaneseParser } from "budoux";
+    const parser = loadDefaultJapaneseParser();
+    const sel = [
+      ".subsc-lp-scope .section-lead",
+      ".subsc-lp-scope .large-text",
+      ".subsc-lp-scope .check-list li",
+      ".subsc-lp-scope .scheme-node p",
+      ".subsc-lp-scope .perk-steps p",
+      ".subsc-lp-scope .perk-note",
+      ".subsc-lp-scope .work-body p",
+      ".subsc-lp-scope .slots-banner p",
+      ".subsc-lp-scope .shindan-note",
+      ".subsc-lp-scope .shindan-comment",
+      ".subsc-lp-scope .faq-list details p",
+      ".subsc-lp-scope .cta-band p",
+      ".subsc-lp-scope .contact-form-lead",
+      ".subsc-lp-scope .sw-copy__title",
+      ".subsc-lp-scope .sw-copy__body",
+    ].join(",");
+    document.querySelectorAll(sel).forEach((el) => {
+      try {
+        parser.applyToElement(el);
+      } catch (e) {}
+    });
+  </script>
+</BaseLayout>

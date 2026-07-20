@@ -1,0 +1,355 @@
+/* ============================================================
+   SAIMONサブスクデザイン パートナーLP（/subsc-design/partner/）差分CSS
+   ------------------------------------------------------------
+   styles.css（subsc-design本体と共用・無変更）を読み込んだ上で、
+   .subsc-lp-scope.partner-lp 配下にのみ効く差分を定義する。
+   本体LPのキャッシュバスト（cssVersion）を道連れにしないため、
+   partner側の変更はこのファイルと partnerVersion のバンプで行う。
+   ============================================================ */
+
+/* ============================================================
+   01 Hero: scroll-world（スクロール連動・夜の都市飛行）
+   ============================================================ */
+.subsc-lp-scope.partner-lp .hero-sw {
+  padding: 0;
+  margin: 0;
+  background: #0c1e33;
+}
+.partner-lp #hero-world {
+  /* fork版 scrub-engine のテーマ変数（ネイビー×ゴールド・明朝見出し） */
+  --sw-bg: #0c1e33;
+  --sw-ink: #f7f5f0;
+  --sw-ink-soft: #b9c4d4;
+  --sw-accent: #b98a2f;
+  --sw-font-display: "Shippori Mincho B1", "Hiragino Mincho ProN", serif;
+  --sw-font-body: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+}
+/* JS無効・クローラー向けの静的コピー（エンジンがマウントすると hidden になる） */
+.partner-lp [data-sw-seo] {
+  max-width: 760px;
+  margin-inline: auto;
+  padding: 96px 24px;
+  color: #f7f5f0;
+}
+.partner-lp [data-sw-seo] h1 { font-family: "Shippori Mincho B1", serif; font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.4; }
+.partner-lp [data-sw-seo] h2 { font-family: "Shippori Mincho B1", serif; font-size: clamp(1.3rem, 2.6vw, 1.7rem); margin-top: 2em; }
+.partner-lp [data-sw-seo] p { line-height: 1.9; color: #d5dbe4; }
+.partner-lp [data-sw-seo] a { color: #d9b25e; }
+
+/* エンジン生成UIの上書き（partner.css は styles.css より後・@layer sw より優先） */
+.partner-lp .sw-copy__title,
+.partner-lp .sw-copy__body {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.partner-lp .sw-copy__title {
+  /* styles.css の見出し色（--ink）に負けないよう、ダーク背景用の文字色を明示する */
+  color: #f7f5f0;
+  font-family: "Shippori Mincho B1", "Hiragino Mincho ProN", serif;
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: 0.01em;
+}
+.partner-lp .sw-copy__body { color: rgba(247, 245, 240, 0.88); }
+.partner-lp .sw-copy__num { color: rgba(185, 196, 212, 0.85); }
+.partner-lp .sw-copy__eyebrow { color: #d9b25e; text-transform: none; letter-spacing: 0.12em; }
+.partner-lp .sw-btn--primary {
+  background: linear-gradient(135deg, #b98a2f, #d9b25e);
+  color: #10233c;
+  font-weight: 800;
+}
+.partner-lp .sw-btn--ghost {
+  color: #f7f5f0;
+  border-color: rgba(247, 245, 240, 0.4);
+}
+.partner-lp .sw-copy__tags li {
+  color: #d9b25e;
+  background: rgba(185, 138, 47, 0.16);
+  border-color: rgba(217, 178, 94, 0.45);
+}
+.partner-lp .sw-hint { letter-spacing: 0.18em; }
+
+/* ============================================================
+   03 Scheme（OEM三者図）
+   ============================================================ */
+.partner-lp .scheme-figure {
+  display: grid;
+  grid-template-columns: 1fr auto 1.15fr auto 1fr;
+  align-items: stretch;
+  gap: 10px;
+  margin: 0 auto 34px;
+}
+.partner-lp .scheme-node {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px 22px;
+  text-align: center;
+}
+.partner-lp .scheme-node-partner {
+  background: var(--navy);
+  border-color: rgba(217, 178, 94, 0.55);
+  box-shadow: 0 16px 38px rgba(12, 30, 51, 0.28);
+}
+.partner-lp .scheme-node-partner h3,
+.partner-lp .scheme-node-partner p { color: #f7f5f0; }
+.partner-lp .scheme-node-partner .scheme-node-kicker { color: var(--gold-soft); border-color: rgba(217, 178, 94, 0.5); }
+.partner-lp .scheme-node-kicker {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  border: 1px solid rgba(185, 138, 47, 0.45);
+  border-radius: 999px;
+  padding: 4px 12px;
+  margin: 0 0 14px;
+}
+.partner-lp .scheme-node h3 { font-size: 17px; margin: 0 0 8px; }
+.partner-lp .scheme-node p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.75; }
+/* ↑の muted 指定より後に書いて、ネイビー面のパートナーノードだけ白文字を勝たせる */
+.partner-lp .scheme-node-partner p { color: rgba(247, 245, 240, 0.92); }
+.partner-lp .scheme-arrow {
+  align-self: center;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 0 2px;
+}
+.partner-lp .scheme-arrow span {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+  white-space: nowrap;
+}
+.partner-lp .scheme-arrow i {
+  font-style: normal;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--navy);
+  line-height: 1;
+}
+
+/* ============================================================
+   04 収益シミュレーション（スライダーUI）
+   ============================================================ */
+.partner-lp .sim-form { grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr) minmax(0, 1.4fr) auto; }
+.partner-lp .sim-slider-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 14px 14px;
+}
+.partner-lp .sim-slider-row output {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--gold-soft);
+  min-width: 4.2em;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.partner-lp .sim-slider-row output small { font-size: 12px; font-weight: 700; color: rgba(255, 255, 255, 0.75); margin-left: 2px; }
+.partner-lp input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--gold-soft), rgba(255, 255, 255, 0.25));
+  outline: none;
+  cursor: pointer;
+}
+.partner-lp input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  border: 3px solid #0c1e33;
+  box-shadow: 0 0 0 2px rgba(217, 178, 94, 0.6), 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+.partner-lp input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  border: 3px solid #0c1e33;
+  box-shadow: 0 0 0 2px rgba(217, 178, 94, 0.6), 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+.partner-lp .sim-plan-choice {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 7px;
+}
+.partner-lp .sim-plan-choice legend {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0;
+  margin-bottom: 0;
+}
+.partner-lp .sim-plan-choice label { display: block; cursor: pointer; }
+.partner-lp .sim-plan-choice input { position: absolute; opacity: 0; pointer-events: none; }
+.partner-lp .sim-plan-choice span {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 800;
+  padding: 9px 14px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.partner-lp .sim-plan-choice span small { font-size: 11px; font-weight: 600; color: rgba(255, 255, 255, 0.65); }
+.partner-lp .sim-plan-choice input:checked + span {
+  border-color: var(--gold-soft);
+  background: rgba(185, 138, 47, 0.28);
+  box-shadow: 0 0 0 2px rgba(217, 178, 94, 0.35);
+}
+.partner-lp .sim-plan-choice input:focus-visible + span { outline: 2px solid var(--gold-soft); outline-offset: 2px; }
+
+/* ============================================================
+   05 営業ツール特典（診断レポート）
+   ============================================================ */
+.partner-lp .perk.section-block { max-width: none; background: var(--white); }
+.partner-lp .perk > * { max-width: 1120px; margin-left: auto; margin-right: auto; }
+.partner-lp .perk-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.partner-lp .perk-steps li {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 26px 22px;
+}
+.partner-lp .perk-num {
+  display: block;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.partner-lp .perk-steps h3 { font-size: 17px; margin: 0 0 8px; }
+.partner-lp .perk-steps p { margin: 0; font-size: 13.5px; color: var(--muted); }
+.partner-lp .perk-note {
+  font-size: 12.5px;
+  color: var(--muted);
+  text-align: left;
+  max-width: 640px;
+  margin: 18px auto 0;
+  line-height: 1.85;
+}
+
+/* ============================================================
+   06 Case（NASH実績・1枚組の横型カード）
+   ============================================================ */
+.partner-lp .partner-case-card {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  max-width: 980px;
+  margin-inline: auto;
+}
+.partner-lp .partner-case-card .work-media { aspect-ratio: auto; min-height: 100%; }
+.partner-lp .partner-case-card .work-media img { height: 100%; }
+.partner-lp .case-kpis {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 8px;
+  padding: 0;
+  margin: 0 0 16px;
+}
+.partner-lp .case-kpis li {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 10px;
+  text-align: center;
+  display: grid;
+  gap: 2px;
+}
+.partner-lp .case-kpis strong {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--navy);
+  font-variant-numeric: tabular-nums;
+}
+.partner-lp .case-kpis span { font-size: 11px; color: var(--muted); }
+.partner-lp .partner-case-card .work-body p { font-size: 14px; color: var(--muted); }
+.partner-lp .case-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(185, 138, 47, 0.45);
+  padding-bottom: 2px;
+}
+.partner-lp .case-link:hover { color: var(--navy); border-color: var(--navy); }
+
+/* ============================================================
+   07 Price（2プラン・受入枠バナーの載せ替え）
+   ============================================================ */
+.partner-lp .plan-grid-two {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 840px;
+  margin-inline: auto;
+  margin-bottom: 36px;
+}
+/* slots-banner は本体ではネイビーヒーロー上の想定（白文字）のため、明るい背景の Price 内ではネイビー面にして再利用 */
+.partner-lp .partner-limit {
+  background: var(--navy);
+  border-color: rgba(217, 178, 94, 0.5);
+  margin: 0 auto;
+}
+
+/* ============================================================
+   09 Flow（5ステップ化）
+   ============================================================ */
+@media (min-width: 961px) {
+  .subsc-lp-scope.partner-lp .flow-steps { grid-template-columns: repeat(5, 1fr); }
+}
+
+/* ============================================================
+   レスポンシブ
+   ============================================================ */
+@media (max-width: 960px) {
+  .partner-lp .scheme-figure { grid-template-columns: 1fr; max-width: 520px; }
+  .partner-lp .scheme-arrow { padding: 2px 0; }
+  .partner-lp .scheme-arrow i { transform: rotate(90deg); }
+  .partner-lp .sim-form { grid-template-columns: 1fr 1fr; }
+  .partner-lp .sim-field-slider { grid-column: 1 / -1; }
+  .partner-lp .sim-plan-choice { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; align-items: end; }
+  .partner-lp .sim-plan-choice legend { grid-column: 1 / -1; }
+  .partner-lp .shindan-run { grid-column: 1 / -1; justify-self: center; width: 100%; max-width: 420px; }
+  .partner-lp .perk-steps { grid-template-columns: 1fr; max-width: 520px; margin-inline: auto; }
+  .partner-lp .partner-case-card { grid-template-columns: 1fr; max-width: 560px; }
+  .partner-lp .partner-case-card .work-media { aspect-ratio: 16 / 9; min-height: 0; }
+  .partner-lp .plan-grid-two { grid-template-columns: 1fr; max-width: 480px; }
+}
+@media (max-width: 640px) {
+  .partner-lp .sim-form { grid-template-columns: 1fr; }
+  .partner-lp .sim-plan-choice { grid-template-columns: 1fr; }
+  .partner-lp .case-kpis { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 6px; }
+  .partner-lp .case-kpis strong { font-size: 17px; }
+}
