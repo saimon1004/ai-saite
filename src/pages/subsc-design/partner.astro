@@ -8,7 +8,7 @@ const base = import.meta.env.BASE_URL;
 // styles.css は subsc-design.astro（cssVersion）と共用・無変更。partner側の差分は partner.css / scrub-engine.js / 動画で、
 // それぞれ partnerVersion だけをバンプする（本体LPのキャッシュを道連れにしない）
 const cssVersion = "20260716-v1"; // src/pages/subsc-design.astro L8 と手動同期
-const partnerVersion = "20260720-v1";
+const partnerVersion = "20260720-v2";
 const cssHref = `${base}subsc-design/styles.css?v=${cssVersion}`;
 const partnerCssHref = `${base}subsc-design/partner.css?v=${partnerVersion}`;
 const engineSrc = `${base}subsc-design/partner/scrub-engine.js?v=${partnerVersion}`;

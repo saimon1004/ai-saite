@@ -348,6 +348,12 @@
   .partner-lp .plan-grid-two { grid-template-columns: 1fr; max-width: 480px; }
 }
 @media (max-width: 640px) {
+  /* justify は幅の広いリード文専用（CLAUDE.md標準）。1行20字程度の狭い行長では
+     nowrap塊の折り返しと組み合わさって文字間が大きく間延びするため、左揃えに戻す */
+  .subsc-lp-scope.partner-lp .section-lead,
+  .subsc-lp-scope.partner-lp .large-text { text-align: left; }
+  /* 診断パネルの見出しリードは styles.css の中央寄せ指定を維持する */
+  .subsc-lp-scope.partner-lp .shindan-heading .section-lead { text-align: center; }
   .partner-lp .sim-form { grid-template-columns: 1fr; }
   .partner-lp .sim-plan-choice { grid-template-columns: 1fr; }
   .partner-lp .case-kpis { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 6px; }
