@@ -2,10 +2,12 @@
 import SinglePageLayout from "../layouts/SinglePageLayout.astro";
 import HeroSection from "../components/sections/HeroSection.astro";
 import SolutionOverviewSection from "../components/sections/SolutionOverviewSection.astro";
+import StatsBarSection from "../components/sections/StatsBarSection.astro";
+import ClientsSection from "../components/sections/ClientsSection.astro";
+import WorksSection from "../components/sections/WorksSection.astro";
 import TrainingModulesSection from "../components/sections/TrainingModulesSection.astro";
 import ResultsSection from "../components/sections/ResultsSection.astro";
 import CaseStudySection from "../components/sections/CaseStudySection.astro";
-import PricingSection from "../components/sections/PricingSection.astro";
 import AboutSection from "../components/sections/AboutSection.astro";
 import TeamSection from "../components/sections/TeamSection.astro";
 import CompanySection from "../components/sections/CompanySection.astro";
@@ -63,12 +65,51 @@ const jsonLd = {
 >
   <HeroSection />
   <SolutionOverviewSection />
+  <StatsBarSection />
   <ResultsSection />
   <TrainingModulesSection />
+  <ClientsSection />
   <CaseStudySection />
-  <PricingSection />
+  <WorksSection />
   <AboutSection />
   <TeamSection />
   <CompanySection />
   <ContactSection />
+
+  <style is:global>
+    /* BudouXが挿入する文節区切り（ZWSP）でのみ折り返す（語中改行の防止・Safari含む全ブラウザ対応） */
+    .jp-budoux,
+    #solution h2, #solution h3, #solution h4, #solution .text-center p, #solution .mb-12 > p, #solution div > p.text-sm,
+    #solution .saimon-card p,
+    #clients h2, #clients .saimon-card p,
+    #works h2, #works p {
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+  </style>
+
+  <script>
+    // BudouX: 日本語の文節を自動判定して折り返し位置を制御（subsc-designと同方式）
+    import { loadDefaultJapaneseParser } from "budoux";
+    const parser = loadDefaultJapaneseParser();
+    const sel = [
+      ".jp-budoux",
+      "#solution h2",
+      "#solution h3",
+      "#solution h4",
+      "#solution .text-center p",
+      "#solution .mb-12 > p",
+      "#solution div > p.text-sm",
+      "#solution .saimon-card p",
+      "#clients h2",
+      "#clients .saimon-card p",
+      "#works h2",
+      "#works p",
+    ].join(",");
+    document.querySelectorAll(sel).forEach((el) => {
+      try {
+        parser.applyToElement(el);
+      } catch (e) {}
+    });
+  </script>
 </SinglePageLayout>

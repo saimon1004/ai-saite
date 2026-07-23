@@ -1,0 +1,67 @@
+---
+// サブスクデザインLP（/subsc-design/）で公開済みの制作実績と同じ匿名表記を使用
+const base = import.meta.env.BASE_URL;
+
+interface Work {
+  tag: string;
+  client: string;
+  image: string;
+  alt: string;
+}
+
+const works: Work[] = [
+  {
+    tag: "結婚式場LP",
+    client: "大手冠婚葬祭グループ様",
+    image: "subsc-design/assets/work-wedding.jpg",
+    alt: "温かな光に包まれた結婚式場のイメージ",
+  },
+  {
+    tag: "葬儀保険LP",
+    client: "少額短期保険様",
+    image: "subsc-design/assets/work-flower.jpg",
+    alt: "白い菊とユリの上品なアレンジメントのイメージ",
+  },
+  {
+    tag: "イベントチラシ",
+    client: "互助会代理店様",
+    image: "subsc-design/assets/work-event.jpg",
+    alt: "ネイビーと金の招待状・ギフトのイメージ",
+  },
+];
+---
+
+<section id="works" class="saimon-section bg-surface">
+  <div class="saimon-shell">
+    <div class="text-center mb-8">
+      <p class="saimon-eyebrow">制作実績</p>
+      <h2 class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy leading-tight" style="text-wrap: balance;">
+        <span class="whitespace-nowrap">「任せる」の実績——</span><wbr /><span class="whitespace-nowrap">プロがつくると</span><wbr /><span class="whitespace-nowrap">こうなる</span>
+      </h2>
+      <p class="mt-4 max-w-2xl mx-auto text-sm text-text-secondary leading-relaxed">
+        サブスクデザインで制作したLP・クリエイティブの一部をご紹介します。
+      </p>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-3">
+      {works.map((w) => (
+        <article class="saimon-card overflow-hidden">
+          <div class="aspect-[3/2] overflow-hidden">
+            <img src={`${base}${w.image}`} alt={w.alt} class="h-full w-full object-cover" loading="lazy" width="900" height="599" />
+          </div>
+          <div class="p-5">
+            <p class="text-xs font-bold text-teal">{w.tag}</p>
+            <p class="mt-1 text-sm font-heading font-black text-navy">{w.client}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+    <div class="mt-8 text-center">
+      <a href="/subsc-design/" class="inline-flex items-center gap-2 text-sm font-bold text-teal hover:text-teal-dark transition-colors">
+        サブスクデザインの詳細を見る
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

@@ -61,7 +61,7 @@ body {
 }
 
 .saimon-section {
-  padding-block: clamp(3rem, 7vw, 5.5rem);
+  padding-block: clamp(2.75rem, 5vw, 3.75rem);
 }
 
 .soft-grid {

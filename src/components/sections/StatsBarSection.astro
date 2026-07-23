@@ -1,0 +1,22 @@
+---
+const stats = [
+  { label: "AI研修 実施企業", value: "18", unit: "社" },
+  { label: "累計受講者", value: "77", unit: "名" },
+  { label: "デザイン制作実績", value: "51", unit: "件" },
+];
+---
+
+<section class="bg-navy py-10 sm:py-12">
+  <div class="saimon-shell">
+    <div class="grid grid-cols-3 gap-4 sm:gap-8 text-center">
+      {stats.map((s) => (
+        <div>
+          <p class="whitespace-nowrap text-2xl sm:text-5xl font-heading font-black text-white leading-none">
+            {s.value}<span class="text-sm sm:text-2xl text-teal-light ml-1">{s.unit}</span>
+          </p>
+          <p class="mt-2 text-[11px] sm:text-sm text-white/70 font-bold">{s.label}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

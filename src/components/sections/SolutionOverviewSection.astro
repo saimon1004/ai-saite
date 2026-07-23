@@ -9,26 +9,50 @@ interface Solution {
   badge?: { label: string; tone: "new" | "popular" };
 }
 
-const solutions: Solution[] = [
+// 学ぶ（研修系）— 社内に"つくる力"を育てる
+const learnSolutions: Solution[] = [
   {
-    title: "AI研修",
+    title: "AI実務研修",
     description: "実務に必要なAIスキルを、体系的に学べる研修プログラム。",
-    image: "pillar-genba.jpg",
+    image: "solutions/solution-training.jpg",
     href: "#modules",
   },
   {
-    title: "HP制作の内製化",
+    title: "助成金活用プラン",
+    description: "人材開発支援助成金を使い、費用を抑えてAI研修を導入。申請テンプレートも提供します。",
+    image: "solutions/solution-subsidy.jpg",
+    href: "/subsidy-plan/",
+  },
+  {
+    title: "石垣島AI実践研修",
+    description: "石垣島の自然のなかで、AI実践研修とチームビルディングを3泊4日で。",
+    image: "ishigaki/cover.jpg",
+    href: "/ishigaki/",
+    badge: { label: "NEW", tone: "new" },
+  },
+  {
+    title: "採用HP内製化",
     description: "採用HPを採用担当者がAIと一緒に更新できる体制をつくる3日間。外注待ちをなくし、改善を社内資産に。",
     image: "recruit-hp/assets/hero-ai-jitsumu-poster.png",
     href: "/recruit-hp/",
     badge: { label: "人気", tone: "popular" },
   },
+];
+
+// 任せる（制作・伴走系）— プロの"つくる力"を月額で
+const delegateSolutions: Solution[] = [
   {
-    title: "石垣島研修",
-    description: "石垣島の自然のなかで、AI実践研修とチームビルディングを4日間で。",
-    image: "ishigaki/cover.jpg",
-    href: "/ishigaki/",
+    title: "サブスクデザイン",
+    description: "保険・互助会業界特化の月額定額デザイン制作。バナー・チラシ・LP・Webサイトを専属デザイナーに何度でも依頼可能。",
+    image: "solutions/solution-design.jpg",
+    href: "/subsc-design/",
     badge: { label: "NEW", tone: "new" },
+  },
+  {
+    title: "顧問・伴走支援",
+    description: "研修後のAI活用を月額で継続サポート。定着支援から業務改善の相談まで、社外のAI顧問として伴走します。",
+    image: "solutions/solution-advisor.jpg",
+    href: "#contact",
   },
 ];
 
@@ -40,47 +64,96 @@ const badgeStyles: Record<"new" | "popular", string> = {
 
 <section id="solution" class="saimon-section bg-white">
   <div class="saimon-shell">
-    <div class="text-center mb-10 sm:mb-12">
+    <div class="text-center mb-8">
       <p class="saimon-eyebrow">SAIMONのソリューション</p>
       <h2 class="mt-3 text-2xl sm:text-4xl font-heading font-black text-navy leading-tight">
-        AIの力を、チームの力に変える。
+        "育てる"と"任せる"、2つのかたち。
       </h2>
       <p class="mt-4 max-w-2xl mx-auto text-sm sm:text-base text-text-secondary leading-relaxed">
-        SAIMONは、AIを「使える」だけでなく「つくれる」人材を社内に増やすことで、業務効率化・制作内製化・組織変革を加速させる研修プログラムを提供します。
+        SAIMONは、AI研修で社内人材を育てる「学ぶ」ソリューションと、プロのデザインチームが制作を担う「任せる」ソリューションの2本柱で、企業の"つくる力"を支えます。
       </p>
     </div>
 
-    <div class="grid gap-5 md:grid-cols-3">
-      {solutions.map((item) => (
-        <a href={item.href} class="group relative saimon-card overflow-hidden hover:border-navy/25 hover:shadow-card-hover transition-all duration-300">
-          {item.badge && (
-            <span class:list={[
-              "absolute top-3 right-3 z-10 inline-flex items-center justify-center px-2 py-0.5 text-[10px] font-heading font-black tracking-widest rounded-full shadow-md",
-              badgeStyles[item.badge.tone],
-            ]}>
-              {item.badge.label}
-            </span>
-          )}
-          <div class="aspect-[4/2.65] overflow-hidden">
-            <img
-              src={`${base}${item.image}`}
-              alt=""
-              class="h-full w-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
-              loading="lazy"
-            />
-          </div>
-          <div class="p-5">
-            <h3 class="text-lg font-heading font-black text-navy">{item.title}</h3>
-            <p class="mt-2 min-h-[3rem] text-sm text-text-secondary leading-relaxed">{item.description}</p>
-            <span class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-teal">
-              詳しく見る
-              <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </span>
-          </div>
-        </a>
-      ))}
+    <!-- 学ぶ -->
+    <div class="mb-10">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-navy text-white text-xs font-heading font-black tracking-wider">学ぶ</span>
+        <h3 class="text-lg sm:text-xl font-heading font-black text-navy">社内に"つくる力"を育てる</h3>
+      </div>
+      <p class="text-sm text-text-secondary mb-6">自社でつくれる、を当たり前に。実践型のAI研修プログラム。</p>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {learnSolutions.map((item) => (
+          <a href={item.href} class="group relative saimon-card overflow-hidden hover:border-navy/25 hover:shadow-card-hover transition-all duration-300">
+            {item.badge && (
+              <span class:list={[
+                "absolute top-3 right-3 z-10 inline-flex items-center justify-center px-2 py-0.5 text-[10px] font-heading font-black tracking-widest rounded-full shadow-md",
+                badgeStyles[item.badge.tone],
+              ]}>
+                {item.badge.label}
+              </span>
+            )}
+            <div class="aspect-[4/2.65] overflow-hidden">
+              <img
+                src={`${base}${item.image}`}
+                alt=""
+                class="h-full w-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
+                loading="lazy"
+              />
+            </div>
+            <div class="p-5">
+              <h4 class="text-lg font-heading font-black text-navy">{item.title}</h4>
+              <p class="mt-2 min-h-[3rem] text-sm text-text-secondary leading-relaxed">{item.description}</p>
+              <span class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-teal">
+                詳しく見る
+                <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- 任せる -->
+    <div>
+      <div class="flex items-center gap-3 mb-2">
+        <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-teal text-white text-xs font-heading font-black tracking-wider">任せる</span>
+        <h3 class="text-lg sm:text-xl font-heading font-black text-navy">プロの"つくる力"を月額で</h3>
+      </div>
+      <p class="text-sm text-text-secondary mb-6">育てる時間がない領域は、SAIMONのチームが制作と伴走を引き受けます。</p>
+      <div class="grid gap-5 sm:grid-cols-2 max-w-3xl">
+        {delegateSolutions.map((item) => (
+          <a href={item.href} class="group relative saimon-card overflow-hidden hover:border-navy/25 hover:shadow-card-hover transition-all duration-300">
+            {item.badge && (
+              <span class:list={[
+                "absolute top-3 right-3 z-10 inline-flex items-center justify-center px-2 py-0.5 text-[10px] font-heading font-black tracking-widest rounded-full shadow-md",
+                badgeStyles[item.badge.tone],
+              ]}>
+                {item.badge.label}
+              </span>
+            )}
+            <div class="aspect-[4/2.65] overflow-hidden">
+              <img
+                src={`${base}${item.image}`}
+                alt=""
+                class="h-full w-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
+                loading="lazy"
+              />
+            </div>
+            <div class="p-5">
+              <h4 class="text-lg font-heading font-black text-navy">{item.title}</h4>
+              <p class="mt-2 min-h-[3rem] text-sm text-text-secondary leading-relaxed">{item.description}</p>
+              <span class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-teal">
+                詳しく見る
+                <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
     </div>
   </div>
 </section>
