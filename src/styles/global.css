@@ -13,9 +13,15 @@
   --color-surface-dim: #f8f9fa;
   --color-surface-dark: #0f172a;
   --color-text-primary: #1e293b;
-  --color-text-secondary: #64748b;
+  --color-text-secondary: #475569; /* 視認性改善: slate-500 → slate-600 相当に濃く */
   --color-text-on-dark: #f1f5f9;
   --color-border: #e2e8f0;
+
+  /* 視認性改善: 小さめテキストを全体的に1px強引き上げる（text-xs 12→13px / text-sm 14→15px） */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.35rem;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.65rem;
 
   --font-sans: "Noto Sans JP", system-ui, -apple-system, sans-serif;
   --font-heading: "Inter", system-ui, sans-serif;
@@ -46,9 +52,9 @@ body {
 
 .saimon-eyebrow {
   font-family: var(--font-heading);
-  font-size: 0.74rem;
+  font-size: 0.8rem;
   font-weight: 900;
-  color: var(--color-teal);
+  color: var(--color-teal-dark); /* 視認性改善: ティールを濃色に */
   letter-spacing: 0;
   text-transform: uppercase;
 }
