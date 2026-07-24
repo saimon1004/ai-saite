@@ -16,6 +16,9 @@ const base = import.meta.env.BASE_URL;
     <source src={`${base}hero.mp4`} type="video/mp4" />
   </video>
 
+  <!-- Canvas UI 演出レイヤー（?hero= パラメータ指定時のみJSで起動）。グラデーションの下に敷く -->
+  <div id="hero-particles" class="absolute inset-y-0 right-0 w-[46%] hidden md:block" aria-hidden="true"></div>
+
   <div class="absolute inset-0 bg-gradient-to-r from-navy/92 via-navy/55 to-black/20" aria-hidden="true"></div>
   <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-navy/60 to-transparent" aria-hidden="true"></div>
 
@@ -102,6 +105,8 @@ const base = import.meta.env.BASE_URL;
 </style>
 
 <script>
+  import "../../scripts/hero-particles";
+
   const heroElements = document.querySelectorAll<HTMLElement>('[data-animate]');
   if (heroElements.length > 0) {
     const observer = new IntersectionObserver(
