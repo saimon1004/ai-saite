@@ -110,6 +110,26 @@ const clients: Client[] = [
     word-break: keep-all;
   }
 
+  /* カードごとに淡いグラデーションで彩る（白背景の単調さを避けつつ、目立ちすぎない範囲） */
+  .clients-group .clients-card:nth-child(1) {
+    background: linear-gradient(135deg, #f4f4ff 0%, #e9e9fb 100%); /* ネイビー系 */
+  }
+  .clients-group .clients-card:nth-child(2) {
+    background: linear-gradient(135deg, #effbfa 0%, #dff4f2 100%); /* ティール系 */
+  }
+  .clients-group .clients-card:nth-child(3) {
+    background: linear-gradient(135deg, #f0f7ff 0%, #e2eefb 100%); /* スカイ系 */
+  }
+  .clients-group .clients-card:nth-child(4) {
+    background: linear-gradient(135deg, #f8f3fc 0%, #efe6f8 100%); /* バイオレット系 */
+  }
+  .clients-group .clients-card:nth-child(5) {
+    background: linear-gradient(135deg, #f1faf3 0%, #e2f2e8 100%); /* グリーン系 */
+  }
+  .clients-group .clients-card:nth-child(6) {
+    background: linear-gradient(135deg, #fdf8ee 0%, #f7eeda 100%); /* アンバー系 */
+  }
+
   @keyframes clients-scroll {
     from {
       transform: translateX(0);
