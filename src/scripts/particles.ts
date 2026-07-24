@@ -11,6 +11,15 @@
 
 // ==================== Types ====================
 
+/**
+ * モーションのバリエーション（セクションごとに変えて単調さを避ける。いずれも控えめ）
+ * - fall: 上から粉が舞い落ちる（ヒーローのインク演出の続き・既定）
+ * - rise: 気泡のようにゆっくり浮かび上がる
+ * - drift: 左から右へゆるやかに流れる
+ * - constellation: 点がゆっくり漂い、近い点同士を淡い線で結ぶ
+ */
+type ParticleMode = "fall" | "rise" | "drift" | "constellation";
+
 interface ParticleConfig {
   count: number;
   colorRgb: string;
@@ -21,6 +30,7 @@ interface ParticleConfig {
   speedMin: number;
   speedMax: number;
   swayMax: number;
+  mode?: ParticleMode;
 }
 
 interface Particle {
@@ -28,6 +38,7 @@ interface Particle {
   y: number;
   radius: number;
   opacity: number;
+  velocityX: number;
   velocityY: number;
   swayPhase: number;
   swaySpeed: number;
@@ -60,7 +71,68 @@ const SECTION_CONFIGS: Record<string, ParticleConfig> = {
     speedMax: 0.4,
     swayMax: 0.3,
   },
+  results: {
+    mode: "rise",
+    count: 60,
+    colorRgb: "13, 0, 132",
+    opacityMin: 0.05,
+    opacityMax: 0.24,
+    radiusMin: 1.5,
+    radiusMax: 4,
+    speedMin: 0.08,
+    speedMax: 0.38,
+    swayMax: 0.3,
+  },
+  modules: {
+    mode: "constellation",
+    count: 35,
+    colorRgb: "13, 0, 132",
+    opacityMin: 0.05,
+    opacityMax: 0.22,
+    radiusMin: 1,
+    radiusMax: 3.5,
+    speedMin: 0.07,
+    speedMax: 0.36,
+    swayMax: 0.28,
+  },
+  clients: {
+    mode: "drift",
+    count: 50,
+    colorRgb: "13, 0, 132",
+    opacityMin: 0.05,
+    opacityMax: 0.2,
+    radiusMin: 1,
+    radiusMax: 3.5,
+    speedMin: 0.06,
+    speedMax: 0.35,
+    swayMax: 0.25,
+  },
+  cases: {
+    mode: "rise",
+    count: 45,
+    colorRgb: "13, 0, 132",
+    opacityMin: 0.05,
+    opacityMax: 0.2,
+    radiusMin: 1,
+    radiusMax: 3.5,
+    speedMin: 0.06,
+    speedMax: 0.35,
+    swayMax: 0.25,
+  },
+  works: {
+    mode: "drift",
+    count: 45,
+    colorRgb: "13, 0, 132",
+    opacityMin: 0.05,
+    opacityMax: 0.2,
+    radiusMin: 1,
+    radiusMax: 3.5,
+    speedMin: 0.06,
+    speedMax: 0.35,
+    swayMax: 0.25,
+  },
   team: {
+    mode: "rise",
     count: 50,
     colorRgb: "13, 0, 132",
     opacityMin: 0.05,
@@ -72,6 +144,7 @@ const SECTION_CONFIGS: Record<string, ParticleConfig> = {
     swayMax: 0.25,
   },
   company: {
+    mode: "drift",
     count: 35,
     colorRgb: "13, 0, 132",
     opacityMin: 0.05,
@@ -83,7 +156,8 @@ const SECTION_CONFIGS: Record<string, ParticleConfig> = {
     swayMax: 0.2,
   },
   contact: {
-    count: 30,
+    mode: "constellation",
+    count: 25,
     colorRgb: "255, 255, 255",
     opacityMin: 0.06,
     opacityMax: 0.18,
@@ -166,18 +240,40 @@ class ParticleField {
     }
   }
 
-  private createParticle(randomY: boolean): Particle {
+  private createParticle(randomPos: boolean): Particle {
     const radius = randomRange(this.config.radiusMin, this.config.radiusMax);
-    return {
+    const mode = this.config.mode ?? "fall";
+    const speed = randomRange(this.config.speedMin, this.config.speedMax);
+
+    const p: Particle = {
       x: Math.random() * this.width,
-      y: randomY ? Math.random() * this.height : -radius * 2,
+      y: Math.random() * this.height,
       radius,
       opacity: randomRange(this.config.opacityMin, this.config.opacityMax),
-      velocityY: randomRange(this.config.speedMin, this.config.speedMax),
+      velocityX: 0,
+      velocityY: speed,
       swayPhase: Math.random() * Math.PI * 2,
       swaySpeed: randomRange(0.005, 0.02),
       swayAmplitude: randomRange(0.05, this.config.swayMax),
     };
+
+    if (mode === "rise") {
+      p.velocityY = -speed;
+      if (!randomPos) p.y = this.height + radius * 2;
+    } else if (mode === "drift") {
+      p.velocityX = speed;
+      p.velocityY = 0;
+      if (!randomPos) p.x = -radius * 2;
+    } else if (mode === "constellation") {
+      const angle = Math.random() * Math.PI * 2;
+      p.velocityX = Math.cos(angle) * speed;
+      p.velocityY = Math.sin(angle) * speed;
+    } else {
+      // fall
+      if (!randomPos) p.y = -radius * 2;
+    }
+
+    return p;
   }
 
   // ==================== Animation ====================
@@ -203,33 +299,88 @@ class ParticleField {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     const { colorRgb } = this.config;
+    const mode = this.config.mode ?? "fall";
     const dpr = this.dpr;
 
     for (const p of this.particles) {
       // Update sway
       p.swayPhase += p.swaySpeed;
-      const swayX = Math.sin(p.swayPhase) * p.swayAmplitude;
+      const sway = Math.sin(p.swayPhase) * p.swayAmplitude;
 
-      // Move
-      p.y += p.velocityY;
-      p.x += swayX;
-
-      // Recycle when past bottom
-      if (p.y > this.height + p.radius * 2) {
-        p.y = -p.radius * 2;
-        p.x = Math.random() * this.width;
-        p.swayPhase = Math.random() * Math.PI * 2;
+      // Move (mode-specific)
+      if (mode === "drift") {
+        p.x += p.velocityX;
+        p.y += sway; // 縦にゆらぐ
+      } else if (mode === "constellation") {
+        p.x += p.velocityX;
+        p.y += p.velocityY;
+      } else {
+        // fall / rise
+        p.y += p.velocityY;
+        p.x += sway; // 横にゆらぐ
       }
 
-      // Wrap horizontally
-      if (p.x < -p.radius) p.x = this.width + p.radius;
-      if (p.x > this.width + p.radius) p.x = -p.radius;
+      // Recycle / wrap (mode-specific)
+      if (mode === "fall") {
+        if (p.y > this.height + p.radius * 2) {
+          p.y = -p.radius * 2;
+          p.x = Math.random() * this.width;
+          p.swayPhase = Math.random() * Math.PI * 2;
+        }
+        if (p.x < -p.radius) p.x = this.width + p.radius;
+        if (p.x > this.width + p.radius) p.x = -p.radius;
+      } else if (mode === "rise") {
+        if (p.y < -p.radius * 2) {
+          p.y = this.height + p.radius * 2;
+          p.x = Math.random() * this.width;
+          p.swayPhase = Math.random() * Math.PI * 2;
+        }
+        if (p.x < -p.radius) p.x = this.width + p.radius;
+        if (p.x > this.width + p.radius) p.x = -p.radius;
+      } else if (mode === "drift") {
+        if (p.x > this.width + p.radius * 2) {
+          p.x = -p.radius * 2;
+          p.y = Math.random() * this.height;
+          p.swayPhase = Math.random() * Math.PI * 2;
+        }
+        if (p.y < -p.radius) p.y = this.height + p.radius;
+        if (p.y > this.height + p.radius) p.y = -p.radius;
+      } else {
+        // constellation: 全方向ラップ
+        if (p.x < -p.radius) p.x = this.width + p.radius;
+        if (p.x > this.width + p.radius) p.x = -p.radius;
+        if (p.y < -p.radius) p.y = this.height + p.radius;
+        if (p.y > this.height + p.radius) p.y = -p.radius;
+      }
 
-      // Draw
+      // Draw dot
       this.ctx.beginPath();
       this.ctx.arc(p.x * dpr, p.y * dpr, p.radius * dpr, 0, Math.PI * 2);
       this.ctx.fillStyle = `rgba(${colorRgb}, ${p.opacity})`;
       this.ctx.fill();
+    }
+
+    // constellation: 近い点同士を淡い線で結ぶ（うるさくならないよう線は極薄・短距離のみ）
+    if (mode === "constellation") {
+      const linkDist = 110;
+      this.ctx.lineWidth = 1;
+      for (let i = 0; i < this.particles.length; i++) {
+        for (let j = i + 1; j < this.particles.length; j++) {
+          const a = this.particles[i];
+          const b = this.particles[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < linkDist) {
+            const alpha = 0.07 * (1 - dist / linkDist);
+            this.ctx.beginPath();
+            this.ctx.moveTo(a.x * dpr, a.y * dpr);
+            this.ctx.lineTo(b.x * dpr, b.y * dpr);
+            this.ctx.strokeStyle = `rgba(${colorRgb}, ${alpha})`;
+            this.ctx.stroke();
+          }
+        }
+      }
     }
 
     this.animationId = requestAnimationFrame(() => this.update());
