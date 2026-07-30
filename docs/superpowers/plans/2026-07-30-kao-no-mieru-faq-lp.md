@@ -590,13 +590,15 @@ cd ~/projects/saimon/ai-saite && python3 -c "
 import re, html
 src = open('dist/video-faq/index.html', encoding='utf-8').read()
 text = re.sub(r'<(script|style)[^>]*>.*?</\1>', '', src, flags=re.S)
-text = html.unescape(re.sub(r'<[^>]+>', '', text))
+text = html.unescape(re.sub(r'<[^>]+>', chr(10), text))
 cjk = r'[぀-ヿ一-鿿]'
 hits = re.findall(cjk + r' ' + cjk, text)
 print('count=', len(hits))
 for h in hits[:20]: print(repr(h))
 "
 ```
+
+**タグは空文字ではなく改行（`chr(10)`）に置換すること。** 空文字に置換すると隣接ブロック要素（`</h2>` と `<p>` など）のテキストが連結され、タグ間の空白を「文中の半角スペース」として拾ってしまい偽陽性が大量に出る（2026-07-30 に実測：空文字だと33件、改行だと0件）。検出したいのは**同一テキストノード内**の半角スペースだけ。
 
 Expected: `count= 0`
 
