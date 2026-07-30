@@ -15,6 +15,84 @@ const pageUrl = "https://sai-mon.co.jp/video-faq/";
 // 実演デモ（ほんりゅう提供の動作確認用サンプルサイト。別業種・架空企業である旨をページ本文に明記する）
 const demoUrl = "https://sunrise-travel-recruit.vercel.app";
 
+const faqEntity = {
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "保険商品の説明に使って、法令上の問題はありませんか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "よくある質問への補助的な説明としてご利用いただくことを前提にしています。重要事項説明や契約締結前交付書面を動画で代替するものではありません。募集行為に当たる内容を扱う場合は、貴社のコンプライアンス部門の確認を前提に、台本のレビュー工程を挟んで進めます。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "高齢のお客様でも操作できますか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "質問をタップするだけです。字幕が出るので、音を出せない場所や聞き取りにくい方でも内容を読めます。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "動画は何本くらい必要ですか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "よく聞かれる質問10〜15本から始めるのが標準です。公開後に視聴データを見ながら足していく形をおすすめしています。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "動画は誰が作るのですか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "SAIMONが質問の洗い出しと台本作成から対応します。担当者に出ていただく実写撮影と、AIアバターでの生成のどちらにも対応できます。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "既存のサイトに影響はありませんか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "ウィジェットはサイト本体の表示を妨げない独立したJavaScriptです（実測 gzip 約18KB）。CSSも独自のスコープで管理しているため、既存サイトのデザインには干渉しません。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "どんなサイトに入れられますか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "HTMLが書き込めるサイトであれば導入できます。WordPress、Studio、ペライチなどノーコードで作られたサイトでも、HTMLを挿入する機能があれば設置できます。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "効果はどうやって測るのですか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "起動回数、動画の再生数、視聴完了率、よく見られている質問、訪問者数を管理画面で確認できます。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "料金はいくらですか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "質問の本数、動画制作をどこから任せるか、運用代行の有無、対象サイト数で変わります。お話を伺ってから個別にお見積りします。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "契約期間や解約の条件は？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "個別のご契約でお取り決めします。ご相談の段階で条件をお伝えします。",
+      },
+    },
+  ],
+};
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -47,6 +125,7 @@ const jsonLd = {
         { "@type": "ListItem", position: 2, name: "顔の見えるFAQ", item: pageUrl },
       ],
     },
+    faqEntity,
   ],
 };
 ---
@@ -312,6 +391,54 @@ const jsonLd = {
           <li>対象サイトの数</li>
         </ul>
         <p class="fine-print jp-budoux">「まず概算だけ知りたい」というご相談でも構いません。想定している質問の数と対象サイトを教えていただければ、目安をお伝えできます。</p>
+      </div>
+    </section>
+
+    <!-- 10 FAQ -->
+    <section id="faq" class="faq section-block" aria-labelledby="faq-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">FAQ</p>
+          <h2 id="faq-title">よくある質問</h2>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary><span class="no-break">保険商品の説明に使って、</span><wbr /><span class="no-break">法令上の問題はありませんか？</span></summary>
+            <p class="faq-a jp-budoux">よくある質問への補助的な説明としてご利用いただくことを前提にしています。重要事項説明や契約締結前交付書面を動画で代替するものではありません。募集行為に当たる内容を扱う場合は、貴社のコンプライアンス部門の確認を前提に、台本のレビュー工程を挟んで進めます。</p>
+          </details>
+          <details>
+            <summary>高齢のお客様でも操作できますか？</summary>
+            <p class="faq-a jp-budoux">質問をタップするだけです。字幕が出るので、音を出せない場所や聞き取りにくい方でも内容を読めます。</p>
+          </details>
+          <details>
+            <summary>動画は何本くらい必要ですか？</summary>
+            <p class="faq-a jp-budoux">よく聞かれる質問10〜15本から始めるのが標準です。公開後に視聴データを見ながら足していく形をおすすめしています。</p>
+          </details>
+          <details>
+            <summary>動画は誰が作るのですか？</summary>
+            <p class="faq-a jp-budoux">SAIMONが質問の洗い出しと台本作成から対応します。担当者に出ていただく実写撮影と、AIアバターでの生成のどちらにも対応できます。</p>
+          </details>
+          <details>
+            <summary>既存のサイトに影響はありませんか？</summary>
+            <p class="faq-a jp-budoux">ウィジェットはサイト本体の表示を妨げない独立したJavaScriptです（実測 gzip 約18KB）。CSSも独自のスコープで管理しているため、既存サイトのデザインには干渉しません。</p>
+          </details>
+          <details>
+            <summary>どんなサイトに入れられますか？</summary>
+            <p class="faq-a jp-budoux">HTMLが書き込めるサイトであれば導入できます。WordPress、Studio、ペライチなどノーコードで作られたサイトでも、HTMLを挿入する機能があれば設置できます。</p>
+          </details>
+          <details>
+            <summary>効果はどうやって測るのですか？</summary>
+            <p class="faq-a jp-budoux">起動回数、動画の再生数、視聴完了率、よく見られている質問、訪問者数を管理画面で確認できます。</p>
+          </details>
+          <details>
+            <summary>料金はいくらですか？</summary>
+            <p class="faq-a jp-budoux">質問の本数、動画制作をどこから任せるか、運用代行の有無、対象サイト数で変わります。お話を伺ってから個別にお見積りします。</p>
+          </details>
+          <details>
+            <summary>契約期間や解約の条件は？</summary>
+            <p class="faq-a jp-budoux">個別のご契約でお取り決めします。ご相談の段階で条件をお伝えします。</p>
+          </details>
+        </div>
       </div>
     </section>
   </main>

@@ -503,3 +503,46 @@
   border-radius: 50%;
   background: var(--teal);
 }
+
+/* ---- FAQ ---- */
+.vfaq-lp-scope .faq-list {
+  max-width: 800px;
+  margin-inline: auto;
+  border-top: 1px solid var(--line);
+}
+.vfaq-lp-scope .faq-list details {
+  border-bottom: 1px solid var(--line);
+}
+.vfaq-lp-scope .faq-list summary {
+  cursor: pointer;
+  padding: 18px 34px 18px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  position: relative;
+  list-style: none;
+  line-height: 1.6;
+}
+.vfaq-lp-scope .faq-list summary::-webkit-details-marker {
+  display: none;
+}
+.vfaq-lp-scope .faq-list summary::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--teal-deep);
+  border-bottom: 2px solid var(--teal-deep);
+  transform: translateY(-70%) rotate(45deg);
+  transition: transform 0.2s ease;
+}
+.vfaq-lp-scope .faq-list details[open] summary::after {
+  transform: translateY(-30%) rotate(225deg);
+}
+.vfaq-lp-scope .faq-a {
+  margin: 0 0 20px;
+  font-size: 15px;
+  color: var(--muted);
+}
