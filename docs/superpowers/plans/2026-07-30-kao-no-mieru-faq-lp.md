@@ -26,8 +26,8 @@
 | --- | --- | --- |
 | 新規 | `src/pages/video-faq.astro` | ページ本体（frontmatter の JSON-LD、全11セクションのマークアップ、末尾スクリプト） |
 | 新規 | `public/video-faq/styles.css` | LP専用CSS（全セレクタ `.vfaq-lp-scope` 接頭辞） |
-| 新規 | `public/video-faq/assets/hero.jpg` | ヒーロー背景（PC・横長） |
-| 新規 | `public/video-faq/assets/hero-m.jpg` | ヒーロー背景（モバイル・縦長） |
+| 新規 | `public/video-faq/assets/hero.jpg` | ヒーロー背景（PC・横長 1536x1024） |
+| 新規 | `public/video-faq/assets/hero-m.jpg` | ヒーロー背景（モバイル・縦長 1024x1536） |
 | 修正 | `src/data/navigation.ts` | ナビに「顔の見えるFAQ」を追加 |
 
 1ページ完結なのでコンポーネント分割はしない（既存LP 3本と同じ方針）。
@@ -50,17 +50,25 @@ mkdir -p ~/projects/saimon/ai-saite/public/video-faq/assets
 
 - [ ] **Step 2: `gen-image` スキルで PC 用画像を生成する**
 
+**Codex内蔵 `image_gen` の制約（2026-07-30 実測）:** 出力サイズは `1536x1024` / `1024x1536` / `1024x1024` の3種のみ。厳密な 16:9 や 4:5 は出せない。出力形式は PNG。
+
+したがって **PC用は `1536x1024`（3:2）で生成し、CSS の `object-fit: cover` でトリミングする**。PNG で出たら `sips -s format jpeg` で JPEG に変換して `hero.jpg` にする。
+
+```bash
+sips -s format jpeg <生成されたPNG> --out /Users/saimoto_tatsuya/projects/saimon/ai-saite/public/video-faq/assets/hero.jpg
+```
+
 Skill ツールで `gen-image` を起動し、次のプロンプトを渡す。
 
 ```
-16:9 horizontal photograph. A calm, dignified consultation space in Japan: a woman in her early 60s sits at a warm wood table, looking at a tablet screen held at a comfortable angle, receiving a gentle explanation. Soft natural light from a window on the left. Warm wood grain, soft neutral fabric upholstery, a single small plant out of focus in the background. The hands and the tablet are the focal point; faces are calm and unstrained. Respectful, reassuring, quietly professional mood. Muted warm neutrals with a hint of cool blue in the shadows. Shallow depth of field.
+1536x1024 horizontal photograph. A calm, dignified consultation space in Japan: a woman in her early 60s sits at a warm wood table, looking at a tablet screen held at a comfortable angle, receiving a gentle explanation. Soft natural light from a window on the left. Warm wood grain, soft neutral fabric upholstery, a single small plant out of focus in the background. The hands and the tablet are the focal point; faces are calm and unstrained. Respectful, reassuring, quietly professional mood. Muted warm neutrals with a hint of cool blue in the shadows. Shallow depth of field.
 Absolutely avoid: hospital or clinical settings, funeral or mourning imagery, black clothing, flowers arranged as offerings, sadness, crying, dark or gloomy lighting, stock-photo handshake poses.
 no text, no lettering, no branding, no watermark, no logos, no UI overlays
 ```
 
 - [ ] **Step 3: モバイル用画像を生成する**
 
-同じスキルで、`16:9 horizontal` を `4:5 vertical` に置き換えたプロンプトを渡す。構図は「手元とタブレットに寄る」ことを明示する。
+同じスキルで、`1536x1024 horizontal` を `1024x1536 vertical` に置き換えたプロンプトを渡す。構図は「手元とタブレットに寄る（closer crop on the hands and the tablet）」ことを明示する。生成後、同じく `sips -s format jpeg` で `hero-m.jpg` に変換する。
 
 - [ ] **Step 4: 生成物を Read（画像）で目視確認する**
 
