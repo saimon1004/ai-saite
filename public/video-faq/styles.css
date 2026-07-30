@@ -378,3 +378,43 @@
     gap: 24px;
   }
 }
+
+/* ---- Features ---- */
+.vfaq-lp-scope .features {
+  background: var(--white);
+}
+.vfaq-lp-scope .feature-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.vfaq-lp-scope .feature-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px 18px;
+}
+.vfaq-lp-scope .feature-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.vfaq-lp-scope .feature-card p {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+}
+@media (max-width: 900px) {
+  .vfaq-lp-scope .feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .vfaq-lp-scope .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
