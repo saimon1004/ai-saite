@@ -1,0 +1,108 @@
+/* ============================================================
+   顔の見えるFAQ LP styles
+   scope: .vfaq-lp-scope（他ページへの影響を避けるため全て接頭辞付き）
+   palette: navy #0d0084 / teal #31b9b5 / paper #faf9f7
+   ============================================================ */
+
+.vfaq-lp-scope {
+  --navy: #0d0084;
+  --navy-deep: #070046;
+  --teal: #31b9b5;
+  --teal-deep: #1f8d8a;
+  --ink: #1b2430;
+  --muted: #5d6672;
+  --line: #e3e1dc;
+  --paper: #faf9f7;
+  --white: #ffffff;
+  --ok: #1f7a4d;
+  --err: #b3261e;
+  color: var(--ink);
+  background: var(--paper);
+  font-feature-settings: "palt";
+  line-height: 1.85;
+  overflow-x: clip;
+}
+
+/* ---- 日本語折り返し品質（全ページ共通の標準） ---- */
+/* balance は見出し専用（本文に使うと行が均等に短くなり右側が空く） */
+.vfaq-lp-scope h1,
+.vfaq-lp-scope h2,
+.vfaq-lp-scope h3 {
+  text-wrap: balance;
+  word-break: auto-phrase;
+  letter-spacing: -0.01em;
+}
+.vfaq-lp-scope .section-lead,
+.vfaq-lp-scope .hero-lead {
+  text-wrap: pretty;
+  word-break: auto-phrase;
+}
+.vfaq-lp-scope p,
+.vfaq-lp-scope li,
+.vfaq-lp-scope figcaption,
+.vfaq-lp-scope small,
+.vfaq-lp-scope .note,
+.vfaq-lp-scope .faq-a {
+  text-wrap: pretty;
+  word-break: auto-phrase;
+}
+.vfaq-lp-scope .fine-print {
+  text-align: left;
+  max-width: 640px;
+  margin-inline: auto;
+  line-height: 1.85;
+}
+/* BudouXが挿入する文節区切り（ZWSP）でのみ折り返す（Safari含む全ブラウザ対応） */
+.vfaq-lp-scope .jp-budoux {
+  word-break: keep-all;
+}
+/* 幅制限ブロックは中央寄せが既定 */
+.vfaq-lp-scope form,
+.vfaq-lp-scope .faq-list {
+  margin-inline: auto;
+}
+@media (max-width: 640px) {
+  /* 短い行長では文節折り返しが右側の空きを生むため、本文は通常折り返しに戻す */
+  .vfaq-lp-scope p,
+  .vfaq-lp-scope li,
+  .vfaq-lp-scope figcaption,
+  .vfaq-lp-scope small,
+  .vfaq-lp-scope .note,
+  .vfaq-lp-scope .faq-a {
+    word-break: normal;
+  }
+  .vfaq-lp-scope .section-lead,
+  .vfaq-lp-scope .hero-lead {
+    word-break: auto-phrase;
+  }
+}
+
+/* ---- セクション余白の基準（PC 60px / モバイル 44px） ---- */
+.vfaq-lp-scope .section-block {
+  padding: 60px 20px;
+}
+.vfaq-lp-scope .section-inner {
+  max-width: 1040px;
+  margin-inline: auto;
+}
+.vfaq-lp-scope .section-heading {
+  margin-bottom: 32px;
+}
+.vfaq-lp-scope .section-kicker {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  margin-bottom: 8px;
+}
+@media (max-width: 640px) {
+  .vfaq-lp-scope .section-block {
+    padding: 44px 18px;
+  }
+}
+
+/* ---- Safari対策の文節塊 ---- */
+.vfaq-lp-scope .no-break {
+  white-space: nowrap;
+}
