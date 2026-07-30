@@ -348,3 +348,33 @@
     text-align: left;
   }
 }
+
+/* ---- Why ---- */
+.vfaq-lp-scope .why-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 32px;
+}
+.vfaq-lp-scope .why-list h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+  padding-left: 14px;
+  border-left: 3px solid var(--teal);
+  line-height: 1.5;
+}
+.vfaq-lp-scope .why-list p {
+  font-size: 15px;
+  color: var(--muted);
+  margin: 0;
+}
+@media (max-width: 640px) {
+  .vfaq-lp-scope .why-list {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
