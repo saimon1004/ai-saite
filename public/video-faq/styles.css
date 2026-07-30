@@ -325,3 +325,26 @@
   color: var(--muted);
   margin: 0;
 }
+
+/* ---- Demo ---- */
+.vfaq-lp-scope .demo {
+  background: var(--white);
+  text-align: center;
+}
+.vfaq-lp-scope .demo .section-lead {
+  max-width: 40em;
+  margin-inline: auto;
+}
+.vfaq-lp-scope .demo .fine-print {
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--muted);
+}
+@media (max-width: 640px) {
+  .vfaq-lp-scope .demo {
+    text-align: left;
+  }
+  .vfaq-lp-scope .demo .section-lead {
+    text-align: left;
+  }
+}
