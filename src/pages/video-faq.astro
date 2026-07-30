@@ -1,0 +1,88 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/common/Header.astro";
+import Footer from "../components/common/Footer.astro";
+
+const base = import.meta.env.BASE_URL;
+// CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
+const cssVersion = "20260730-v1";
+const cssHref = `${base}video-faq/styles.css?v=${cssVersion}`;
+
+const heroImg = `${base}video-faq/assets/hero.jpg`;
+const heroImgM = `${base}video-faq/assets/hero-m.jpg`;
+
+const pageUrl = "https://sai-mon.co.jp/video-faq/";
+// 実演デモ（ほんりゅう提供の動作確認用サンプルサイト。別業種・架空企業である旨をページ本文に明記する）
+const demoUrl = "https://sunrise-travel-recruit.vercel.app";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://sai-mon.co.jp/#organization",
+      name: "株式会社SAIMON",
+      url: "https://sai-mon.co.jp/",
+      logo: "https://sai-mon.co.jp/logo.png",
+    },
+    {
+      "@type": "Service",
+      "@id": `${pageUrl}#service`,
+      name: "顔の見えるFAQ",
+      serviceType: "動画FAQチャットボットの導入・運用支援",
+      description:
+        "保険・共済・互助会・葬祭事業者向けの動画FAQチャットボット。解約返戻金や保障範囲など文章では伝わりにくい質問に、担当者が動画で答えます。Webサイトにタグを貼るだけで導入でき、質問設計から動画制作までSAIMONが対応します。",
+      url: pageUrl,
+      provider: { "@id": "https://sai-mon.co.jp/#organization" },
+      areaServed: "JP",
+      audience: {
+        "@type": "Audience",
+        audienceType: "保険会社・少額短期保険・共済・冠婚葬祭互助会・葬祭事業者",
+      },
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "ホーム", item: "https://sai-mon.co.jp/" },
+        { "@type": "ListItem", position: 2, name: "顔の見えるFAQ", item: pageUrl },
+      ],
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="顔の見えるFAQ｜保険・互助会・葬祭のための動画FAQ"
+  description="保険・共済・互助会・葬祭のための動画FAQ「顔の見えるFAQ」。解約返戻金や保障の範囲など、文章では伝わりにくい質問に担当者が動画で答えます。Webサイトにタグを貼るだけで導入でき、字幕・視聴データの計測に対応。質問の洗い出しから動画制作までSAIMONがお引き受けします。"
+  jsonLd={jsonLd}
+>
+  <Fragment slot="head">
+    <!-- 研修LP向けのFAQ動画チャットボット（BaseLayout共通）は、本LPで売る商品とは別実装のため誤認を避けて非表示にする -->
+    <style is:global>#faq-chatbot-root { display: none !important; }</style>
+  </Fragment>
+  <link rel="preload" as="image" href={heroImg} slot="head" />
+  <link rel="stylesheet" href={cssHref} slot="head" />
+
+  <Header />
+
+  <main class="vfaq-lp-scope">
+    <!-- 01 Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <picture class="hero-media" aria-hidden="true">
+        <source media="(max-width: 640px)" srcset={heroImgM} />
+        <img src={heroImg} alt="" decoding="async" fetchpriority="high" />
+      </picture>
+      <div class="hero-inner">
+        <p class="hero-kicker">保険・共済・互助会・葬祭のための動画FAQ</p>
+        <h1 id="hero-title">顔の見えるFAQ</h1>
+        <p class="hero-lead jp-budoux">「解約したらいくら戻るのか」「どこまで保障されるのか」。文章にすると長くなる質問に、担当者が動画で答えます。Webサイトにタグを貼るだけで導入できます。</p>
+        <div class="hero-actions">
+          <a class="primary-cta" href={demoUrl} target="_blank" rel="noopener" data-cta-source="hero-demo">実装デモを触る<span aria-hidden="true">→</span></a>
+          <a class="secondary-cta" href="#contact-form" data-cta-source="hero-primary">無料相談する</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
