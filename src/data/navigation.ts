@@ -9,6 +9,7 @@ export const navigation: NavItem[] = [
   { label: "石垣島研修", labelEn: "ISHIGAKI", href: "/ishigaki/" },
   { label: "HP制作内製化", labelEn: "CREATE HP", href: "/recruit-hp/" },
   { label: "サブスクデザイン", labelEn: "DESIGN", href: "/subsc-design/" },
+  { label: "顔の見えるFAQ", labelEn: "VIDEO FAQ", href: "/video-faq/" },
   { label: "研修プログラム", labelEn: "PROGRAM", href: "/#modules" },
   { label: "導入実績", labelEn: "CASES", href: "/#cases" },
   { label: "無料研修コンテンツ", labelEn: "無料研修", href: "/blog/" },
