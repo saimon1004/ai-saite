@@ -5,7 +5,7 @@ import Footer from "../components/common/Footer.astro";
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260730-v1";
+const cssVersion = "20260730-v2";
 const cssHref = `${base}video-faq/styles.css?v=${cssVersion}`;
 
 const heroImg = `${base}video-faq/assets/hero.jpg`;
@@ -24,6 +24,14 @@ const faqEntity = {
       acceptedAnswer: {
         "@type": "Answer",
         text: "よくある質問への補助的な説明としてご利用いただくことを前提にしています。重要事項説明や契約締結前交付書面を動画で代替するものではありません。募集行為に当たる内容を扱う場合は、貴社のコンプライアンス部門の確認を前提に、台本のレビュー工程を挟んで進めます。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "導入までどれくらいかかりますか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "タグの設置自体は最短即日です。全体の期間は動画の本数と撮り方で変わるため、ご相談の際に目安をお伝えします。時間がかかるのは動画の準備なので、そこはSAIMONがまとめてお引き受けします。",
       },
     },
     {
@@ -107,15 +115,15 @@ const jsonLd = {
       "@type": "Service",
       "@id": `${pageUrl}#service`,
       name: "顔の見えるFAQ",
-      serviceType: "動画FAQチャットボットの導入・運用支援",
+      serviceType: "動画FAQチャットボットの導入・運用支援（保険・EC・採用ほか）",
       description:
-        "保険・共済・互助会・葬祭事業者向けの動画FAQチャットボット。解約返戻金や保障の範囲など、文章では伝わりにくい質問に、担当者が動画で答えます。Webサイトにタグを貼るだけで導入でき、質問設計から動画制作までSAIMONが対応します。",
+        "Webサイトにタグを貼るだけで導入できる動画FAQチャットボット。よくある質問に担当者が動画で答えます。保険・共済・互助会、ECサイト、採用サイトなどで活用でき、質問設計から動画制作までSAIMONが対応します。",
       url: pageUrl,
       provider: { "@id": "https://sai-mon.co.jp/#organization" },
       areaServed: "JP",
       audience: {
         "@type": "Audience",
-        audienceType: "保険会社・少額短期保険・共済・冠婚葬祭互助会・葬祭事業者",
+        audienceType: "保険会社・共済・冠婚葬祭互助会・ECサイト運営企業・採用担当企業",
       },
     },
     {
@@ -131,8 +139,8 @@ const jsonLd = {
 ---
 
 <BaseLayout
-  title="顔の見えるFAQ｜保険・互助会・葬祭のための動画FAQ"
-  description="保険・共済・互助会・葬祭のための動画FAQ「顔の見えるFAQ」。解約返戻金や保障の範囲など、文章では伝わりにくい質問に担当者が動画で答えます。Webサイトにタグを貼るだけで導入でき、字幕・視聴データの計測に対応。質問の洗い出しから動画制作までSAIMONがお引き受けします。"
+  title="顔の見えるFAQ｜タグ1行で入る動画FAQチャットボット"
+  description="動画で答えるFAQチャットボット「顔の見えるFAQ」。Webサイトにタグを貼るだけなので設置は最短即日。保険・共済・互助会、ECサイト、採用サイトなどで、文章では伝わりにくい質問に担当者が動画で答えます。字幕・視聴データの計測に対応し、質問の洗い出しから動画制作までSAIMONがお引き受けします。"
   jsonLd={jsonLd}
 >
   <Fragment slot="head">
@@ -152,9 +160,9 @@ const jsonLd = {
         <img src={heroImg} alt="" decoding="async" fetchpriority="high" />
       </picture>
       <div class="hero-inner">
-        <p class="hero-kicker">保険・共済・互助会・葬祭のための動画FAQ</p>
+        <p class="hero-kicker">タグ1行で入る、動画で答えるFAQ</p>
         <h1 id="hero-title">顔の見えるFAQ</h1>
-        <p class="hero-lead jp-budoux">「解約したらいくら戻るのか」「どこまで保障されるのか」。文章にすると長くなる質問に、担当者が動画で答えます。Webサイトにタグを貼るだけで導入できます。</p>
+        <p class="hero-lead jp-budoux">よくある質問に、担当者が動画で答えます。Webサイトにタグを貼るだけなので、設置は最短即日。時間がかかる動画の準備は、SAIMONがまとめて引き受けます。</p>
         <div class="hero-actions">
           <a class="primary-cta" href={demoUrl} target="_blank" rel="noopener" data-cta-source="hero-demo">実装デモを触る<span aria-hidden="true">→</span></a>
           <a class="secondary-cta" href="#contact-form" data-cta-source="hero-primary">無料相談する</a>
@@ -167,25 +175,25 @@ const jsonLd = {
       <div class="section-inner">
         <div class="section-heading">
           <p class="section-kicker">Problem</p>
-          <h2 id="problem-title"><span class="no-break">その質問、今週も</span><wbr /><span class="no-break">電話で答えていませんか</span></h2>
-          <p class="section-lead jp-budoux">保険・共済・互助会・葬祭の窓口で、繰り返し起きていることです。</p>
+          <h2 id="problem-title"><span class="no-break">その質問、今週も</span><wbr /><span class="no-break">何度答えましたか</span></h2>
+          <p class="section-lead jp-budoux">業種は違っても、問い合わせの現場で起きていることは同じです。</p>
         </div>
         <ul class="problem-grid">
           <li class="problem-card">
-            <h3>「解約したらいくら戻るの」を説明し続けている</h3>
-            <p class="jp-budoux">同じ質問への説明で、担当者の時間が毎日削られていきます。書面を送っても「読んでも分からない」と、結局電話がかかってきます。</p>
+            <h3>同じ質問への対応に、毎日時間を取られている</h3>
+            <p class="jp-budoux">「未経験でも大丈夫ですか」「返品はできますか」「解約したらいくら戻りますか」。答えは決まっているのに、毎回人が対応しています。</p>
           </li>
           <li class="problem-card">
-            <h3>資料請求の前に、静かに離脱されている</h3>
-            <p class="jp-budoux">検討している人が知りたいのは、パンフレットに書いてある一般論ではなく「自分の場合はどうなるか」です。文章だけのFAQでは、その不安は消えません。</p>
+            <h3>文章のFAQでは、不安が消えない</h3>
+            <p class="jp-budoux">知りたいのはページに書いてある一般論ではなく「自分の場合はどうなるか」です。文字だけでは、そこまで届きません。</p>
           </li>
           <li class="problem-card">
-            <h3>高齢のお客様に、Webの文章だけでは伝わりきらない</h3>
-            <p class="jp-budoux">文字を追うことが負担な方に、長い説明文は届きません。結局電話に頼ることになり、窓口の負荷が下がりません。</p>
+            <h3>動画を入れたいが、抱えるものが多い</h3>
+            <p class="jp-budoux">撮影、配信の仕組み、更新の運用。外注すれば高くつき、内製すれば運用が残ります。だから後回しになります。</p>
           </li>
           <li class="problem-card">
-            <h3>説明の質が、担当者によってばらついている</h3>
-            <p class="jp-budoux">誰が答えても同じ説明になっているか、確かめる手段がありません。この業界では、それ自体がリスクになります。</p>
+            <h3>説明の質が、担当者によってばらつく</h3>
+            <p class="jp-budoux">誰が答えても同じ説明になっているか、確かめる手段がありません。</p>
           </li>
         </ul>
         <p class="problem-close jp-budoux">この4つは、答える人の顔と声が見えるだけで大きく変わります。</p>
@@ -233,7 +241,37 @@ const jsonLd = {
       </div>
     </section>
 
-    <!-- 04 Demo -->
+    <!-- 04 Use cases -->
+    <section id="usecase" class="usecase section-block" aria-labelledby="usecase-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Use cases</p>
+          <h2 id="usecase-title"><span class="no-break">どの質問を動画にするかが、</span><wbr /><span class="no-break">業種ごとの違いです</span></h2>
+          <p class="section-lead jp-budoux">ウィジェットの動きと設置の手軽さはどの業種でも同じです。変わるのは中身だけなので、貴社の質問に置き換えて考えてみてください。</p>
+        </div>
+        <ul class="usecase-grid">
+          <li class="usecase-item">
+            <p class="usecase-tag">保険・共済・互助会</p>
+            <h3>文章にすると長くなる質問を、動画で</h3>
+            <p class="jp-budoux">「解約したらいくら戻るのか」「どこまで保障されるのか」「申込みから開始までの流れ」。電話が集中しがちな質問を動画にします。高齢の加入者にも、読まずに受け取ってもらえます。</p>
+            <p class="usecase-note jp-budoux">よくある質問への補助的な説明としての利用が前提です。重要事項説明の代替にはなりません。</p>
+          </li>
+          <li class="usecase-item">
+            <p class="usecase-tag">ECサイト</p>
+            <h3>写真と説明文では判断がつかない質問を、動画で</h3>
+            <p class="jp-budoux">「サイズはどう選ぶのか」「素材の質感はどうか」「返品と交換の手順」。購入前の問い合わせが減り、思っていたものと違ったという理由の返品も減らせます。</p>
+          </li>
+          <li class="usecase-item">
+            <p class="usecase-tag">採用サイト</p>
+            <h3>求人票では伝わらない質問を、動画で</h3>
+            <p class="jp-budoux">「未経験でも大丈夫か」「1日の仕事の流れ」「職場の雰囲気」。実際に働いている人が答えることで、応募前の不安を減らせます。</p>
+          </li>
+        </ul>
+        <p class="usecase-close jp-budoux">ここに挙げていない業種でも、よく聞かれる質問が10問あれば始められます。</p>
+      </div>
+    </section>
+
+    <!-- 05 Demo -->
     <section id="demo" class="demo section-block" aria-labelledby="demo-title">
       <div class="section-inner">
         <div class="section-heading">
@@ -242,35 +280,7 @@ const jsonLd = {
           <p class="section-lead jp-budoux">下のリンクから、ウィジェットが埋め込まれたページを開けます。右下のボタンをタップすると、質問の選び方から動画の再生、字幕の表示まで、実際の操作感をそのまま確認できます。</p>
         </div>
         <a class="primary-cta" href={demoUrl} target="_blank" rel="noopener" data-cta-source="demo-section">デモを開く<span aria-hidden="true">→</span></a>
-        <p class="fine-print jp-budoux">このデモは別業種（採用サイト）での実装例で、動作確認のために用意されたサンプルサイトです。実在企業の運用サイトではありません。ウィジェットの動作と操作感は業種を問わず同じで、変わるのは質問と回答動画の中身です。</p>
-      </div>
-    </section>
-
-    <!-- 05 Why this industry -->
-    <section class="why section-block" aria-labelledby="why-title">
-      <div class="section-inner">
-        <div class="section-heading">
-          <p class="section-kicker">Why</p>
-          <h2 id="why-title"><span class="no-break">なぜ、保険・互助会・葬祭で</span><wbr /><span class="no-break">効くのか</span></h2>
-        </div>
-        <ul class="why-list">
-          <li>
-            <h3>聞きにくい質問こそ、人が答えると伝わる</h3>
-            <p class="jp-budoux">費用のこと、家族に何が起きるか。文章では冷たく読めてしまう質問が、人の声と表情で説明されると受け取り方が変わります。</p>
-          </li>
-          <li>
-            <h3>読んでもらうより、見てもらうほうが届く</h3>
-            <p class="jp-budoux">高齢のお客様にとって、長い説明文を読むことは負担です。タップして見るだけなら、操作も理解も軽くなります。</p>
-          </li>
-          <li>
-            <h3>説明を固定できるので、ばらつきがなくなる</h3>
-            <p class="jp-budoux">一度撮った動画は、誰が対応しても同じ説明を届けます。台本が残るので、社内の確認も通しやすくなります。</p>
-          </li>
-          <li>
-            <h3>同じ質問への電話が減る</h3>
-            <p class="jp-budoux">よく聞かれる質問を先に動画で答えておけば、窓口にかかる電話の総量が下がります。</p>
-          </li>
-        </ul>
+        <p class="fine-print jp-budoux">このデモは採用サイトでの実装例です。動作確認のために用意されたサンプルサイトで、実在企業の運用サイトではありません。ウィジェットの動作と操作感は業種を問わず同じで、変わるのは質問と回答動画の中身です。</p>
       </div>
     </section>
 
@@ -405,6 +415,10 @@ const jsonLd = {
           <details>
             <summary><span class="no-break">保険商品の説明に使って、</span><wbr /><span class="no-break">法令上の問題はありませんか？</span></summary>
             <p class="faq-a jp-budoux">よくある質問への補助的な説明としてご利用いただくことを前提にしています。重要事項説明や契約締結前交付書面を動画で代替するものではありません。募集行為に当たる内容を扱う場合は、貴社のコンプライアンス部門の確認を前提に、台本のレビュー工程を挟んで進めます。</p>
+          </details>
+          <details>
+            <summary>導入までどれくらいかかりますか？</summary>
+            <p class="faq-a jp-budoux">タグの設置自体は最短即日です。全体の期間は動画の本数と撮り方で変わるため、ご相談の際に目安をお伝えします。時間がかかるのは動画の準備なので、そこはSAIMONがまとめてお引き受けします。</p>
           </details>
           <details>
             <summary>高齢のお客様でも操作できますか？</summary>
@@ -671,7 +685,8 @@ const jsonLd = {
       ".vfaq-lp-scope .problem-card p",
       ".vfaq-lp-scope .problem-close",
       ".vfaq-lp-scope .step-body p",
-      ".vfaq-lp-scope .why-list p",
+      ".vfaq-lp-scope .usecase-item p",
+      ".vfaq-lp-scope .usecase-close",
       ".vfaq-lp-scope .feature-card p",
       ".vfaq-lp-scope .production-list p",
       ".vfaq-lp-scope .price-factors li",

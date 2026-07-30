@@ -349,33 +349,59 @@
   }
 }
 
-/* ---- Why ---- */
-.vfaq-lp-scope .why-list {
+/* ---- Use cases ---- */
+.vfaq-lp-scope .usecase-grid {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 28px;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 28px 32px;
 }
-.vfaq-lp-scope .why-list h3 {
+.vfaq-lp-scope .usecase-item {
+  border-top: 3px solid var(--teal);
+  padding-top: 16px;
+}
+.vfaq-lp-scope .usecase-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--teal-deep);
+  margin: 0 0 8px;
+}
+.vfaq-lp-scope .usecase-item h3 {
   font-size: 17px;
   font-weight: 700;
   color: var(--navy);
-  margin-bottom: 8px;
-  padding-left: 14px;
-  border-left: 3px solid var(--teal);
+  margin-bottom: 10px;
   line-height: 1.5;
 }
-.vfaq-lp-scope .why-list p {
+.vfaq-lp-scope .usecase-item p {
   font-size: 15px;
   color: var(--muted);
   margin: 0;
 }
-@media (max-width: 640px) {
-  .vfaq-lp-scope .why-list {
+.vfaq-lp-scope .usecase-note {
+  margin-top: 12px !important;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 13px !important;
+}
+.vfaq-lp-scope .usecase-close {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  text-align: center;
+  max-width: 36em;
+  margin-inline: auto;
+}
+@media (max-width: 900px) {
+  .vfaq-lp-scope .usecase-grid {
     grid-template-columns: 1fr;
     gap: 24px;
+  }
+  .vfaq-lp-scope .usecase-close {
+    text-align: left;
   }
 }
 
