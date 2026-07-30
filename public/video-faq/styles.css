@@ -281,3 +281,47 @@
     text-align: left;
   }
 }
+
+/* ---- How it works ---- */
+.vfaq-lp-scope .step-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 18px;
+}
+.vfaq-lp-scope .step-item {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+.vfaq-lp-scope .step-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.vfaq-lp-scope .step-num {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--white);
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+}
+.vfaq-lp-scope .step-body h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.vfaq-lp-scope .step-body p {
+  font-size: 15px;
+  color: var(--muted);
+  margin: 0;
+}
