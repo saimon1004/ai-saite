@@ -234,3 +234,50 @@
     font-size: 16px;
   }
 }
+
+/* ---- Problem ---- */
+.vfaq-lp-scope .problem {
+  background: var(--white);
+}
+.vfaq-lp-scope .problem-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+}
+.vfaq-lp-scope .problem-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 22px 20px;
+  background: var(--paper);
+}
+.vfaq-lp-scope .problem-card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.vfaq-lp-scope .problem-card p {
+  font-size: 15px;
+  color: var(--muted);
+  margin: 0;
+}
+.vfaq-lp-scope .problem-close {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--navy);
+  text-align: center;
+  max-width: 34em;
+  margin-inline: auto;
+}
+@media (max-width: 640px) {
+  .vfaq-lp-scope .problem-grid {
+    grid-template-columns: 1fr;
+  }
+  .vfaq-lp-scope .problem-close {
+    text-align: left;
+  }
+}
