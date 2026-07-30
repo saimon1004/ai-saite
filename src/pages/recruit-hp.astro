@@ -884,17 +884,61 @@ const faqJsonLd = {
         }
       });
 
-      // フォームが画面内にあるときは追従CTAを隠す（送信ボタンと重ならないように）
+      // ===== 計測: GA4ファネルイベント（既存 gtag / G-FSC03D4DCV） =====
+      function track(name, params) {
+        try { if (typeof window.gtag === "function") window.gtag("event", name, params || {}); } catch (_) {}
+      }
+
       var stickyCta = document.getElementById("mobile-sticky-cta");
       var formSection = document.getElementById("contact-form");
-      if (stickyCta && formSection && "IntersectionObserver" in window) {
+
+      // フォーム到達（form_view・1回のみ）＋ 追従CTAをフォーム表示時に隠す
+      var formViewed = false;
+      if (formSection && "IntersectionObserver" in window) {
         var io = new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
-            stickyCta.classList.toggle("is-hidden", e.isIntersecting);
+            if (stickyCta) stickyCta.classList.toggle("is-hidden", e.isIntersecting);
+            if (e.isIntersecting && !formViewed) {
+              formViewed = true;
+              track("lp_form_view", { event_category: "recruit_hp_funnel" });
+            }
           });
         }, { threshold: 0.01 });
         io.observe(formSection);
       }
+
+      // CTAクリック（data-cta-source 別）
+      document.querySelectorAll("[data-cta-source]").forEach(function (el) {
+        el.addEventListener("click", function () {
+          track("lp_cta_click", { event_category: "recruit_hp_funnel", event_label: el.getAttribute("data-cta-source") });
+        });
+      });
+
+      // フォーム入力開始（最初のフォーカス・1回のみ）
+      var formStarted = false;
+      if (form) {
+        form.addEventListener("focusin", function () {
+          if (formStarted) return;
+          formStarted = true;
+          track("lp_form_start", { event_category: "recruit_hp_funnel" });
+        });
+      }
+
+      // スクロール深度（25/50/75/100% を1回ずつ）
+      var depths = [25, 50, 75, 100];
+      var fired = {};
+      function onScroll() {
+        var doc = document.documentElement;
+        var scrolled = (window.scrollY + window.innerHeight) / doc.scrollHeight * 100;
+        depths.forEach(function (d) {
+          if (!fired[d] && scrolled >= d) {
+            fired[d] = true;
+            track("lp_scroll_depth", { event_category: "recruit_hp_funnel", event_label: d + "%", value: d });
+          }
+        });
+        if (fired[100]) window.removeEventListener("scroll", onScroll);
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
     })();
   </script>
 </BaseLayout>
