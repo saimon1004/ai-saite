@@ -5,7 +5,7 @@ import Footer from "../components/common/Footer.astro";
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260731-v5";
+const cssVersion = "20260731-v7";
 const cssHref = `${base}video-faq/styles.css?v=${cssVersion}`;
 
 const heroImg = `${base}video-faq/assets/hero-bg.jpg`;
@@ -183,6 +183,10 @@ const jsonLd = {
           <p class="hero-kicker">タグ1行で入る、動画で答えるFAQ</p>
           <h1 id="hero-title">顔の見えるFAQ</h1>
           <p class="hero-lead jp-budoux">よくある質問に、担当者が動画で答えます。Webサイトにタグを貼るだけなので、設置は最短即日。時間がかかる動画の準備は、SAIMONがまとめて引き受けます。</p>
+          <ul class="hero-facts">
+            <li class="hero-fact-zero"><span class="hero-fact-value">初期構築費用 0円</span></li>
+            <li><span class="hero-fact-value">動画5本つきで月額50,000円<small>（税別）</small></span></li>
+          </ul>
           <div class="hero-actions">
             <a class="primary-cta" href={demoUrl} target="_blank" rel="noopener" data-cta-source="hero-demo">実装デモを触る<span aria-hidden="true">→</span></a>
             <a class="secondary-cta" href="#contact-form" data-cta-source="hero-primary">無料相談する</a>
@@ -453,8 +457,16 @@ const jsonLd = {
         </div>
         <div class="price-plan">
           <p class="price-plan-name">1アカウント</p>
-          <p class="price-amount"><span class="price-num">50,000</span><span class="price-unit">円 / 月<small>（税別）</small></span></p>
-          <p class="price-initial">初期構築費用 <strong>0円</strong></p>
+          <div class="price-figures">
+            <div class="price-figure price-figure-zero">
+              <p class="price-figure-label">初期構築費用</p>
+              <p class="price-figure-value"><span class="price-num">0</span><span class="price-unit">円</span></p>
+            </div>
+            <div class="price-figure">
+              <p class="price-figure-label">月額</p>
+              <p class="price-figure-value"><span class="price-num">50,000</span><span class="price-unit">円<small>（税別）</small></span></p>
+            </div>
+          </div>
           <ul class="price-includes">
             <li>回答動画5本（質問の洗い出し・台本作成・撮影または生成まで）</li>
             <li>埋め込みタグの発行と、設置のサポート</li>

@@ -198,6 +198,42 @@
   flex-wrap: wrap;
   gap: 12px;
 }
+/* ヒーローの要点。初期費用0円を最初の画面で伝える */
+.vfaq-lp-scope .hero-facts {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+}
+.vfaq-lp-scope .hero-facts li {
+  position: relative;
+  padding-left: 24px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.vfaq-lp-scope .hero-facts li::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0.55em;
+  width: 10px;
+  height: 5px;
+  border-left: 2px solid var(--teal-deep);
+  border-bottom: 2px solid var(--teal-deep);
+  transform: rotate(-45deg);
+}
+.vfaq-lp-scope .hero-facts small {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.vfaq-lp-scope .hero-fact-zero .hero-fact-value {
+  color: var(--teal-deep);
+  font-size: 17px;
+}
 .vfaq-lp-scope .hero-note {
   margin-top: 14px;
   font-size: 13px;
@@ -273,12 +309,19 @@
     font-size: 16px;
     max-width: none;
   }
+  .vfaq-lp-scope .hero-facts {
+    margin-bottom: 18px;
+    gap: 8px 18px;
+  }
+  .vfaq-lp-scope .hero-lead {
+    margin-bottom: 20px;
+  }
   /* モバイルはヒーローが縦に伸びすぎないよう、端末を下端で切って見せる */
   .vfaq-lp-scope .hero-device {
     justify-self: center;
-    width: 208px;
+    width: 190px;
     aspect-ratio: auto;
-    height: 190px;
+    height: 142px;
     overflow: hidden;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -590,18 +633,32 @@
   color: var(--teal-deep);
   margin: 0 0 6px;
 }
-.vfaq-lp-scope .price-amount {
+.vfaq-lp-scope .price-figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin: 0 0 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+.vfaq-lp-scope .price-figure-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  margin: 0 0 2px;
+}
+.vfaq-lp-scope .price-figure-value {
   display: flex;
   align-items: baseline;
-  gap: 6px;
-  margin: 0 0 6px;
+  gap: 4px;
+  margin: 0;
   color: var(--navy);
 }
 .vfaq-lp-scope .price-num {
   font-family: "Inter", system-ui, sans-serif;
   font-size: 46px;
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.05;
   letter-spacing: -0.02em;
 }
 .vfaq-lp-scope .price-unit {
@@ -609,20 +666,25 @@
   font-weight: 700;
 }
 .vfaq-lp-scope .price-unit small {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
   color: var(--muted);
 }
-.vfaq-lp-scope .price-initial {
-  margin: 0 0 18px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--line);
-  font-size: 15px;
-  color: var(--ink);
-}
-.vfaq-lp-scope .price-initial strong {
-  font-weight: 800;
+/* 初期費用0円がこの商品のいちばんの障壁除去なので、色と下線で他より強く出す */
+.vfaq-lp-scope .price-figure-zero .price-figure-label {
   color: var(--teal-deep);
+}
+.vfaq-lp-scope .price-figure-zero .price-figure-value {
+  color: var(--teal-deep);
+}
+.vfaq-lp-scope .price-figure-zero .price-num {
+  font-size: 56px;
+}
+@media (max-width: 520px) {
+  .vfaq-lp-scope .price-figures {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
 }
 .vfaq-lp-scope .price-includes {
   list-style: none;
