@@ -2,6 +2,14 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/common/Header.astro";
 import Footer from "../../components/common/Footer.astro";
+import { loadDefaultJapaneseParser } from "budoux";
+
+// 字幕は実行時に textContent で差し込むため、その場では BudouX を掛けられない
+//（再生スクリプトは define:vars = is:inline で import できない）。
+// そこでビルド時に文節境界へ ZWSP を入れておき、CSS の word-break:keep-all と組み合わせて
+// 語中改行を防ぐ。
+const jpParser = loadDefaultJapaneseParser();
+const phrase = (t: string) => jpParser.parse(t).join("\u200b");
 
 const base = import.meta.env.BASE_URL;
 const dir = `${base}video-faq/samples/`;
@@ -87,6 +95,13 @@ const samples = [
   },
 ];
 
+// 再生スクリプトへ渡すのは、文節を分割済みのもの
+const samplesForPlayer = samples.map((v) => ({
+  ...v,
+  question: phrase(v.question),
+  cues: v.cues.map((c) => ({ ...c, t: phrase(c.t) })),
+}));
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -161,7 +176,8 @@ const jsonLd = {
           <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-loud"><path d="M4 9v6h4l5 4V5L8 9H4z" /><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12" /></svg>
         </button>
       </div>
-      <p class="player-caption" id="vfaq-caption" aria-live="polite"></p>
+      <p class="player-question" id="vfaq-question"></p>
+      <p class="player-caption" id="vfaq-caption" aria-live="polite"><span id="vfaq-caption-text"></span></p>
       <p class="player-label" id="vfaq-label"></p>
     </div>
   </div>
@@ -205,13 +221,13 @@ const jsonLd = {
       font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--teal-deep); margin: 0 0 8px;
     }
-    .vfaq-samples .lead { max-width: 42em; font-size: 16px; color: var(--muted); margin: 0; }
+    .vfaq-samples .lead { max-width: 42em; font-size: 17px; color: var(--muted); margin: 0; }
     /* 音が出ることを、押す前に伝える */
     .sound-notice {
       display: inline-flex; align-items: center; gap: 8px;
-      margin: 16px 0 0; padding: 8px 14px; border-radius: 999px;
+      margin: 16px 0 0; padding: 9px 16px; border-radius: 999px;
       background: #eaf5f5; color: var(--teal-deep);
-      font-size: 13px; font-weight: 700;
+      font-size: 14px; font-weight: 700;
     }
     .sound-notice-icon { display: inline-grid; place-items: center; }
     .sound-notice-icon svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
@@ -244,10 +260,10 @@ const jsonLd = {
     .sample-card:hover .thumb::after,
     .sample-card:focus-visible .thumb::after { border-color: var(--teal); }
     .meta { display: grid; gap: 2px; }
-    .scene { font-size: 12px; font-weight: 700; color: var(--teal-deep); letter-spacing: 0.02em; }
-    .question { word-break: keep-all; font-size: 15px; font-weight: 700; color: var(--navy); line-height: 1.5; }
-    .spec { word-break: keep-all; font-size: 12px; color: var(--muted); line-height: 1.6; }
-    .vfaq-samples .note { max-width: 640px; margin-inline: auto; font-size: 13px; color: var(--muted); text-align: left; }
+    .scene { font-size: 13px; font-weight: 700; color: var(--teal-deep); letter-spacing: 0.02em; }
+    .question { word-break: keep-all; font-size: 16px; font-weight: 700; color: var(--navy); line-height: 1.5; }
+    .spec { word-break: keep-all; font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .vfaq-samples .note { max-width: 640px; margin-inline: auto; font-size: 14px; color: var(--muted); text-align: left; }
 
     .back-band { padding: 0 20px 72px; text-align: center; }
     .back-link {
@@ -285,15 +301,29 @@ const jsonLd = {
     .ctrl .icon-loud { display: none; }
     .ctrl[aria-pressed="true"] .icon-muted { display: none; }
     .ctrl[aria-pressed="true"] .icon-loud { display: block; }
-    .player-caption {
-      position: absolute; z-index: 2; left: 0; right: 0; bottom: 52px; margin: 0; padding: 0 16px;
-      text-align: center; color: #fff; font-size: 16px; font-weight: 700; line-height: 1.6;
-      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9);
-      word-break: keep-all;
+    /* 音を出せない環境でも内容が追えるよう、答えている質問を常に出す */
+    .player-question {
+      position: absolute; z-index: 2; top: 12px; left: 12px; right: 62px; margin: 0;
+      padding: 8px 14px; border-radius: 8px;
+      background: rgba(13, 0, 132, 0.86); color: #fff;
+      font-size: 14px; font-weight: 700; line-height: 1.5; word-break: keep-all;
     }
+    /* 字幕は文字を大きくし、影ではなく面で背景を敷いて読ませる */
+    .player-caption {
+      position: absolute; z-index: 2; left: 0; right: 0; bottom: 54px; margin: 0; padding: 0 12px;
+      text-align: center; word-break: keep-all;
+    }
+    .player-caption span {
+      display: inline; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+      background: rgba(8, 12, 24, 0.82); color: #fff;
+      font-size: 21px; font-weight: 700; line-height: 1.9;
+      padding: 3px 12px; border-radius: 6px;
+    }
+    .player-caption span:empty { display: none; }
     .player-label {
-      position: absolute; z-index: 2; left: 0; right: 0; bottom: 16px; margin: 0;
-      text-align: center; color: rgba(255, 255, 255, 0.85); font-size: 12px;
+      position: absolute; z-index: 2; left: 0; right: 0; bottom: 18px; margin: 0;
+      text-align: center; color: rgba(255, 255, 255, 0.9); font-size: 13px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
     }
 
     @media (max-width: 900px) {
@@ -307,7 +337,8 @@ const jsonLd = {
       .vfaq-samples .lead { word-break: auto-phrase; }
       .thumb { max-width: 140px; }
       .player-panel { width: 100%; max-height: 82vh; aspect-ratio: 400 / 712; }
-      .player-caption { font-size: 15px; }
+      .player-caption span { font-size: 18px; line-height: 1.85; }
+      .player-question { font-size: 13px; }
     }
   </style>
 
@@ -323,11 +354,12 @@ const jsonLd = {
     });
   </script>
 
-  <script define:vars={{ samples, dir }}>
+  <script define:vars={{ samples: samplesForPlayer, dir }}>
     (function () {
       const overlay = document.getElementById("vfaq-player");
       const video = document.getElementById("vfaq-video");
-      const caption = document.getElementById("vfaq-caption");
+      const caption = document.getElementById("vfaq-caption-text");
+      const question = document.getElementById("vfaq-question");
       const label = document.getElementById("vfaq-label");
       const closeBtn = document.getElementById("vfaq-close");
       const soundBtn = document.getElementById("vfaq-sound");
@@ -354,6 +386,7 @@ const jsonLd = {
         current = bySlug[slug];
         if (!current) return;
         lastFocus = trigger || null;
+        question.textContent = current.question;
         label.textContent = current.scene + "／" + current.speaker;
         caption.textContent = "";
         video.src = dir + slug + ".mp4";
