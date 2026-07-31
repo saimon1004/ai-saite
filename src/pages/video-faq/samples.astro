@@ -116,6 +116,7 @@ const jsonLd = {
         <p class="kicker">Samples</p>
         <h1><span class="nb">話し手と声の</span><wbr /><span class="nb">バリエーション</span></h1>
         <p class="lead jp-budoux">アイコンをタップすると、実際の再生画面が開きます。字幕・音声のオンオフ・閉じるボタンは、サイトに設置したときと同じ動きです。同じ仕組みのまま、業種によって変わるのは質問と回答動画の中身だけです。</p>
+        <p class="sound-notice"><span class="sound-notice-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z" /><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12" /></svg></span>タップすると音が出ます。声のちがいも聞き比べてみてください。</p>
       </div>
     </section>
 
@@ -205,6 +206,15 @@ const jsonLd = {
       color: var(--teal-deep); margin: 0 0 8px;
     }
     .vfaq-samples .lead { max-width: 42em; font-size: 16px; color: var(--muted); margin: 0; }
+    /* 音が出ることを、押す前に伝える */
+    .sound-notice {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin: 16px 0 0; padding: 8px 14px; border-radius: 999px;
+      background: #eaf5f5; color: var(--teal-deep);
+      font-size: 13px; font-weight: 700;
+    }
+    .sound-notice-icon { display: inline-grid; place-items: center; }
+    .sound-notice-icon svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
     .vfaq-samples .grid-section { padding: 40px 20px 60px; }
 
     .sample-grid {
@@ -324,6 +334,13 @@ const jsonLd = {
       const bySlug = Object.fromEntries(samples.map((s) => [s.slug, s]));
       let current = null;
       let lastFocus = null;
+      let prefersMuted = false;
+
+      function syncSoundButton() {
+        const on = !video.muted;
+        soundBtn.setAttribute("aria-pressed", String(on));
+        soundBtn.setAttribute("aria-label", on ? "音声をオフにする" : "音声をオンにする");
+      }
 
       function renderCaption() {
         if (!current) return;
@@ -340,15 +357,24 @@ const jsonLd = {
         label.textContent = current.scene + "／" + current.speaker;
         caption.textContent = "";
         video.src = dir + slug + ".mp4";
-        // ブラウザが音ありの自動再生を止めるため、実機と同じくミュートで開始する
-        video.muted = true;
-        soundBtn.setAttribute("aria-pressed", "false");
-        soundBtn.setAttribute("aria-label", "音声をオンにする");
+        // このページは「声のバリエーション」を聞かせるのが目的なので音ありで始める。
+        // アイコンのクリックが直前にあるため、ブラウザの自動再生制限には当たらない。
+        // 一度ミュートされたらその選択をセッション中は引き継ぐ。
+        video.muted = prefersMuted;
+        syncSoundButton();
         overlay.hidden = false;
         document.body.style.overflow = "hidden";
         video.currentTime = 0;
         const p = video.play();
-        if (p && p.catch) p.catch(function () {});
+        if (p && p.catch) {
+          p.catch(function () {
+            // 想定外にブロックされたときだけミュートに落として再生する
+            video.muted = true;
+            syncSoundButton();
+            const retry = video.play();
+            if (retry && retry.catch) retry.catch(function () {});
+          });
+        }
         closeBtn.focus();
       }
 
@@ -379,9 +405,8 @@ const jsonLd = {
 
       soundBtn.addEventListener("click", function () {
         video.muted = !video.muted;
-        const on = !video.muted;
-        soundBtn.setAttribute("aria-pressed", String(on));
-        soundBtn.setAttribute("aria-label", on ? "音声をオフにする" : "音声をオンにする");
+        prefersMuted = video.muted;
+        syncSoundButton();
       });
 
       video.addEventListener("timeupdate", renderCaption);
