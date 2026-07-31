@@ -169,7 +169,7 @@
   margin-inline: auto;
   width: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
+  grid-template-columns: minmax(0, 1fr) 420px;
   gap: 40px;
   align-items: center;
 }
@@ -271,23 +271,72 @@
   color: var(--white);
 }
 
-/* 実機画面のデバイスモック（スクショが「商品の画面」だと分かる枠） */
-.vfaq-lp-scope .hero-device {
+/* 実機画面を3台並べて「同じ仕組みで話し手が変わる」を見せる。
+   中央を大きく、左右を小さく後ろに置いて奥行きを作る。 */
+.vfaq-lp-scope .hero-devices {
+  position: relative;
   justify-self: end;
-  width: 300px;
-  aspect-ratio: 600 / 1020;
-  border-radius: 26px;
-  padding: 8px;
-  background: #12161c;
-  box-shadow: 0 18px 40px rgba(12, 20, 40, 0.28), 0 2px 6px rgba(12, 20, 40, 0.16);
+  width: 420px;
+  height: 400px;
 }
-.vfaq-lp-scope .hero-device picture,
-.vfaq-lp-scope .hero-device img {
+.vfaq-lp-scope .hero-phone {
+  position: absolute;
+  border-radius: 20px;
+  padding: 6px;
+  background: #12161c;
+  box-shadow: 0 16px 36px rgba(12, 20, 40, 0.26), 0 2px 6px rgba(12, 20, 40, 0.16);
+  overflow: hidden;
+}
+.vfaq-lp-scope .hero-phone img {
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: 19px;
+  border-radius: 14px;
   object-fit: cover;
+}
+/* 字幕の帯。動画FAQだと一目で分かる要素なので小さくても残す */
+.vfaq-lp-scope .hero-phone-caption {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 12px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(8, 12, 24, 0.82);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  word-break: keep-all;
+}
+.vfaq-lp-scope .hero-phone-main {
+  width: 196px;
+  aspect-ratio: 320 / 569;
+  left: 50%;
+  top: 8px;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+.vfaq-lp-scope .hero-phone-left,
+.vfaq-lp-scope .hero-phone-right {
+  width: 154px;
+  aspect-ratio: 320 / 569;
+  top: 74px;
+  z-index: 2;
+}
+.vfaq-lp-scope .hero-phone-left {
+  left: 0;
+  transform: rotate(-7deg);
+}
+.vfaq-lp-scope .hero-phone-right {
+  right: 0;
+  transform: rotate(7deg);
+}
+.vfaq-lp-scope .hero-phone-left .hero-phone-caption,
+.vfaq-lp-scope .hero-phone-right .hero-phone-caption {
+  font-size: 9px;
+  bottom: 9px;
 }
 
 @media (max-width: 900px) {
@@ -316,22 +365,17 @@
   .vfaq-lp-scope .hero-lead {
     margin-bottom: 20px;
   }
-  /* モバイルはヒーローが縦に伸びすぎないよう、端末を下端で切って見せる */
-  .vfaq-lp-scope .hero-device {
+  /* モバイルはヒーローが縦に伸びすぎないよう、3台を小さくして下端で切る */
+  .vfaq-lp-scope .hero-devices {
     justify-self: center;
-    width: 190px;
-    aspect-ratio: auto;
-    height: 142px;
+    width: 300px;
+    height: 168px;
     overflow: hidden;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    padding-bottom: 0;
   }
-  .vfaq-lp-scope .hero-device img {
-    height: auto;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
+  .vfaq-lp-scope .hero-phone-main { width: 132px; top: 0; }
+  .vfaq-lp-scope .hero-phone-left,
+  .vfaq-lp-scope .hero-phone-right { width: 106px; top: 42px; }
+  .vfaq-lp-scope .hero-phone-caption { display: none; }
 }
 
 
