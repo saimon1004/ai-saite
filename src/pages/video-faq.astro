@@ -5,11 +5,14 @@ import Footer from "../components/common/Footer.astro";
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260730-v3";
+const cssVersion = "20260731-v4";
 const cssHref = `${base}video-faq/styles.css?v=${cssVersion}`;
 
-const heroImg = `${base}video-faq/assets/hero.jpg`;
-const heroImgM = `${base}video-faq/assets/hero-m.jpg`;
+const heroImg = `${base}video-faq/assets/hero-bg.jpg`;
+const heroImgM = `${base}video-faq/assets/hero-bg-m.jpg`;
+// 実機ウィジェットのスクリーンショット（デモサイトで実際に動いている画面を撮影したもの）
+const widgetWebp = `${base}video-faq/assets/widget.webp`;
+const widgetJpg = `${base}video-faq/assets/widget.jpg`;
 
 const pageUrl = "https://sai-mon.co.jp/video-faq/";
 // 実演デモ（ほんりゅう提供の動作確認用サンプルサイト。別業種・架空企業である旨をページ本文に明記する）
@@ -160,12 +163,21 @@ const jsonLd = {
         <img src={heroImg} alt="" decoding="async" fetchpriority="high" />
       </picture>
       <div class="hero-inner">
-        <p class="hero-kicker">タグ1行で入る、動画で答えるFAQ</p>
-        <h1 id="hero-title">顔の見えるFAQ</h1>
-        <p class="hero-lead jp-budoux">よくある質問に、担当者が動画で答えます。Webサイトにタグを貼るだけなので、設置は最短即日。時間がかかる動画の準備は、SAIMONがまとめて引き受けます。</p>
-        <div class="hero-actions">
-          <a class="primary-cta" href={demoUrl} target="_blank" rel="noopener" data-cta-source="hero-demo">実装デモを触る<span aria-hidden="true">→</span></a>
-          <a class="secondary-cta" href="#contact-form" data-cta-source="hero-primary">無料相談する</a>
+        <div class="hero-copy">
+          <p class="hero-kicker">タグ1行で入る、動画で答えるFAQ</p>
+          <h1 id="hero-title">顔の見えるFAQ</h1>
+          <p class="hero-lead jp-budoux">よくある質問に、担当者が動画で答えます。Webサイトにタグを貼るだけなので、設置は最短即日。時間がかかる動画の準備は、SAIMONがまとめて引き受けます。</p>
+          <div class="hero-actions">
+            <a class="primary-cta" href={demoUrl} target="_blank" rel="noopener" data-cta-source="hero-demo">実装デモを触る<span aria-hidden="true">→</span></a>
+            <a class="secondary-cta" href="#contact-form" data-cta-source="hero-primary">無料相談する</a>
+          </div>
+          <p class="hero-note jp-budoux">話し手は自社の担当者でも、AIアバターでも選べます。</p>
+        </div>
+        <div class="hero-device">
+          <picture>
+            <source type="image/webp" srcset={widgetWebp} />
+            <img src={widgetJpg} width="600" height="1020" alt="サイトに設置した「顔の見えるFAQ」の画面。担当者の回答動画が再生され、下に次の質問と問い合わせのボタンが並んでいる。" decoding="async" fetchpriority="high" />
+          </picture>
         </div>
       </div>
     </section>
