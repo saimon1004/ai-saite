@@ -5,7 +5,7 @@ import Footer from "../components/common/Footer.astro";
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260730-v2";
+const cssVersion = "20260730-v3";
 const cssHref = `${base}video-faq/styles.css?v=${cssVersion}`;
 
 const heroImg = `${base}video-faq/assets/hero.jpg`;
@@ -268,6 +268,35 @@ const jsonLd = {
           </li>
         </ul>
         <p class="usecase-close jp-budoux">ここに挙げていない業種でも、よく聞かれる質問が10問あれば始められます。</p>
+      </div>
+    </section>
+
+    <!-- 04.5 More: 広告的な使い方 -->
+    <section id="more" class="more section-block" aria-labelledby="more-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">More</p>
+          <h2 id="more-title"><span class="no-break">答えるだけでなく、</span><wbr /><span class="no-break">こちらから見せる使い方も</span></h2>
+          <p class="section-lead jp-budoux">質問に答える形だけでなく、見てほしいものを前に出す使い方もできます。動画のあとに好きなページへ飛ぶボタンを置けるので、見せて終わりになりません。</p>
+        </div>
+        <ul class="usecase-grid">
+          <li class="usecase-item">
+            <p class="usecase-tag">不動産賃貸仲介</p>
+            <h3>今週のおすすめ物件</h3>
+            <p class="jp-budoux">カテゴリを「今週のおすすめ物件」にして、1件ずつ内見動画を並べます。動画のあとに「この物件を見る」ボタンを置けば、そのまま物件ページへ送れます。毎週の入れ替えは管理画面で動画と見出しを差し替えるだけで、サイト側に手を入れる必要はありません。</p>
+          </li>
+          <li class="usecase-item">
+            <p class="usecase-tag">ECサイト</p>
+            <h3>今月の新作紹介</h3>
+            <p class="jp-budoux">新作を1本ずつ動画で見せて、そのまま商品ページへ送ります。写真では伝わらない質感や着用イメージを、買う前に確かめてもらえます。</p>
+          </li>
+          <li class="usecase-item">
+            <p class="usecase-tag">スクール・教室</p>
+            <h3>体験会のご案内</h3>
+            <p class="jp-budoux">講師本人が教室の雰囲気と当日の流れを話し、申込みフォームへ送ります。誰に教わるのかが先に分かるので、申込みの心理的な壁が下がります。</p>
+          </li>
+        </ul>
+        <p class="fine-print jp-budoux">動画のあとに置けるボタンは、任意のURLを開くもの、別のカテゴリへ移動するもの、別の質問へ移動するものの3種類です。ボタンの色も個別に指定できます。内容の入れ替えは管理画面から行います。</p>
       </div>
     </section>
 

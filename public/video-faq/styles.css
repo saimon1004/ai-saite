@@ -405,6 +405,16 @@
   }
 }
 
+/* ---- More（広告的な使い方）: 活用事例と同じ組みで、背景の色味だけ変えて別トピックだと分からせる ---- */
+.vfaq-lp-scope .more {
+  background: #f1f7f7;
+}
+.vfaq-lp-scope .more .fine-print {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
 /* ---- Features ---- */
 .vfaq-lp-scope .features {
   background: var(--white);
