@@ -1,0 +1,394 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/common/Header.astro";
+import Footer from "../../components/common/Footer.astro";
+
+const base = import.meta.env.BASE_URL;
+const dir = `${base}video-faq/samples/`;
+
+// 字幕のタイミングは各動画の音声から無音区間を検出して割り出し、台本の文節に対応させたもの。
+// start/end は秒。実機のウィジェットと同じ「開始・終了・テキスト」の形にしている。
+const samples = [
+  {
+    slug: "insurance",
+    speaker: "AIアバター（50代女性）",
+    scene: "保険・共済・互助会",
+    question: "解約したらいくら戻るの？",
+    voice: "落ち着いた女性",
+    duration: 26.4,
+    cues: [
+      { s: 0.33, e: 2.97, t: "ご解約のときにいくらお戻しできるかは、" },
+      { s: 3.23, e: 6.72, t: "ご加入からの年数と、お選びのコースによって変わります。" },
+      { s: 7.27, e: 9.75, t: "たとえば十年目でご解約された場合、" },
+      { s: 10.07, e: 12.33, t: "お積み立ていただいた金額の一部が、" },
+      { s: 12.56, e: 14.94, t: "解約返戻金としてお戻りします。" },
+      { s: 14.94, e: 16.05, t: "正確な金額は、" },
+      { s: 16.05, e: 20.01, t: "お手元の証券番号をご用意のうえお電話いただければ、" },
+      { s: 20.01, e: 21.75, t: "その場でお調べします。" },
+      { s: 22.24, e: 25.79, t: "お手続き自体は、書類のご返送だけで完了します。" },
+    ],
+  },
+  {
+    slug: "ec",
+    speaker: "AIアバター（30代女性）",
+    scene: "ECサイト",
+    question: "サイズはどう選べばいい？",
+    voice: "やわらかい女性",
+    duration: 18.0,
+    cues: [
+      { s: 0.35, e: 1.78, t: "サイズ選びで迷われたら、" },
+      { s: 1.78, e: 4.16, t: "お手持ちでいちばんよく着ているお洋服の、" },
+      { s: 4.16, e: 6.06, t: "肩幅と着丈を測ってみてください。" },
+      { s: 6.37, e: 9.12, t: "商品ページの寸法表と見比べていただくのが、" },
+      { s: 9.12, e: 10.3, t: "いちばん確実です。" },
+      { s: 10.73, e: 11.85, t: "それでも迷う場合は、" },
+      { s: 11.85, e: 14.44, t: "いつものサイズより一つ上をおすすめしています。" },
+      { s: 14.75, e: 16.1, t: "ゆったりめの作りなので、" },
+      { s: 16.1, e: 17.45, t: "体型を拾いにくいんです。" },
+    ],
+  },
+  {
+    slug: "recruit",
+    speaker: "AIアバター（20代男性）",
+    scene: "採用サイト",
+    question: "未経験でも大丈夫？",
+    voice: "明るい男性",
+    duration: 21.6,
+    cues: [
+      { s: 0.35, e: 2.02, t: "未経験の方、大歓迎です。" },
+      { s: 3.09, e: 5.31, t: "実際に今いるメンバーの半分以上が、" },
+      { s: 5.92, e: 8.29, t: "この仕事を始めるまでは別の業界にいました。" },
+      { s: 9.65, e: 11.94, t: "入社してから三か月は先輩がついて、" },
+      { s: 12.3, e: 13.83, t: "一つずつ覚えていってもらいます。" },
+      { s: 14.2, e: 16.29, t: "最初から一人で任せることはありません。" },
+      { s: 17.24, e: 18.57, t: "気になることがあれば、" },
+      { s: 18.57, e: 20.99, t: "面接の前に一度お話だけでも大丈夫ですよ。" },
+    ],
+  },
+  {
+    slug: "realestate",
+    speaker: "キャラクター（イラスト）",
+    scene: "不動産賃貸仲介",
+    question: "今週のおすすめ物件は？",
+    voice: "高めの明るい声",
+    duration: 19.8,
+    cues: [
+      { s: 0.36, e: 1.76, t: "今週のおすすめを二件、" },
+      { s: 2.05, e: 2.86, t: "ご紹介します。" },
+      { s: 3.63, e: 5.39, t: "一件目は駅から徒歩五分、" },
+      { s: 5.81, e: 7.16, t: "南向きの角部屋です。" },
+      { s: 7.91, e: 9.2, t: "日当たりがとても良くて、" },
+      { s: 9.53, e: 11.05, t: "洗濯物がよく乾きます。" },
+      { s: 11.75, e: 13.79, t: "二件目はペット相談可の一階で、" },
+      { s: 14.11, e: 15.2, t: "専用のお庭つき。" },
+      { s: 15.65, e: 17.21, t: "どちらも内見のご予約は、" },
+      { s: 17.54, e: 19.18, t: "この下のボタンから取れますよ。" },
+    ],
+  },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "ホーム", item: "https://sai-mon.co.jp/" },
+    { "@type": "ListItem", position: 2, name: "顔の見えるFAQ", item: "https://sai-mon.co.jp/video-faq/" },
+    { "@type": "ListItem", position: 3, name: "サンプル", item: "https://sai-mon.co.jp/video-faq/samples/" },
+  ],
+};
+---
+
+<BaseLayout
+  title="サンプル動画｜顔の見えるFAQ"
+  description="動画FAQチャットボット「顔の見えるFAQ」のサンプル動画。保険・EC・採用・不動産の4つのシチュエーションで、実写風アバターからイラストのキャラクターまで、話し手と声のバリエーションを実際の再生画面で確認できます。"
+  jsonLd={jsonLd}
+>
+  <Fragment slot="head">
+    <!-- 研修LP向けのFAQ動画チャットボット（BaseLayout共通）は、このページのサンプルと紛らわしいため非表示にする -->
+    <style is:global>#faq-chatbot-root { display: none !important; }</style>
+  </Fragment>
+
+  <Header />
+
+  <main class="vfaq-samples">
+    <section class="intro">
+      <div class="inner">
+        <p class="kicker">Samples</p>
+        <h1><span class="nb">話し手と声の</span><wbr /><span class="nb">バリエーション</span></h1>
+        <p class="lead jp-budoux">アイコンをタップすると、実際の再生画面が開きます。字幕・音声のオンオフ・閉じるボタンは、サイトに設置したときと同じ動きです。同じ仕組みのまま、業種によって変わるのは質問と回答動画の中身だけです。</p>
+      </div>
+    </section>
+
+    <section class="grid-section">
+      <div class="inner">
+        <ul class="sample-grid">
+          {samples.map((v) => (
+            <li>
+              <button class="sample-card" type="button" data-slug={v.slug} aria-label={`${v.scene}のサンプルを再生する`}>
+                <span class="thumb"><img src={`${dir}${v.slug}.jpg`} width="360" height="360" alt="" loading="lazy" decoding="async" /></span>
+                <span class="meta">
+                  <span class="scene">{v.scene}</span>
+                  <span class="question">{v.question}</span>
+                  <span class="spec">{v.speaker}／{v.voice}</span>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+        <p class="note jp-budoux">サンプルの内容はすべて架空の企業を想定したものです。実在の企業・商品とは関係ありません。話し手は自社の担当者による実写撮影にも対応しています。</p>
+      </div>
+    </section>
+
+    <section class="back-band">
+      <a class="back-link" href={`${base}video-faq/`}>顔の見えるFAQ のページへ戻る</a>
+    </section>
+  </main>
+
+  <Footer />
+
+  <!-- 再生オーバーレイ（実機ウィジェットと同じ操作系: 閉じる・音声オンオフ・字幕） -->
+  <div class="vfaq-player" id="vfaq-player" hidden>
+    <div class="player-backdrop" data-close></div>
+    <div class="player-panel" role="dialog" aria-modal="true" aria-label="サンプル動画">
+      <video id="vfaq-video" playsinline preload="metadata" muted></video>
+      <div class="player-controls">
+        <button type="button" class="ctrl" id="vfaq-close" aria-label="閉じる">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+        </button>
+        <button type="button" class="ctrl" id="vfaq-sound" aria-label="音声をオンにする" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-muted"><path d="M4 9v6h4l5 4V5L8 9H4z" /><path d="M17 9l4 6M21 9l-4 6" /></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-loud"><path d="M4 9v6h4l5 4V5L8 9H4z" /><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12" /></svg>
+        </button>
+      </div>
+      <p class="player-caption" id="vfaq-caption" aria-live="polite"></p>
+      <p class="player-label" id="vfaq-label"></p>
+    </div>
+  </div>
+
+  <style>
+    .vfaq-samples {
+      --navy: #0d0084;
+      --teal: #31b9b5;
+      --teal-deep: #1f8d8a;
+      --ink: #1b2430;
+      --muted: #5d6672;
+      --line: #e3e1dc;
+      --paper: #faf9f7;
+      color: var(--ink);
+      background: var(--paper);
+      font-feature-settings: "palt";
+      line-height: 1.85;
+      overflow-x: clip;
+    }
+    .vfaq-samples h1 {
+      text-wrap: balance;
+      word-break: auto-phrase;
+      letter-spacing: -0.01em;
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 0 0 16px;
+      line-height: 1.35;
+    }
+    .vfaq-samples .lead,
+    .vfaq-samples .note {
+      text-wrap: pretty;
+      word-break: auto-phrase;
+    }
+    .vfaq-samples .jp-budoux { word-break: keep-all; }
+    .vfaq-samples .nb { white-space: nowrap; }
+    .vfaq-samples .inner { max-width: 1040px; margin-inline: auto; }
+    .vfaq-samples .intro { padding: 84px 20px 0; }
+    .vfaq-samples .kicker {
+      font-family: "Inter", system-ui, sans-serif;
+      font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--teal-deep); margin: 0 0 8px;
+    }
+    .vfaq-samples .lead { max-width: 42em; font-size: 16px; color: var(--muted); margin: 0; }
+    .vfaq-samples .grid-section { padding: 40px 20px 60px; }
+
+    .sample-grid {
+      list-style: none; padding: 0; margin: 0 0 28px;
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px;
+    }
+    .sample-card {
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+      width: 100%; padding: 0; border: 0; background: none; cursor: pointer;
+      font: inherit; color: inherit; text-align: center;
+    }
+    .thumb {
+      display: block; width: 100%; max-width: 180px; aspect-ratio: 1;
+      border-radius: 50%; overflow: hidden; background: #e8eeee;
+      box-shadow: 0 6px 18px rgba(12, 20, 40, 0.14);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      position: relative;
+    }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* 再生できることが分かるよう、円の縁にリングを重ねる */
+    .thumb::after {
+      content: ""; position: absolute; inset: 0; border-radius: 50%;
+      border: 3px solid rgba(49, 185, 181, 0); transition: border-color 0.18s ease;
+    }
+    .sample-card:hover .thumb,
+    .sample-card:focus-visible .thumb { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(12, 20, 40, 0.2); }
+    .sample-card:hover .thumb::after,
+    .sample-card:focus-visible .thumb::after { border-color: var(--teal); }
+    .meta { display: grid; gap: 2px; }
+    .scene { font-size: 12px; font-weight: 700; color: var(--teal-deep); letter-spacing: 0.02em; }
+    .question { word-break: keep-all; font-size: 15px; font-weight: 700; color: var(--navy); line-height: 1.5; }
+    .spec { word-break: keep-all; font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .vfaq-samples .note { max-width: 640px; margin-inline: auto; font-size: 13px; color: var(--muted); text-align: left; }
+
+    .back-band { padding: 0 20px 72px; text-align: center; }
+    .back-link {
+      display: inline-flex; align-items: center; padding: 13px 24px; border-radius: 8px;
+      border: 1px solid var(--navy); color: var(--navy); font-weight: 700; text-decoration: none;
+    }
+    .back-link:hover { background: var(--navy); color: #fff; }
+
+    /* ---- 再生オーバーレイ ---- */
+    .vfaq-player[hidden] { display: none; }
+    .vfaq-player {
+      position: fixed; inset: 0; z-index: 100;
+      display: grid; place-items: center; padding: 20px;
+    }
+    .player-backdrop { position: absolute; inset: 0; background: rgba(8, 12, 24, 0.72); }
+    .player-panel {
+      position: relative; width: min(400px, 100%); aspect-ratio: 400 / 712;
+      background: #000; border-radius: 18px; overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    }
+    .player-panel video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* 明るい映像でも字幕が読めるように、下部だけ暗く落とす */
+    .player-panel::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 210px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0) 100%);
+      pointer-events: none;
+    }
+    .player-controls { position: absolute; z-index: 3; top: 10px; right: 10px; display: grid; gap: 8px; }
+    .ctrl {
+      width: 38px; height: 38px; border-radius: 50%; border: 0; cursor: pointer;
+      background: rgba(255, 255, 255, 0.92); display: grid; place-items: center; padding: 0;
+    }
+    .ctrl:hover { background: #fff; }
+    .ctrl svg { width: 17px; height: 17px; fill: none; stroke: #1b2430; stroke-width: 2; stroke-linecap: round; }
+    .ctrl .icon-loud { display: none; }
+    .ctrl[aria-pressed="true"] .icon-muted { display: none; }
+    .ctrl[aria-pressed="true"] .icon-loud { display: block; }
+    .player-caption {
+      position: absolute; z-index: 2; left: 0; right: 0; bottom: 52px; margin: 0; padding: 0 16px;
+      text-align: center; color: #fff; font-size: 16px; font-weight: 700; line-height: 1.6;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9);
+      word-break: keep-all;
+    }
+    .player-label {
+      position: absolute; z-index: 2; left: 0; right: 0; bottom: 16px; margin: 0;
+      text-align: center; color: rgba(255, 255, 255, 0.85); font-size: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .sample-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 20px; }
+    }
+    @media (max-width: 640px) {
+      .vfaq-samples .intro { padding: 68px 18px 0; }
+      .vfaq-samples h1 { font-size: 26px; }
+      .vfaq-samples .grid-section { padding: 32px 18px 48px; }
+      .vfaq-samples .lead, .vfaq-samples .note { word-break: normal; }
+      .vfaq-samples .lead { word-break: auto-phrase; }
+      .thumb { max-width: 140px; }
+      .player-panel { width: 100%; max-height: 82vh; aspect-ratio: 400 / 712; }
+      .player-caption { font-size: 15px; }
+    }
+  </style>
+
+  <script>
+    // BudouX: 日本語の文節を自動判定して折り返す。
+    // .jp-budoux は word-break:keep-all なので、ZWSP が入らないと一切折り返せずはみ出す。
+    import { loadDefaultJapaneseParser } from "budoux";
+    const parser = loadDefaultJapaneseParser();
+    document.querySelectorAll(".vfaq-samples .lead, .vfaq-samples .note, .vfaq-samples .question, .vfaq-samples .spec").forEach((el) => {
+      try {
+        parser.applyToElement(el);
+      } catch (e) {}
+    });
+  </script>
+
+  <script define:vars={{ samples, dir }}>
+    (function () {
+      const overlay = document.getElementById("vfaq-player");
+      const video = document.getElementById("vfaq-video");
+      const caption = document.getElementById("vfaq-caption");
+      const label = document.getElementById("vfaq-label");
+      const closeBtn = document.getElementById("vfaq-close");
+      const soundBtn = document.getElementById("vfaq-sound");
+      const bySlug = Object.fromEntries(samples.map((s) => [s.slug, s]));
+      let current = null;
+      let lastFocus = null;
+
+      function renderCaption() {
+        if (!current) return;
+        const t = video.currentTime;
+        const cue = current.cues.find((c) => t >= c.s && t < c.e);
+        const text = cue ? cue.t : "";
+        if (caption.textContent !== text) caption.textContent = text;
+      }
+
+      function open(slug, trigger) {
+        current = bySlug[slug];
+        if (!current) return;
+        lastFocus = trigger || null;
+        label.textContent = current.scene + "／" + current.speaker;
+        caption.textContent = "";
+        video.src = dir + slug + ".mp4";
+        // ブラウザが音ありの自動再生を止めるため、実機と同じくミュートで開始する
+        video.muted = true;
+        soundBtn.setAttribute("aria-pressed", "false");
+        soundBtn.setAttribute("aria-label", "音声をオンにする");
+        overlay.hidden = false;
+        document.body.style.overflow = "hidden";
+        video.currentTime = 0;
+        const p = video.play();
+        if (p && p.catch) p.catch(function () {});
+        closeBtn.focus();
+      }
+
+      function close() {
+        video.pause();
+        video.removeAttribute("src");
+        video.load();
+        overlay.hidden = true;
+        document.body.style.overflow = "";
+        caption.textContent = "";
+        current = null;
+        if (lastFocus) lastFocus.focus();
+      }
+
+      document.querySelectorAll(".sample-card").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          open(btn.dataset.slug, btn);
+        });
+      });
+
+      closeBtn.addEventListener("click", close);
+      overlay.querySelectorAll("[data-close]").forEach(function (el) {
+        el.addEventListener("click", close);
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && !overlay.hidden) close();
+      });
+
+      soundBtn.addEventListener("click", function () {
+        video.muted = !video.muted;
+        const on = !video.muted;
+        soundBtn.setAttribute("aria-pressed", String(on));
+        soundBtn.setAttribute("aria-label", on ? "音声をオフにする" : "音声をオンにする");
+      });
+
+      video.addEventListener("timeupdate", renderCaption);
+      video.addEventListener("seeked", renderCaption);
+      video.addEventListener("ended", function () {
+        caption.textContent = "";
+      });
+    })();
+  </script>
+</BaseLayout>
