@@ -11,7 +11,7 @@ const phrase = (t: string) => jpParser.parse(t).join("\u200b");
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260731-v8";
+const cssVersion = "20260802-v9";
 const cssHref = `${base}video-faq/styles.css?v=${cssVersion}`;
 
 const heroImg = `${base}video-faq/assets/hero-bg.jpg`;
@@ -208,7 +208,24 @@ const jsonLd = {
         <div class="hero-devices">
           {heroPhones.map((p) => (
             <div class={`hero-phone hero-phone-${p.side}`}>
-              <img src={`${base}video-faq/hero-phones/${p.slug}.jpg`} width="320" height="569" alt={p.alt} decoding="async" fetchpriority="high" />
+              {/*
+                poster に静止画を置き、動画は preload="none" で読み込まない。
+                ヒーローが見えたら JS が src を挿して再生するので、初期表示の重さは今までと同じ。
+              */}
+              <video
+                class="hero-phone-video"
+                poster={`${base}video-faq/hero-phones/${p.slug}.jpg`}
+                data-src={`${base}video-faq/hero-phones/${p.slug}.mp4`}
+                width="320"
+                height="569"
+                muted
+                loop
+                playsinline
+                disablepictureinpicture
+                preload="none"
+                role="img"
+                aria-label={p.alt}
+              ></video>
               <span class="hero-phone-caption">{p.caption}</span>
             </div>
           ))}
@@ -760,6 +777,44 @@ const jsonLd = {
         if (fired[100]) window.removeEventListener("scroll", onScroll);
       }
       window.addEventListener("scroll", onScroll, { passive: true });
+    })();
+  </script>
+
+  <script is:inline>
+    // ヒーローのスマホ3台。見えている間だけ動画を再生する。
+    // preload="none" のまま置いておき、交差したところで src を挿すので LCP を邪魔しない。
+    (function () {
+      var vids = document.querySelectorAll(".hero-phone-video");
+      if (!vids.length || !("IntersectionObserver" in window)) return;
+      // 「動きを減らす」設定の人には静止画（poster）のまま見せる
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (e) {
+            var v = e.target;
+            if (!e.isIntersecting) {
+              v.pause();
+              return;
+            }
+            if (!v.src) {
+              // 3台を同時に取りに行かず、少しずつずらす（回線と再生開始のタイミングを分散）
+              var i = Number(v.dataset.order || 0);
+              setTimeout(function () {
+                v.src = v.dataset.src;
+                v.play().catch(function () {});
+              }, i * 260);
+            } else {
+              v.play().catch(function () {});
+            }
+          });
+        },
+        { threshold: 0.2 }
+      );
+      Array.prototype.forEach.call(vids, function (v, i) {
+        v.dataset.order = String(i);
+        io.observe(v);
+      });
     })();
   </script>
 
