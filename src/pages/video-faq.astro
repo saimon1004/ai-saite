@@ -171,11 +171,13 @@ const jsonLd = {
   title="顔の見えるFAQ｜タグ1行で入る動画FAQチャットボット"
   description="動画で答えるFAQチャットボット「顔の見えるFAQ」。初期構築費用0円、動画5本つきで月額50,000円（税別）。Webサイトにタグを貼るだけなので設置は最短即日です。保険・共済・互助会、ECサイト、採用サイトなどで、文章では伝わりにくい質問に担当者が動画で答えます。質問の洗い出しから字幕入りの動画制作までSAIMONがお引き受けします。"
   jsonLd={jsonLd}
+  chatbot={false}
 >
-  <Fragment slot="head">
-    <!-- 研修LP向けのFAQ動画チャットボット（BaseLayout共通）は、本LPで売る商品とは別実装のため誤認を避けて非表示にする -->
-    <style is:global>#faq-chatbot-root { display: none !important; }</style>
-  </Fragment>
+  <!--
+    研修LP向けの自作FAQ動画チャットボット（BaseLayout共通）は読み込まない。
+    本LPで売る商品そのものであるウィジェットを設置するため、スクリプト名（faq-chatbot.js）も
+    グローバル（FAQChatbotConfig）も衝突する。CSSで隠すだけでは不十分なので chatbot={false}。
+  -->
   <link rel="preload" as="image" href={heroImg} slot="head" />
   <link rel="stylesheet" href={cssHref} slot="head" />
 
@@ -787,4 +789,23 @@ const jsonLd = {
       } catch (e) {}
     });
   </script>
+
+  <!--
+    「顔の見えるFAQ」ウィジェット（ほんりゅう社提供）の埋め込みタグ。
+    このLPで売っている商品そのものを、LP上で実際に動かしている。
+    テナント: saimon / 管理画面: faq-saas-admin.pages.dev
+    ※ このページ限定。BaseLayout には入れないこと（他ページは自作ウィジェット）
+  -->
+  <Fragment slot="body-end">
+    <link
+      rel="stylesheet"
+      href="https://faq-saas-widget.pages.dev/faq-chatbot.css"
+    />
+    <script
+      src="https://faq-saas-widget.pages.dev/faq-chatbot.js"
+      data-tenant="saimon"
+      data-api-url="https://faq-saas-api.takashi-matsumoto-jp.workers.dev"
+      defer
+    ></script>
+  </Fragment>
 </BaseLayout>
