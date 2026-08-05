@@ -11,11 +11,11 @@ const phrase = (t: string) => jpParser.parse(t).join("\u200b");
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260802-v9";
+const cssVersion = "20260805-v10";
 const cssHref = `${base}video-faq/styles.css?v=${cssVersion}`;
 
 const heroImg = `${base}video-faq/assets/hero-bg.jpg`;
-const heroImgM = `${base}video-faq/assets/hero-bg-m.jpg`;
+const heroImgM = `${base}video-faq/assets/hero-bg-m2.jpg`;
 // ヒーローに並べる3画面。サンプル動画から切り出した実際の話し手を使う。
 // 年齢・性別・画風の振れ幅が一目で分かる並びにしている。
 const heroPhones = [

@@ -346,8 +346,10 @@
   .vfaq-lp-scope .hero {
     padding: 68px 18px 0;
   }
+  /* スクリムが濃すぎると背景写真が消えて「画像なし」に見える。
+     上端はキッカー（ティール）の可読性が限界なので濃いまま残し、下へ速く抜く。 */
   .vfaq-lp-scope .hero::after {
-    background: linear-gradient(178deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 46%, rgba(255, 255, 255, 0.55) 100%);
+    background: linear-gradient(178deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.84) 40%, rgba(255, 255, 255, 0.66) 74%, rgba(255, 255, 255, 0.2) 100%);
   }
   .vfaq-lp-scope .hero-inner {
     grid-template-columns: 1fr;
@@ -379,6 +381,9 @@
   .vfaq-lp-scope .hero-phone-left,
   .vfaq-lp-scope .hero-phone-right { width: 106px; top: 42px; }
   .vfaq-lp-scope .hero-phone-caption { display: none; }
+  /* モバイルは背景写真の木目が透けるぶん地色が濃くなるので、注記だけ文字を締める
+     （--muted のままだとコントラスト4.34でAAに届かない。実測して 5.1 に戻している） */
+  .vfaq-lp-scope .hero-note { color: #4e5864; }
 }
 
 
