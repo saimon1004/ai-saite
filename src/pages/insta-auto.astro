@@ -12,7 +12,7 @@ const phrase = (t: string) => jpParser.parse(t).join(ZWSP);
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260813-v9";
+const cssVersion = "20260813-v12";
 const cssHref = `${base}insta-auto/styles.css?v=${cssVersion}`;
 
 const img = (name: string) => `${base}insta-auto/assets/${name}`;
@@ -224,9 +224,13 @@ const jsonLd = {
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-inner">
         <div class="hero-copy">
-          <p class="hero-kicker">飲食店のInstagram運用<span aria-hidden="true">／</span><b>おまかせグラム</b></p>
-          {/* 改行位置は固定する。自動折り返しに任せると幅によって「け。」だけが3行目に落ちる */}
-          <h1 id="hero-title">写真を送る。<br />あとは、<br />承認するだけ。</h1>
+          {/* スマホではこの塊だけを投稿グリッドの上に重ねる（下のCSS参照）。
+              重ねるのは見出しまでで、リード文以降は写真の下に流す。 */}
+          <div class="hero-head">
+            <p class="hero-kicker">飲食店のInstagram運用<span aria-hidden="true">／</span><b>おまかせグラム</b></p>
+            {/* 改行位置は固定する。自動折り返しに任せると幅によって「け。」だけが3行目に落ちる */}
+            <h1 id="hero-title">写真を送る。<br />あとは、<br />承認するだけ。</h1>
+          </div>
           <p class="hero-lead jp-budoux">料理の写真を送ると、AIが加工と文章を用意します。届いた投稿案をアプリで承認すれば、決めた時間に投稿されます。お店の作業は、送ることと承認することの2つだけです。</p>
           <ul class="hero-facts">
             <li class="hero-fact-zero"><span class="hero-fact-value">初期費用 0円</span><span class="hero-fact-note">はじめる費用はかかりません</span></li>

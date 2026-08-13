@@ -362,6 +362,9 @@
   .insta-lp-scope .hero-inner {
     grid-template-columns: 1fr;
     gap: 30px;
+    /* .hero-head を投稿グリッドの上に重ねるための基準。
+       グリッドは1列で、order:-1 のコラージュが先頭行に来るので top:0 が画像の上端になる。 */
+    position: relative;
   }
   .insta-lp-scope .hero h1 {
     font-size: clamp(30px, 8vw, 40px);
@@ -378,6 +381,56 @@
     order: -1;
     max-width: none;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* 2×2グリッドの画像部分はちょうど正方形になる（列幅=(W-8)/2、2行+8pxの隙間=W）。
+     だから aspect-ratio:1 の要素を重ねれば、ビューポート幅に依存せず画像部分に一致する。 */
+  .insta-lp-scope .feed-collage::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    aspect-ratio: 1;
+    z-index: 4;
+    pointer-events: none;
+    /* 中段を弱くするとキッカー（11px）のコントラストが4.5を割るので、実測して濃さを決めている */
+    background: linear-gradient(180deg, rgba(18, 16, 14, 0) 8%, rgba(18, 16, 14, 0.5) 34%, rgba(18, 16, 14, 0.84) 62%, rgba(18, 16, 14, 0.93) 100%);
+  }
+  /* 見出しを写真の上に重ねる。リード文以降は写真の下に流したいので、
+     .hero-head だけを絶対配置で抜いている。 */
+  .insta-lp-scope .hero-head {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    aspect-ratio: 1;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 18px 20px;
+  }
+  /* 写真の上では横幅が足りず「運用」「ラム」で折り返すので、1行に収まるまで詰める */
+  .insta-lp-scope .hero-head .hero-kicker {
+    color: rgba(255, 255, 255, 0.92);
+    margin-bottom: 10px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    gap: 7px;
+    white-space: nowrap;
+    text-shadow: 0 1px 6px rgba(12, 10, 8, 0.5);
+  }
+  .insta-lp-scope .hero-head .hero-kicker::before {
+    background: rgba(255, 255, 255, 0.75);
+    width: 16px;
+  }
+  .insta-lp-scope .hero-head .hero-kicker span {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .insta-lp-scope .hero-head h1 {
+    color: var(--white);
+    margin-bottom: 0;
+    text-shadow: 0 1px 12px rgba(12, 10, 8, 0.4);
   }
   /* 積み順が変わるのでキャプションは絶対配置をやめて自然に流す */
   .insta-lp-scope .feed-caption {
