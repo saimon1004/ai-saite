@@ -12,7 +12,7 @@ const phrase = (t: string) => jpParser.parse(t).join(ZWSP);
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260813-v8";
+const cssVersion = "20260813-v9";
 const cssHref = `${base}insta-auto/styles.css?v=${cssVersion}`;
 
 const img = (name: string) => `${base}insta-auto/assets/${name}`;
@@ -269,7 +269,8 @@ const jsonLd = {
               </div>
             </div>
           </div>
-          <p class="feed-caption">おまかせグラムで運用した投稿のイメージ。画面はイメージです。</p>
+          {/* 後半はスマホでは出さない。承認画面のモックがスマホでは非表示のため */}
+          <p class="feed-caption">おまかせグラムで運用した投稿のイメージ。<span class="cap-screen">画面はイメージです。</span></p>
         </div>
       </div>
     </section>
@@ -328,6 +329,9 @@ const jsonLd = {
           </p>
         </div>
 
+        {/* スマホでは「これまで」列（全行とも“お店”）を畳むため、その情報をここで一度だけ書く */}
+        <p class="compare-mobile-note">これまでは、この7つがすべてお店の仕事でした。</p>
+
         <div class="compare-board" role="table" aria-label="投稿1本あたりの工程と担当">
           <div class="compare-head" role="row">
             <span role="columnheader">工程</span>
@@ -337,11 +341,11 @@ const jsonLd = {
           {compareRows.map((r) => (
             <div class={`compare-row${r.op ? " is-kept" : ""}`} role="row">
               <span class="compare-step" role="rowheader">{r.step}</span>
-              <span class="compare-cell" role="cell">
+              <span class="compare-cell is-before" role="cell">
                 <span class="cell-label">これまで</span>
                 <span class="owner owner-shop">{r.before}</span>
               </span>
-              <span class="compare-cell" role="cell">
+              <span class="compare-cell is-after" role="cell">
                 <span class="cell-label">おまかせグラム</span>
                 {r.op && <span class="op-badge" aria-hidden="true">{r.op}</span>}
                 <span class={`owner owner-${r.owner}`}>{r.after}</span>

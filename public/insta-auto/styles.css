@@ -371,10 +371,23 @@
     font-size: 16px;
   }
   /* 縦に積むモバイルでは、3列コラージュのままだと縦に伸びすぎる。
-     2×2の正方形グリッドに畳んで高さを半分以下にする（投稿グリッドには変わらず見える）。 */
+     2×2の正方形グリッドに畳んで高さを半分以下にする（投稿グリッドには変わらず見える）。
+     さらに、コピーより前に出す。テキストだけのファーストビューにしないため、
+     かつ「この商品を使うとフィードがこうなる」という成果を先に見せるため。 */
   .insta-lp-scope .feed-collage {
-    max-width: 340px;
+    order: -1;
+    max-width: none;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* 積み順が変わるのでキャプションは絶対配置をやめて自然に流す */
+  .insta-lp-scope .feed-caption {
+    position: static;
+    max-width: none;
+    text-align: left;
+    margin-top: 10px;
+  }
+  .insta-lp-scope .cap-screen {
+    display: none;
   }
   .insta-lp-scope .feed-main {
     grid-area: auto;
@@ -387,13 +400,6 @@
      承認画面は「3ステップ」と「Approval」で大きく見せている。 */
   .insta-lp-scope .collage-phone {
     display: none;
-  }
-  .insta-lp-scope .feed-caption {
-    bottom: -48px;
-    max-width: 100%;
-    text-align: left;
-    left: 0;
-    right: auto;
   }
   .insta-lp-scope .hero-facts li {
     grid-template-columns: 1fr;
@@ -767,6 +773,10 @@
   color: var(--vermilion);
   margin-right: 8px;
 }
+/* スマホ専用。PCでは「これまで」列がそのまま出ているので不要 */
+.insta-lp-scope .compare-mobile-note {
+  display: none;
+}
 .insta-lp-scope .compare-close {
   max-width: 44em;
   margin-inline: auto;
@@ -796,16 +806,39 @@
   .insta-lp-scope .compare-head {
     display: none;
   }
+  /* スマホは1行が4行分に積み上がって表として読めなくなる。
+     「これまで」列は全行とも“お店”で情報量がないので畳み、
+     工程名＋担当＋補足の2行に収める（その旨は compare-mobile-note で明示）。 */
+  .insta-lp-scope .compare-mobile-note {
+    display: block;
+    max-width: 24em;
+    margin: 0 0 18px;
+    font-size: 14px;
+    color: var(--ink-65);
+  }
   .insta-lp-scope .compare-row {
     grid-template-columns: 1fr;
-    gap: 6px;
-    padding: 20px 0 20px 14px;
+    gap: 3px;
+    padding: 13px 0 13px 14px;
+  }
+  .insta-lp-scope .compare-cell.is-before {
+    display: none;
   }
   .insta-lp-scope .cell-label {
+    display: none;
+  }
+  .insta-lp-scope .compare-step {
+    font-size: 16px;
+  }
+  /* 補足は担当の続きに流す（改行して1行使わない） */
+  .insta-lp-scope .owner-note {
     display: inline;
-    margin-right: 10px;
-    font-size: 12px;
-    color: var(--ink-45);
+    margin-top: 0;
+  }
+  .insta-lp-scope .owner-note::before {
+    content: "／";
+    margin: 0 6px;
+    color: var(--ink-25);
   }
   .insta-lp-scope .compare-close {
     text-align: left;
