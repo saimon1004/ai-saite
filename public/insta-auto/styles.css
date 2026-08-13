@@ -13,10 +13,14 @@
   --paper: #f8f7f4;
   --paper-deep: #eeece7;
   --ink: #201e1a;
+  /* 生成りの上での実測コントラスト（通常文字は4.5以上が基準）:
+     .80=8.3 / .74=6.8 / .66=5.2 / .46=2.9(NG) / .26=1.7(NG)
+     文字に使う3段はすべて4.5を超える濃さにし、--ink-25 は罫線・ドットなど
+     装飾専用に限定する（文字には使わない）。 */
   --ink-80: rgba(32, 30, 26, 0.8);
-  --ink-65: rgba(32, 30, 26, 0.66);
-  --ink-45: rgba(32, 30, 26, 0.46);
-  --ink-25: rgba(32, 30, 26, 0.26);
+  --ink-65: rgba(32, 30, 26, 0.74);
+  --ink-45: rgba(32, 30, 26, 0.66);
+  --ink-25: rgba(32, 30, 26, 0.38);
   --rule: #e2ddd2;
   --vermilion: #a6432b; /* 白文字で 6.07:1 / 生成り上で 5.53:1（実測） */
   --vermilion-deep: #8c351f;
@@ -708,12 +712,13 @@
   margin: 0;
   text-align: center;
 }
+/* 「7」は装飾ではなく読ませる数字なので、罫線用の --ink-25 は使わない */
 .insta-lp-scope .compare-num {
   font-family: var(--mincho);
   font-size: 76px;
   font-weight: 700;
   line-height: 1;
-  color: var(--ink-25);
+  color: var(--ink-45);
 }
 .insta-lp-scope .compare-unit {
   font-family: var(--mincho);
@@ -725,8 +730,8 @@
 .insta-lp-scope .compare-cap {
   display: block;
   margin-top: 12px;
-  font-size: 12.5px;
-  color: var(--ink-45);
+  font-size: 13px;
+  color: var(--ink-65);
 }
 .insta-lp-scope .compare-figure.is-ours .compare-num,
 .insta-lp-scope .compare-figure.is-ours .compare-unit {
@@ -780,15 +785,15 @@
 .insta-lp-scope .compare-head {
   padding: 12px 0 12px 16px;
   font-family: "Inter", system-ui, sans-serif;
-  font-size: 10.5px;
-  font-weight: 500;
-  letter-spacing: 0.16em;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ink-45);
+  color: var(--ink-65);
 }
 .insta-lp-scope .compare-step {
   font-family: var(--mincho);
-  font-size: 16.5px;
+  font-size: 17px;
   font-weight: 700;
 }
 .insta-lp-scope .compare-cell {
@@ -799,9 +804,9 @@
   display: none;
 }
 .insta-lp-scope .owner {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 700;
-  color: var(--ink-45);
+  color: var(--ink-65);
 }
 .insta-lp-scope .owner-shop {
   color: var(--ink);
@@ -812,8 +817,8 @@
 .insta-lp-scope .owner-note {
   display: block;
   margin-top: 3px;
-  font-size: 13.5px;
-  color: var(--ink-45);
+  font-size: 14.5px;
+  color: var(--ink-65);
 }
 /* お店に残る操作は、地色ではなく朱の縦罫で示す（余白は動かさない） */
 .insta-lp-scope .compare-row.is-kept {
@@ -1574,7 +1579,7 @@
   counter-increment: inc;
   font-family: "Inter", system-ui, sans-serif;
   font-size: 11px;
-  color: var(--ink-25);
+  color: var(--ink-45);
   padding-top: 0.5em;
 }
 .insta-lp-scope .price-includes {
