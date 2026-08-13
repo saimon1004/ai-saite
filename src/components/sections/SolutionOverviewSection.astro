@@ -49,6 +49,13 @@ const delegateSolutions: Solution[] = [
     badge: { label: "NEW", tone: "new" },
   },
   {
+    title: "おまかせグラム",
+    description: "飲食店のInstagram運用を、写真を送るのと承認するのだけに。AIが加工と文章を用意し、承認すると決めた時間に投稿されます。",
+    image: "insta-auto/assets/feed-salad.jpg",
+    href: "/insta-auto/",
+    badge: { label: "NEW", tone: "new" },
+  },
+  {
     title: "顧問・伴走支援",
     description: "研修後のAI活用を月額で継続サポート。定着支援から業務改善の相談まで、社外のAI顧問として伴走します。",
     image: "solutions/solution-advisor.jpg",
@@ -122,7 +129,7 @@ const badgeStyles: Record<"new" | "popular", string> = {
         <h3 class="text-lg sm:text-xl font-heading font-black text-navy">プロの"つくる力"を月額で</h3>
       </div>
       <p class="text-sm text-text-secondary mb-6">育てる時間がない領域は、SAIMONのチームが制作と伴走を引き受けます。</p>
-      <div class="grid gap-5 sm:grid-cols-2 max-w-3xl">
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl">
         {delegateSolutions.map((item) => (
           <a href={item.href} class="group relative saimon-card overflow-hidden hover:border-navy/25 hover:shadow-card-hover transition-all duration-300">
             {item.badge && (

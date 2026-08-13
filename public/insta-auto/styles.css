@@ -1,0 +1,1792 @@
+/* ============================================================
+   おまかせグラム LP styles — 誌面（エディトリアル）様式
+   scope: .insta-lp-scope（他ページへの影響を避けるため全て接頭辞付き）
+   palette: 生成り #f7f5f1 / 墨 #201e1a / 朱 #a6432b / 罫 #e2ddd2
+
+   方針: 反復するカードグリッドを一切使わない。
+   セクションの区切りは「罫線・通し番号・写真の大きさ」で作る。
+   飲食店の投稿写真そのものが商品の成果物なので、写真を最大の要素として扱う。
+   ============================================================ */
+
+.insta-lp-scope {
+  /* 写真も紙も暖色に寄ると全体が茶色く見えるので、地色の黄みは軽く抜いている */
+  --paper: #f8f7f4;
+  --paper-deep: #eeece7;
+  --ink: #201e1a;
+  --ink-80: rgba(32, 30, 26, 0.8);
+  --ink-65: rgba(32, 30, 26, 0.66);
+  --ink-45: rgba(32, 30, 26, 0.46);
+  --ink-25: rgba(32, 30, 26, 0.26);
+  --rule: #e2ddd2;
+  --vermilion: #a6432b; /* 白文字で 6.07:1 / 生成り上で 5.53:1（実測） */
+  --vermilion-deep: #8c351f;
+  --white: #ffffff;
+  --ok: #1f7a4d;
+  --err: #b3261e;
+  --mincho: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  color: var(--ink);
+  background: var(--paper);
+  font-feature-settings: "palt";
+  line-height: 1.85;
+  overflow-x: clip;
+}
+
+/* ---- 日本語折り返し品質（全ページ共通の標準・video-faq から一字も変えずに移植） ---- */
+/* balance は見出し専用（本文に使うと行が均等に短くなり右側が空く） */
+.insta-lp-scope h1,
+.insta-lp-scope h2,
+.insta-lp-scope h3 {
+  text-wrap: balance;
+  word-break: auto-phrase;
+  letter-spacing: -0.01em;
+}
+.insta-lp-scope .section-lead,
+.insta-lp-scope .hero-lead {
+  text-wrap: pretty;
+  word-break: auto-phrase;
+}
+.insta-lp-scope p,
+.insta-lp-scope li,
+.insta-lp-scope figcaption,
+.insta-lp-scope small,
+.insta-lp-scope .note,
+.insta-lp-scope .faq-a {
+  text-wrap: pretty;
+  word-break: auto-phrase;
+}
+/* 注記は中央に置くと1行なのに目立つ。直前の本文と左端をそろえて流れに戻す */
+.insta-lp-scope .fine-print {
+  text-align: left;
+  max-width: 640px;
+  margin-inline: 0;
+  font-size: 13.5px;
+  color: var(--ink-45);
+  line-height: 1.85;
+}
+/* BudouXが挿入する文節区切り（ZWSP）でのみ折り返す（Safari含む全ブラウザ対応） */
+.insta-lp-scope .jp-budoux {
+  word-break: keep-all;
+}
+.insta-lp-scope form,
+.insta-lp-scope .faq-list {
+  margin-inline: auto;
+}
+@media (max-width: 640px) {
+  /* 短い行長では文節折り返しが右側の空きを生むため、本文は通常折り返しに戻す */
+  .insta-lp-scope p,
+  .insta-lp-scope li,
+  .insta-lp-scope figcaption,
+  .insta-lp-scope small,
+  .insta-lp-scope .note,
+  .insta-lp-scope .faq-a {
+    word-break: normal;
+  }
+  .insta-lp-scope .section-lead,
+  .insta-lp-scope .hero-lead {
+    word-break: auto-phrase;
+  }
+}
+
+/* ---- Safari対策の文節塊 ---- */
+.insta-lp-scope .no-break {
+  white-space: nowrap;
+}
+
+/* ============================================================
+   セクションの器 — 誌面なので余白を大きく取る
+   ============================================================ */
+.insta-lp-scope .section-block {
+  padding: 72px 24px;
+}
+.insta-lp-scope .section-inner {
+  max-width: 1080px;
+  margin-inline: auto;
+}
+.insta-lp-scope .section-heading {
+  margin-bottom: 36px;
+}
+/* 眉ラベル: 朱の点＋欧文小文字間隔。中央寄せにはしない */
+.insta-lp-scope .section-kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+  margin-bottom: 18px;
+}
+.insta-lp-scope .section-kicker::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--vermilion);
+  flex: none;
+}
+@media (max-width: 640px) {
+  .insta-lp-scope .section-block {
+    padding: 44px 20px;
+  }
+  .insta-lp-scope .section-heading {
+    margin-bottom: 26px;
+  }
+}
+
+/* ---- 見出し・リード文 ---- */
+/* Tailwind preflight が h1〜h6 を継承値に落とすため明示する。
+   vw スケールは使わない（ヒーローH1のclampのみ例外）。 */
+.insta-lp-scope h2 {
+  font-family: var(--mincho);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  margin: 0 0 18px;
+}
+.insta-lp-scope h3 {
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.6;
+}
+.insta-lp-scope .section-lead {
+  font-size: 16px;
+  color: var(--ink-65);
+  max-width: 40em;
+  margin: 0;
+}
+@media (max-width: 640px) {
+  .insta-lp-scope h2 {
+    font-size: 25px;
+    line-height: 1.6;
+  }
+}
+
+/* ---- ボタン ---- */
+.insta-lp-scope .primary-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 30px;
+  border-radius: 2px;
+  background: var(--vermilion);
+  color: var(--white);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+.insta-lp-scope .primary-cta:hover {
+  background: var(--vermilion-deep);
+  color: var(--white);
+}
+.insta-lp-scope .secondary-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 16px 28px;
+  border-radius: 2px;
+  border: 1px solid var(--ink-25);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  background: transparent;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.insta-lp-scope .secondary-cta:hover {
+  border-color: var(--ink);
+  background: rgba(32, 30, 26, 0.04);
+}
+
+/* ============================================================
+   01 Hero — 左に明朝の大見出し、右にInstagramグリッド風のコラージュ
+   ============================================================ */
+/* 次セクションの気配が画面下に残る高さに収める */
+.insta-lp-scope .hero {
+  padding: 52px 24px 56px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+.insta-lp-scope .hero-inner {
+  max-width: 1080px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
+  gap: 52px;
+  align-items: center;
+}
+.insta-lp-scope .hero-kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--vermilion);
+  margin-bottom: 16px;
+}
+.insta-lp-scope .hero-kicker::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: var(--vermilion);
+  flex: none;
+}
+.insta-lp-scope .hero-kicker span {
+  color: var(--ink-25);
+  margin: 0 2px;
+}
+.insta-lp-scope .hero-kicker b {
+  font-weight: 700;
+}
+.insta-lp-scope .hero h1 {
+  font-family: var(--mincho);
+  font-size: clamp(36px, 3.7vw, 47px);
+  line-height: 1.32;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  color: var(--ink);
+  margin: 0 0 18px;
+}
+.insta-lp-scope .hero-lead {
+  max-width: 27em;
+  font-size: 16.5px;
+  color: var(--ink-80);
+  margin: 0 0 22px;
+}
+/* 要点は「値｜補足」の仕様表として組む。横並びのチェックリストにしない */
+.insta-lp-scope .hero-facts {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  border-top: 1px solid var(--rule);
+}
+.insta-lp-scope .hero-facts li {
+  display: grid;
+  /* 値の列は内容幅。（税別）だけが次行に落ちるのを防ぐ */
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 4px 20px;
+  align-items: baseline;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.insta-lp-scope .hero-fact-value {
+  font-family: var(--mincho);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.insta-lp-scope .hero-fact-note {
+  font-size: 13.5px;
+  color: var(--ink-45);
+  line-height: 1.6;
+}
+.insta-lp-scope .hero-facts small {
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--ink-45);
+}
+.insta-lp-scope .hero-fact-zero .hero-fact-value {
+  color: var(--vermilion);
+}
+.insta-lp-scope .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.insta-lp-scope .hero-note {
+  margin: 18px 0 0;
+  font-size: 13px;
+  color: var(--ink-45);
+}
+
+/* ---- 投稿グリッド風コラージュ（大1＋小3） ---- */
+.insta-lp-scope .feed-collage {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.insta-lp-scope .feed-collage figure {
+  margin: 0;
+  overflow: hidden;
+  background: var(--paper-deep);
+}
+.insta-lp-scope .feed-collage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* 高さは右列3枚に合わせて伸ばす。aspect-ratio を持たせると下端がそろわない */
+.insta-lp-scope .feed-main {
+  grid-area: 1 / 1 / 4 / 3;
+}
+.insta-lp-scope .feed-sub {
+  aspect-ratio: 1;
+  grid-column: 3;
+}
+.insta-lp-scope .feed-caption {
+  position: absolute;
+  right: 0;
+  bottom: -44px;
+  max-width: 62%;
+  text-align: right;
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-45);
+}
+/* 成果（フィード）の上に、その作り方（承認画面）を重ねる。
+   右列の写真3枚を隠さないよう、大きい1枚の左下にかぶせる。 */
+.insta-lp-scope .collage-phone {
+  position: absolute;
+  left: -22px;
+  bottom: -44px;
+  z-index: 3;
+  --phone-w: 156px;
+  box-shadow: 0 18px 40px rgba(32, 30, 26, 0.24);
+}
+
+@media (max-width: 900px) {
+  .insta-lp-scope .hero {
+    padding: 56px 20px 56px;
+  }
+  .insta-lp-scope .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .insta-lp-scope .hero h1 {
+    font-size: clamp(30px, 8vw, 40px);
+  }
+  .insta-lp-scope .hero-lead {
+    max-width: none;
+    font-size: 16px;
+  }
+  /* 縦に積むモバイルでは、3列コラージュのままだと縦に伸びすぎる。
+     2×2の正方形グリッドに畳んで高さを半分以下にする（投稿グリッドには変わらず見える）。 */
+  .insta-lp-scope .feed-collage {
+    max-width: 340px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .insta-lp-scope .feed-main {
+    grid-area: auto;
+    aspect-ratio: 1;
+  }
+  .insta-lp-scope .feed-sub {
+    grid-column: auto;
+  }
+  /* 畳んだ2×2グリッドに重ねると写真2枚を潰してしまうので、モバイルでは外す。
+     承認画面は「3ステップ」と「Approval」で大きく見せている。 */
+  .insta-lp-scope .collage-phone {
+    display: none;
+  }
+  .insta-lp-scope .feed-caption {
+    bottom: -48px;
+    max-width: 100%;
+    text-align: left;
+    left: 0;
+    right: auto;
+  }
+  .insta-lp-scope .hero-facts li {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 8px 0;
+  }
+  /* モバイルはボタンを縦積みの全幅にする（折り返して半端な2行になるのを防ぐ） */
+  .insta-lp-scope .hero-actions {
+    display: grid;
+    gap: 10px;
+  }
+  .insta-lp-scope .hero-actions a {
+    justify-content: center;
+    padding: 15px 20px;
+  }
+}
+
+/* ============================================================
+   アプリ画面のモック（手組み。実装のスクリーンショットではない）
+   ============================================================ */
+.insta-lp-scope .phone {
+  --phone-w: 208px;
+  width: var(--phone-w);
+  aspect-ratio: 320 / 569;
+  border-radius: 18px;
+  padding: 6px;
+  background: #17150f;
+}
+.insta-lp-scope .phone-screen {
+  height: 100%;
+  border-radius: 12px;
+  background: var(--white);
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto auto;
+  color: var(--ink);
+  line-height: 1.5;
+  word-break: keep-all;
+  font-family: "Noto Sans JP", sans-serif;
+}
+.insta-lp-scope .mock-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 7px 10px;
+  background: var(--ink);
+  color: var(--white);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+.insta-lp-scope .mock-bar span:last-child {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 9.5px;
+}
+.insta-lp-scope .mock-photo {
+  position: relative;
+  aspect-ratio: 1;
+  background: var(--paper-deep);
+}
+.insta-lp-scope .mock-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.insta-lp-scope .mock-photo-badge {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 3px 7px;
+  background: rgba(23, 21, 15, 0.78);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 700;
+}
+.insta-lp-scope .mock-body {
+  padding: 8px 10px;
+  display: grid;
+  gap: 3px;
+  align-content: start;
+  overflow: hidden;
+}
+.insta-lp-scope .mock-title {
+  margin: 0;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+.insta-lp-scope .mock-caption {
+  margin: 0;
+  font-size: 10px;
+  color: var(--ink-65);
+}
+.insta-lp-scope .mock-tags {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--vermilion);
+}
+/* 「承認すると決めた時間に投稿される」ことが画面からも分かるようにする */
+.insta-lp-scope .mock-meta {
+  margin: 0;
+  padding: 6px 10px;
+  border-top: 1px solid var(--rule);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-45);
+}
+.insta-lp-scope .mock-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 8px 10px 10px;
+  border-top: 1px solid var(--rule);
+}
+.insta-lp-scope .mock-btn {
+  display: grid;
+  place-items: center;
+  padding: 6px 4px;
+  border-radius: 2px;
+  border: 1px solid var(--rule);
+  font-size: 10.5px;
+  font-weight: 700;
+  background: var(--white);
+}
+.insta-lp-scope .mock-btn.is-primary {
+  background: var(--vermilion);
+  border-color: var(--vermilion);
+  color: var(--white);
+}
+/* 送信画面 */
+.insta-lp-scope .phone-send .phone-screen {
+  grid-template-rows: auto auto auto 1fr auto;
+}
+.insta-lp-scope .mock-chips {
+  display: flex;
+  gap: 4px;
+  padding: 8px 8px 6px;
+}
+.insta-lp-scope .mock-chip {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 4px 2px;
+  border-radius: 2px;
+  border: 1px solid var(--rule);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--ink-45);
+}
+.insta-lp-scope .mock-chip.is-on {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+.insta-lp-scope .mock-thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  padding: 0 8px;
+}
+.insta-lp-scope .mock-thumb {
+  aspect-ratio: 1;
+  background: var(--paper-deep);
+  overflow: hidden;
+}
+.insta-lp-scope .mock-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.insta-lp-scope .mock-thumb.is-empty {
+  border: 1px dashed var(--rule);
+  background: var(--paper);
+}
+.insta-lp-scope .phone-send .mock-actions {
+  grid-template-columns: 1fr;
+}
+
+/* ============================================================
+   02 Problem — 見出しと本文を左右に割った誌面組み。箱を使わない
+   ============================================================ */
+.insta-lp-scope .problem {
+  background: var(--white);
+}
+.insta-lp-scope .split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1fr);
+  gap: 56px;
+  align-items: start;
+}
+.insta-lp-scope .split .section-heading {
+  margin-bottom: 0;
+  position: sticky;
+  top: 88px;
+}
+.insta-lp-scope .rule-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--rule);
+}
+.insta-lp-scope .rule-list > li {
+  padding: 21px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.insta-lp-scope .rule-list h3 {
+  font-family: var(--mincho);
+  font-size: 19px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.insta-lp-scope .rule-list p {
+  font-size: 15px;
+  color: var(--ink-65);
+  margin: 0;
+}
+.insta-lp-scope .problem-close {
+  margin: 30px 0 0;
+  font-family: var(--mincho);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+@media (max-width: 900px) {
+  .insta-lp-scope .split {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .insta-lp-scope .split .section-heading {
+    position: static;
+  }
+}
+
+/* ============================================================
+   03 What changes — このページの核。罫線だけで組んだ担当台帳
+   ============================================================ */
+.insta-lp-scope .compare {
+  background: var(--paper);
+}
+/* 要点。明朝の大きな数字で「7 → 2」を見せる */
+.insta-lp-scope .compare-summary {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 26px;
+  max-width: 720px;
+  margin: 0 auto 40px;
+}
+.insta-lp-scope .compare-figure {
+  margin: 0;
+  text-align: center;
+}
+.insta-lp-scope .compare-num {
+  font-family: var(--mincho);
+  font-size: 76px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink-25);
+}
+.insta-lp-scope .compare-unit {
+  font-family: var(--mincho);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink-45);
+  margin-left: 6px;
+}
+.insta-lp-scope .compare-cap {
+  display: block;
+  margin-top: 12px;
+  font-size: 12.5px;
+  color: var(--ink-45);
+}
+.insta-lp-scope .compare-figure.is-ours .compare-num,
+.insta-lp-scope .compare-figure.is-ours .compare-unit {
+  color: var(--vermilion);
+}
+.insta-lp-scope .compare-figure.is-ours .compare-cap {
+  color: var(--ink);
+}
+.insta-lp-scope .compare-ops {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--vermilion);
+}
+.insta-lp-scope .compare-arrow {
+  justify-self: center;
+  width: 56px;
+  height: 1px;
+  background: var(--ink-25);
+  position: relative;
+  font-size: 0;
+}
+.insta-lp-scope .compare-arrow::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  border-top: 1px solid var(--ink-25);
+  border-right: 1px solid var(--ink-25);
+  transform: rotate(45deg);
+}
+
+.insta-lp-scope .compare-board {
+  max-width: 940px;
+  margin: 0 auto 30px;
+  border-top: 1px solid var(--ink);
+}
+/* 左の余白は全行そろえる。朱の縦罫が付く行だけ字下げすると列がずれる */
+.insta-lp-scope .compare-head,
+.insta-lp-scope .compare-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.6fr) minmax(0, 1.7fr);
+  gap: 20px;
+  align-items: baseline;
+  padding: 15px 0 15px 16px;
+  border-bottom: 1px solid var(--rule);
+}
+.insta-lp-scope .compare-head {
+  padding: 12px 0 12px 16px;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+}
+.insta-lp-scope .compare-step {
+  font-family: var(--mincho);
+  font-size: 16.5px;
+  font-weight: 700;
+}
+.insta-lp-scope .compare-cell {
+  display: block;
+  font-size: 14px;
+}
+.insta-lp-scope .cell-label {
+  display: none;
+}
+.insta-lp-scope .owner {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink-45);
+}
+.insta-lp-scope .owner-shop {
+  color: var(--ink);
+}
+.insta-lp-scope .owner-ai {
+  color: var(--vermilion);
+}
+.insta-lp-scope .owner-note {
+  display: block;
+  margin-top: 3px;
+  font-size: 13.5px;
+  color: var(--ink-45);
+}
+/* お店に残る操作は、地色ではなく朱の縦罫で示す（余白は動かさない） */
+.insta-lp-scope .compare-row.is-kept {
+  box-shadow: inset 2px 0 0 var(--vermilion);
+}
+.insta-lp-scope .op-badge {
+  font-family: var(--mincho);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--vermilion);
+  margin-right: 8px;
+}
+.insta-lp-scope .compare-close {
+  max-width: 44em;
+  margin-inline: auto;
+  font-size: 15.5px;
+  color: var(--ink-80);
+  text-align: center;
+}
+@media (max-width: 760px) {
+  .insta-lp-scope .compare-summary {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-bottom: 40px;
+  }
+  .insta-lp-scope .compare-arrow {
+    width: 1px;
+    height: 40px;
+  }
+  .insta-lp-scope .compare-arrow::after {
+    right: -3px;
+    top: auto;
+    bottom: 0;
+    transform: rotate(135deg);
+  }
+  .insta-lp-scope .compare-num {
+    font-size: 62px;
+  }
+  .insta-lp-scope .compare-head {
+    display: none;
+  }
+  .insta-lp-scope .compare-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 20px 0 20px 14px;
+  }
+  .insta-lp-scope .cell-label {
+    display: inline;
+    margin-right: 10px;
+    font-size: 12px;
+    color: var(--ink-45);
+  }
+  .insta-lp-scope .compare-close {
+    text-align: left;
+  }
+}
+
+/* ============================================================
+   04 How it works — 大きな通し番号と、左右交互の図版
+   ============================================================ */
+.insta-lp-scope .how {
+  background: var(--white);
+}
+.insta-lp-scope .step-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  counter-reset: step;
+}
+.insta-lp-scope .step-item {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.86fr);
+  gap: 44px;
+  align-items: center;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.insta-lp-scope .step-item:first-child {
+  border-top: 1px solid var(--rule);
+}
+/* 偶数番は図版を左に置いて、視線を折り返させる */
+.insta-lp-scope .step-item:nth-child(even) .step-figure {
+  order: -1;
+}
+.insta-lp-scope .step-num {
+  display: block;
+  font-family: var(--mincho);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--vermilion);
+  margin-bottom: 14px;
+}
+.insta-lp-scope .step-body h3 {
+  font-family: var(--mincho);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+.insta-lp-scope .step-body p {
+  font-size: 15.5px;
+  color: var(--ink-65);
+  margin: 0;
+  max-width: 30em;
+}
+.insta-lp-scope .step-figure {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+.insta-lp-scope .step-figure img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--paper-deep);
+}
+.insta-lp-scope .step-figure figcaption {
+  font-size: 12px;
+  color: var(--ink-45);
+  justify-self: start;
+}
+@media (max-width: 860px) {
+  .insta-lp-scope .step-item {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 28px 0;
+  }
+  .insta-lp-scope .step-item:nth-child(even) .step-figure {
+    order: 0;
+  }
+  .insta-lp-scope .step-body h3 {
+    font-size: 22px;
+  }
+}
+
+/* ============================================================
+   05 Formats — 比率の違いをそのまま図にする
+   ============================================================ */
+.insta-lp-scope .formats {
+  background: var(--paper);
+}
+.insta-lp-scope .format-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 36px;
+  align-items: end;
+}
+/* 図版の行は固定高。3形式で比率が違うので、いちばん高いリール（9:16）が
+   収まる高さに取って下端をそろえる。ここが足りないと図版が見出しへはみ出す。 */
+.insta-lp-scope .format-item {
+  display: grid;
+  grid-template-rows: 318px auto auto 1fr;
+  gap: 0;
+}
+.insta-lp-scope .format-frame {
+  position: relative;
+  align-self: end;
+  margin: 0 0 22px;
+  background: var(--paper-deep);
+}
+.insta-lp-scope .format-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 2;
+}
+.insta-lp-scope .format-frame-square {
+  width: 74%;
+  aspect-ratio: 1;
+}
+.insta-lp-scope .format-frame-reel {
+  width: 50%;
+  aspect-ratio: 9 / 16;
+}
+/* カルーセルは実際の写真を3枚ずらして重ねる。
+   地色のリングを外側に出して、隣の1枚と切れて見えるようにする。 */
+.insta-lp-scope .format-frame-stack {
+  width: 68%;
+  aspect-ratio: 1;
+}
+.insta-lp-scope .format-frame-stack img {
+  position: absolute;
+  inset: 0;
+  box-shadow: 0 0 0 3px var(--paper);
+}
+.insta-lp-scope .format-frame-stack .stack-3 {
+  transform: translate(20px, -10px);
+  z-index: 0;
+}
+.insta-lp-scope .format-frame-stack .stack-2 {
+  transform: translate(10px, -5px);
+  z-index: 1;
+}
+.insta-lp-scope .format-frame-stack .stack-1 {
+  z-index: 2;
+}
+/* リールに再生の記号だけ重ねる */
+.insta-lp-scope .format-frame-reel::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  width: 0;
+  height: 0;
+  border-left: 16px solid rgba(255, 255, 255, 0.95);
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  transform: translate(-40%, -50%);
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.45));
+}
+.insta-lp-scope .format-tag {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vermilion);
+  margin: 0 0 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ink);
+}
+.insta-lp-scope .format-item h3 {
+  font-family: var(--mincho);
+  font-size: 19px;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+.insta-lp-scope .format-item p {
+  font-size: 14.5px;
+  color: var(--ink-65);
+  margin: 0;
+}
+@media (max-width: 860px) {
+  .insta-lp-scope .format-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .insta-lp-scope .format-item {
+    grid-template-rows: auto auto auto 1fr;
+  }
+  .insta-lp-scope .format-frame-square {
+    width: 58%;
+  }
+  .insta-lp-scope .format-frame-stack {
+    width: 54%;
+  }
+  .insta-lp-scope .format-frame-reel {
+    width: 36%;
+  }
+}
+
+/* ============================================================
+   06 Approval — 画面と、そこでできることの対応
+   ============================================================ */
+.insta-lp-scope .approve {
+  background: var(--white);
+}
+.insta-lp-scope .approve-layout {
+  display: grid;
+  grid-template-columns: 252px minmax(0, 1fr);
+  gap: 56px;
+  align-items: start;
+}
+.insta-lp-scope .approve-figure {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  position: sticky;
+  top: 88px;
+}
+.insta-lp-scope .approve-figure .phone {
+  --phone-w: 252px;
+}
+.insta-lp-scope .approve-figure figcaption {
+  font-size: 12px;
+  color: var(--ink-45);
+}
+@media (max-width: 900px) {
+  .insta-lp-scope .approve-layout {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+  .insta-lp-scope .approve-figure {
+    position: static;
+  }
+}
+
+/* ============================================================
+   写真帯（フルブリード） — 文字は写真に重ねる
+   ============================================================ */
+.insta-lp-scope .photo-band {
+  position: relative;
+  min-height: 380px;
+  display: grid;
+  align-items: center;
+  padding: 68px 24px;
+  color: var(--white);
+  isolation: isolate;
+}
+.insta-lp-scope .photo-band > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+/* 文字の可読性を担保するスクリム（装飾のグラデ玉ではない） */
+.insta-lp-scope .photo-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(96deg, rgba(17, 17, 19, 0.86) 0%, rgba(17, 17, 19, 0.72) 46%, rgba(17, 17, 19, 0.26) 100%);
+}
+.insta-lp-scope .photo-band .section-inner {
+  width: 100%;
+}
+.insta-lp-scope .photo-band .section-kicker {
+  color: rgba(255, 255, 255, 0.7);
+}
+.insta-lp-scope .photo-band h2 {
+  color: var(--white);
+  max-width: 18em;
+}
+.insta-lp-scope .photo-band .section-lead {
+  color: rgba(255, 255, 255, 0.86);
+  max-width: 34em;
+}
+@media (max-width: 640px) {
+  .insta-lp-scope .photo-band {
+    min-height: 0;
+    padding: 56px 20px;
+  }
+  .insta-lp-scope .photo-band::after {
+    background: linear-gradient(178deg, rgba(17, 17, 19, 0.84) 0%, rgba(17, 17, 19, 0.78) 60%, rgba(17, 17, 19, 0.6) 100%);
+  }
+}
+
+/* ============================================================
+   07 Photo — 加工前後と、加工の考え方
+   ============================================================ */
+.insta-lp-scope .photo {
+  background: var(--paper);
+}
+.insta-lp-scope .photo-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 860px;
+  margin: 0 auto 44px;
+}
+.insta-lp-scope .photo-compare figure {
+  margin: 0;
+}
+/* 同じ1枚を、表示範囲だけ変えて「料理に寄る」を示す */
+.insta-lp-scope .photo-frame {
+  aspect-ratio: 4 / 3;
+  background: var(--paper-deep) center / cover no-repeat;
+}
+.insta-lp-scope .photo-before .photo-frame {
+  background-size: cover;
+  background-position: 50% 50%;
+}
+/* 補正は控えめに（強く掛けると「盛りすぎない」という主張と自己矛盾する） */
+.insta-lp-scope .photo-after .photo-frame {
+  background-size: 196%;
+  background-position: 28% 64%;
+  filter: brightness(1.03) saturate(1.05);
+}
+.insta-lp-scope .photo-compare figcaption {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--ink-45);
+}
+.insta-lp-scope .photo-label {
+  display: block;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+  margin-bottom: 4px;
+}
+.insta-lp-scope .photo-after .photo-label {
+  color: var(--vermilion);
+}
+/* 2列の罫線リスト（カードにしない） */
+.insta-lp-scope .duo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 52px;
+  border-top: 1px solid var(--rule);
+}
+.insta-lp-scope .duo-list > li {
+  padding: 21px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.insta-lp-scope .duo-list h3 {
+  font-family: var(--mincho);
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.insta-lp-scope .duo-list p {
+  font-size: 14.5px;
+  color: var(--ink-65);
+  margin: 0;
+}
+@media (max-width: 760px) {
+  .insta-lp-scope .photo-compare {
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .insta-lp-scope .duo-list {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+}
+
+/* ============================================================
+   07.5 Samples — できあがる投稿（画像＋AIが作る文章）
+   画像に載る文字は、生成画像に焼き込まず CSS で重ねる。
+   日本語は画像生成AIが正しく描けないうえ、装飾テンプレートは
+   実際にも「写真の上に文字を載せる」処理なので、これが実態に近い。
+   ============================================================ */
+.insta-lp-scope .samples {
+  background: var(--white);
+}
+.insta-lp-scope .sample-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+}
+.insta-lp-scope .sample-shot {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--paper-deep);
+}
+.insta-lp-scope .sample-shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* 装飾テンプレート：左上のバッジ */
+.insta-lp-scope .deco-badge {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  padding: 5px 11px;
+  background: var(--vermilion);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+/* 装飾テンプレート：下部のメニュー名と価格 */
+.insta-lp-scope .deco-name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 34px 14px 14px;
+  background: linear-gradient(180deg, rgba(20, 18, 14, 0) 0%, rgba(20, 18, 14, 0.68) 60%);
+  color: var(--white);
+  font-family: var(--mincho);
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.insta-lp-scope .deco-name b {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+}
+/* 装飾テンプレート：右下のひとことコピー */
+.insta-lp-scope .deco-copy {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  padding: 4px 9px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+.insta-lp-scope .sample-mode {
+  margin: 16px 0 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink-45);
+}
+.insta-lp-scope .sample-title {
+  font-family: var(--mincho);
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.insta-lp-scope .sample-caption {
+  font-size: 14.5px;
+  color: var(--ink-65);
+  margin: 0 0 10px;
+}
+.insta-lp-scope .sample-tags {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--vermilion);
+  margin: 0;
+  line-height: 1.7;
+}
+@media (max-width: 860px) {
+  .insta-lp-scope .sample-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    max-width: 440px;
+    margin-inline: auto;
+  }
+}
+
+/* ============================================================
+   08 Features / 10 Fit — 2列の罫線リストを共用
+   ============================================================ */
+.insta-lp-scope .features {
+  background: var(--paper);
+}
+.insta-lp-scope .fit {
+  background: var(--white);
+}
+/* 用意するものは1点だけなので、朱の罫線で締める */
+.insta-lp-scope .need-block {
+  max-width: 640px;
+  margin: 36px auto 0;
+  padding-top: 20px;
+  border-top: 2px solid var(--vermilion);
+}
+.insta-lp-scope .need-block h3 {
+  font-family: var(--mincho);
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.insta-lp-scope .need-block p {
+  font-size: 15px;
+  color: var(--ink-65);
+  margin: 0;
+}
+
+/* ============================================================
+   09 Admin — 墨のバンドでリズムを作る
+   ============================================================ */
+.insta-lp-scope .admin {
+  background: var(--ink);
+  color: rgba(255, 255, 255, 0.86);
+}
+.insta-lp-scope .admin .section-kicker {
+  color: rgba(255, 255, 255, 0.6);
+}
+.insta-lp-scope .admin h2 {
+  color: var(--white);
+}
+.insta-lp-scope .admin .section-lead {
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 40em;
+}
+.insta-lp-scope .admin-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+.insta-lp-scope .admin-grid li {
+  padding: 26px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+.insta-lp-scope .admin-grid h3 {
+  font-family: var(--mincho);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--white);
+  margin: 0 0 8px;
+}
+.insta-lp-scope .admin-grid p {
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+}
+.insta-lp-scope .admin .fine-print {
+  color: rgba(255, 255, 255, 0.66);
+}
+@media (max-width: 900px) {
+  .insta-lp-scope .admin-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 28px;
+  }
+}
+@media (max-width: 560px) {
+  .insta-lp-scope .admin-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   11 Price — 誌面の料金組み。箱で囲わない
+   ============================================================ */
+.insta-lp-scope .price {
+  background: var(--paper);
+}
+.insta-lp-scope .price-plan {
+  max-width: 720px;
+  margin: 0 auto 30px;
+  padding-top: 24px;
+  border-top: 2px solid var(--ink);
+}
+.insta-lp-scope .price-plan-name {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-45);
+  margin: 0 0 20px;
+}
+.insta-lp-scope .price-figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0 0 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+.insta-lp-scope .price-figure-label {
+  font-size: 13px;
+  color: var(--ink-45);
+  margin: 0 0 6px;
+}
+.insta-lp-scope .price-figure-value {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+}
+.insta-lp-scope .price-num {
+  font-family: var(--mincho);
+  font-size: 60px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+.insta-lp-scope .price-unit {
+  font-family: var(--mincho);
+  font-size: 18px;
+  font-weight: 700;
+}
+.insta-lp-scope .price-unit small {
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-45);
+}
+/* 初期費用0円がこの商品のいちばんの障壁除去なので、朱で強く出す */
+.insta-lp-scope .price-figure-zero .price-figure-value,
+.insta-lp-scope .price-figure-zero .price-figure-label {
+  color: var(--vermilion);
+}
+.insta-lp-scope .price-includes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0;
+}
+.insta-lp-scope .price-includes li {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  padding: 11px 0;
+  font-size: 15px;
+  border-bottom: 1px solid var(--rule);
+}
+.insta-lp-scope .price-includes li::before {
+  content: counter(inc, decimal-leading-zero);
+  counter-increment: inc;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 11px;
+  color: var(--ink-25);
+  padding-top: 0.5em;
+}
+.insta-lp-scope .price-includes {
+  counter-reset: inc;
+}
+/* 料金だけは中央寄せのプラン表に付く注記なので、その左端にそろえる */
+.insta-lp-scope .price .fine-print {
+  max-width: 720px;
+  margin-inline: auto;
+}
+@media (max-width: 560px) {
+  .insta-lp-scope .price-figures {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .insta-lp-scope .price-num {
+    font-size: 46px;
+  }
+}
+
+/* ============================================================
+   12 Status — いま使えること／これから
+   ============================================================ */
+.insta-lp-scope .status {
+  background: var(--white);
+}
+.insta-lp-scope .status-cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 52px;
+  margin-bottom: 32px;
+}
+.insta-lp-scope .status-col h3 {
+  font-family: var(--mincho);
+  font-size: 19px;
+  font-weight: 700;
+  margin: 0 0 18px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--ink);
+}
+.insta-lp-scope .status-col-next h3 {
+  border-bottom-color: var(--rule);
+  color: var(--ink-45);
+}
+.insta-lp-scope .status-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.insta-lp-scope .status-col li {
+  padding: 9px 0;
+  font-size: 14.5px;
+  border-bottom: 1px solid var(--rule);
+}
+.insta-lp-scope .status-col-next li {
+  color: var(--ink-45);
+}
+.insta-lp-scope .status-tag {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 1px 7px;
+  border: 1px solid var(--rule);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink-45);
+  vertical-align: 0.1em;
+}
+@media (max-width: 768px) {
+  .insta-lp-scope .status-cols {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+}
+
+/* ============================================================
+   13 FAQ
+   ============================================================ */
+.insta-lp-scope .faq {
+  background: var(--paper);
+}
+.insta-lp-scope .faq-list {
+  max-width: 840px;
+  margin-inline: auto;
+  border-top: 1px solid var(--ink);
+}
+.insta-lp-scope .faq-list details {
+  border-bottom: 1px solid var(--rule);
+}
+.insta-lp-scope .faq-list summary {
+  cursor: pointer;
+  padding: 18px 40px 18px 0;
+  font-family: var(--mincho);
+  font-size: 17px;
+  font-weight: 700;
+  position: relative;
+  list-style: none;
+  line-height: 1.65;
+}
+.insta-lp-scope .faq-list summary::-webkit-details-marker {
+  display: none;
+}
+.insta-lp-scope .faq-list summary::after,
+.insta-lp-scope .faq-list summary::before {
+  content: "";
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  background: var(--vermilion);
+  transition: opacity 0.2s ease;
+}
+.insta-lp-scope .faq-list summary::before {
+  width: 13px;
+  height: 1px;
+  margin-top: -0.5px;
+}
+.insta-lp-scope .faq-list summary::after {
+  width: 1px;
+  height: 13px;
+  right: 12px;
+  margin-top: -6.5px;
+}
+.insta-lp-scope .faq-list details[open] summary::after {
+  opacity: 0;
+}
+.insta-lp-scope .faq-a {
+  margin: 0 0 20px;
+  font-size: 15px;
+  color: var(--ink-65);
+  max-width: 46em;
+}
+
+/* ============================================================
+   14 CTA（写真帯）・15 フォーム
+   ============================================================ */
+.insta-lp-scope .cta-band {
+  position: relative;
+  padding: 80px 24px;
+  color: var(--white);
+  text-align: center;
+  isolation: isolate;
+}
+.insta-lp-scope .cta-band > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* 灯りの入った店先が見える位置で切る */
+  object-position: 64% 58%;
+  z-index: -2;
+}
+/* 元の写真が暗い（夕暮れ）ので、スクリムは薄く。濃くすると写真が沈んで無地に見える */
+.insta-lp-scope .cta-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(14, 12, 9, 0.42) 0%, rgba(14, 12, 9, 0.62) 100%);
+}
+.insta-lp-scope .cta-band h2 {
+  color: var(--white);
+  margin: 0 auto 20px;
+  max-width: 20em;
+}
+.insta-lp-scope .cta-band > p {
+  color: rgba(255, 255, 255, 0.86);
+  max-width: 40em;
+  margin: 0 auto 30px;
+  font-size: 15.5px;
+}
+
+.insta-lp-scope .contact-form-section {
+  background: var(--paper);
+}
+.insta-lp-scope .contact-form-lead {
+  font-size: 15px;
+  color: var(--ink-65);
+  text-wrap: pretty;
+  word-break: auto-phrase;
+}
+.insta-lp-scope .contact-form-section .section-heading {
+  max-width: 720px;
+  margin-inline: auto;
+}
+.insta-lp-scope .lead-form {
+  max-width: 720px;
+  margin-inline: auto;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  padding: 36px 34px;
+  display: grid;
+  gap: 18px;
+}
+.insta-lp-scope .lead-form-row-double {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.insta-lp-scope .form-field {
+  display: grid;
+  gap: 8px;
+}
+.insta-lp-scope .form-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.insta-lp-scope .form-label em {
+  color: var(--vermilion);
+  font-style: normal;
+  margin-left: 3px;
+}
+.insta-lp-scope .form-optional {
+  font-weight: 400;
+  color: var(--ink-45);
+  font-size: 12px;
+}
+.insta-lp-scope .lead-form input[type="text"],
+.insta-lp-scope .lead-form input[type="email"],
+.insta-lp-scope .lead-form input[type="tel"],
+.insta-lp-scope .lead-form textarea {
+  width: 100%;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 13px 15px;
+  font-size: 15px;
+  font-family: inherit;
+  background: var(--paper);
+  color: var(--ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.insta-lp-scope .lead-form input:focus,
+.insta-lp-scope .lead-form textarea:focus {
+  outline: none;
+  border-color: var(--vermilion);
+  box-shadow: 0 0 0 3px rgba(166, 67, 43, 0.16);
+  background: var(--white);
+}
+.insta-lp-scope .form-field-consent label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+.insta-lp-scope .form-field-consent input {
+  margin-top: 4px;
+}
+.insta-lp-scope .form-field-consent a {
+  color: var(--ink);
+  text-decoration: underline;
+}
+.insta-lp-scope .form-field-consent em {
+  color: var(--vermilion);
+  font-style: normal;
+}
+.insta-lp-scope .form-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.insta-lp-scope .lead-form-actions {
+  text-align: center;
+}
+.insta-lp-scope .lead-form-submit {
+  width: 100%;
+  max-width: 380px;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: inherit;
+}
+.insta-lp-scope .lead-form-submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.insta-lp-scope .lead-form-note {
+  margin-top: 14px;
+  font-size: 12.5px;
+  color: var(--ink-45);
+}
+.insta-lp-scope .form-feedback {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  min-height: 1em;
+}
+.insta-lp-scope .form-feedback.is-success {
+  color: var(--ok);
+}
+.insta-lp-scope .form-feedback.is-error {
+  color: var(--err);
+}
+/* 商標注記。飲食店オーナー相手では「公式かどうか」が必ず論点になるので先に書く */
+.insta-lp-scope .trademark-note {
+  max-width: 720px;
+  margin: 24px auto 0;
+  font-size: 12px;
+  color: var(--ink-45);
+  text-align: center;
+}
+@media (max-width: 640px) {
+  .insta-lp-scope .cta-band {
+    padding: 64px 20px;
+  }
+  .insta-lp-scope .lead-form {
+    padding: 28px 20px;
+  }
+  .insta-lp-scope .lead-form-row-double {
+    grid-template-columns: 1fr;
+  }
+  .insta-lp-scope .trademark-note {
+    text-align: left;
+  }
+}

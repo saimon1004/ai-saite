@@ -1,0 +1,1030 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/common/Header.astro";
+import Footer from "../components/common/Footer.astro";
+import { loadDefaultJapaneseParser } from "budoux";
+
+// アプリ画面モックの文字は幅が狭く、word-break:keep-all だけだと折り返せずはみ出す。
+// ビルド時に文節境界へ ZWSP を入れておく。
+const jpParser = loadDefaultJapaneseParser();
+const ZWSP = String.fromCharCode(0x200b);
+const phrase = (t: string) => jpParser.parse(t).join(ZWSP);
+
+const base = import.meta.env.BASE_URL;
+// CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
+const cssVersion = "20260813-v8";
+const cssHref = `${base}insta-auto/styles.css?v=${cssVersion}`;
+
+const img = (name: string) => `${base}insta-auto/assets/${name}`;
+const feedHero = img("feed-main-v.jpg");
+const bandKitchen = img("band-kitchen.jpg");
+const bandCta = img("band-cta.jpg");
+const dishA = img("dish-a.jpg");
+const dishB = img("dish-b.jpg");
+const feedSalad = img("feed-salad.jpg");
+const feedParfait = img("feed-parfait.jpg");
+const feedCafe = img("feed-cafe.jpg");
+const reelStill = img("reel-still.jpg");
+// 加工前の1枚は「店側が出す直前に厨房でさっと撮ったもの」。客席で客が撮った写真ではない
+const prepWide = img("prep-wide.jpg");
+
+// ヒーローの投稿グリッド（大1＋小3）。おまかせグラムの成果物そのものを最初に見せる。
+const feedSubs = [
+  { src: feedSalad, alt: "彩り野菜のサラダの投稿写真。" },
+  { src: feedParfait, alt: "季節のフルーツパフェの投稿写真。" },
+  { src: img("feed-drink.jpg"), alt: "グラスに注がれた自家製サングリアの投稿写真。" },
+];
+
+// できあがる投稿のサンプル。画像に載る文字（装飾テンプレート）は焼き込まずCSSで重ねる。
+// キャプションは「AIが作る文章の例」であり、実物の出力ではない旨をセクション末尾に明記している。
+const samples = [
+  {
+    img: img("sample-pasta.jpg"),
+    alt: "バジルのジェノベーゼ。白い器に盛られたパスタとミニトマト。",
+    badge: "",
+    copy: "",
+    name: "",
+    price: "",
+    mode: "装飾なし（写真だけの上品な見せ方）",
+    title: "バジルのジェノベーゼ",
+    caption: "バジルは今朝、店の裏の鉢から摘みました。チーズは削りたてをそのままのせています。麺は少し固めにゆでました。",
+    tags: "#本町ランチ #ジェノベーゼ #自家製バジル #本町パスタ",
+  },
+  {
+    img: img("sample-kaisen.jpg"),
+    alt: "海鮮丼。まぐろ・サーモン・いくらなどをのせた丼。",
+    badge: "本日のおすすめ",
+    copy: "今朝入荷",
+    name: "",
+    price: "",
+    mode: "装飾あり（バッジ＋ひとこと）",
+    title: "海鮮丼",
+    caption: "今朝入ったばかりの魚を、七種のせました。数に限りがあるので、なくなり次第終わりです。ランチは11時半からです。",
+    tags: "#本町ランチ #海鮮丼 #日替わり #本町ディナー",
+  },
+  {
+    img: img("sample-curry.jpg"),
+    alt: "スパイスチキンカレー。白い皿に盛られたカレーとライス。",
+    badge: "",
+    copy: "",
+    name: "スパイスチキンカレー",
+    price: "¥1,180",
+    mode: "装飾あり（メニュー名＋価格）",
+    title: "スパイスチキンカレー",
+    caption: "10種類のスパイスを自分のところで挽いています。辛さは3段階から選べます。ライスの大盛りは無料です。",
+    tags: "#本町ランチ #スパイスカレー #カレー好きと繋がりたい",
+  },
+];
+
+const pageUrl = "https://sai-mon.co.jp/insta-auto/";
+
+// 投稿1本あたりの工程と担当。ページの核なので、ここを唯一の情報源にして表を描く。
+// お店に残る操作は op（①送る／②承認する）で示す。行は3つあるが操作は2つ、というのが要点。
+const compareRows = [
+  { step: "料理の写真を撮る", before: "お店", owner: "shop", after: "お店", note: "アプリから送ります", op: "①" },
+  { step: "投稿に使う写真を選ぶ", before: "お店", owner: "shop", after: "お店", note: "送るときに一緒に選びます（①と同じ操作です）", op: "①" },
+  { step: "トリミングして明るさを整える", before: "お店", owner: "ai", after: "AI", note: "料理に寄せて、控えめに補正します", op: "" },
+  { step: "画像に文字やバッジを載せる", before: "お店", owner: "ai", after: "AI", note: "登録した装飾テンプレートに沿って作ります", op: "" },
+  { step: "キャプションを考える", before: "お店", owner: "ai", after: "AI", note: "店舗プロフィールと作成ルールに沿って作ります", op: "" },
+  { step: "ハッシュタグを調べて選ぶ", before: "お店", owner: "ai", after: "AI", note: "形式とルールに合わせて付けます", op: "" },
+  { step: "投稿する時間を決めて投稿する", before: "お店", owner: "shop", after: "お店（承認）＋自動", note: "承認すると、決めた時間に投稿されます", op: "②" },
+];
+
+// FAQ は本文の <details> と JSON-LD の両方をこの配列から描く（文言のズレを構造的に防ぐ）
+const faqs = [
+  {
+    q: "勝手に投稿されることはありませんか？",
+    a: "投稿はすべて、お店の承認を経てから公開されます。承認していない投稿案が、そのまま公開されることはありません。承認したあとでも、予定・履歴から日時の変更や取り消しができます。",
+  },
+  {
+    q: "Instagramのアカウントは何が必要ですか？",
+    a: "Instagramのビジネスアカウントと、連携するFacebookページをご用意ください。ご用意いただくのはこの2つだけです。接続の手順はお申し込み後にご案内します。",
+  },
+  {
+    q: "写真は何枚送ればいいですか？",
+    a: "投稿の形式によって変わります。フィードは写真1枚、カルーセルは最大10枚まで並べられ、動画のスライドも入れられます。リールは動画1本を60秒までお送りください。操作はどの形式でも同じで、送るものが変わるだけです。",
+  },
+  {
+    q: "AIが作った文章は直せますか？",
+    a: "直せます。承認画面でタイトルとキャプションをその場で書き換えられます。文章そのものが気に入らないときは、AIで別の案を作り直すこともできます。",
+  },
+  {
+    q: "料理の写真をAIが描き換えたりしませんか？",
+    a: "描き換えません。生成AIで画像を作り直すことはせず、お店で撮った写真を、トリミングと控えめな補正で整えるだけにとどめています。来店されたときに実物と違って見えることを避けるためです。",
+  },
+  {
+    q: "メニュー名や価格を間違えられませんか？",
+    a: "正式なメニュー名と価格をあらかじめ登録しておき、その内容と照合します。AIに料理名を推測させない仕組みです。名前の誤りはお店の信用に関わるため、ここは推測に任せていません。",
+  },
+  {
+    q: "投稿する時間は選べますか？",
+    a: "選べます。頻度と時間帯を投稿ルールとして決めておくと、承認した投稿がその時間に合わせて予約されます。カレンダーで月ごとの予定を確認でき、ドラッグで日付を移したり、ワンタップで取り消したりできます。",
+  },
+  {
+    q: "アプリのインストールは必要ですか？",
+    a: "必要ありません。ブラウザで開いてホーム画面に追加していただければ、アプリと同じように使えて、通知も届きます。",
+  },
+  {
+    q: "Instagramの仕様が変わったらどうなりますか？",
+    a: "ハッシュタグの上限など、変わり続ける仕様は運営側で更新します。お店側で対応していただくことはありません。",
+  },
+  {
+    q: "投稿に失敗したらどうなりますか？",
+    a: "自動でやり直します。結果は通知でお知らせしますので、投稿できていたかどうかを確認できます。",
+  },
+  {
+    q: "複数の店舗で使えますか？",
+    a: "使えます。店舗ごとにデータを分けて管理するので、系列店でも投稿が混ざりません。料金は1店舗あたりの月額で、複数店舗でのご利用は個別にお見積もりします。",
+  },
+  {
+    q: "料金はいくらですか？",
+    a: "初期費用は0円、1店舗あたり月額30,000円（税別）です。アプリ、AIによる画像の加工と文章の作成、承認後の予約投稿と自動投稿、各種ルールの設定、Instagramの仕様変更への追従が含まれます。",
+  },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://sai-mon.co.jp/#organization",
+      name: "株式会社SAIMON",
+      url: "https://sai-mon.co.jp/",
+      logo: "https://sai-mon.co.jp/og-image.png",
+    },
+    {
+      "@type": "Service",
+      "@id": `${pageUrl}#service`,
+      name: "おまかせグラム",
+      serviceType: "飲食店向けInstagram運用自動化サービス",
+      description:
+        "飲食店のInstagram運用を、写真を送ることと投稿案を承認することの2工程にするサービス。AIが写真の加工と文章・ハッシュタグの作成を行い、店主が承認すると決めた時間に投稿されます。フィード・カルーセル・リールに対応し、スマホだけで操作が完結します。",
+      url: pageUrl,
+      provider: { "@id": "https://sai-mon.co.jp/#organization" },
+      areaServed: "JP",
+      audience: {
+        "@type": "Audience",
+        audienceType: "カフェ・居酒屋・レストランなどの飲食店",
+      },
+      offers: {
+        "@type": "Offer",
+        name: "1店舗あたり",
+        price: "30000",
+        priceCurrency: "JPY",
+        description:
+          "初期費用0円。店舗アプリ、AIによる画像加工と文章・ハッシュタグの作成、承認後の予約投稿と自動投稿、メニュー・作成ルール・装飾テンプレート・投稿ルールの設定、Instagramの仕様変更への追従を含む月額プラン（税別・1店舗あたり）。複数店舗でのご利用は個別見積。",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: "30000",
+          priceCurrency: "JPY",
+          valueAddedTaxIncluded: false,
+          unitCode: "MON",
+        },
+      },
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "ホーム", item: "https://sai-mon.co.jp/" },
+        { "@type": "ListItem", position: 2, name: "おまかせグラム", item: pageUrl },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="おまかせグラム｜写真を送って承認するだけの飲食店Instagram運用"
+  description="飲食店のInstagram運用を自動化する「おまかせグラム」。料理の写真を送ると、AIが加工と文章・ハッシュタグを用意します。届いた投稿案をアプリで承認すれば、決めた時間に投稿されます。お店の作業は送ることと承認することの2つだけ。初期費用0円、1店舗あたり月額30,000円（税別）。フィード・カルーセル・リールに対応します。"
+  jsonLd={jsonLd}
+  chatbot={false}
+>
+  <link rel="preconnect" href="https://fonts.googleapis.com" slot="head" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin slot="head" />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&display=swap"
+    slot="head"
+  />
+  <link rel="preload" as="image" href={feedHero} slot="head" />
+  <link rel="stylesheet" href={cssHref} slot="head" />
+
+  <Header />
+
+  <main class="insta-lp-scope">
+    <!-- 01 Hero — 左に明朝の見出し、右に「このお店の投稿グリッド」 -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="hero-kicker">飲食店のInstagram運用<span aria-hidden="true">／</span><b>おまかせグラム</b></p>
+          {/* 改行位置は固定する。自動折り返しに任せると幅によって「け。」だけが3行目に落ちる */}
+          <h1 id="hero-title">写真を送る。<br />あとは、<br />承認するだけ。</h1>
+          <p class="hero-lead jp-budoux">料理の写真を送ると、AIが加工と文章を用意します。届いた投稿案をアプリで承認すれば、決めた時間に投稿されます。お店の作業は、送ることと承認することの2つだけです。</p>
+          <ul class="hero-facts">
+            <li class="hero-fact-zero"><span class="hero-fact-value">初期費用 0円</span><span class="hero-fact-note">はじめる費用はかかりません</span></li>
+            <li><span class="hero-fact-value">月額 30,000円<small>（税別）</small></span><span class="hero-fact-note">1店舗あたり</span></li>
+            <li><span class="hero-fact-value">承認前は公開されません</span><span class="hero-fact-note">投稿するかどうかの判断はお店に残ります</span></li>
+          </ul>
+          <div class="hero-actions">
+            <a class="primary-cta" href="#contact-form" data-cta-source="hero-primary">無料相談する<span aria-hidden="true">→</span></a>
+            <a class="secondary-cta" href="#compare" data-cta-source="hero-compare">何が楽になるか見る</a>
+          </div>
+          <p class="hero-note jp-budoux">ご用意いただくのは、Instagramのビジネスアカウント（と連携するFacebookページ）だけです。</p>
+        </div>
+
+        <div class="feed-collage">
+          <figure class="feed-main">
+            <img src={feedHero} alt="カウンターに置かれた焼き鳥の一皿の投稿写真。" width="1024" height="1280" fetchpriority="high" decoding="async" />
+          </figure>
+          {feedSubs.map((s) => (
+            <figure class="feed-sub">
+              <img src={s.src} alt={s.alt} width="512" height="512" loading="lazy" decoding="async" />
+            </figure>
+          ))}
+          {/* 成果（フィード）の上に、その作り方（承認画面）を小さく重ねる */}
+          <div class="phone collage-phone" role="img" aria-label="AIが作った投稿案を承認する画面のイメージ。料理の写真、タイトル、キャプション、ハッシュタグと、文章を直す・承認するのボタンが並んでいる。">
+            <div class="phone-screen" aria-hidden="true">
+              <p class="mock-bar"><span>承認待ち</span><span>1件</span></p>
+              <div class="mock-photo">
+                <img src={dishB} alt="" loading="lazy" decoding="async" />
+                <span class="mock-photo-badge">{phrase("本日のおすすめ")}</span>
+              </div>
+              <div class="mock-body">
+                <p class="mock-title">{phrase("窯焼きマルゲリータ")}</p>
+                <p class="mock-caption">{phrase("生地から仕込んでいます。")}</p>
+                <p class="mock-tags">{phrase("#本町ディナー")}</p>
+              </div>
+              <p class="mock-meta">{phrase("承認すると 18:30 に投稿")}</p>
+              <div class="mock-actions">
+                <span class="mock-btn">直す</span>
+                <span class="mock-btn is-primary">承認</span>
+              </div>
+            </div>
+          </div>
+          <p class="feed-caption">おまかせグラムで運用した投稿のイメージ。画面はイメージです。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 Problem -->
+    <section class="problem section-block" aria-labelledby="problem-title">
+      <div class="section-inner split">
+        <div class="section-heading">
+          <p class="section-kicker">Problem</p>
+          <h2 id="problem-title"><span class="no-break">続けるつもりだったのに、</span><wbr /><span class="no-break">止まってしまう</span></h2>
+          <p class="section-lead jp-budoux">投稿が止まるのは、やる気の問題ではありません。1回の投稿に、工程が多すぎるからです。</p>
+        </div>
+        <div>
+          <ul class="rule-list">
+            <li>
+              <h3>「あとで書こう」で止まっている</h3>
+              <p class="jp-budoux">写真は撮ってあるのに、文章とタグを考える時間が取れません。1週間空くと、次の1枚がさらに重くなります。</p>
+            </li>
+            <li>
+              <h3>何を書けばいいか、毎回ゼロから考えている</h3>
+              <p class="jp-budoux">料理の説明、締めの一言、付けるタグ。決まった型がないので、毎回同じところで迷います。</p>
+            </li>
+            <li>
+              <h3>外注しても、お店に残る手間がある</h3>
+              <p class="jp-budoux">費用の話だけではありません。写真を用意して内容を確認するやりとりは、結局お店の仕事として残ります。</p>
+            </li>
+            <li>
+              <h3>書ける人が抜けると、投稿も止まる</h3>
+              <p class="jp-budoux">投稿の型がその人の頭の中にあると、担当が変わったところで雰囲気も更新も途切れます。</p>
+            </li>
+          </ul>
+          <p class="problem-close jp-budoux">どれも、工程が多いことから起きています。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 What changes（このページの核） -->
+    <section id="compare" class="compare section-block" aria-labelledby="compare-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">What changes</p>
+          <h2 id="compare-title"><span class="no-break">7つあった工程が、</span><wbr /><span class="no-break">2つになります</span></h2>
+          <p class="section-lead jp-budoux">お店の作業は、写真を送ることと、届いた投稿案を承認することだけになります。間の工程はAIが受け持ちます。</p>
+        </div>
+
+        <div class="compare-summary">
+          <p class="compare-figure">
+            <span class="compare-num">7</span><span class="compare-unit">工程</span>
+            <span class="compare-cap">これまでお店がやっていたこと</span>
+          </p>
+          <span class="compare-arrow" aria-hidden="true"></span>
+          <p class="compare-figure is-ours">
+            <span class="compare-num">2</span><span class="compare-unit">工程</span>
+            <span class="compare-cap">おまかせグラムでお店がやること</span>
+            <span class="compare-ops">①写真を送る ／ ②承認する</span>
+          </p>
+        </div>
+
+        <div class="compare-board" role="table" aria-label="投稿1本あたりの工程と担当">
+          <div class="compare-head" role="row">
+            <span role="columnheader">工程</span>
+            <span role="columnheader">これまで</span>
+            <span role="columnheader">おまかせグラム</span>
+          </div>
+          {compareRows.map((r) => (
+            <div class={`compare-row${r.op ? " is-kept" : ""}`} role="row">
+              <span class="compare-step" role="rowheader">{r.step}</span>
+              <span class="compare-cell" role="cell">
+                <span class="cell-label">これまで</span>
+                <span class="owner owner-shop">{r.before}</span>
+              </span>
+              <span class="compare-cell" role="cell">
+                <span class="cell-label">おまかせグラム</span>
+                {r.op && <span class="op-badge" aria-hidden="true">{r.op}</span>}
+                <span class={`owner owner-${r.owner}`}>{r.after}</span>
+                <span class="owner-note jp-budoux">{r.note}</span>
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <p class="compare-close jp-budoux">①②の番号がついた3つの行は、操作としては「送る」と「承認する」の2つにまとまります。減らしているのは工程の数で、投稿するかどうかの判断は、これまでどおりお店に残ります。</p>
+      </div>
+    </section>
+
+    <!-- 04 How it works — 大きな通し番号と、左右交互の図版 -->
+    <section id="how" class="how section-block" aria-labelledby="how-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">How it works</p>
+          <h2 id="how-title">3ステップで、1本の投稿ができます</h2>
+          <p class="section-lead jp-budoux">操作はスマホだけで完結します。パソコンも、アプリのインストールも必要ありません。</p>
+        </div>
+        <ol class="step-list">
+          <li class="step-item">
+            <div class="step-body">
+              <span class="step-num" aria-hidden="true">01</span>
+              <h3>写真を送る</h3>
+              <p class="jp-budoux">アプリで投稿の種類を選び、写真か動画を送ります。1枚でも、複数枚でも、動画1本でも構いません。料理はメニューから選ぶと、料理名が正確になります。</p>
+            </div>
+            <figure class="step-figure">
+              <img src={img("hero-bg.jpg")} alt="カウンターの料理にスマートフォンを向けて撮影しようとしている手元。" loading="lazy" decoding="async" style="object-position: 74% 46%;" />
+              <figcaption>撮ったその場から送れます</figcaption>
+            </figure>
+          </li>
+          <li class="step-item">
+            <div class="step-body">
+              <span class="step-num" aria-hidden="true">02</span>
+              <h3>AIが加工と文章を用意する</h3>
+              <p class="jp-budoux">料理に寄せてトリミングし、明るさを整えます。形式に合わせた文章とハッシュタグも一緒に作ります。</p>
+            </div>
+            <figure class="step-figure">
+              <img src={dishA} alt="料理に寄せてトリミングされた、から揚げの一皿。" loading="lazy" decoding="async" />
+              <figcaption>料理に寄せて整えた1枚</figcaption>
+            </figure>
+          </li>
+          <li class="step-item">
+            <div class="step-body">
+              <span class="step-num" aria-hidden="true">03</span>
+              <h3>承認すると、決めた時間に投稿されます</h3>
+              <p class="jp-budoux">投稿案がアプリに届いたら、内容を確認して承認します。文章はその場で直せます。届いたことは通知でお知らせします。</p>
+            </div>
+            <figure class="step-figure">
+              <img src={feedCafe} alt="窓から光の入る、営業中の明るい店内。" loading="lazy" decoding="async" />
+              <figcaption>お店が忙しい時間でも、決めた時刻に出ます</figcaption>
+            </figure>
+          </li>
+        </ol>
+        <p class="fine-print">承認していない投稿案が、そのまま公開されることはありません。</p>
+      </div>
+    </section>
+
+    <!-- 05 Formats -->
+    <section class="formats section-block" aria-labelledby="formats-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Formats</p>
+          <h2 id="formats-title">3つの形式に対応しています</h2>
+          <p class="section-lead jp-budoux">操作はどれも同じです。変わるのは、送るものだけです。</p>
+        </div>
+        <ul class="format-grid">
+          <li class="format-item">
+            <div class="format-frame format-frame-square" aria-hidden="true">
+              <img src={feedSalad} alt="" loading="lazy" decoding="async" />
+            </div>
+            <p class="format-tag">Feed</p>
+            <h3>写真1枚を送る</h3>
+            <p class="jp-budoux">今日の一皿をそのまま出したいときに使います。送るのは写真1枚です。</p>
+          </li>
+          <li class="format-item">
+            {/* カルーセルは実際に複数枚が重なって見えるようにする（コースの流れの3枚） */}
+            <div class="format-frame format-frame-stack" aria-hidden="true">
+              <img class="stack-3" src={feedParfait} alt="" loading="lazy" decoding="async" />
+              <img class="stack-2" src={img("sample-pasta.jpg")} alt="" loading="lazy" decoding="async" />
+              <img class="stack-1" src={dishB} alt="" loading="lazy" decoding="async" />
+            </div>
+            <p class="format-tag">Carousel</p>
+            <h3>写真を最大10枚まで並べる</h3>
+            <p class="jp-budoux">コースの流れや複数のメニューを見せたいときに使います。動画のスライドも入れられます。</p>
+          </li>
+          <li class="format-item">
+            <div class="format-frame format-frame-reel" aria-hidden="true">
+              <img src={reelStill} alt="" loading="lazy" decoding="async" />
+            </div>
+            <p class="format-tag">Reel</p>
+            <h3>動画1本（60秒まで）を送る</h3>
+            <p class="jp-budoux">湯気や焼ける音など、写真では伝わらないものを見せたいときに使います。</p>
+          </li>
+        </ul>
+        <p class="fine-print">料理・お知らせなど、投稿の種類はアプリで選べます。種類ごとに入力欄と文章の仕上がりが変わります。</p>
+      </div>
+    </section>
+
+    <!-- 06 Approval -->
+    <section class="approve section-block" aria-labelledby="approve-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Approval</p>
+          <h2 id="approve-title"><span class="no-break">投稿の前に、</span><wbr /><span class="no-break">必ずお店が確認します</span></h2>
+          <p class="section-lead jp-budoux">完全に任せきりにも、全部手作業にもしていません。AIが作ったものを、公開前に人が1度見る形にしています。</p>
+        </div>
+        <div class="approve-layout">
+          <figure class="approve-figure">
+            <div class="phone" role="img" aria-label="承認画面のイメージ。料理の写真、タイトル、キャプション、ハッシュタグの下に、文章を直すと承認のボタンが並んでいる。">
+              <div class="phone-screen" aria-hidden="true">
+                <p class="mock-bar"><span>承認待ち</span><span>1件</span></p>
+                <div class="mock-photo">
+                  <img src={feedParfait} alt="" loading="lazy" decoding="async" />
+                  <span class="mock-photo-badge">{phrase("本日のおすすめ")}</span>
+                </div>
+                <div class="mock-body">
+                  <p class="mock-title">{phrase("季節のフルーツパフェ")}</p>
+                  <p class="mock-caption">{phrase("いちごが終わって、桃になりました。")}</p>
+                  <p class="mock-tags">{phrase("#本町カフェ #季節のパフェ")}</p>
+                </div>
+                <p class="mock-meta">{phrase("承認すると 本日 18:30 に投稿")}</p>
+                <div class="mock-actions">
+                  <span class="mock-btn">文章を直す</span>
+                  <span class="mock-btn is-primary">承認</span>
+                </div>
+              </div>
+            </div>
+            <figcaption>画面はイメージです。</figcaption>
+          </figure>
+          <ul class="rule-list">
+            <li>
+              <h3>文章を直す</h3>
+              <p class="jp-budoux">タイトルとキャプションを、その場で書き換えられます。</p>
+            </li>
+            <li>
+              <h3>AIで作り直す</h3>
+              <p class="jp-budoux">気に入らないときは、別の案を作り直せます。</p>
+            </li>
+            <li>
+              <h3>写真の文字</h3>
+              <p class="jp-budoux">画像に載る文字の大きさ・位置・表示を変えられます。</p>
+            </li>
+            <li>
+              <h3>今すぐ投稿</h3>
+              <p class="jp-budoux">予約を待たずに、その場で投稿できます。</p>
+            </li>
+            <li>
+              <h3>承認</h3>
+              <p class="jp-budoux">決められた時間に投稿を予約します。</p>
+            </li>
+            <li>
+              <h3>予定・履歴</h3>
+              <p class="jp-budoux">予約済みの投稿を、あとから日時変更したり取り消したりできます。</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 Photo — 写真帯で見出しを打ってから、加工前後を見せる -->
+    <section class="photo-band" aria-labelledby="photo-title">
+      <img src={bandKitchen} alt="" loading="lazy" decoding="async" />
+      <div class="section-inner">
+        <p class="section-kicker">Photo</p>
+        <h2 id="photo-title">料理を、盛りすぎずに見せます</h2>
+        <p class="section-lead jp-budoux">生成AIで写真を描き換えることはしません。お店で撮った料理そのものを、見やすく整えるだけにとどめています。来店したときに「写真と違う」と思われないためです。</p>
+      </div>
+    </section>
+
+    <section class="photo section-block">
+      <div class="section-inner">
+        <div class="photo-compare">
+          <figure class="photo-before">
+            <div class="photo-frame" style={`background-image:url(${prepWide})`} role="img" aria-label="厨房の作業台に置かれた、出す直前の一皿。まわりに空き皿や調理道具も写り込んでいる。"></div>
+            <figcaption><span class="photo-label">Before — 送った写真</span>出す前に、厨房でさっと撮った1枚。</figcaption>
+          </figure>
+          <figure class="photo-after">
+            <div class="photo-frame" style={`background-image:url(${prepWide})`} role="img" aria-label="同じ写真を、主役の料理に寄せてトリミングしたもの。"></div>
+            <figcaption><span class="photo-label">After — AIの加工後</span>料理に寄せて、明るさを控えめに整えたもの。</figcaption>
+          </figure>
+        </div>
+        <ul class="duo-list">
+          <li>
+            <h3>料理に寄せてトリミングします</h3>
+            <p class="jp-budoux">AIが主役の料理を見つけて寄ります。まわりの器や作業台が写り込んでも、料理が主役の1枚になります。</p>
+          </li>
+          <li>
+            <h3>補正は控えめにします</h3>
+            <p class="jp-budoux">明るさや色みを自然な範囲で整えます。実物と離れて見えるほどの加工はしません。</p>
+          </li>
+          <li>
+            <h3>装飾は2通りから選べます</h3>
+            <p class="jp-budoux">文字を載せない上品な見せ方と、バッジや短い一言で訴求する見せ方があります。文字の大きさと位置は3×3で調整できます。</p>
+          </li>
+          <li>
+            <h3>メニュー名と価格を載せられます</h3>
+            <p class="jp-budoux">登録した正式なメニュー名と価格を画像にのせられます。表示するかどうかは設定で選べます。</p>
+          </li>
+        </ul>
+        <p class="fine-print">加工の考え方を示したイメージです。お客様が写り込んだ写真を送るときは、承認画面でご確認のうえ判断してください。</p>
+      </div>
+    </section>
+
+    <!-- 07.5 Samples -->
+    <section id="samples" class="samples section-block" aria-labelledby="samples-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Samples</p>
+          <h2 id="samples-title">できあがる投稿</h2>
+          <p class="section-lead jp-budoux">写真を送ると、加工された画像と、お店の情報にもとづいた文章がセットで届きます。画像に文字を載せるかどうかは、設定で切り替えられます。</p>
+        </div>
+        <ul class="sample-grid">
+          {samples.map((s) => (
+            <li class="sample">
+              <figure class="sample-shot">
+                <img src={s.img} alt={s.alt} loading="lazy" decoding="async" width="512" height="512" />
+                {s.badge && <span class="deco-badge">{s.badge}</span>}
+                {s.copy && <span class="deco-copy">{s.copy}</span>}
+                {s.name && <span class="deco-name">{s.name}{s.price && <b>{s.price}</b>}</span>}
+              </figure>
+              <p class="sample-mode">{s.mode}</p>
+              <p class="sample-title">{s.title}</p>
+              <p class="sample-caption jp-budoux">{s.caption}</p>
+              <p class="sample-tags">{s.tags}</p>
+            </li>
+          ))}
+        </ul>
+        <p class="fine-print">画像と文章の例です。実際の仕上がりは、登録したメニュー・作成ルール・装飾テンプレートによって変わります。文章は承認画面でその場で直せます。</p>
+      </div>
+    </section>
+
+    <!-- 08 Features -->
+    <section class="features section-block" aria-labelledby="features-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Details</p>
+          <h2 id="features-title"><span class="no-break">毎日使うための、</span><wbr /><span class="no-break">細かいところ</span></h2>
+        </div>
+        <ul class="duo-list">
+          <li>
+            <h3>スマホひとつで完結します</h3>
+            <p class="jp-budoux">インストールは不要です。ブラウザで開いてホーム画面に追加すると、通知も届くようになります。</p>
+          </li>
+          <li>
+            <h3>Instagramの仕様変更に追従します</h3>
+            <p class="jp-budoux">ハッシュタグの上限など、変わり続ける仕様は運営側で更新します。お店側での対応は必要ありません。</p>
+          </li>
+          <li>
+            <h3>投稿に失敗しても、やり直します</h3>
+            <p class="jp-budoux">通信などの理由で投稿できなかったときは自動で再試行し、結果を通知でお知らせします。</p>
+          </li>
+          <li>
+            <h3>複数の店舗を分けて運用できます</h3>
+            <p class="jp-budoux">店舗ごとにデータを分けて管理します。系列店でも投稿が混ざりません。</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 09 Admin -->
+    <section class="admin section-block" aria-labelledby="admin-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Behind</p>
+          <h2 id="admin-title"><span class="no-break">お店が触るのは</span><wbr /><span class="no-break">アプリだけ、</span><wbr /><span class="no-break">その裏側にある設定</span></h2>
+          <p class="section-lead jp-budoux">日々の操作はアプリだけで済みます。投稿がブレずに続くのは、裏側で次の8つを整えているからです。設定はご相談のうえこちらで組み立てます。</p>
+        </div>
+        <ul class="admin-grid">
+          <li>
+            <h3>概要</h3>
+            <p class="jp-budoux">承認待ち・投稿予定・投稿済みの件数と、最近の投稿をひと目で確認できます。</p>
+          </li>
+          <li>
+            <h3>投稿管理</h3>
+            <p class="jp-budoux">全投稿の一覧・編集・承認・却下ができます。投稿後のInstagramのURLも確認できます。</p>
+          </li>
+          <li>
+            <h3>カレンダー</h3>
+            <p class="jp-budoux">予約投稿を月表示で見られます。ドラッグで日付を移し、ワンタップで取り消せます。</p>
+          </li>
+          <li>
+            <h3>メニュー</h3>
+            <p class="jp-budoux">正式なメニュー名と価格を登録します。AIが料理名を推測して間違えるのを防ぐ土台です。</p>
+          </li>
+          <li>
+            <h3>作成ルール</h3>
+            <p class="jp-budoux">キャプション・タイトル・ハッシュタグの文章方針を決めておきます。担当が変わっても書き方がぶれません。</p>
+          </li>
+          <li>
+            <h3>装飾テンプレート</h3>
+            <p class="jp-budoux">画像に載せる文字・バッジ・ロゴのレイアウトを管理します。見た目をブランドで揃えられます。</p>
+          </li>
+          <li>
+            <h3>投稿ルール</h3>
+            <p class="jp-budoux">頻度・時間帯・画像加工の方針・ハッシュタグの方針を決めます。飲食店の運用の勘どころをルールの形にしています。</p>
+          </li>
+          <li>
+            <h3>設定</h3>
+            <p class="jp-budoux">画像加工プラン、価格表示、店舗プロフィール（テイスト・売り・エリア・固定タグ・NG）を管理します。</p>
+          </li>
+        </ul>
+        <p class="fine-print">メニュー名の誤りは、お店の信用に直結します。だから推測させずに、登録した名前と照合しています。</p>
+      </div>
+    </section>
+
+    <!-- 10 Fit -->
+    <section class="fit section-block" aria-labelledby="fit-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Fit</p>
+          <h2 id="fit-title">こんなお店に向いています</h2>
+        </div>
+        <ul class="duo-list">
+          <li>
+            <h3>投稿が続かないカフェ・居酒屋</h3>
+            <p class="jp-budoux">始めたものの、月に数回で止まってしまっているお店。</p>
+          </li>
+          <li>
+            <h3>何を書くか毎回迷う飲食店</h3>
+            <p class="jp-budoux">写真はあるのに、文章のところで止まってしまうお店。</p>
+          </li>
+          <li>
+            <h3>外注は割高だと感じているお店</h3>
+            <p class="jp-budoux">毎月の費用に見合うかどうか、判断しかねているお店。</p>
+          </li>
+          <li>
+            <h3>運用を属人化させたくない店舗</h3>
+            <p class="jp-budoux">特定の人に投稿が紐づいている状態を、そろそろ変えたいお店。</p>
+          </li>
+        </ul>
+        <div class="need-block">
+          <h3>ご用意いただくもの</h3>
+          <p class="jp-budoux">Instagramのビジネスアカウントと、連携するFacebookページだけです。接続の手順はお申し込み後にご案内します。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 Price -->
+    <section id="price" class="price section-block" aria-labelledby="price-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Price</p>
+          <h2 id="price-title">料金</h2>
+          <p class="section-lead jp-budoux">初期費用はかかりません。1店舗あたりの月額だけです。</p>
+        </div>
+        <div class="price-plan">
+          <p class="price-plan-name">1店舗あたり</p>
+          <div class="price-figures">
+            <div class="price-figure price-figure-zero">
+              <p class="price-figure-label">初期費用</p>
+              <p class="price-figure-value"><span class="price-num">0</span><span class="price-unit">円</span></p>
+            </div>
+            <div class="price-figure">
+              <p class="price-figure-label">月額</p>
+              <p class="price-figure-value"><span class="price-num">30,000</span><span class="price-unit">円<small>（税別）</small></span></p>
+            </div>
+          </div>
+          <ul class="price-includes">
+            <li>店舗アプリ（写真の送信・投稿案の承認・予定と履歴の確認・設定）</li>
+            <li>AIによる画像の加工と、文章・ハッシュタグの作成</li>
+            <li>承認後の予約投稿と自動投稿（失敗時の自動再試行と通知を含みます）</li>
+            <li>メニュー・作成ルール・装飾テンプレート・投稿ルールの設定</li>
+            <li>Instagramの仕様変更への追従</li>
+          </ul>
+        </div>
+        <p class="fine-print">複数店舗でのご利用は個別にお見積もりします。Instagramのビジネスアカウント（と連携するFacebookページ）はお客様でご用意ください。契約期間や解約の条件は、個別のご契約でお取り決めします。</p>
+      </div>
+    </section>
+
+    <!-- 12 Status -->
+    <section class="status section-block" aria-labelledby="status-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Status</p>
+          <h2 id="status-title"><span class="no-break">いまできることと、</span><wbr /><span class="no-break">これからのこと</span></h2>
+          <p class="section-lead jp-budoux">2026年8月時点の状況です。実際のお店で運用しながら開発を進めています。</p>
+        </div>
+        <div class="status-cols">
+          <div class="status-col status-col-now">
+            <h3>いま使えます</h3>
+            <ul>
+              <li>店舗アプリ（ログイン・投稿・承認・予定と履歴・設定）</li>
+              <li>フィード・カルーセル・リールの投稿</li>
+              <li>店舗プロフィールを反映した文章とハッシュタグの作成</li>
+              <li>料理に寄せたトリミングと控えめな補正</li>
+              <li>承認画面での文章の修正・作り直し・写真の文字の調整</li>
+              <li>メニュー名と価格の登録、および自動照合</li>
+              <li>予約投稿の自動実行、日時の変更、取り消し</li>
+              <li>投稿に失敗したときの自動再試行と通知</li>
+              <li>複数店舗のデータ分離</li>
+            </ul>
+          </div>
+          <div class="status-col status-col-next">
+            <h3>これから追加していきます</h3>
+            <ul>
+              <li><span class="status-tag">開発中</span>Instagramとの直接連携（お客様側だけで接続を完結できるようにするもの。Metaの審査を伴うため時期はお約束できません）</li>
+              <li><span class="status-tag">開発中</span>権限管理の強化</li>
+              <li><span class="status-tag">開発中</span>アカウントの診断と投稿の提案</li>
+              <li><span class="status-tag">開発中</span>反応の分析とレポート</li>
+              <li><span class="status-tag">開発中</span>装飾テンプレートの追加</li>
+              <li><span class="status-tag">開発中</span>写真に写った人物への自動的な配慮</li>
+            </ul>
+          </div>
+        </div>
+        <p class="fine-print">「これから追加していきます」に挙げた項目は、まだお使いいただけません。月額に含まれるのは、いま使える機能です。公開できる導入事例はまだありません。</p>
+      </div>
+    </section>
+
+    <!-- 13 FAQ -->
+    <section id="faq" class="faq section-block" aria-labelledby="faq-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">FAQ</p>
+          <h2 id="faq-title">よくあるご質問</h2>
+        </div>
+        <div class="faq-list">
+          {faqs.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <p class="faq-a jp-budoux">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 CTA -->
+    <section class="cta-band" aria-labelledby="cta-title">
+      <img src={bandCta} alt="" loading="lazy" decoding="async" />
+      <h2 id="cta-title"><span class="no-break">まず、</span><wbr /><span class="no-break">お店の状況を</span><wbr /><span class="no-break">聞かせてください</span></h2>
+      <p class="jp-budoux">いまの投稿の頻度と、どこで止まっているかを伺えれば、どこまで任せられるかをお伝えできます。画面を実際にご覧いただくこともできます。</p>
+      <a class="primary-cta" href="#contact-form" data-cta-source="band-primary">無料相談する<span aria-hidden="true">→</span></a>
+    </section>
+
+    <!-- 15 Form -->
+    <section id="contact-form" class="contact-form-section section-block" aria-labelledby="contact-form-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Form</p>
+          <h2 id="contact-form-title">無料相談フォーム</h2>
+          <p class="contact-form-lead jp-budoux">ご記入いただいた内容をもとに、1営業日以内に担当よりご連絡いたします。「うちの店でも使えるか知りたい」だけのご相談でも構いません。しつこい営業はいたしません。</p>
+        </div>
+
+        <form id="lead-form" class="lead-form" novalidate>
+          <div class="lead-form-row lead-form-row-double">
+            <label class="form-field">
+              <span class="form-label">店舗名・会社名<em aria-hidden="true">*</em></span>
+              <input type="text" name="company" required autocomplete="organization" placeholder="カフェサンプル" />
+            </label>
+            <label class="form-field">
+              <span class="form-label">お名前<em aria-hidden="true">*</em></span>
+              <input type="text" name="name" required autocomplete="name" placeholder="山田 太郎" />
+            </label>
+          </div>
+
+          <div class="lead-form-row lead-form-row-double">
+            <label class="form-field">
+              <span class="form-label">メールアドレス<em aria-hidden="true">*</em></span>
+              <input type="email" name="email" required autocomplete="email" placeholder="taro@example.com" />
+            </label>
+            <label class="form-field">
+              <span class="form-label">電話番号<span class="form-optional">（任意）</span></span>
+              <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="0312345678（任意）" />
+            </label>
+          </div>
+
+          <div class="lead-form-row">
+            <label class="form-field">
+              <span class="form-label">ご相談内容（任意）</span>
+              <textarea name="challenges" rows="4" placeholder="例：カフェを1店やっています。投稿が月に2〜3回で止まっているので、どこまで任せられるか相談したいです。"></textarea>
+            </label>
+          </div>
+
+          <div class="lead-form-row form-field-checkbox form-field-consent">
+            <label>
+              <input type="checkbox" name="consent" required value="yes" />
+              <span>
+                <a href="/privacy-policy/" target="_blank" rel="noopener">個人情報の取り扱い</a>に同意の上、送信します<em aria-hidden="true">*</em>
+              </span>
+            </label>
+          </div>
+
+          <div aria-hidden="true" class="form-honeypot">
+            <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+          </div>
+
+          <div class="lead-form-actions">
+            <button type="submit" class="primary-cta lead-form-submit">送信する<span aria-hidden="true">→</span></button>
+            <p class="lead-form-note">送信後、1営業日以内に担当よりご連絡いたします。</p>
+          </div>
+
+          <p id="form-feedback" class="form-feedback" role="status" aria-live="polite"></p>
+        </form>
+
+        <p class="trademark-note">Instagram、Facebook は Meta Platforms, Inc. の商標です。本サービスは Meta Platforms, Inc. とは関係ありません。</p>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+
+  <script is:inline>
+    (function () {
+      const FORM_ENDPOINT = "https://recruit-hp-form-api.vercel.app/api/contact";
+
+      const form = document.getElementById("lead-form");
+      if (!form) return;
+
+      const feedback = document.getElementById("form-feedback");
+      const submitBtn = form.querySelector(".lead-form-submit");
+
+      // API側の獲得経路ホワイトリストに合わせる（"LP無料相談" は登録済みの値なので変更しない）
+      function resolveSource() {
+        return "LP無料相談";
+      }
+
+      function collectUtm() {
+        try {
+          const url = new URL(window.location.href);
+          return {
+            utmSource: url.searchParams.get("utm_source") || "",
+            utmCampaign: url.searchParams.get("utm_campaign") || "insta-auto-lp",
+          };
+        } catch (_) {
+          return { utmSource: "", utmCampaign: "insta-auto-lp" };
+        }
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "送信中...";
+        feedback.className = "form-feedback";
+        feedback.textContent = "";
+
+        const data = new FormData(form);
+        const utm = collectUtm();
+        const eventId =
+          (window.crypto && crypto.randomUUID && crypto.randomUUID()) ||
+          String(Date.now()) + Math.random().toString(16).slice(2);
+        const payload = {
+          source: resolveSource(),
+          company: data.get("company"),
+          name: data.get("name"),
+          email: data.get("email"),
+          phone: data.get("phone"),
+          challenges: data.get("challenges"),
+          consent: data.get("consent") === "yes",
+          website: data.get("website") || "",
+          utmSource: utm.utmSource,
+          utmCampaign: utm.utmCampaign,
+          eventId: eventId,
+          pageUrl: window.location.href,
+        };
+
+        try {
+          const res = await fetch(FORM_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const body = await res.json().catch(() => ({}));
+
+          if (!res.ok) {
+            throw new Error(body.error || "送信に失敗しました");
+          }
+
+          feedback.classList.add("is-success");
+          feedback.textContent =
+            body.message || "お問い合わせを受け付けました。1営業日以内にご連絡いたします。";
+          form.reset();
+          submitBtn.textContent = "送信完了";
+
+          if (typeof window.gtag === "function") {
+            window.gtag("event", "generate_lead", {
+              event_category: "form",
+              event_label: payload.source,
+            });
+          }
+        } catch (err) {
+          feedback.classList.add("is-error");
+          feedback.textContent =
+            err.message ||
+            "送信に失敗しました。お手数ですが info@sai-mon.co.jp まで直接ご連絡ください。";
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '送信する <span aria-hidden="true">→</span>';
+        }
+      });
+
+      // ===== 計測: GA4ファネルイベント（gtag は BaseLayout 側で読み込み済み） =====
+      function track(name, params) {
+        try { if (typeof window.gtag === "function") window.gtag("event", name, params || {}); } catch (_) {}
+      }
+
+      var formSection = document.getElementById("contact-form");
+
+      // フォーム到達（form_view・1回のみ）
+      var formViewed = false;
+      if (formSection && "IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting && !formViewed) {
+              formViewed = true;
+              track("lp_form_view", { event_category: "insta_auto_funnel" });
+            }
+          });
+        }, { threshold: 0.01 });
+        io.observe(formSection);
+      }
+
+      // CTAクリック（data-cta-source 別）
+      document.querySelectorAll("[data-cta-source]").forEach(function (el) {
+        el.addEventListener("click", function () {
+          track("lp_cta_click", { event_category: "insta_auto_funnel", event_label: el.getAttribute("data-cta-source") });
+        });
+      });
+
+      // フォーム入力開始（最初のフォーカス・1回のみ）
+      var formStarted = false;
+      form.addEventListener("focusin", function () {
+        if (formStarted) return;
+        formStarted = true;
+        track("lp_form_start", { event_category: "insta_auto_funnel" });
+      });
+
+      // スクロール深度（25/50/75/100% を1回ずつ）
+      var depths = [25, 50, 75, 100];
+      var fired = {};
+      function onScroll() {
+        var doc = document.documentElement;
+        var scrolled = (window.scrollY + window.innerHeight) / doc.scrollHeight * 100;
+        depths.forEach(function (d) {
+          if (!fired[d] && scrolled >= d) {
+            fired[d] = true;
+            track("lp_scroll_depth", { event_category: "insta_auto_funnel", event_label: d + "%", value: d });
+          }
+        });
+        if (fired[100]) window.removeEventListener("scroll", onScroll);
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+    })();
+  </script>
+
+  <script>
+    // BudouX: 日本語の文節を自動判定して折り返す（Safari含む全ブラウザで語中改行を防ぐ）
+    import { loadDefaultJapaneseParser } from "budoux";
+    const parser = loadDefaultJapaneseParser();
+    const sel = [
+      ".insta-lp-scope .hero-lead",
+      ".insta-lp-scope .hero-note",
+      ".insta-lp-scope .section-lead",
+      ".insta-lp-scope .rule-list p",
+      ".insta-lp-scope .problem-close",
+      ".insta-lp-scope .compare-close",
+      ".insta-lp-scope .owner-note",
+      ".insta-lp-scope .step-body p",
+      ".insta-lp-scope .step-figure figcaption",
+      ".insta-lp-scope .format-item p",
+      ".insta-lp-scope .duo-list p",
+      ".insta-lp-scope .sample-caption",
+      ".insta-lp-scope .admin-grid p",
+      ".insta-lp-scope .need-block p",
+      ".insta-lp-scope .status-col li",
+      ".insta-lp-scope .price-includes li",
+      ".insta-lp-scope .photo-compare figcaption",
+      ".insta-lp-scope .faq-a",
+      ".insta-lp-scope .fine-print",
+      ".insta-lp-scope .cta-band p",
+      ".insta-lp-scope .contact-form-lead",
+    ].join(",");
+    document.querySelectorAll(sel).forEach((el) => {
+      try {
+        parser.applyToElement(el);
+      } catch (e) {}
+    });
+  </script>
+</BaseLayout>
