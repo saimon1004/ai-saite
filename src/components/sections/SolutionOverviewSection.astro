@@ -49,6 +49,12 @@ const delegateSolutions: Solution[] = [
     badge: { label: "NEW", tone: "new" },
   },
   {
+    title: "顔の見えるFAQ",
+    description: "よくある質問に、担当者が動画で答えるFAQチャットボット。タグを貼るだけで設置でき、動画の制作はSAIMONが引き受けます。",
+    image: "video-faq/assets/card-video-faq.jpg",
+    href: "/video-faq/",
+  },
+  {
     title: "おまかせグラム",
     description: "飲食店のInstagram運用を、写真を送るのと承認するのだけに。AIが加工と文章を用意し、承認すると決めた時間に投稿されます。",
     image: "insta-auto/assets/feed-salad.jpg",
@@ -129,7 +135,7 @@ const badgeStyles: Record<"new" | "popular", string> = {
         <h3 class="text-lg sm:text-xl font-heading font-black text-navy">プロの"つくる力"を月額で</h3>
       </div>
       <p class="text-sm text-text-secondary mb-6">育てる時間がない領域は、SAIMONのチームが制作と伴走を引き受けます。</p>
-      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl">
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {delegateSolutions.map((item) => (
           <a href={item.href} class="group relative saimon-card overflow-hidden hover:border-navy/25 hover:shadow-card-hover transition-all duration-300">
             {item.badge && (
