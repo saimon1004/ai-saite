@@ -12,7 +12,7 @@ const phrase = (t: string) => jpParser.parse(t).join(ZWSP);
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260813-v12";
+const cssVersion = "20260813-v13";
 const cssHref = `${base}insta-auto/styles.css?v=${cssVersion}`;
 
 const img = (name: string) => `${base}insta-auto/assets/${name}`;
@@ -420,27 +420,41 @@ const jsonLd = {
         </div>
         <ul class="format-grid">
           <li class="format-item">
-            <div class="format-frame format-frame-square" aria-hidden="true">
-              <img src={feedSalad} alt="" loading="lazy" decoding="async" />
+            {/* 3形式とも同じスマホ枠に収める。中身の入り方の違いがそのまま形式の違いになる */}
+            <div class="format-device" aria-hidden="true">
+              <div class="format-screen">
+                <div class="fm fm-feed">
+                  <img src={feedSalad} alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
             </div>
             <p class="format-tag">Feed</p>
             <h3>写真1枚を送る</h3>
             <p class="jp-budoux">今日の一皿をそのまま出したいときに使います。送るのは写真1枚です。</p>
           </li>
           <li class="format-item">
-            {/* カルーセルは実際に複数枚が重なって見えるようにする（コースの流れの3枚） */}
-            <div class="format-frame format-frame-stack" aria-hidden="true">
-              <img class="stack-3" src={feedParfait} alt="" loading="lazy" decoding="async" />
-              <img class="stack-2" src={img("sample-pasta.jpg")} alt="" loading="lazy" decoding="async" />
-              <img class="stack-1" src={dishB} alt="" loading="lazy" decoding="async" />
+            {/* カルーセルは、次の1枚が右端に覗く＋下にドット、という実際の見え方で示す */}
+            <div class="format-device" aria-hidden="true">
+              <div class="format-screen">
+                <div class="fm fm-carousel">
+                  <img src={dishB} alt="" loading="lazy" decoding="async" />
+                  <img src={img("sample-pasta.jpg")} alt="" loading="lazy" decoding="async" />
+                </div>
+                <span class="fm-dots"><i class="is-on"></i><i></i><i></i></span>
+              </div>
             </div>
             <p class="format-tag">Carousel</p>
             <h3>写真を最大10枚まで並べる</h3>
             <p class="jp-budoux">コースの流れや複数のメニューを見せたいときに使います。動画のスライドも入れられます。</p>
           </li>
           <li class="format-item">
-            <div class="format-frame format-frame-reel" aria-hidden="true">
-              <img src={reelStill} alt="" loading="lazy" decoding="async" />
+            {/* リールは画面いっぱいに縦動画が入る */}
+            <div class="format-device" aria-hidden="true">
+              <div class="format-screen is-full">
+                <div class="fm fm-reel">
+                  <img src={reelStill} alt="" loading="lazy" decoding="async" />
+                </div>
+              </div>
             </div>
             <p class="format-tag">Reel</p>
             <h3>動画1本（60秒まで）を送る</h3>

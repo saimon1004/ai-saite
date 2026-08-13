@@ -999,60 +999,85 @@
    収まる高さに取って下端をそろえる。ここが足りないと図版が見出しへはみ出す。 */
 .insta-lp-scope .format-item {
   display: grid;
-  grid-template-rows: 318px auto auto 1fr;
+  grid-template-rows: 356px auto auto 1fr;
   gap: 0;
 }
-.insta-lp-scope .format-frame {
-  position: relative;
+/* 3形式とも同じスマホ枠（承認セクションの .phone と同じ寸法）に収める。
+   幅がバラバラの図版を左揃えで置くと、右側に最大168pxの空きが出て左に寄って見えるため。 */
+.insta-lp-scope .format-device {
+  width: 186px;
+  aspect-ratio: 320 / 569;
   align-self: end;
-  margin: 0 0 22px;
-  background: var(--paper-deep);
+  margin: 0 auto 22px;
+  border-radius: 18px;
+  padding: 6px;
+  background: #17150f;
+  box-shadow: 0 14px 30px rgba(32, 30, 26, 0.16);
 }
-.insta-lp-scope .format-frame img {
+.insta-lp-scope .format-screen {
+  position: relative;
+  height: 100%;
+  border-radius: 12px;
+  background: var(--white);
+  overflow: hidden;
+  display: grid;
+  align-content: center;
+}
+.insta-lp-scope .format-screen.is-full {
+  align-content: stretch;
+}
+.insta-lp-scope .fm img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  position: relative;
-  z-index: 2;
+  background: var(--paper-deep);
 }
-.insta-lp-scope .format-frame-square {
-  width: 74%;
+/* フィード: 正方形1枚が画面の中ほどに入る */
+.insta-lp-scope .fm-feed {
+  width: 100%;
   aspect-ratio: 1;
 }
-.insta-lp-scope .format-frame-reel {
-  width: 50%;
-  aspect-ratio: 9 / 16;
-}
-/* カルーセルは実際の写真を3枚ずらして重ねる。
-   地色のリングを外側に出して、隣の1枚と切れて見えるようにする。 */
-.insta-lp-scope .format-frame-stack {
-  width: 68%;
+/* カルーセル: 次の1枚が右端に覗く */
+.insta-lp-scope .fm-carousel {
+  display: flex;
+  gap: 5px;
+  width: 100%;
   aspect-ratio: 1;
 }
-.insta-lp-scope .format-frame-stack img {
+.insta-lp-scope .fm-carousel img {
+  width: 90%;
+  flex: none;
+}
+.insta-lp-scope .fm-dots {
   position: absolute;
-  inset: 0;
-  box-shadow: 0 0 0 3px var(--paper);
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
 }
-.insta-lp-scope .format-frame-stack .stack-3 {
-  transform: translate(20px, -10px);
-  z-index: 0;
+.insta-lp-scope .fm-dots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(32, 30, 26, 0.22);
 }
-.insta-lp-scope .format-frame-stack .stack-2 {
-  transform: translate(10px, -5px);
-  z-index: 1;
+.insta-lp-scope .fm-dots i.is-on {
+  background: var(--vermilion);
 }
-.insta-lp-scope .format-frame-stack .stack-1 {
-  z-index: 2;
+/* リール: 縦動画が画面いっぱい */
+.insta-lp-scope .fm-reel {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
-/* リールに再生の記号だけ重ねる */
-.insta-lp-scope .format-frame-reel::after {
+.insta-lp-scope .fm-reel::after {
   content: "";
   position: absolute;
   left: 50%;
   top: 50%;
-  z-index: 3;
   width: 0;
   height: 0;
   border-left: 16px solid rgba(255, 255, 255, 0.95);
@@ -1091,14 +1116,8 @@
   .insta-lp-scope .format-item {
     grid-template-rows: auto auto auto 1fr;
   }
-  .insta-lp-scope .format-frame-square {
-    width: 58%;
-  }
-  .insta-lp-scope .format-frame-stack {
-    width: 54%;
-  }
-  .insta-lp-scope .format-frame-reel {
-    width: 36%;
+  .insta-lp-scope .format-device {
+    margin-bottom: 18px;
   }
 }
 
