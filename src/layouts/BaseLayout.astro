@@ -80,8 +80,11 @@ const resolvedCanonical = canonicalUrl || Astro.url.href;
           src={`https://www.googletagmanager.com/gtag/js?id=${import.meta.env.PUBLIC_GA4_ID}`}
         />
         <script is:inline define:vars={{ gaId: import.meta.env.PUBLIC_GA4_ID }}>
+          // define:vars はこのスクリプトを IIFE で包むため、function 宣言だと gtag が
+          // 関数スコープに閉じ、他のスクリプトから window.gtag を呼べない。
+          // （PV は取れるが generate_lead などのカスタムイベントが全部落ちる）
           window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
+          window.gtag = function () { window.dataLayer.push(arguments); };
           gtag('js', new Date());
           gtag('config', gaId);
         </script>
