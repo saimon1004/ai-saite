@@ -179,6 +179,15 @@ const base = import.meta.env.BASE_URL;
   const modalMessage = document.getElementById("form-modal-message");
   const modalClose = document.getElementById("form-modal-close");
 
+  // このフォームは preventDefault + fetch でページ遷移しないため、GA4 拡張計測の
+  // form_submit が発火しない。送信結果を自前のイベントとして送る。
+  type Gtag = (command: string, name: string, params?: Record<string, unknown>) => void;
+
+  function trackFormEvent(name: string, params: Record<string, unknown> = {}) {
+    const gtag = (window as unknown as { gtag?: Gtag }).gtag;
+    gtag?.("event", name, { form_name: "contact", ...params });
+  }
+
   function showModal(success: boolean) {
     if (!modal || !modalContent || !modalIcon || !modalTitle || !modalMessage) return;
 
@@ -229,12 +238,15 @@ const base = import.meta.env.BASE_URL;
         });
 
         if (response.ok) {
+          trackFormEvent("contact_submit");
           showModal(true);
           contactForm.reset();
         } else {
+          trackFormEvent("contact_submit_error", { reason: `http_${response.status}` });
           showModal(false);
         }
       } catch {
+        trackFormEvent("contact_submit_error", { reason: "network" });
         showModal(false);
       } finally {
         if (submitBtn) {
