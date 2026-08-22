@@ -1,0 +1,145 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/common/Header.astro";
+import Footer from "../../components/common/Footer.astro";
+
+const rows = [
+  { th: "販売事業者", td: "株式会社SAIMON" },
+  { th: "運営統括責任者", td: "齋本 竜也" },
+  { th: "所在地", td: "大阪府大阪市中央区龍造寺町4-3" },
+  {
+    th: "電話番号",
+    td: "お客様からのご請求があれば、遅滞なく開示いたします。<br /><span class=\"sub\">お問い合わせは、メール（info@sai-mon.co.jp）にて承っております。</span>",
+  },
+  { th: "メールアドレス", td: "info@sai-mon.co.jp" },
+  { th: "サービス名", td: "おまかせグラム（飲食店向けInstagram運用サービス）" },
+  {
+    th: "販売価格",
+    td: "月額 30,000円（税別・1店舗あたり）<br /><span class=\"sub\">初期費用は0円です。複数店舗でのご利用は個別にお見積もりします。</span>",
+  },
+  {
+    th: "商品代金以外の必要料金",
+    td: "銀行振込をご利用の場合の振込手数料<br /><span class=\"sub\">インターネット接続料金、通信料金はお客様のご負担となります。</span>",
+  },
+  {
+    th: "支払方法",
+    td: "銀行振込（前払い）／クレジットカード（毎月自動課金）",
+  },
+  {
+    th: "支払時期",
+    td: "銀行振込：前月に請求書を発行し、当社指定の期日までにお支払いいただきます。<br />クレジットカード：毎月、決済事業者を通じて自動で決済されます。",
+  },
+  {
+    th: "サービスの提供時期",
+    td: "お申し込みおよびお支払い方法の登録の完了後、Instagramビジネスアカウントとの接続が済み次第、順次提供を開始します。<br /><span class=\"sub\">お客様側でのアカウントのご準備状況により、開始までの期間は前後します。</span>",
+  },
+  {
+    th: "返品・キャンセル",
+    td: "サービスの性質上、提供開始後のご返金は承っておりません。<br />解約をご希望の場合は、解約を希望される月の前月末日までにメール（info@sai-mon.co.jp）にてご連絡ください。<br /><span class=\"sub\">最低利用期間を定めてお申し込みいただいた場合は、申込書の記載に従います。</span>",
+  },
+  {
+    th: "動作環境",
+    td: "インターネットに接続されたスマートフォンまたはパソコンの最新のブラウザ<br /><span class=\"sub\">別途、Instagramのビジネスアカウントと、これに連携するFacebookページが必要です。</span>",
+  },
+];
+---
+
+<BaseLayout
+  title="おまかせグラム 特定商取引法に基づく表記"
+  description="飲食店向けInstagram運用サービス「おまかせグラム」の特定商取引法に基づく表記です。"
+>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex" />
+  </Fragment>
+
+  <Header />
+
+  <main class="ig-tokusho">
+    <h1>特定商取引法に基づく表記</h1>
+    <p class="lead">飲食店向けInstagram運用サービス「おまかせグラム」に関する表記です。</p>
+
+    <table>
+      <tbody>
+        {rows.map((r) => (
+          <tr>
+            <th scope="row">{r.th}</th>
+            <td set:html={r.td} />
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <p class="note">
+      本サービスの詳細な条件は<a href="/insta-auto/terms/">おまかせグラム 利用規約</a>に定めるところによります。
+    </p>
+    <p class="note">Instagram、Facebook は Meta Platforms, Inc. の商標です。本サービスは Meta Platforms, Inc. とは関係ありません。</p>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style is:global>
+  .ig-tokusho {
+    max-width: 820px;
+    margin-inline: auto;
+    padding: 64px 24px 96px;
+    color: #1b2430;
+    font-size: 15px;
+    line-height: 1.9;
+  }
+  .ig-tokusho h1 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #122a46;
+    margin-bottom: 10px;
+    text-wrap: balance;
+  }
+  .ig-tokusho .lead {
+    color: #5d6672;
+    margin-bottom: 28px;
+  }
+  .ig-tokusho p,
+  .ig-tokusho td,
+  .ig-tokusho th {
+    text-wrap: pretty;
+    word-break: auto-phrase;
+  }
+  .ig-tokusho table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 1px solid #dcd6ca;
+  }
+  .ig-tokusho th,
+  .ig-tokusho td {
+    text-align: left;
+    vertical-align: top;
+    padding: 16px 4px;
+    border-bottom: 1px solid #dcd6ca;
+    font-size: 14.5px;
+  }
+  .ig-tokusho th {
+    width: 32%;
+    color: #122a46;
+    font-weight: 700;
+    padding-right: 20px;
+  }
+  .ig-tokusho .sub {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 13px;
+    color: #5d6672;
+  }
+  .ig-tokusho .note {
+    margin-top: 24px;
+    font-size: 13px;
+    color: #5d6672;
+  }
+  .ig-tokusho a { color: #122a46; text-decoration: underline; }
+  @media (max-width: 600px) {
+    .ig-tokusho { padding: 48px 20px 72px; }
+    .ig-tokusho th, .ig-tokusho td { display: block; width: 100%; }
+    .ig-tokusho th { border-bottom: none; padding-bottom: 2px; }
+    .ig-tokusho td { padding-top: 2px; }
+    .ig-tokusho p, .ig-tokusho td, .ig-tokusho th { word-break: normal; }
+  }
+</style>

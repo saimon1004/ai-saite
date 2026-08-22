@@ -1,0 +1,240 @@
+/* ============================================================
+   おまかせグラム 申込フォーム
+   scope: .apply-scope
+   LP（styles.css）と同じ誌面トーンを使うが、入力しやすさを優先して
+   文字は一段大きく、罫線と余白は控えめにしている。
+   ============================================================ */
+.apply-scope {
+  --paper: #f8f7f4;
+  --ink: #201e1a;
+  --ink-65: rgba(32, 30, 26, 0.74);
+  --ink-45: rgba(32, 30, 26, 0.66);
+  --rule: #e2ddd2;
+  --vermilion: #a6432b;
+  --white: #fff;
+  --err: #b3261e;
+  --ok: #1f7a4d;
+  --mincho: "Shippori Mincho B1", "Hiragino Mincho ProN", serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-feature-settings: "palt";
+  line-height: 1.85;
+  padding: 56px 24px 88px;
+  overflow-x: clip;
+}
+.apply-scope h1,
+.apply-scope h2 { text-wrap: balance; word-break: auto-phrase; }
+.apply-scope p,
+.apply-scope li,
+.apply-scope span { text-wrap: pretty; word-break: auto-phrase; }
+.apply-scope .jp-budoux { word-break: keep-all; }
+
+.apply-inner { max-width: 720px; margin-inline: auto; }
+.apply-kicker {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 12.5px; font-weight: 700; letter-spacing: .06em;
+  color: var(--vermilion); margin-bottom: 12px;
+}
+.apply-kicker::before { content: ""; width: 22px; height: 1px; background: var(--vermilion); flex: none; }
+.apply-scope h1 {
+  font-family: var(--mincho);
+  font-size: 34px; font-weight: 700; line-height: 1.4;
+  margin: 0 0 14px;
+}
+.apply-lead { font-size: 15.5px; color: var(--ink-65); margin: 0 0 36px; }
+
+/* ---- セクション ---- */
+.fs { margin-bottom: 34px; }
+.apply-scope .fs h2 {
+  font-family: var(--mincho);
+  font-size: 19px; font-weight: 700;
+  margin: 0 0 14px; padding-bottom: 10px;
+  border-bottom: 2px solid var(--ink);
+}
+.fs h2 .req {
+  font-family: "Noto Sans JP", sans-serif;
+  font-style: normal; font-size: 11px; font-weight: 700;
+  color: var(--vermilion); margin-left: 8px; vertical-align: .15em;
+}
+.fnote { font-size: 13.5px; color: var(--ink-45); margin: 8px 0 0; }
+/* 適用条件（モニター価格など）。通常価格のときは出さない */
+.plan-badge {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 5px 12px;
+  background: var(--vermilion);
+  color: var(--white);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+/* 金額は申込リンクで決まるので、入力欄ではなく表示として置く */
+.terms {
+  margin: 0 0 6px;
+  border-top: 1px solid var(--rule);
+}
+.terms > div {
+  display: grid;
+  grid-template-columns: minmax(0, 12em) minmax(0, 1fr);
+  gap: 4px 16px;
+  align-items: baseline;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.terms dt { font-size: 13.5px; color: var(--ink-45); }
+.terms dd {
+  margin: 0;
+  font-family: var(--mincho);
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--vermilion);
+  line-height: 1.3;
+}
+/* 自動計算・固定表示の欄は触れないことが見て分かるようにする */
+.apply-scope input[readonly] {
+  background: #f1efea;
+  color: var(--ink-65);
+  cursor: default;
+}
+.apply-scope input[readonly]:focus { border-color: var(--rule); box-shadow: none; }
+
+/* ---- 入力欄 ---- */
+.f { display: grid; gap: 6px; margin-bottom: 14px; }
+.fl { font-size: 13.5px; font-weight: 700; }
+.fl em {
+  font-style: normal; font-size: 11px; font-weight: 700;
+  color: var(--vermilion); margin-left: 6px; vertical-align: .15em;
+}
+.fl .opt { font-weight: 400; font-size: 12.5px; color: var(--ink-45); margin-left: 4px; }
+.apply-scope input[type="text"],
+.apply-scope input[type="email"],
+.apply-scope input[type="tel"],
+.apply-scope input[type="date"],
+.apply-scope input[type="number"],
+.apply-scope select,
+.apply-scope textarea {
+  width: 100%;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 12px 14px;
+  font-size: 16px; /* iOSで拡大されないよう16px以上を保つ */
+  font-family: inherit;
+  background: var(--white);
+  color: var(--ink);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.apply-scope textarea { line-height: 1.8; resize: vertical; }
+.apply-scope input:focus,
+.apply-scope select:focus,
+.apply-scope textarea:focus {
+  outline: none;
+  border-color: var(--vermilion);
+  box-shadow: 0 0 0 3px rgba(166, 67, 43, .16);
+}
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+.yen, .at { display: flex; align-items: center; gap: 8px; }
+.yen span, .at span { font-size: 14px; color: var(--ink-45); flex: none; }
+.at span { order: -1; }
+
+/* ---- 店舗行 ---- */
+.shop {
+  display: grid;
+  grid-template-columns: 26px 1fr 1fr 32px;
+  gap: 0 12px;
+  align-items: end;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.shop:first-child { border-top: 1px solid var(--rule); }
+.shop-no {
+  font-family: var(--mincho); font-size: 15px; font-weight: 700;
+  color: var(--ink-45); padding-bottom: 12px;
+}
+.shop .f { margin-bottom: 0; }
+.shop-del {
+  border: 1px solid var(--rule); background: var(--white);
+  border-radius: 2px; width: 32px; height: 42px;
+  font-size: 16px; color: var(--ink-45); cursor: pointer;
+  transition: border-color .15s ease, color .15s ease;
+}
+.shop-del:hover { border-color: var(--vermilion); color: var(--vermilion); }
+.add-shop {
+  margin-top: 14px;
+  border: 1px solid var(--ink); background: transparent;
+  border-radius: 2px; padding: 10px 20px;
+  font-size: 14px; font-weight: 700; font-family: inherit;
+  color: var(--ink); cursor: pointer;
+  transition: background .15s ease;
+}
+.add-shop:hover { background: rgba(32, 30, 26, .05); }
+
+/* ---- 支払方法 ---- */
+.pays { display: grid; gap: 10px; margin-bottom: 16px; }
+.pay {
+  display: grid; grid-template-columns: 22px 1fr; gap: 10px;
+  align-items: start;
+  border: 1px solid var(--rule); border-radius: 2px;
+  padding: 14px 16px; background: var(--white); cursor: pointer;
+  transition: border-color .15s ease;
+}
+.pay:has(input:checked) { border-color: var(--vermilion); box-shadow: inset 2px 0 0 var(--vermilion); }
+.pay input { margin-top: 4px; }
+.pay span { font-size: 13.5px; color: var(--ink-65); }
+.pay b { display: block; font-size: 15px; color: var(--ink); margin-bottom: 3px; }
+
+/* ---- 同意・送信 ---- */
+.consent {
+  border-top: 2px solid var(--ink);
+  padding-top: 18px; margin-bottom: 28px;
+}
+.consent > label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.consent input { margin-top: 6px; flex: none; }
+.consent span { font-size: 14.5px; }
+.consent em {
+  font-style: normal; font-size: 11px; font-weight: 700;
+  color: var(--vermilion); margin-left: 6px; vertical-align: .15em;
+}
+.consent a { color: var(--ink); text-decoration: underline; }
+.honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.actions { text-align: center; }
+.submit {
+  width: 100%; max-width: 360px;
+  border: none; border-radius: 2px;
+  background: var(--vermilion); color: var(--white);
+  padding: 17px 30px;
+  font-size: 16px; font-weight: 700; font-family: inherit;
+  cursor: pointer; transition: background .2s ease;
+}
+.submit:hover { background: #8c351f; }
+.submit:disabled { opacity: .6; cursor: default; }
+.actions .fnote { margin-top: 14px; }
+.actions a { color: var(--ink); text-decoration: underline; }
+.feedback {
+  margin: 20px 0 0; font-size: 15px; font-weight: 700;
+  text-align: center; min-height: 1em;
+}
+.feedback.is-success { color: var(--ok); font-size: 16px; }
+.feedback.is-error { color: var(--err); }
+
+@media (max-width: 640px) {
+  .apply-scope { padding: 40px 20px 72px; }
+  .apply-scope h1 { font-size: 26px; }
+  .apply-scope p, .apply-scope li, .apply-scope span { word-break: normal; }
+  .row2 { grid-template-columns: 1fr; }
+  /* 店舗行は横に4つ並べると潰れるので、1段目に番号・店舗名・削除、2段目にID。
+     DOM順（番号→店舗名→ID→削除）のままだと削除が次の行に落ちるので位置を明示する。 */
+  .shop {
+    grid-template-columns: 26px 1fr 32px;
+    gap: 0 10px;
+    align-items: start;
+  }
+  .shop-no { grid-column: 1; grid-row: 1; padding-top: 26px; padding-bottom: 0; }
+  .shop .f:first-of-type { grid-column: 2; grid-row: 1; }
+  .shop .f:last-of-type { grid-column: 2 / 4; grid-row: 2; margin-top: 10px; }
+  .shop-del { grid-column: 3; grid-row: 1; align-self: end; }
+}
+
+@media (max-width: 640px) {
+  .terms > div { grid-template-columns: 1fr; gap: 2px; padding: 10px 0; }
+  .terms dd { font-size: 19px; }
+}

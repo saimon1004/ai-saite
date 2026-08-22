@@ -1,0 +1,361 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/common/Header.astro";
+import Footer from "../../components/common/Footer.astro";
+
+const base = import.meta.env.BASE_URL;
+// CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
+const cssVersion = "20260821-v4";
+const cssHref = `${base}insta-auto/apply.css?v=${cssVersion}`;
+---
+
+<BaseLayout
+  title="おまかせグラム お申し込み"
+  description="飲食店向けInstagram運用サービス「おまかせグラム」のお申し込みフォームです。"
+  chatbot={false}
+>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex" />
+  </Fragment>
+  <link rel="preconnect" href="https://fonts.googleapis.com" slot="head" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin slot="head" />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700&display=swap"
+    slot="head"
+  />
+  <link rel="stylesheet" href={cssHref} slot="head" />
+
+  <Header />
+
+  <main class="apply-scope">
+    <div class="apply-inner">
+      <p class="apply-kicker">おまかせグラム</p>
+      <h1>お申し込み</h1>
+      <p class="apply-lead jp-budoux">下記をご記入のうえ送信してください。送信後、1営業日以内に担当よりご連絡します。ご不明な点があれば、空欄のままお送りいただいても構いません。</p>
+
+      <form id="apply-form" novalidate>
+        <section class="fs">
+          <h2>1. 申込者情報</h2>
+          <div class="row2">
+            <label class="f">
+              <span class="fl">会社名・屋号<em>必須</em></span>
+              <input type="text" name="company" required autocomplete="organization" placeholder="カフェサンプル" />
+            </label>
+            <label class="f">
+              <span class="fl">ご担当者名<em>必須</em></span>
+              <input type="text" name="name" required autocomplete="name" placeholder="山田 太郎" />
+            </label>
+          </div>
+          <div class="row2">
+            <label class="f">
+              <span class="fl">メールアドレス<em>必須</em></span>
+              <input type="email" name="email" required autocomplete="email" placeholder="taro@example.com" />
+            </label>
+            <label class="f">
+              <span class="fl">電話番号<span class="opt">（任意）</span></span>
+              <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="0312345678" />
+            </label>
+          </div>
+          <label class="f">
+            <span class="fl">住所<span class="opt">（任意）</span></span>
+            <input type="text" name="address" autocomplete="street-address" placeholder="大阪府大阪市…" />
+          </label>
+        </section>
+
+        <section class="fs">
+          <h2>2. 対象店舗</h2>
+          <p class="fnote jp-budoux">1店舗につき1行です。足りない場合は「店舗を追加」を押してください。Instagramのビジネスアカウントと、連携するFacebookページが必要です。未取得の場合は空欄のままで構いません。取得方法をご案内します。</p>
+          <div id="shops"></div>
+          <button type="button" class="add-shop" id="add-shop">＋ 店舗を追加</button>
+        </section>
+
+        <section class="fs">
+          <h2>3. 料金</h2>
+          {/* 単価・初期費用・期間は申込リンクのパラメータで決まる（営業が条件込みのURLを送る）。
+              店舗側が書き換えられないよう readonly にしてある。 */}
+          <p class="plan-badge" id="plan-badge" hidden></p>
+          <dl class="terms">
+            <div><dt>初期費用</dt><dd id="disp-init">0円</dd></div>
+            <div><dt>月額（1店舗あたり）</dt><dd id="disp-unit">30,000円</dd></div>
+          </dl>
+          <p class="fnote">表示は税別です。</p>
+          <div class="row2">
+            <label class="f">
+              <span class="fl">ご契約店舗数</span>
+              <input type="number" name="shopCount" min="1" step="1" inputmode="numeric" placeholder="1" />
+            </label>
+            <label class="f">
+              <span class="fl">月額合計（税別）<span class="opt">（自動計算）</span></span>
+              <div class="yen"><input type="number" name="monthlyTotal" readonly tabindex="-1" /><span>円</span></div>
+            </label>
+          </div>
+          <input type="hidden" name="unitPrice" />
+          <input type="hidden" name="initialFee" />
+          <input type="hidden" name="planLabel" />
+          <p class="fnote">店舗数を入力すると合計を自動で計算します。条件が違う場合は5の特記事項にご記入いただくか、担当者までご連絡ください。</p>
+        </section>
+
+        <section class="fs">
+          <h2>4. お支払い方法<em class="req">必須</em></h2>
+          <div class="pays">
+            <label class="pay">
+              <input type="radio" name="payMethod" value="銀行振込" required />
+              <span>
+                <b>銀行振込（前払い）</b>
+                前月に請求書をメールでお送りします。ご入金の確認後に当月分を提供します。振込手数料はご負担ください。
+              </span>
+            </label>
+            <label class="pay">
+              <input type="radio" name="payMethod" value="クレジットカード" />
+              <span>
+                <b>クレジットカード</b>
+                毎月自動で決済されます。お申し込み後、決済登録用のURLをメールでお送りします。
+              </span>
+            </label>
+          </div>
+          <label class="f">
+            <span class="fl">請求書送付先<span class="opt">（上記ご担当者と異なる場合のみ）</span></span>
+            <input type="text" name="invoiceTo" placeholder="経理部 佐藤様 / keiri@example.com" />
+          </label>
+        </section>
+
+        <section class="fs">
+          <h2>5. 契約条件</h2>
+          <div class="row2">
+            <label class="f">
+              <span class="fl">利用開始希望日<span class="opt">（任意）</span></span>
+              <input type="date" name="startDate" />
+            </label>
+            <label class="f">
+              <span class="fl">最低利用期間</span>
+              <select name="minTerm" id="min-term">
+                <option value="定めなし（1ヶ月単位で自動更新）">定めなし（1ヶ月単位で自動更新）</option>
+                <option value="3ヶ月">3ヶ月</option>
+                <option value="6ヶ月">6ヶ月</option>
+                <option value="12ヶ月">12ヶ月</option>
+              </select>
+              <input type="text" id="min-term-fixed" readonly tabindex="-1" hidden />
+            </label>
+          </div>
+          <label class="f">
+            <span class="fl">特記事項<span class="opt">（任意）</span></span>
+            <textarea name="notes" rows="3" placeholder="モニター価格、初回割引、複数店舗の割引など、営業担当とお話しした条件があればご記入ください。"></textarea>
+          </label>
+          <p class="fnote jp-budoux">解約は、解約を希望される月の前月末日までにメール（info@sai-mon.co.jp）にてご連絡ください。最低利用期間を定めた場合は、その期間中の解約はできません。</p>
+        </section>
+
+        <div class="consent">
+          <label>
+            <input type="checkbox" name="consent" required value="yes" />
+            <span><a href="/insta-auto/terms/" target="_blank" rel="noopener">おまかせグラム利用規約</a>および<a href="/privacy-policy/" target="_blank" rel="noopener">個人情報の取り扱い</a>の内容を確認し、同意のうえ申し込みます。<em>必須</em></span>
+          </label>
+          <p class="fnote">送信をもって申込みとなり、当社が受け付けた時点で利用規約に基づく契約が成立します。押印は不要です。契約の記録として、<b>送信日時・IPアドレス・同意いただいた規約の版</b>を保存します。</p>
+        </div>
+
+        <div aria-hidden="true" class="honeypot">
+          <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="submit">申し込む</button>
+          <p class="fnote">紙の申込書をご希望の場合は <a href="mailto:info@sai-mon.co.jp">info@sai-mon.co.jp</a> までご連絡ください。PDFをお送りします。</p>
+        </div>
+
+        <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </main>
+
+  <Footer />
+
+  <script is:inline>
+    (function () {
+      const ENDPOINT = "https://recruit-hp-form-api.vercel.app/api/apply";
+
+      const form = document.getElementById("apply-form");
+      if (!form) return;
+
+      // 営業が条件込みのURLを送る想定。
+      //   ?unit=20000&init=0&term=6&plan=monitor
+      // 指定がなければ通常価格。金額欄は readonly なので店舗側では変えられない。
+      const PLAN_LABELS = { normal: "通常価格", monitor: "モニター価格", custom: "個別見積" };
+      const TERM_LABELS = {
+        "0": "定めなし（1ヶ月単位で自動更新）",
+        "3": "3ヶ月", "6": "6ヶ月", "12": "12ヶ月",
+      };
+      const params = new URLSearchParams(window.location.search);
+      const yen = function (n) { return Number(n).toLocaleString("ja-JP") + "円"; };
+      const readInt = function (key, fallback) {
+        const v = parseInt(params.get(key), 10);
+        return Number.isFinite(v) && v >= 0 && v <= 10000000 ? v : fallback;
+      };
+
+      const UNIT_PRICE = readInt("unit", 30000);
+      const INITIAL_FEE = readInt("init", 0);
+      const PLAN_LABEL = PLAN_LABELS[params.get("plan")] || "通常価格";
+
+      document.getElementById("disp-unit").textContent = yen(UNIT_PRICE);
+      document.getElementById("disp-init").textContent = yen(INITIAL_FEE);
+      form.elements.unitPrice.value = UNIT_PRICE;
+      form.elements.initialFee.value = INITIAL_FEE;
+      form.elements.planLabel.value = PLAN_LABEL;
+
+      if (PLAN_LABEL !== "通常価格") {
+        const badge = document.getElementById("plan-badge");
+        badge.textContent = PLAN_LABEL + "が適用されています";
+        badge.hidden = false;
+      }
+
+      // 期間がリンクで指定されていれば、選ばせずに固定表示にする
+      const termParam = params.get("term");
+      if (termParam !== null && TERM_LABELS[termParam]) {
+        const sel = document.getElementById("min-term");
+        const fixed = document.getElementById("min-term-fixed");
+        sel.value = TERM_LABELS[termParam];
+        sel.hidden = true;
+        fixed.value = TERM_LABELS[termParam];
+        fixed.hidden = false;
+      }
+      const feedback = document.getElementById("feedback");
+      const submitBtn = form.querySelector(".submit");
+      const shopsBox = document.getElementById("shops");
+
+      // 店舗行は動的に増やす。1店舗＝1行なので、行そのものが契約単位になる。
+      let shopIndex = 0;
+      function addShop(focus) {
+        shopIndex += 1;
+        const row = document.createElement("div");
+        row.className = "shop";
+        row.innerHTML =
+          '<span class="shop-no">' + shopIndex + '</span>' +
+          '<label class="f"><span class="fl">店舗名</span>' +
+          '<input type="text" data-shop="name" placeholder="カフェサンプル 本町店" /></label>' +
+          '<label class="f"><span class="fl">Instagram ID</span>' +
+          '<div class="at"><span>@</span><input type="text" data-shop="instagram" placeholder="cafe_sample" /></div></label>' +
+          '<button type="button" class="shop-del" aria-label="この店舗を削除">×</button>';
+        shopsBox.appendChild(row);
+        row.querySelector(".shop-del").addEventListener("click", function () {
+          row.remove();
+          renumber();
+          syncCount();
+        });
+        row.querySelectorAll("input").forEach(function (i) {
+          i.addEventListener("input", syncCount);
+        });
+        if (focus) row.querySelector("input").focus();
+        syncCount();
+      }
+      function renumber() {
+        shopIndex = 0;
+        shopsBox.querySelectorAll(".shop").forEach(function (r) {
+          shopIndex += 1;
+          r.querySelector(".shop-no").textContent = shopIndex;
+        });
+      }
+      // 店舗名かIDが入っている行を数えて、店舗数と月額を自動で埋める
+      function syncCount() {
+        const filled = Array.prototype.filter.call(
+          shopsBox.querySelectorAll(".shop"),
+          function (r) {
+            return Array.prototype.some.call(r.querySelectorAll("input"), function (i) {
+              return i.value.trim() !== "";
+            });
+          }
+        ).length;
+        const countEl = form.elements.shopCount;
+        const totalEl = form.elements.monthlyTotal;
+        if (!countEl.dataset.touched) countEl.value = filled || "";
+        if (!totalEl.dataset.touched) totalEl.value = filled ? filled * UNIT_PRICE : "";
+      }
+      form.elements.shopCount.addEventListener("input", function () { this.dataset.touched = "1"; });
+      form.elements.monthlyTotal.addEventListener("input", function () { this.dataset.touched = "1"; });
+      document.getElementById("add-shop").addEventListener("click", function () { addShop(true); });
+      addShop(false);
+
+      form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+
+        const shops = Array.prototype.map.call(shopsBox.querySelectorAll(".shop"), function (r) {
+          return {
+            name: r.querySelector('[data-shop="name"]').value,
+            instagram: r.querySelector('[data-shop="instagram"]').value,
+          };
+        }).filter(function (s) { return s.name.trim() || s.instagram.trim(); });
+
+        if (shops.length === 0) {
+          feedback.className = "feedback is-error";
+          feedback.textContent = "対象店舗を1店舗以上ご記入ください。";
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "送信中...";
+        feedback.className = "feedback";
+        feedback.textContent = "";
+
+        const d = new FormData(form);
+        const payload = {
+          company: d.get("company"),
+          name: d.get("name"),
+          email: d.get("email"),
+          phone: d.get("phone"),
+          address: d.get("address"),
+          shops: shops,
+          shopCount: d.get("shopCount"),
+          monthlyTotal: d.get("monthlyTotal"),
+          payMethod: d.get("payMethod"),
+          invoiceTo: d.get("invoiceTo"),
+          startDate: d.get("startDate"),
+          minTerm: d.get("minTerm"),
+          notes: d.get("notes"),
+          unitPrice: d.get("unitPrice"),
+          initialFee: d.get("initialFee"),
+          planLabel: d.get("planLabel"),
+          consent: d.get("consent") === "yes",
+          website: d.get("website") || "",
+          pageUrl: window.location.href,
+        };
+
+        try {
+          const res = await fetch(ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const body = await res.json().catch(function () { return {}; });
+          if (!res.ok) throw new Error(body.error || "送信に失敗しました");
+
+          form.querySelectorAll("section, .consent, .actions").forEach(function (el) {
+            el.style.display = "none";
+          });
+          feedback.className = "feedback is-success";
+          feedback.textContent = body.message || "お申し込みを受け付けました。1営業日以内に担当よりご連絡いたします。";
+          window.scrollTo({ top: 0, behavior: "smooth" });
+
+          if (typeof window.gtag === "function") {
+            window.gtag("event", "generate_lead", {
+              event_category: "form",
+              event_label: "おまかせグラム申込",
+            });
+          }
+        } catch (err) {
+          feedback.className = "feedback is-error";
+          feedback.textContent =
+            err.message || "送信に失敗しました。お手数ですが info@sai-mon.co.jp まで直接ご連絡ください。";
+          submitBtn.disabled = false;
+          submitBtn.textContent = "申し込む";
+        }
+      });
+    })();
+  </script>
+
+  <script>
+    import { loadDefaultJapaneseParser } from "budoux";
+    const parser = loadDefaultJapaneseParser();
+    document
+      .querySelectorAll(".apply-scope .jp-budoux")
+      .forEach((el) => { try { parser.applyToElement(el); } catch (e) {} });
+  </script>
+</BaseLayout>

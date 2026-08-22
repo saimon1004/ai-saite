@@ -1900,3 +1900,24 @@
     text-align: left;
   }
 }
+
+/* 規約・特商法へのリンク（カード決済を扱うので導線を必ず残す） */
+.insta-lp-scope .legal-links {
+  max-width: 720px;
+  margin: 28px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 22px;
+  font-size: 13px;
+}
+.insta-lp-scope .legal-links a {
+  color: var(--ink-65);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.insta-lp-scope .legal-links a:hover { color: var(--ink); }
+.insta-lp-scope .trademark-note { margin-top: 14px; }
+@media (max-width: 640px) {
+  .insta-lp-scope .legal-links { justify-content: flex-start; }
+}
