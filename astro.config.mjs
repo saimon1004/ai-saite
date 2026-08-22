@@ -10,7 +10,21 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  integrations: [sitemap(), mdx()],
+  integrations: [
+    sitemap({
+      // noindex を付けたページはサイトマップからも外す。
+      // 載せたままだと「索引に入れろ（sitemap）」と「入れるな（meta）」の
+      // 矛盾したシグナルになり、クロールも無駄になる。
+      filter: (page) =>
+        ![
+          "/insta-auto/terms/",
+          "/insta-auto/tokushoho/",
+          "/insta-auto/apply/",
+          "/subsc-design/terms/",
+        ].includes(new URL(page).pathname),
+    }),
+    mdx(),
+  ],
   i18n: {
     defaultLocale: "ja",
     locales: ["ja"],
