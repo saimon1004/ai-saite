@@ -90,14 +90,6 @@
   color: var(--vermilion);
   line-height: 1.3;
 }
-/* 自動計算・固定表示の欄は触れないことが見て分かるようにする */
-.apply-scope input[readonly] {
-  background: #f1efea;
-  color: var(--ink-65);
-  cursor: default;
-}
-.apply-scope input[readonly]:focus { border-color: var(--rule); box-shadow: none; }
-
 /* ---- 入力欄 ---- */
 .f { display: grid; gap: 6px; margin-bottom: 14px; }
 .fl { font-size: 13.5px; font-weight: 700; }
@@ -131,6 +123,14 @@
   border-color: var(--vermilion);
   box-shadow: 0 0 0 3px rgba(166, 67, 43, .16);
 }
+
+/* 自動計算・固定表示の欄は触れないことが見て分かるようにする */
+.apply-scope input[readonly] {
+  background: #f1efea;
+  color: var(--ink-65);
+  cursor: default;
+}
+.apply-scope input[readonly]:focus { border-color: var(--rule); box-shadow: none; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
 .yen, .at { display: flex; align-items: center; gap: 8px; }
 .yen span, .at span { font-size: 14px; color: var(--ink-45); flex: none; }

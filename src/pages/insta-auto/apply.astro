@@ -5,7 +5,7 @@ import Footer from "../../components/common/Footer.astro";
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260821-v4";
+const cssVersion = "20260822-v5";
 const cssHref = `${base}insta-auto/apply.css?v=${cssVersion}`;
 ---
 
@@ -82,8 +82,8 @@ const cssHref = `${base}insta-auto/apply.css?v=${cssVersion}`;
           <p class="fnote">表示は税別です。</p>
           <div class="row2">
             <label class="f">
-              <span class="fl">ご契約店舗数</span>
-              <input type="number" name="shopCount" min="1" step="1" inputmode="numeric" placeholder="1" />
+              <span class="fl">ご契約店舗数<span class="opt">（自動計算）</span></span>
+              <input type="number" name="shopCount" min="1" step="1" readonly tabindex="-1" />
             </label>
             <label class="f">
               <span class="fl">月額合計（税別）<span class="opt">（自動計算）</span></span>
@@ -93,7 +93,7 @@ const cssHref = `${base}insta-auto/apply.css?v=${cssVersion}`;
           <input type="hidden" name="unitPrice" />
           <input type="hidden" name="initialFee" />
           <input type="hidden" name="planLabel" />
-          <p class="fnote">店舗数を入力すると合計を自動で計算します。条件が違う場合は5の特記事項にご記入いただくか、担当者までご連絡ください。</p>
+          <p class="fnote">「2. 対象店舗」にご記入いただいた店舗数から、自動で計算しています。条件が違う場合は5の特記事項にご記入いただくか、担当者までご連絡ください。</p>
         </section>
 
         <section class="fs">
@@ -253,7 +253,8 @@ const cssHref = `${base}insta-auto/apply.css?v=${cssVersion}`;
           r.querySelector(".shop-no").textContent = shopIndex;
         });
       }
-      // 店舗名かIDが入っている行を数えて、店舗数と月額を自動で埋める
+      // 店舗名かIDが入っている行を数えて、店舗数と月額合計を出す。
+      // どちらも readonly。店舗数の二重入力をなくすため、行の増減だけが唯一の入力口。
       function syncCount() {
         const filled = Array.prototype.filter.call(
           shopsBox.querySelectorAll(".shop"),
@@ -263,13 +264,9 @@ const cssHref = `${base}insta-auto/apply.css?v=${cssVersion}`;
             });
           }
         ).length;
-        const countEl = form.elements.shopCount;
-        const totalEl = form.elements.monthlyTotal;
-        if (!countEl.dataset.touched) countEl.value = filled || "";
-        if (!totalEl.dataset.touched) totalEl.value = filled ? filled * UNIT_PRICE : "";
+        form.elements.shopCount.value = filled || "";
+        form.elements.monthlyTotal.value = filled ? filled * UNIT_PRICE : "";
       }
-      form.elements.shopCount.addEventListener("input", function () { this.dataset.touched = "1"; });
-      form.elements.monthlyTotal.addEventListener("input", function () { this.dataset.touched = "1"; });
       document.getElementById("add-shop").addEventListener("click", function () { addShop(true); });
       addShop(false);
 
