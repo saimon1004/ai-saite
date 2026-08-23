@@ -20,6 +20,7 @@ export default defineConfig({
           "/insta-auto/terms/",
           "/insta-auto/tokushoho/",
           "/insta-auto/apply/",
+          "/insta-auto/start/",
           "/subsc-design/terms/",
         ].includes(new URL(page).pathname),
     }),

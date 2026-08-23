@@ -1,0 +1,242 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/common/Header.astro";
+import Footer from "../../components/common/Footer.astro";
+
+const base = import.meta.env.BASE_URL;
+// CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
+const cssVersion = "20260822-v1";
+const cssHref = `${base}insta-auto/start.css?v=${cssVersion}`;
+
+// 工程は1枚で追えるよう配列にまとめ、番号とタイムラインの線は自動で引く。
+// who: "shop" = お店にお願いする作業 / "saimon" = こちらで進める作業
+const steps = [
+  {
+    who: "shop",
+    when: "5分ほど",
+    title: "お申し込み",
+    body: [
+      "担当者からお送りした申込ページから、お店の情報・対象の店舗・お支払い方法をご記入のうえ送信してください。押印も郵送も不要です。",
+      "送信いただいた時点でお申し込みとなり、当社が受け付けた時点で利用規約に基づく契約が成立します。",
+    ],
+    aside:
+      "料金は申込ページに表示されているとおりです。金額欄は書き換えられないようになっているため、条件が違う場合は送信せずに担当者までご連絡ください。",
+  },
+  {
+    who: "saimon",
+    when: "1営業日以内",
+    title: "お支払いのご案内",
+    body: [
+      "お支払い方法に応じて、こちらからご案内をお送りします。",
+    ],
+    list: [
+      "<strong>クレジットカード</strong>：決済用のURLをメールでお送りします",
+      "<strong>銀行振込</strong>：請求書をメールでお送りします",
+    ],
+  },
+  {
+    who: "shop",
+    when: "カードは5分ほど",
+    title: "お支払い",
+    body: [
+      "カードの場合は、お送りしたURLを開いてカード情報をご入力ください。初回のお支払いは決済日から1ヶ月分で、以後は毎月同じ日に自動で決済されます。",
+      "銀行振込の場合は、請求書の期日までにお振込みください。ご入金の確認後に次の工程へ進みます。",
+    ],
+  },
+  {
+    who: "shop",
+    when: "5分ほど",
+    title: "Facebookページのご対応",
+    branch: true,
+    body: [
+      "Instagramへの自動投稿は、Instagramの運営会社（Meta社）が公式に用意した仕組みを通して行います。この仕組みを使うには、<strong>店舗のInstagramと連携したFacebookページ</strong>が必要です。お店の状況に応じて、どちらかの形で進めます。",
+    ],
+  },
+  {
+    who: "shop",
+    when: "15分ほど",
+    title: "運用ヒアリングのご入力",
+    body: [
+      "お店専用の入力フォームのURLをお送りします。お店の売り・看板メニュー・文章のテイスト・ハッシュタグ・営業時間帯や定休日をご記入ください。",
+      "ここでいただいた内容が、AIが書く文章の「話し方」と「投稿する時間帯」の材料になります。分からない項目は空欄のままで構いません。",
+    ],
+    aside:
+      "定休日をご記入いただくと、お休みの日に「本日のおすすめ」が出ないようにできます。",
+  },
+  {
+    who: "saimon",
+    when: "1〜2営業日",
+    title: "アカウントの発行と初期設定",
+    body: [
+      "お店専用のアカウントを発行し、ログイン用のURLとあわせてお送りします。Instagramとの接続、投稿ルールや装飾テンプレートの設定は、すべてこちらで行います。",
+      "アプリのインストールは不要です。お送りするURLをスマホのホーム画面に追加していただくと、アプリのように開けます。",
+    ],
+  },
+  {
+    who: "shop",
+    when: "10分ほど",
+    title: "メニューのご登録",
+    body: [
+      "メニュー登録フォームのURLをお送りします。「名前 | 価格 | カテゴリ | 補足」の形式で、1行に1メニューずつ貼り付けてください。価格・カテゴリ・補足は省略できます。",
+      "料理名を正確に書くための一覧です。焼肉の部位など見た目で判別しにくいものは、補足を書いていただくと文章が正確になります。",
+    ],
+  },
+  {
+    who: "saimon",
+    when: "",
+    title: "運用開始",
+    body: [
+      "準備が整いましたら、こちらからご連絡します。以降は<strong>写真を送る</strong>のと<strong>承認する</strong>の2つだけです。",
+      "AIが加工と文章を用意し、お店が承認すると、決めた時間に投稿されます。承認していない投稿案が、そのまま公開されることはありません。",
+    ],
+  },
+];
+
+const troubles = [
+  {
+    q: "どのFacebookページか分からない",
+    a: "Instagramアプリのプロフィール → 「プロフィールを編集」 → 「ページ」で、連携中のページ名を確認できます。",
+  },
+  {
+    q: "「フルコントロール」の選択肢が出ない",
+    a: "操作されている方ご自身がそのページの管理者権限をお持ちかどうかをご確認ください。管理者でない場合は、権限をお持ちの方にご依頼ください。",
+  },
+  {
+    q: "追加するアカウントが検索で見つからない",
+    a: "名前の表記ゆれの可能性があります。お送りした資料のプロフィールURLからご確認ください。それでも見つからない場合はご連絡ください。メールでの招待など別の方法をご案内します。",
+  },
+  {
+    q: "画面の文言が資料と違う",
+    a: "FacebookのアプリやWebは画面の文言・場所がときどき変わります。「ページのアクセス権限」「アクセス許可」「ページの役割」というキーワードで設定画面内を探してみてください。",
+  },
+  {
+    q: "手順どおりに進まない",
+    a: "ご連絡ください。お電話やオンラインで画面を拝見しながらご案内します。",
+  },
+];
+---
+
+<BaseLayout
+  title="おまかせグラム 導入の流れ"
+  description="おまかせグラムのお申し込みから運用開始までの流れをまとめたご案内です。"
+  chatbot={false}
+>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex" />
+  </Fragment>
+  <link rel="preconnect" href="https://fonts.googleapis.com" slot="head" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin slot="head" />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700&display=swap"
+    slot="head"
+  />
+  <link rel="stylesheet" href={cssHref} slot="head" />
+
+  <Header />
+
+  <main class="flow-scope">
+    <div class="flow-inner">
+      <p class="flow-kicker">おまかせグラム</p>
+      <h1>お申し込みから運用開始まで</h1>
+      <p class="flow-lead jp-budoux">
+        ご契約いただいてから投稿が始まるまでの流れです。お店にお願いするのは、申込・お支払い・<span class="nb">Facebookページ</span>の権限・ヒアリング・メニュー登録の5つだけで、あとはこちらで進めます。
+      </p>
+
+      <dl class="flow-summary">
+        <div>
+          <dt>お店で手を動かす時間の合計</dt>
+          <dd>35<span class="unit">分ほど</span></dd>
+        </div>
+        <div>
+          <dt>お申し込みから運用開始まで</dt>
+          <dd>1週間<span class="unit">ほど</span></dd>
+        </div>
+      </dl>
+      <p class="flow-note">
+        いずれも目安です。銀行振込の場合はご入金の確認まで、Facebookページの状況によっては確認のお時間をいただく場合があります。
+      </p>
+
+      <ol class="steps">
+        {steps.map((step, i) => (
+          <li class:list={["step", step.who === "shop" ? "by-shop" : "by-saimon"]}>
+            <span class="step-no" aria-hidden="true">{i + 1}</span>
+            <div class="step-body">
+              <div class="step-meta">
+                <span class:list={["who", step.who === "shop" ? "who-shop" : "who-saimon"]}>
+                  {step.who === "shop" ? "お店" : "SAIMON"}
+                </span>
+                {step.when && <span class="when">{step.when}</span>}
+              </div>
+              <h2>{step.title}</h2>
+              {step.body.map((p) => <p set:html={p} />)}
+              {step.list && (
+                <ul>
+                  {step.list.map((li) => <li set:html={li} />)}
+                </ul>
+              )}
+
+              {step.branch && (
+                <>
+                  <div class="branch">
+                    <div class="branch-item">
+                      <span class="branch-tag">パターンA</span>
+                      <h3>すでにFacebookページをお持ちの場合</h3>
+                      <p>そのページに、運用担当のFacebookアカウントを管理者として追加していただきます。追加するアカウント名と、画面ごとの手順書は別途お送りします。</p>
+                    </div>
+                    <div class="branch-item">
+                      <span class="branch-tag">パターンB</span>
+                      <h3>Facebookページをお持ちでない場合</h3>
+                      <p>SAIMONの法人Facebookアカウントで新しくページを作成し、お店のInstagramアカウントを紐付けます。お店での作業はほとんどありません。</p>
+                    </div>
+                  </div>
+                  <ul class="assure">
+                    <li>InstagramやFacebookの<strong>パスワードをお伺いすることは一切ありません</strong></li>
+                    <li>ページの<strong>所有権が移ることはありません</strong>。既存の管理者の権限もそのまま残ります</li>
+                    <li>いただいた権限は、Instagram自動投稿の接続と運用<strong>のみ</strong>に使用します</li>
+                    <li>権限は「ページのアクセス権限」の画面から<strong>いつでも解除できます</strong></li>
+                  </ul>
+                </>
+              )}
+
+              {step.aside && (
+                <div class="aside">
+                  <p>{step.aside}</p>
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <section class="sec">
+        <h2>ご用意いただくもの</h2>
+        <ul class="prep">
+          <li><strong>Instagramのビジネスアカウント</strong>（お持ちでない場合は、個人アカウントからの切り替え方法をご案内します）</li>
+          <li><strong>連携するFacebookページ</strong>（お持ちでない場合は、こちらで作成します）</li>
+          <li><strong>ご連絡先のメールアドレス</strong>（決済のご案内・各種フォームのURLをお送りします）</li>
+          <li><strong>お店の写真</strong>（運用が始まってから、その都度スマホで撮って送っていただきます。事前のご準備は不要です）</li>
+        </ul>
+      </section>
+
+      <section class="sec">
+        <h2>よくあるつまずき</h2>
+        <dl class="trouble">
+          {troubles.map((t) => (
+            <div class="trouble-row">
+              <dt>{t.q}</dt>
+              <dd>{t.a}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <div class="flow-end">
+        <p>ご不明な点は、担当者または <a href="mailto:info@sai-mon.co.jp">info@sai-mon.co.jp</a> までお気軽にご連絡ください。</p>
+        <p class="flow-note">Instagram、Facebook は Meta Platforms, Inc. の商標です。本サービスは Meta Platforms, Inc. とは関係ありません。</p>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

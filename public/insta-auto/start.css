@@ -1,0 +1,216 @@
+/* ============================================================
+   おまかせグラム 導入の流れ（申込〜運用開始）
+   scope: .flow-scope
+   LP（styles.css）・申込フォーム（apply.css）と同じ誌面トーン。
+   1枚で全工程が追えるよう、縦のタイムライン1本に集約している。
+   ============================================================ */
+.flow-scope {
+  --paper: #f8f7f4;
+  --ink: #201e1a;
+  --ink-65: rgba(32, 30, 26, 0.74);
+  --ink-45: rgba(32, 30, 26, 0.66);
+  --rule: #e2ddd2;
+  --vermilion: #a6432b;
+  --teal: #1f6f6a;
+  --white: #fff;
+  --mincho: "Shippori Mincho B1", "Hiragino Mincho ProN", serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-feature-settings: "palt";
+  line-height: 1.85;
+  padding: 56px 24px 88px;
+  overflow-x: clip;
+}
+.flow-scope h1,
+.flow-scope h2,
+.flow-scope h3 { text-wrap: balance; word-break: auto-phrase; }
+.flow-scope p,
+.flow-scope li,
+.flow-scope dd { text-wrap: pretty; word-break: auto-phrase; }
+.flow-scope .jp-budoux { word-break: keep-all; }
+/* 欧文と和文の境目で割れると読みにくい語を塊にする。
+   隣接する塊の間には必ず <wbr /> を入れること（Safariは隣接nowrap境界で改行しない） */
+.flow-scope .nb { white-space: nowrap; }
+
+.flow-inner { max-width: 760px; margin-inline: auto; }
+
+/* ---- 見出し ---- */
+.flow-kicker {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 12.5px; font-weight: 700; letter-spacing: .06em;
+  color: var(--vermilion); margin-bottom: 12px;
+}
+.flow-kicker::before { content: ""; width: 22px; height: 1px; background: var(--vermilion); flex: none; }
+.flow-scope h1 {
+  font-family: var(--mincho);
+  font-size: 34px; font-weight: 700; line-height: 1.4;
+  margin: 0 0 14px;
+}
+.flow-lead { font-size: 15.5px; color: var(--ink-65); margin: 0 0 28px; }
+
+/* ---- 全体の目安（罫線1本の帯。カードにしない） ---- */
+.flow-summary {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0 24px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 16px 0 18px;
+  margin-bottom: 44px;
+}
+.flow-summary div { display: grid; gap: 2px; }
+.flow-summary dt { font-size: 12.5px; font-weight: 700; color: var(--ink-45); }
+.flow-summary dd {
+  margin: 0; font-family: var(--mincho);
+  font-size: 22px; font-weight: 700; line-height: 1.4;
+}
+.flow-summary .unit { font-size: 14px; font-weight: 700; margin-left: 2px; }
+.flow-note { font-size: 13px; color: var(--ink-45); margin: 10px 0 0; }
+
+/* ---- タイムライン ---- */
+.steps { position: relative; margin: 40px 0 8px; padding: 0; list-style: none; }
+.step {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 28px 1fr;
+  gap: 0 18px;
+  padding-bottom: 30px;
+}
+/* 番号の丸から次の丸へ引く縦線。最後の工程からは引かない */
+.step::before {
+  content: ""; position: absolute; left: 13px; top: 28px; bottom: 0;
+  width: 1px; background: var(--rule);
+}
+.step:last-child::before { display: none; }
+.step:last-child { padding-bottom: 0; }
+.step-no {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; line-height: 1;
+  background: var(--ink); color: var(--white);
+  flex: none;
+}
+.step.by-shop .step-no { background: var(--vermilion); }
+.step-body { padding-top: 1px; min-width: 0; }
+.step-meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  margin-bottom: 5px;
+}
+.who {
+  font-size: 11px; font-weight: 700; letter-spacing: .04em;
+  padding: 2px 8px; border-radius: 2px; line-height: 1.6;
+}
+.who-shop { background: var(--vermilion); color: var(--white); }
+.who-saimon { background: var(--ink); color: var(--white); }
+.when { font-size: 12.5px; font-weight: 700; color: var(--ink-45); }
+.flow-scope .step h2 {
+  font-family: var(--mincho);
+  font-size: 20px; font-weight: 700; line-height: 1.5;
+  margin: 0 0 8px;
+}
+.step-body p { font-size: 14.5px; color: var(--ink-65); margin: 0 0 8px; }
+.step-body p:last-child { margin-bottom: 0; }
+.step-body ul { margin: 0 0 8px; padding-left: 1.15em; }
+.step-body li { font-size: 14.5px; color: var(--ink-65); margin-bottom: 3px; }
+.step-body strong { color: var(--ink); font-weight: 700; }
+
+/* 補足の囲み（枠線1本。カードのinカードにしない） */
+.aside {
+  border-left: 3px solid var(--rule);
+  padding: 2px 0 2px 14px;
+  margin: 12px 0 0;
+}
+.aside p { font-size: 13.5px; color: var(--ink-45); margin: 0; }
+
+/* ---- Facebookの分岐 ---- */
+.branch {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  margin: 12px 0 4px;
+}
+.branch-item {
+  border: 1px solid var(--rule); border-radius: 3px;
+  background: var(--white);
+  padding: 16px 18px 18px;
+}
+.branch-tag {
+  display: inline-block;
+  font-size: 11px; font-weight: 700; letter-spacing: .04em;
+  color: var(--teal); border: 1px solid var(--teal);
+  border-radius: 2px; padding: 1px 7px; line-height: 1.7;
+  margin-bottom: 8px;
+}
+.flow-scope .branch-item h3 {
+  font-size: 15px; font-weight: 700; line-height: 1.6;
+  margin: 0 0 6px;
+}
+.branch-item p { font-size: 13.5px; color: var(--ink-65); margin: 0; }
+
+/* ---- 安心材料 ---- */
+.assure { margin: 14px 0 0; padding: 0; list-style: none; }
+.assure li {
+  position: relative; padding-left: 22px;
+  font-size: 14px; color: var(--ink-65); margin-bottom: 4px;
+}
+.assure li::before {
+  content: "✓"; position: absolute; left: 0; top: 0;
+  color: var(--teal); font-weight: 700;
+}
+
+/* ---- 後半のセクション ---- */
+.sec { margin-top: 44px; }
+.flow-scope .sec h2 {
+  font-family: var(--mincho);
+  font-size: 20px; font-weight: 700;
+  margin: 0 0 16px; padding-bottom: 10px;
+  border-bottom: 2px solid var(--ink);
+}
+.prep { margin: 0; padding: 0; list-style: none; }
+.prep li {
+  border-bottom: 1px solid var(--rule);
+  padding: 13px 0 13px 16px;
+  font-size: 14.5px; color: var(--ink-65);
+  position: relative;
+}
+.prep li::before {
+  content: ""; position: absolute; left: 0; top: 22px;
+  width: 6px; height: 1px; background: var(--vermilion);
+}
+.prep strong { color: var(--ink); }
+
+/* つまずき表（tableは使わず罫線で組む） */
+.trouble { display: grid; gap: 0; }
+.trouble-row {
+  display: grid; grid-template-columns: 240px 1fr; gap: 0 20px;
+  border-bottom: 1px solid var(--rule);
+  padding: 13px 0;
+}
+.trouble-row dt { font-size: 14px; font-weight: 700; }
+.trouble-row dd { font-size: 14px; color: var(--ink-65); margin: 0; }
+
+/* ---- 締め ---- */
+.flow-end {
+  margin-top: 44px; border-top: 2px solid var(--ink);
+  padding-top: 18px;
+}
+.flow-end p { font-size: 14.5px; color: var(--ink-65); margin: 0 0 6px; }
+.flow-end a { color: var(--vermilion); }
+
+/* ============================================================
+   モバイル
+   ============================================================ */
+@media (max-width: 640px) {
+  .flow-scope {
+    padding: 40px 18px 64px;
+    line-height: 1.9;
+  }
+  /* 640px以下ではauto-phraseを切る（狭い幅では行が痩せるため） */
+  .flow-scope p,
+  .flow-scope li,
+  .flow-scope dd { word-break: normal; }
+  .flow-scope h1 { font-size: 27px; }
+  .flow-summary { grid-template-columns: 1fr; gap: 14px 0; }
+  .flow-scope .step h2 { font-size: 18px; }
+  .step { grid-template-columns: 24px 1fr; gap: 0 14px; }
+  .step-no { width: 24px; height: 24px; font-size: 12px; }
+  .step::before { left: 11px; top: 24px; }
+  .branch { grid-template-columns: 1fr; gap: 12px; }
+  .trouble-row { grid-template-columns: 1fr; gap: 4px; }
+}
