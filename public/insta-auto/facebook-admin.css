@@ -1,0 +1,197 @@
+/* ============================================================
+   Facebookページ 管理者追加のお願い（店舗さま向け手順書）
+   scope: .fbadm-scope
+   導入の流れ（start.css）と同じ誌面トーン。配布用PDFと同じ内容を
+   スマホで読めるようにしたもの。
+   ============================================================ */
+.fbadm-scope {
+  --paper: #f8f7f4;
+  --ink: #201e1a;
+  --ink-65: rgba(32, 30, 26, 0.74);
+  --ink-45: rgba(32, 30, 26, 0.66);
+  --rule: #e2ddd2;
+  --vermilion: #a6432b;
+  --teal: #1f6f6a;
+  --white: #fff;
+  --mincho: "Shippori Mincho B1", "Hiragino Mincho ProN", serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-feature-settings: "palt";
+  line-height: 1.85;
+  padding: 56px 24px 88px;
+  overflow-x: clip;
+}
+.fbadm-scope h1,
+.fbadm-scope h2,
+.fbadm-scope h3 { text-wrap: balance; word-break: auto-phrase; }
+.fbadm-scope p,
+.fbadm-scope li,
+.fbadm-scope dd { text-wrap: pretty; word-break: auto-phrase; }
+/* 欧文と和文の境目で割れると読みにくい語を塊にする。
+   隣接する塊の間には必ず <wbr /> を入れること（Safariは隣接nowrap境界で改行しない） */
+.fbadm-scope .nb { white-space: nowrap; }
+
+.fbadm-inner { max-width: 760px; margin-inline: auto; }
+
+/* ---- 見出し ---- */
+.fbadm-kicker {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 12.5px; font-weight: 700; letter-spacing: .04em;
+  color: var(--vermilion); margin-bottom: 12px;
+  line-height: 1.7;
+}
+.fbadm-kicker::before { content: ""; width: 22px; height: 1px; background: var(--vermilion); flex: none; }
+.fbadm-scope h1 {
+  font-family: var(--mincho);
+  font-size: 34px; font-weight: 700; line-height: 1.4;
+  margin: 0 0 20px;
+}
+
+/* ---- 対象・所要時間（罫線1本の帯。カードにしない） ---- */
+.fbadm-summary {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 0 28px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 14px 0 16px;
+  margin: 0 0 26px;
+}
+.fbadm-summary div { display: grid; gap: 2px; min-width: 0; }
+.fbadm-summary dt { font-size: 12.5px; font-weight: 700; color: var(--ink-45); }
+.fbadm-summary dd { margin: 0; font-size: 14.5px; font-weight: 700; line-height: 1.6; }
+
+.fbadm-lead { font-size: 15.5px; color: var(--ink-65); margin: 0 0 22px; }
+.fbadm-scope strong { color: var(--ink); font-weight: 700; }
+
+/* ---- PDFリンク ---- */
+.fbadm-actions {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px;
+  margin: 0 0 40px;
+}
+.fbadm-actions.bottom { margin: 40px 0 0; }
+.pdf-link {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 13.5px; font-weight: 700; line-height: 1.6;
+  color: var(--white); background: var(--ink);
+  border-radius: 3px; padding: 9px 16px;
+  text-decoration: none;
+}
+.pdf-link:hover { background: var(--vermilion); }
+.pdf-link svg { width: 15px; height: 15px; flex: none; }
+.back-link {
+  font-size: 13.5px; font-weight: 700; color: var(--teal);
+  text-decoration: none; border-bottom: 1px solid currentColor;
+}
+.back-link:hover { color: var(--vermilion); }
+
+/* ---- セクション ---- */
+.fbadm-section { margin: 0 0 40px; }
+.fbadm-scope .fbadm-section h2 {
+  display: flex; align-items: baseline; gap: 10px;
+  font-family: var(--mincho);
+  font-size: 21px; font-weight: 700; line-height: 1.5;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+}
+.sec-no {
+  font-family: var(--mincho);
+  font-size: 15px; color: var(--vermilion); flex: none;
+}
+.fbadm-scope .fbadm-section h3 {
+  font-size: 15.5px; font-weight: 700; line-height: 1.6;
+  color: var(--teal);
+  margin: 22px 0 8px;
+}
+.fbadm-scope .fbadm-section h3.sub { color: var(--ink); font-size: 14.5px; }
+.fbadm-section p { font-size: 14.5px; color: var(--ink-65); margin: 0 0 8px; }
+
+/* ---- 1章の仕様（定義リスト。表組みにせず罫線で区切る） ---- */
+.spec { margin: 0; }
+.spec > div {
+  display: grid; grid-template-columns: 190px 1fr;
+  gap: 4px 20px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.spec > div:first-child { border-top: 1px solid var(--rule); }
+.spec dt { font-size: 13px; font-weight: 700; color: var(--ink-45); }
+.spec dd { margin: 0; font-size: 14.5px; color: var(--ink-65); min-width: 0; }
+.url, .mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  word-break: break-all;
+}
+.url { color: var(--teal); }
+
+/* ---- 注意書き ---- */
+.callout {
+  border-left: 3px solid var(--vermilion);
+  background: var(--white);
+  padding: 12px 16px;
+  margin: 18px 0 0;
+}
+.callout p { font-size: 14px; color: var(--ink); font-weight: 700; margin: 0; }
+.callout p + p { margin-top: 4px; }
+.aside-note {
+  border-left: 3px solid var(--rule);
+  padding: 2px 0 2px 14px;
+  margin: 0 0 6px;
+}
+.fbadm-section .aside-note { font-size: 13.5px; color: var(--ink-45); }
+
+/* ---- リスト ---- */
+/* Tailwindのpreflightがマーカーを消すため、番号・中黒は明示的に戻す */
+.reasons { margin: 0 0 8px; padding-left: 1.3em; list-style: disc outside; }
+.steps { margin: 0 0 8px; padding-left: 1.6em; list-style: decimal outside; }
+.reasons li, .steps li { font-size: 14.5px; color: var(--ink-65); margin-bottom: 6px; }
+.reasons li::marker, .steps li::marker { color: var(--vermilion); font-weight: 700; }
+
+.assure { margin: 0; padding: 0; list-style: none; }
+.assure li {
+  position: relative; padding-left: 22px;
+  font-size: 14.5px; color: var(--ink-65); margin-bottom: 6px;
+}
+.assure li::before {
+  content: ""; position: absolute; left: 2px; top: 10px;
+  width: 9px; height: 5px;
+  border-left: 2px solid var(--teal); border-bottom: 2px solid var(--teal);
+  transform: rotate(-45deg);
+}
+
+/* ---- 6章 うまくいかないとき ---- */
+.trouble { border-top: 1px solid var(--rule); }
+.trouble-row {
+  display: grid; grid-template-columns: 220px 1fr;
+  gap: 4px 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.trouble-q { font-size: 14px; font-weight: 700; color: var(--ink); }
+.trouble-a { font-size: 14px; color: var(--ink-65); min-width: 0; }
+
+/* ---- フッター ---- */
+.fbadm-foot { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--rule); }
+.fbadm-foot .who { font-size: 14.5px; font-weight: 700; color: var(--ink); margin: 0 0 4px; }
+.fbadm-foot .msg { font-size: 13px; color: var(--ink-45); margin: 0; }
+
+@media (max-width: 640px) {
+  .fbadm-scope { padding: 40px 18px 64px; }
+  .fbadm-scope h1 { font-size: 25px; }
+  .fbadm-scope .fbadm-section h2 { font-size: 18px; }
+  .fbadm-summary { grid-template-columns: 1fr; gap: 12px; }
+  .spec > div, .trouble-row { grid-template-columns: 1fr; gap: 2px; }
+  /* 短い行長では文節折り返しが右側の空きを生むため、本文は通常折り返しに戻す */
+  .fbadm-scope p, .fbadm-scope li, .fbadm-scope dd { word-break: normal; }
+  .fbadm-lead { word-break: auto-phrase; }
+}
+
+/* ブラウザの印刷でもそのまま配れる誌面にする */
+@media print {
+  .fbadm-scope { background: var(--white); padding: 0; }
+  .fbadm-actions, .back-link { display: none; }
+  .fbadm-section { break-inside: auto; }
+  .fbadm-scope .fbadm-section h2,
+  .fbadm-scope .fbadm-section h3 { break-after: avoid; }
+  .spec > div, .trouble-row, .callout { break-inside: avoid; }
+}

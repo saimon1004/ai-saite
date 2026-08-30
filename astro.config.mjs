@@ -21,6 +21,7 @@ export default defineConfig({
           "/insta-auto/tokushoho/",
           "/insta-auto/apply/",
           "/insta-auto/start/",
+          "/insta-auto/facebook-admin/",
           "/subsc-design/terms/",
         ].includes(new URL(page).pathname),
     }),

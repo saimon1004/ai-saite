@@ -48,3 +48,10 @@ ErrorDocument 404 /404.html
   Header set X-Frame-Options "SAMEORIGIN"
   Header set X-XSS-Protection "1; mode=block"
 </IfModule>
+
+# 店舗さま向けの手順書PDFは検索結果に出さない（HTMLのnoindexと揃える）
+<IfModule mod_headers.c>
+  <FilesMatch "^facebook-admin-guide\.pdf$">
+    Header set X-Robots-Tag "noindex, noarchive"
+  </FilesMatch>
+</IfModule>

@@ -5,7 +5,7 @@ import Footer from "../../components/common/Footer.astro";
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260822-v1";
+const cssVersion = "20260830-v2";
 const cssHref = `${base}insta-auto/start.css?v=${cssVersion}`;
 
 // 工程は1枚で追えるよう配列にまとめ、番号とタイムラインの線は自動で引く。
@@ -197,7 +197,11 @@ const troubles = [
                     <div class="branch-item">
                       <span class="branch-tag">パターンA</span>
                       <h3>すでにFacebookページをお持ちの場合</h3>
-                      <p>そのページに、運用担当のFacebookアカウントを管理者として追加していただきます。追加するアカウント名と、画面ごとの手順書は別途お送りします。</p>
+                      <p>そのページに、運用担当のFacebookアカウントを管理者として追加していただきます。追加するアカウント名から画面ごとの操作、うまくいかないときの対処まで、下の手順書にすべて書いてあります。</p>
+                      <p class="branch-actions">
+                        <a class="branch-link" href={`${base}insta-auto/facebook-admin/`}>手順書を見る</a>
+                        <a class="branch-pdf" href={`${base}insta-auto/facebook-admin-guide.pdf`} target="_blank" rel="noopener">PDFで保存・印刷</a>
+                      </p>
                     </div>
                     <div class="branch-item">
                       <span class="branch-tag">パターンB</span>

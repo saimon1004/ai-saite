@@ -1,0 +1,186 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/common/Header.astro";
+import Footer from "../../components/common/Footer.astro";
+
+const base = import.meta.env.BASE_URL;
+// CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
+const cssVersion = "20260830-v2";
+const cssHref = `${base}insta-auto/facebook-admin.css?v=${cssVersion}`;
+const pdfHref = `${base}insta-auto/facebook-admin-guide.pdf`;
+
+// 追加をお願いするアカウント。差し替えるときはPDF（public/insta-auto/facebook-admin-guide.pdf）も一緒に更新する
+const account = {
+  name: "松本隆",
+  profileUrl: "https://www.facebook.com/profile.php?id=61553316098735",
+};
+---
+
+<BaseLayout
+  title="Facebookページ 管理者追加のお願い"
+  description="おまかせグラムでInstagramへの自動投稿を接続するために、Facebookページへ管理者を追加していただく手順のご案内です。"
+  chatbot={false}
+>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex" />
+  </Fragment>
+  <link rel="preconnect" href="https://fonts.googleapis.com" slot="head" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin slot="head" />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700&display=swap"
+    slot="head"
+  />
+  <link rel="stylesheet" href={cssHref} slot="head" />
+
+  <Header />
+
+  <main class="fbadm-scope">
+    <div class="fbadm-inner">
+      <p class="fbadm-kicker">Instagram自動投稿サービス「おまかせグラム」（運営：SAIMON）</p>
+      <h1><span class="nb">Facebookページ</span><wbr /> <span class="nb">管理者追加のお願い</span></h1>
+
+      <dl class="fbadm-summary">
+        <div>
+          <dt>対象</dt>
+          <dd>Facebookページを管理されている方（店舗さま／運営会社さま）</dd>
+        </div>
+        <div>
+          <dt>所要時間</dt>
+          <dd>5分ほど</dd>
+        </div>
+      </dl>
+
+      <p class="fbadm-lead">いつもお世話になっております。Instagram自動投稿サービス「おまかせグラム」（運営：SAIMON）です。Instagramへの自動投稿の接続にあたり、<strong>1点だけ</strong>ご協力をお願いいたします。</p>
+
+      <p class="fbadm-actions">
+        <a class="pdf-link" href={pdfHref} target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          このページをPDFで保存・印刷する
+        </a>
+      </p>
+
+      <section class="fbadm-section">
+        <h2><span class="sec-no">1</span>お願いしたいこと（これだけです）</h2>
+        <dl class="spec">
+          <div>
+            <dt>対象のFacebookページ</dt>
+            <dd><strong>店舗のInstagramと連携されているFacebookページ</strong>（貴社で管理されているもの）</dd>
+          </div>
+          <div>
+            <dt>追加するアカウント</dt>
+            <dd><strong>{account.name}</strong></dd>
+          </div>
+          <div>
+            <dt>プロフィールURL</dt>
+            <dd><a class="url" href={account.profileUrl} target="_blank" rel="noopener">{account.profileUrl}</a></dd>
+          </div>
+          <div>
+            <dt>付与する権限</dt>
+            <dd><strong>フルコントロール（管理者）</strong></dd>
+          </div>
+        </dl>
+
+        <div class="callout">
+          <p>InstagramやFacebookのパスワードをお伺いすることは一切ありません。</p>
+          <p>上記アカウントをページに追加していただくだけで完了します。</p>
+        </div>
+      </section>
+
+      <section class="fbadm-section">
+        <h2><span class="sec-no">2</span>なぜ必要か（かんたんな説明）</h2>
+        <ul class="reasons">
+          <li>おまかせグラムは、Instagramの運営会社（Meta社）が公式に用意した<strong>自動投稿の仕組み（API）</strong>を使って投稿します。</li>
+          <li>この接続作業はMeta公式のログイン画面を通して行いますが、<strong>接続する担当者のFacebookアカウントが、Instagramに連携されたFacebookページの管理者になっている</strong>ことがMeta社のルールで必要です。</li>
+          <li>ページの<strong>所有権が移ることはありません</strong>。また、追加した権限は<strong>いつでも解除できます</strong>。</li>
+        </ul>
+      </section>
+
+      <section class="fbadm-section">
+        <h2><span class="sec-no">3</span>追加の手順</h2>
+        <p class="aside-note">FacebookのアプリやWebは画面の文言・場所がときどき変わります。見つからない場合は <strong>「ページのアクセス権限」「アクセス許可」「ページの役割」</strong>というキーワードを設定画面内で探してください。</p>
+
+        <h3>方法A：Facebookの「ページ設定」から（スマホ・PC共通）</h3>
+        <ol class="steps">
+          <li>Facebookにログインし、<strong>対象のページに切り替える</strong>（プロフィールアイコン → ページを選択）</li>
+          <li>ページの「設定」を開く</li>
+          <li><strong>「ページのアクセス権限」</strong>（ページ設定 → 新しいページ体験）を選ぶ</li>
+          <li>「Facebookのアクセス権限がある人」の<strong>「新しく追加」</strong>（または「追加」）をタップ</li>
+          <li>追加するアカウント（上記1章のアカウント名）を<strong>名前で検索</strong>して選択</li>
+          <li><strong>「フルコントロールでの許可」</strong>を<strong>オン</strong>にして招待を送信</li>
+          <li>確認のため、Facebookのパスワード入力を求められたら入力（※ご自身のパスワードです。当方に伝わることはありません）</li>
+        </ol>
+
+        <h3>方法B：Meta Business Suite から（運営会社さま向け）</h3>
+        <p>ページをMeta Business Suite（ビジネスポートフォリオ）で管理されている場合はこちらが早いです。</p>
+        <ol class="steps">
+          <li><span class="mono">business.facebook.com</span> にログイン</li>
+          <li>「設定」→「<strong>ビジネスポートフォリオの設定</strong>」→「<strong>ユーザー（人）</strong>」</li>
+          <li>「<strong>招待（追加）</strong>」から、追加するアカウントの<strong>メールアドレスまたは名前</strong>で招待</li>
+          <li>アクセス権の割り当てで<strong>対象ページを選択</strong>し、「<strong>フルコントロール（管理する）</strong>」を付与</li>
+        </ol>
+
+        <h3 class="sub">旧タイプのページの場合</h3>
+        <p>設定内に<strong>「ページの役割」</strong>という項目があるタイプのページでは、「ページの役割」→「<strong>新しいページの役割を割り当て</strong>」→ アカウントを検索 → 役割を「<strong>管理者</strong>」にして追加してください。</p>
+      </section>
+
+      <section class="fbadm-section">
+        <h2><span class="sec-no">4</span>追加後の流れ</h2>
+        <ol class="steps">
+          <li>招待を送っていただくと、こちら（SAIMON）側に<strong>承認通知</strong>が届きます</li>
+          <li>こちらで<strong>承認操作</strong>をして権限が有効になります（招待だけでは完了しません）</li>
+          <li>承認できましたら、こちらから「<strong>完了しました</strong>」とご連絡します</li>
+          <li>以降の接続作業（Make経由のInstagram接続）は<strong>すべてこちらで実施</strong>します。追加のご対応は不要です</li>
+        </ol>
+      </section>
+
+      <section class="fbadm-section">
+        <h2><span class="sec-no">5</span>ご安心いただきたいこと</h2>
+        <ul class="assure">
+          <li><strong>パスワードは一切お預かりしません</strong>（Instagram・Facebookとも）</li>
+          <li><strong>ページの所有権は移りません</strong>（既存の管理者の権限もそのまま残ります）</li>
+          <li>付与いただいた権限は、Instagram自動投稿の接続・運用の<strong>みに使用します</strong></li>
+          <li>権限は「ページのアクセス権限」の画面から<strong>いつでも解除できます</strong></li>
+          <li>投稿内容は毎回、<strong>店舗さまが承認したものだけ</strong>がInstagramに投稿されます</li>
+        </ul>
+      </section>
+
+      <section class="fbadm-section">
+        <h2><span class="sec-no">6</span>うまくいかないとき</h2>
+        <div class="trouble">
+          <div class="trouble-row">
+            <div class="trouble-q">アカウントが検索で見つからない</div>
+            <div class="trouble-a">名前の表記ゆれの可能性があります。1章の<strong>プロフィールURL</strong>を開き、そのアカウントであることをご確認ください。見つからない場合はご連絡ください（メール招待など別の方法をご案内します）</div>
+          </div>
+          <div class="trouble-row">
+            <div class="trouble-q">「フルコントロール」の選択肢が出ない</div>
+            <div class="trouble-a">操作されている方ご自身がページの<strong>フルコントロール権限（管理者）</strong>をお持ちか、ご確認ください</div>
+          </div>
+          <div class="trouble-row">
+            <div class="trouble-q">どのページか分からない</div>
+            <div class="trouble-a">Instagramアプリのプロフィール →「プロフィールを編集」→「ページ」で、連携中のページ名を確認できます</div>
+          </div>
+          <div class="trouble-row">
+            <div class="trouble-q">その他、手順どおりに進まない</div>
+            <div class="trouble-a">お気軽にご連絡ください。お電話やオンラインで画面を拝見しながらご案内します</div>
+          </div>
+        </div>
+      </section>
+
+      <p class="fbadm-actions bottom">
+        <a class="pdf-link" href={pdfHref} target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          このページをPDFで保存・印刷する
+        </a>
+        <a class="back-link" href={`${base}insta-auto/start/`}>導入の流れに戻る</a>
+      </p>
+
+      <footer class="fbadm-foot">
+        <p class="who">SAIMON（おまかせグラム運営）</p>
+        <p class="msg">ご不明点は、本資料が届いた窓口（店舗さま経由・直接どちらでも）へお気軽にご連絡ください。</p>
+      </footer>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
