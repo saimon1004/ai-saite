@@ -12,7 +12,7 @@ const phrase = (t: string) => jpParser.parse(t).join(ZWSP);
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260827-v16";
+const cssVersion = "20260827-v17";
 const cssHref = `${base}insta-auto/styles.css?v=${cssVersion}`;
 
 const img = (name: string) => `${base}insta-auto/assets/${name}`;
@@ -320,6 +320,7 @@ const jsonLd = {
           <p class="section-lead jp-budoux">「どこで食べるか」を決める場所が変わりました。食べログやぐるなびで探す前に、Instagramで見つけて保存する。その順番が当たり前になっています。</p>
         </div>
 
+        <p class="why-source-label">第三者調査でわかっていること</p>
         <ul class="why-stats">
           <li class="why-stat">
             <p class="why-num">80.8<small>%</small></p>

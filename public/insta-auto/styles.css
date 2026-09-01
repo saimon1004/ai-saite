@@ -1927,41 +1927,68 @@
    カードを並べず、大きな数字を罫線で仕切って誌面らしく見せる。
    数字は他社調査の引用なので、必ず出典を添える。
    ============================================================ */
+/* 数字の帯。墨帯は管理画面とCTAで既に使っているので、ここは地色を一段落として
+   面で持ち上げ、数字そのものを大きくして目立たせる。 */
+.insta-lp-scope .why-source-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-45);
+  margin: 4px 0 10px;
+}
+.insta-lp-scope .why-source-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
 .insta-lp-scope .why-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-top: 2px solid var(--ink);
-  margin: 4px 0 0;
+  background: var(--paper-deep);
+  border-top: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 .insta-lp-scope .why-stat {
-  padding: 22px 20px 24px;
+  padding: 30px 24px 32px;
   border-right: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
 }
 .insta-lp-scope .why-stat:last-child { border-right: none; }
-.insta-lp-scope .why-num {
+.insta-lp-scope .why-stat .why-num {
   font-family: var(--mincho);
-  font-size: 46px;
+  font-size: 78px;
   font-weight: 700;
-  line-height: 1.05;
+  line-height: 1;
   color: var(--vermilion);
-  margin: 0 0 8px;
-  letter-spacing: -0.02em;
+  margin: 0 0 4px;
+  letter-spacing: -0.03em;
 }
-.insta-lp-scope .why-num small { font-size: 22px; margin-left: 1px; }
+.insta-lp-scope .why-stat .why-num small {
+  font-size: 30px;
+  margin-left: 2px;
+  letter-spacing: 0;
+}
+/* 見出しの上に朱の罫を引いて、数字から説明への切り替わりを作る */
 .insta-lp-scope .why-stat h3 {
-  font-size: 15px;
+  font-size: 16.5px;
   font-weight: 700;
   line-height: 1.6;
-  margin: 0 0 6px;
+  margin: 0 0 8px;
+  padding-top: 12px;
+  border-top: 2px solid var(--vermilion);
+  display: inline-block;
 }
 .insta-lp-scope .why-stat p {
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--ink-45);
   margin: 0;
-  line-height: 1.7;
+  line-height: 1.75;
 }
 /* 締めの一文は罫線1本の帯で受ける（カードにしない） */
 .insta-lp-scope .why-close {
@@ -2071,14 +2098,16 @@
   }
   .insta-lp-scope .why-notes li:last-child { border-bottom: none; padding-bottom: 0; }
   .insta-lp-scope .why-stat:nth-child(2n) { border-right: none; }
+  .insta-lp-scope .why-stat:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
   .insta-lp-scope .payback { grid-template-columns: 1fr; }
   .insta-lp-scope .payback-case { border-right: none; }
 }
 @media (max-width: 640px) {
-  .insta-lp-scope .why-stat { padding: 18px 14px 20px; }
-  .insta-lp-scope .why-num { font-size: 38px; }
-  .insta-lp-scope .why-num small { font-size: 18px; }
-  .insta-lp-scope .why-stat h3 { font-size: 14px; }
+  .insta-lp-scope .why-stat { padding: 22px 14px 24px; }
+  .insta-lp-scope .why-stat .why-num { font-size: 52px; }
+  .insta-lp-scope .why-stat .why-num small { font-size: 22px; }
+  .insta-lp-scope .why-stat h3 { font-size: 14.5px; padding-top: 10px; }
+  .insta-lp-scope .why-stat p { font-size: 12.5px; }
   .insta-lp-scope .why-close,
   .insta-lp-scope .payback-close { font-size: 15px; }
   .insta-lp-scope .payback-case { padding: 20px 16px 22px; }
