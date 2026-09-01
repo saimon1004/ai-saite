@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/common/Header.astro";
 import Footer from "../../components/common/Footer.astro";
+import MetaPixel from "../../components/common/MetaPixel.astro";
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
@@ -17,6 +18,7 @@ const cssHref = `${base}insta-auto/apply.css?v=${cssVersion}`;
   <Fragment slot="head">
     <meta name="robots" content="noindex" />
   </Fragment>
+  <MetaPixel slot="head" />
   <link rel="preconnect" href="https://fonts.googleapis.com" slot="head" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin slot="head" />
   <link
@@ -176,6 +178,36 @@ const cssHref = `${base}insta-auto/apply.css?v=${cssVersion}`;
       const form = document.getElementById("apply-form");
       if (!form) return;
 
+      // Meta の広告クリック識別子。ブラウザのcookieにあるものをそのままCAPIへ渡す。
+      // これが無いと「広告をクリックした人」と「申し込んだ人」が結び付かず一致品質が落ちる。
+      function readCookie(name) {
+        const m = document.cookie.match(new RegExp("(^|;\\s*)" + name + "=([^;]*)"));
+        return m ? decodeURIComponent(m[2]) : "";
+      }
+      function metaBrowserIds() {
+        const fbp = readCookie("_fbp");
+        let fbc = readCookie("_fbc");
+        if (!fbc) {
+          // 広告からの初回着地で cookie がまだ書かれていないケースを拾う
+          const fbclid = new URLSearchParams(window.location.search).get("fbclid");
+          if (fbclid) fbc = "fb.1." + Date.now() + "." + fbclid;
+        }
+        return { fbp: fbp, fbc: fbc };
+      }
+
+      // ブラウザ側 Pixel とサーバー側 CAPI を突き合わせるための ID。
+      const eventId =
+        (window.crypto && crypto.randomUUID && crypto.randomUUID()) ||
+        String(Date.now()) + "-" + Math.random().toString(16).slice(2);
+
+      // 申込フォームへの到達。申込完了は月数件しか出ず Meta の学習に足りないため、
+      // 広告の最適化対象はこちらを使う。
+      if (typeof window.fbq === "function") {
+        window.fbq("track", "ViewContent", {
+          content_name: "omakasegram-apply-form",
+        });
+      }
+
       // 営業が条件込みのURLを送る想定。
       //   ?unit=20000&init=0&term=6&plan=monitor
       // 指定がなければ通常価格。金額欄は readonly なので店舗側では変えられない。
@@ -313,6 +345,9 @@ const cssHref = `${base}insta-auto/apply.css?v=${cssVersion}`;
           consent: d.get("consent") === "yes",
           website: d.get("website") || "",
           pageUrl: window.location.href,
+          eventId: eventId,
+          fbp: metaBrowserIds().fbp,
+          fbc: metaBrowserIds().fbc,
         };
 
         try {
@@ -332,10 +367,24 @@ const cssHref = `${base}insta-auto/apply.css?v=${cssVersion}`;
           window.scrollTo({ top: 0, behavior: "smooth" });
 
           if (typeof window.gtag === "function") {
-            window.gtag("event", "generate_lead", {
+            window.gtag("event", "apply_submit", {
               event_category: "form",
               event_label: "おまかせグラム申込",
             });
+          }
+
+          // Meta Pixel。サーバー側 CAPI と同じ eventId を渡して重複排除する。
+          if (typeof window.fbq === "function") {
+            window.fbq(
+              "track",
+              "Lead",
+              {
+                content_name: "omakasegram-apply",
+                currency: "JPY",
+                value: Number(d.get("monthlyTotal")) || undefined,
+              },
+              { eventID: eventId }
+            );
           }
         } catch (err) {
           feedback.className = "feedback is-error";

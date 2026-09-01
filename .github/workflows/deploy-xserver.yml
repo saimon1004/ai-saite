@@ -26,6 +26,34 @@ jobs:
         env:
           PUBLIC_GA4_ID: ${{ secrets.PUBLIC_GA4_ID }}
 
+      - name: Smoke test tracking tags
+        run: |
+          set -euo pipefail
+          fail=0
+          check() {
+            local file="$1" pattern="$2" expected="$3" label="$4"
+            local n
+            n=$(grep -c -- "$pattern" "$file" || true)
+            if [ "$n" -lt "$expected" ]; then
+              echo "::error::$file: $label が $expected 個以上あるはずが $n 個"
+              fail=1
+            fi
+          }
+          for page in dist/insta-auto/index.html dist/insta-auto/apply/index.html; do
+            check "$page" "googletagmanager.com/gtag/js?id=G-" 1 "GA4タグ"
+            check "$page" "fbq('init'" 1 "Metaピクセル"
+            # init が2つ以上あると全イベントが二重計上される
+            n=$(grep -c -- "fbq('init'" "$page" || true)
+            if [ "$n" -gt 1 ]; then
+              echo "::error::$page: fbq('init') が $n 個ある（二重計上になる）"
+              fail=1
+            fi
+          done
+          check dist/insta-auto/apply/index.html "omakasegram-apply" 1 "申込イベント"
+          check dist/insta-auto/index.html "omakasegram-contact" 1 "相談イベント"
+          [ "$fail" -eq 0 ] || { echo "計測タグが欠けているためデプロイを中止します"; exit 1; }
+          echo "✅ 計測タグのスモークテスト通過"
+
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh

@@ -2113,3 +2113,206 @@
   .insta-lp-scope .payback-case { padding: 20px 16px 22px; }
   .insta-lp-scope .payback-num { font-size: 46px; }
 }
+
+/* ===== 01.5 Monitor band =====================================================
+   広告からの着地点。生成りのLPの中で唯一の濃色ブロックにして視線を止める。
+   募集終了時はAstro側でセクションごと外せば、このCSSは無害に残る。 */
+.insta-lp-scope .monitor-band {
+  background: var(--ink);
+  color: var(--white);
+  padding: 60px 24px;
+}
+.insta-lp-scope .monitor-inner {
+  max-width: 720px;
+  margin-inline: auto;
+  text-align: center;
+}
+.insta-lp-scope .monitor-kicker {
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  color: #e8a993;
+  margin: 0 0 12px;
+}
+.insta-lp-scope .monitor-band h2 {
+  /* .insta-lp-scope h2 が --ink 固定なので、濃色背景では白を明示して打ち消す */
+  color: var(--white);
+  font-family: var(--mincho);
+  font-size: clamp(1.5rem, 4.2vw, 2.1rem);
+  line-height: 1.5;
+  text-wrap: balance;
+  margin: 0 0 16px;
+}
+.insta-lp-scope .monitor-lead {
+  /* 幅の広いリード文なので両端揃え。BudouXが文節境界にZWSPを入れるので語中改行は起きない */
+  text-align: justify;
+  text-wrap: pretty;
+  color: rgba(255, 255, 255, 0.86);
+  max-width: 34em;
+  margin: 0 auto 32px;
+}
+.insta-lp-scope .monitor-price {
+  border-block: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 24px 0;
+  margin-bottom: 28px;
+}
+.insta-lp-scope .monitor-price-value {
+  font-family: var(--mincho);
+  margin: 0;
+  line-height: 1;
+}
+.insta-lp-scope .monitor-num {
+  font-size: clamp(2.8rem, 9vw, 4rem);
+  letter-spacing: 0.01em;
+}
+.insta-lp-scope .monitor-unit {
+  font-size: 1.1rem;
+  margin-left: 4px;
+}
+.insta-lp-scope .monitor-unit small { font-size: 0.72rem; }
+.insta-lp-scope .monitor-price-label {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.86);
+  margin: 10px 0 0;
+}
+.insta-lp-scope .monitor-price-after {
+  font-size: 0.86rem;
+  color: rgba(255, 255, 255, 0.68);
+  margin: 6px 0 0;
+}
+.insta-lp-scope .monitor-terms {
+  margin-bottom: 28px;
+}
+.insta-lp-scope .monitor-terms-title {
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.68);
+  margin: 0 0 10px;
+}
+.insta-lp-scope .monitor-terms ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 20px;
+}
+.insta-lp-scope .monitor-terms li {
+  font-size: 0.92rem;
+  white-space: nowrap;
+}
+.insta-lp-scope .monitor-terms li::before {
+  content: "・";
+  color: #e8a993;
+}
+.insta-lp-scope .monitor-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--vermilion);
+  color: var(--white);
+  text-decoration: none;
+  font-size: 1.02rem;
+  padding: 16px 36px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+.insta-lp-scope .monitor-cta:hover { background: var(--vermilion-deep); }
+.insta-lp-scope .monitor-slots {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.86);
+  margin: 14px 0 0;
+}
+.insta-lp-scope .monitor-slots b {
+  font-family: var(--mincho);
+  font-size: 1.3rem;
+  color: #e8a993;
+}
+.insta-lp-scope .monitor-slots-note {
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 6px;
+}
+.insta-lp-scope .monitor-fine {
+  /* 長い注記は中央揃えにせず、左揃えの中央ブロックにする */
+  text-align: left;
+  max-width: 30em;
+  margin: 24px auto 0;
+  font-size: 0.78rem;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 640px) {
+  .insta-lp-scope .monitor-band { padding: 44px 20px; }
+  /* 短い行長では文節折り返しが右側を空けるため、本文は通常折り返しに戻す */
+  .insta-lp-scope .monitor-lead { text-align: left; word-break: normal; }
+  .insta-lp-scope .monitor-terms ul { flex-direction: column; align-items: center; gap: 6px; }
+  .insta-lp-scope .monitor-cta { width: 100%; justify-content: center; }
+}
+
+/* ===== 04.5 Real screens ====================================================
+   導入事例がまだ無いので、動いている実画面そのものを証拠として並べる。
+   PCは5枚横並び、モバイルは横スクロール（1枚目が必ず視界に入る幅にする）。 */
+.insta-lp-scope .screen-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.insta-lp-scope .screen-item {
+  text-align: center;
+}
+.insta-lp-scope .screen-item img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--white);
+  display: block;
+}
+.insta-lp-scope .screen-step {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 14px 0 4px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+}
+.insta-lp-scope .screen-step span {
+  font-family: var(--mincho);
+  font-size: 0.98rem;
+  color: var(--vermilion);
+}
+.insta-lp-scope .screen-note {
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--ink-65);
+  margin: 0;
+  text-wrap: pretty;
+}
+/* 5枚目（設定）はお店が毎日触る画面ではないので、一段控えめにする */
+.insta-lp-scope .screen-item-sub img { opacity: 0.88; }
+.insta-lp-scope .screen-item-sub .screen-step span { color: var(--ink-45); }
+
+@media (max-width: 900px) {
+  .insta-lp-scope .screen-list {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 56%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 14px;
+    padding-bottom: 12px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .insta-lp-scope .screen-item { scroll-snap-align: start; }
+  .insta-lp-scope .screen-note { word-break: normal; }
+}
+@media (max-width: 560px) {
+  .insta-lp-scope .screen-list { grid-auto-columns: 68%; }
+}

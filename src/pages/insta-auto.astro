@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/common/Header.astro";
 import Footer from "../components/common/Footer.astro";
+import MetaPixel from "../components/common/MetaPixel.astro";
 import { loadDefaultJapaneseParser } from "budoux";
 
 // アプリ画面モックの文字は幅が狭く、word-break:keep-all だけだと折り返せずはみ出す。
@@ -12,7 +13,7 @@ const phrase = (t: string) => jpParser.parse(t).join(ZWSP);
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260827-v18";
+const cssVersion = "20260901-v19";
 const cssHref = `${base}insta-auto/styles.css?v=${cssVersion}`;
 
 const img = (name: string) => `${base}insta-auto/assets/${name}`;
@@ -207,6 +208,7 @@ const jsonLd = {
   jsonLd={jsonLd}
   chatbot={false}
 >
+  <MetaPixel slot="head" />
   <link rel="preconnect" href="https://fonts.googleapis.com" slot="head" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin slot="head" />
   <link
@@ -276,6 +278,36 @@ const jsonLd = {
           {/* 後半はスマホでは出さない。承認画面のモックがスマホでは非表示のため */}
           <p class="feed-caption">おまかせグラムで運用した投稿のイメージ。<span class="cap-screen">画面はイメージです。</span></p>
         </div>
+      </div>
+    </section>
+
+    <!-- 01.5 Monitor — 広告からの着地点。景表法の二重価格表示を避けるため「値引き」ではなく
+         「モニター募集」として提示し、比較対照は過去の販売実績ではなく将来価格（4ヶ月目以降）に置く。
+         募集を締めるときはこのセクションごと外せば元のLPに戻る。 -->
+    <section class="monitor-band" aria-labelledby="monitor-title">
+      <div class="monitor-inner">
+        <p class="monitor-kicker">モニター募集</p>
+        <h2 id="monitor-title"><span class="no-break">一緒に育てていただける</span><wbr /><span class="no-break">10店舗を募集します</span></h2>
+        <p class="monitor-lead jp-budoux">導入事例がまだ1件もありません。だから、最初に使ってくださるお店には、その分の条件でお願いしたいと思っています。</p>
+
+        <div class="monitor-price">
+          <p class="monitor-price-value"><span class="monitor-num">15,000</span><span class="monitor-unit">円<small>（税別）</small></span></p>
+          <p class="monitor-price-label"><span class="no-break">1店舗あたり月額</span><wbr /><span class="no-break">／ 最初の3ヶ月</span></p>
+          <p class="monitor-price-after"><span class="no-break">4ヶ月目以降は通常価格の</span><wbr /><span class="no-break">月30,000円（税別）になります。</span></p>
+        </div>
+
+        <div class="monitor-terms">
+          <p class="monitor-terms-title">お願いする3つのこと</p>
+          <ul>
+            <li>最低3ヶ月のご利用</li>
+            <li>導入事例としての掲載へのご協力</li>
+            <li>月1回15分の運用ヒアリング</li>
+          </ul>
+        </div>
+
+        <a class="monitor-cta" href="/insta-auto/apply/?unit=15000&amp;init=0&amp;term=3&amp;plan=monitor" data-cta-source="monitor-band">モニターに申し込む<span aria-hidden="true">→</span></a>
+        <p class="monitor-slots">残り <b>10</b> 店舗<span class="monitor-slots-note">（2026年9月1日時点）</span></p>
+        <p class="monitor-fine">10店舗に達した時点で募集を終了します。初期費用はかかりません。解約は前月末日までにお知らせいただければ、翌月以降の料金は発生しません。</p>
       </div>
     </section>
 
@@ -461,6 +493,47 @@ const jsonLd = {
           </li>
         </ol>
         <p class="fine-print">承認していない投稿案が、そのまま公開されることはありません。</p>
+      </div>
+    </section>
+
+    <!-- 04.5 Real screens — 事例がまだ無いぶん、動いている実物を見せる -->
+    <section class="screens section-block" aria-labelledby="screens-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Screens</p>
+          <h2 id="screens-title"><span class="no-break">モックではありません。</span><wbr /><span class="no-break">動いている画面です</span></h2>
+          <p class="section-lead jp-budoux">デモ店舗で実際に運用しているアプリの画面です。写真を送ってから投稿されるまで、お店が見るのはこの4画面だけです。</p>
+        </div>
+
+        <ol class="screen-list">
+          <li class="screen-item">
+            <img src={img("app-post.png")} alt="投稿する画面。料理かお知らせかを選び、写真を選ぶ操作だけが並んでいる。" width="519" height="900" loading="lazy" decoding="async" />
+            <p class="screen-step"><span aria-hidden="true">01</span>写真を送る</p>
+            <p class="screen-note">種類を選んで写真を選ぶだけ</p>
+          </li>
+          <li class="screen-item">
+            <img src={img("app-inbox.png")} alt="承認待ちの画面。AIが加工した料理の写真と投稿案が届いている。" width="519" height="900" loading="lazy" decoding="async" />
+            <p class="screen-step"><span aria-hidden="true">02</span>投稿案が届く</p>
+            <p class="screen-note">加工された画像がアプリに届きます</p>
+          </li>
+          <li class="screen-item">
+            <img src={img("app-approve.png")} alt="承認画面。AIが作ったタイトル、キャプション、ハッシュタグと、承認・却下・文章を直すのボタンが並んでいる。" width="519" height="900" loading="lazy" decoding="async" />
+            <p class="screen-step"><span aria-hidden="true">03</span>見て、承認する</p>
+            <p class="screen-note">文章もハッシュタグも用意済みです</p>
+          </li>
+          <li class="screen-item">
+            <img src={img("app-history.png")} alt="予定と履歴の画面。投稿済みの記事が日時とともに並んでいる。" width="519" height="900" loading="lazy" decoding="async" />
+            <p class="screen-step"><span aria-hidden="true">04</span>予定と履歴を見る</p>
+            <p class="screen-note">いつ何を出したかが残ります</p>
+          </li>
+          <li class="screen-item screen-item-sub">
+            <img src={img("app-settings.png")} alt="設定画面。メニュー管理と、写真に文字を載せるかどうかの設定が並んでいる。" width="519" height="900" loading="lazy" decoding="async" />
+            <p class="screen-step"><span aria-hidden="true">＋</span>設定</p>
+            <p class="screen-note">メニューと仕上げを決めておきます</p>
+          </li>
+        </ol>
+
+        <p class="fine-print">デモ店舗「おまかせ体験ダイニング」の実画面です（2026年8月21日撮影）。03のタイトルとキャプションとハッシュタグは、送った写真からAIが実際に作ったものです。<strong>まだ実店舗での導入事例はありません。</strong>だからこそ、画面はそのままお見せしています。</p>
       </div>
     </section>
 
@@ -979,6 +1052,23 @@ const jsonLd = {
         return "LP無料相談";
       }
 
+      // Meta の広告クリック識別子。ブラウザのcookieにあるものをそのままCAPIへ渡す。
+      // これが無いと「広告をクリックした人」と「申し込んだ人」が結び付かず一致品質が落ちる。
+      function readCookie(name) {
+        const m = document.cookie.match(new RegExp("(^|;\\s*)" + name + "=([^;]*)"));
+        return m ? decodeURIComponent(m[2]) : "";
+      }
+      function metaBrowserIds() {
+        const fbp = readCookie("_fbp");
+        let fbc = readCookie("_fbc");
+        if (!fbc) {
+          // 広告からの初回着地で cookie がまだ書かれていないケースを拾う
+          const fbclid = new URLSearchParams(window.location.search).get("fbclid");
+          if (fbclid) fbc = "fb.1." + Date.now() + "." + fbclid;
+        }
+        return { fbp: fbp, fbc: fbc };
+      }
+
       function collectUtm() {
         try {
           const url = new URL(window.location.href);
@@ -1006,6 +1096,7 @@ const jsonLd = {
 
         const data = new FormData(form);
         const utm = collectUtm();
+        const fbIds = metaBrowserIds();
         const eventId =
           (window.crypto && crypto.randomUUID && crypto.randomUUID()) ||
           String(Date.now()) + Math.random().toString(16).slice(2);
@@ -1022,6 +1113,8 @@ const jsonLd = {
           utmCampaign: utm.utmCampaign,
           eventId: eventId,
           pageUrl: window.location.href,
+          fbp: fbIds.fbp,
+          fbc: fbIds.fbc,
         };
 
         try {
@@ -1047,6 +1140,16 @@ const jsonLd = {
               event_category: "form",
               event_label: payload.source,
             });
+          }
+
+          // Meta Pixel。サーバー側 CAPI と同じ eventId を渡して重複排除する。
+          if (typeof window.fbq === "function") {
+            window.fbq(
+              "track",
+              "Lead",
+              { content_name: "omakasegram-contact" },
+              { eventID: eventId }
+            );
           }
         } catch (err) {
           feedback.classList.add("is-error");
