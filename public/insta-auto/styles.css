@@ -100,14 +100,14 @@
    セクションの器 — 誌面なので余白を大きく取る
    ============================================================ */
 .insta-lp-scope .section-block {
-  padding: 72px 24px;
+  padding: 52px 24px;
 }
 .insta-lp-scope .section-inner {
   max-width: 1080px;
   margin-inline: auto;
 }
 .insta-lp-scope .section-heading {
-  margin-bottom: 36px;
+  margin-bottom: 28px;
 }
 /* 眉ラベル: 朱の点＋欧文小文字間隔。中央寄せにはしない */
 .insta-lp-scope .section-kicker {
@@ -132,10 +132,10 @@
 }
 @media (max-width: 640px) {
   .insta-lp-scope .section-block {
-    padding: 44px 20px;
+    padding: 36px 20px;
   }
   .insta-lp-scope .section-heading {
-    margin-bottom: 26px;
+    margin-bottom: 22px;
   }
 }
 
@@ -1171,7 +1171,7 @@
   min-height: 380px;
   display: grid;
   align-items: center;
-  padding: 68px 24px;
+  padding: 52px 24px;
   color: var(--white);
   isolation: isolate;
 }
@@ -1208,7 +1208,7 @@
 @media (max-width: 640px) {
   .insta-lp-scope .photo-band {
     min-height: 0;
-    padding: 56px 20px;
+    padding: 44px 20px;
   }
   .insta-lp-scope .photo-band::after {
     background: linear-gradient(178deg, rgba(17, 17, 19, 0.84) 0%, rgba(17, 17, 19, 0.78) 60%, rgba(17, 17, 19, 0.6) 100%);
@@ -1717,7 +1717,7 @@
    ============================================================ */
 .insta-lp-scope .cta-band {
   position: relative;
-  padding: 80px 24px;
+  padding: 62px 24px;
   color: var(--white);
   text-align: center;
   isolation: isolate;
@@ -1888,7 +1888,7 @@
 }
 @media (max-width: 640px) {
   .insta-lp-scope .cta-band {
-    padding: 64px 20px;
+    padding: 50px 20px;
   }
   .insta-lp-scope .lead-form {
     padding: 28px 20px;

@@ -12,7 +12,7 @@ const phrase = (t: string) => jpParser.parse(t).join(ZWSP);
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260827-v17";
+const cssVersion = "20260827-v18";
 const cssHref = `${base}insta-auto/styles.css?v=${cssVersion}`;
 
 const img = (name: string) => `${base}insta-auto/assets/${name}`;
