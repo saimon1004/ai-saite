@@ -48,6 +48,23 @@
 .insta-lp-scope .hero-lead {
   text-wrap: pretty;
   word-break: auto-phrase;
+  /* BudouXの文節折り返しは行末が大きく空く（実測で充填率46〜66%の行が出ていた）。
+     幅の広いリード文だけ両端揃えにして右側の空きを潰す。
+     狭いカードは文字間が間延びするので当てない。中央揃えのブロックにも当てない。 */
+  text-align: justify;
+}
+
+/* BudouXを当てた本文も同様に行末が空くので両端揃えにする。
+   中央揃えのブロックは、短い行の文字間が極端に開くので下で個別に打ち消す。 */
+.insta-lp-scope .jp-budoux,
+.insta-lp-scope .faq-a,
+.insta-lp-scope .fine-print {
+  text-align: justify;
+}
+.insta-lp-scope .cta-band .jp-budoux,
+.insta-lp-scope .compare-close,
+.insta-lp-scope .monitor-lead {
+  text-align: center;
 }
 .insta-lp-scope p,
 .insta-lp-scope li,
@@ -58,9 +75,10 @@
   text-wrap: pretty;
   word-break: auto-phrase;
 }
-/* 注記は中央に置くと1行なのに目立つ。直前の本文と左端をそろえて流れに戻す */
+/* 注記は中央に置くと1行なのに目立つ。直前の本文と左端をそろえて流れに戻す。
+   右端の空きを作らないよう両端揃えにする（中央揃えにしないことが元の意図） */
 .insta-lp-scope .fine-print {
-  text-align: left;
+  text-align: justify;
   max-width: 640px;
   margin-inline: 0;
   font-size: 13.5px;
@@ -899,7 +917,7 @@
     color: var(--ink-25);
   }
   .insta-lp-scope .compare-close {
-    text-align: left;
+    text-align: justify;
   }
 }
 
@@ -2234,8 +2252,8 @@
   margin-left: 6px;
 }
 .insta-lp-scope .monitor-fine {
-  /* 長い注記は中央揃えにせず、左揃えの中央ブロックにする */
-  text-align: left;
+  /* 長い注記は中央揃えにせず、両端揃えの中央ブロックにする */
+  text-align: justify;
   max-width: 30em;
   margin: 24px auto 0;
   font-size: 0.78rem;
