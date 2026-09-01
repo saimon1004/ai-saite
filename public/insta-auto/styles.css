@@ -79,7 +79,7 @@
    右端の空きを作らないよう両端揃えにする（中央揃えにしないことが元の意図） */
 .insta-lp-scope .fine-print {
   text-align: justify;
-  max-width: 640px;
+  max-width: 880px;
   margin-inline: 0;
   font-size: 13.5px;
   color: var(--ink-45);
@@ -102,6 +102,9 @@
   .insta-lp-scope .note,
   .insta-lp-scope .faq-a {
     word-break: normal;
+  }
+  .insta-lp-scope .hero-lead {
+    text-align: left;
   }
   .insta-lp-scope .section-lead,
   .insta-lp-scope .hero-lead {
@@ -177,7 +180,9 @@
 .insta-lp-scope .section-lead {
   font-size: 16px;
   color: var(--ink-65);
-  max-width: 40em;
+  /* コンテナ(1080px)に対して狭すぎると右側が大きく空くので、
+     日本語の可読上限（1行50字強）まで広げる */
+  max-width: 54em;
   margin: 0;
 }
 @media (max-width: 640px) {
@@ -1221,7 +1226,7 @@
 }
 .insta-lp-scope .photo-band .section-lead {
   color: rgba(255, 255, 255, 0.86);
-  max-width: 34em;
+  max-width: 46em;
 }
 @media (max-width: 640px) {
   .insta-lp-scope .photo-band {
@@ -1472,7 +1477,7 @@
 }
 .insta-lp-scope .admin .section-lead {
   color: rgba(255, 255, 255, 0.8);
-  max-width: 40em;
+  max-width: 54em;
 }
 .insta-lp-scope .admin-grid {
   list-style: none;
