@@ -2143,8 +2143,8 @@
   margin: 0 0 16px;
 }
 .insta-lp-scope .monitor-lead {
-  /* 幅の広いリード文なので両端揃え。BudouXが文節境界にZWSPを入れるので語中改行は起きない */
-  text-align: justify;
+  /* 中央揃えのブロックなので justify にしない（短い行の文字間が極端に開く） */
+  text-align: center;
   text-wrap: pretty;
   color: rgba(255, 255, 255, 0.86);
   max-width: 34em;
@@ -2246,7 +2246,7 @@
 @media (max-width: 640px) {
   .insta-lp-scope .monitor-band { padding: 44px 20px; }
   /* 短い行長では文節折り返しが右側を空けるため、本文は通常折り返しに戻す */
-  .insta-lp-scope .monitor-lead { text-align: left; word-break: normal; }
+  .insta-lp-scope .monitor-lead { word-break: normal; }
   .insta-lp-scope .monitor-terms ul { flex-direction: column; align-items: center; gap: 6px; }
   .insta-lp-scope .monitor-cta { width: 100%; justify-content: center; }
 }

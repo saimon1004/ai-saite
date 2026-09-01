@@ -13,7 +13,7 @@ const phrase = (t: string) => jpParser.parse(t).join(ZWSP);
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260901-v19";
+const cssVersion = "20260901-v20";
 const cssHref = `${base}insta-auto/styles.css?v=${cssVersion}`;
 
 const img = (name: string) => `${base}insta-auto/assets/${name}`;
@@ -288,7 +288,7 @@ const jsonLd = {
       <div class="monitor-inner">
         <p class="monitor-kicker">モニター募集</p>
         <h2 id="monitor-title"><span class="no-break">一緒に育てていただける</span><wbr /><span class="no-break">10店舗を募集します</span></h2>
-        <p class="monitor-lead jp-budoux">導入事例がまだ1件もありません。だから、最初に使ってくださるお店には、その分の条件でお願いしたいと思っています。</p>
+        <p class="monitor-lead jp-budoux">一緒に育ててくださるお店に、モニター価格でお使いいただきます。実際の運用を見せていただきながら、サービスを良くしていきます。</p>
 
         <div class="monitor-price">
           <p class="monitor-price-value"><span class="monitor-num">15,000</span><span class="monitor-unit">円<small>（税別）</small></span></p>
@@ -496,7 +496,7 @@ const jsonLd = {
       </div>
     </section>
 
-    <!-- 04.5 Real screens — 事例がまだ無いぶん、動いている実物を見せる -->
+    <!-- 04.5 Real screens — 実際に動いている画面をそのまま見せる -->
     <section class="screens section-block" aria-labelledby="screens-title">
       <div class="section-inner">
         <div class="section-heading">
@@ -533,7 +533,7 @@ const jsonLd = {
           </li>
         </ol>
 
-        <p class="fine-print">デモ店舗「おまかせ体験ダイニング」の実画面です（2026年8月21日撮影）。03のタイトルとキャプションとハッシュタグは、送った写真からAIが実際に作ったものです。<strong>まだ実店舗での導入事例はありません。</strong>だからこそ、画面はそのままお見せしています。</p>
+        <p class="fine-print">デモ店舗「おまかせ体験ダイニング」の実画面です（2026年8月21日撮影）。03のタイトルとキャプションとハッシュタグは、送った写真からAIが実際に作ったものです。</p>
       </div>
     </section>
 
@@ -937,7 +937,7 @@ const jsonLd = {
             </ul>
           </div>
         </div>
-        <p class="fine-print">「これから追加していきます」に挙げた項目は、まだお使いいただけません。月額に含まれるのは、いま使える機能です。公開できる導入事例はまだありません。</p>
+        <p class="fine-print">「これから追加していきます」に挙げた項目は、まだお使いいただけません。月額に含まれるのは、いま使える機能です。</p>
       </div>
     </section>
 
