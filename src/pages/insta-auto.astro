@@ -12,7 +12,7 @@ const phrase = (t: string) => jpParser.parse(t).join(ZWSP);
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260813-v15";
+const cssVersion = "20260827-v16";
 const cssHref = `${base}insta-auto/styles.css?v=${cssVersion}`;
 
 const img = (name: string) => `${base}insta-auto/assets/${name}`;
@@ -308,6 +308,59 @@ const jsonLd = {
           </ul>
           <p class="problem-close jp-budoux">どれも、工程が多いことから起きています。</p>
         </div>
+      </div>
+    </section>
+
+    <!-- 02.5 Why Instagram — 他社調査の引用。自社の実績値ではないので出典を必ず添える -->
+    <section class="why section-block" aria-labelledby="why-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Why Instagram</p>
+          <h2 id="why-title"><span class="no-break">お店選びは、</span><wbr /><span class="no-break">いまInstagramの中で</span><wbr /><span class="no-break">起きています</span></h2>
+          <p class="section-lead jp-budoux">「どこで食べるか」を決める場所が変わりました。食べログやぐるなびで探す前に、Instagramで見つけて保存する。その順番が当たり前になっています。</p>
+        </div>
+
+        <ul class="why-stats">
+          <li class="why-stat">
+            <p class="why-num">80.8<small>%</small></p>
+            <h3><span class="no-break">SNS・動画で</span><wbr /><span class="no-break">飲食店に出会う</span></h3>
+            <p class="jp-budoux">Z世代（15〜29歳）が、お店を知るきっかけにしているもの。</p>
+          </li>
+          <li class="why-stat">
+            <p class="why-num">67.5<small>%</small></p>
+            <h3><span class="no-break">Instagramで</span><wbr /><span class="no-break">情報を集める</span></h3>
+            <p class="jp-budoux">YouTube 48.1%・TikTok 46.1% を上回って最多。</p>
+          </li>
+          <li class="why-stat">
+            <p class="why-num">71.2<small>%</small></p>
+            <h3><span class="no-break">Instagramに</span><wbr /><span class="no-break">お店を保存する</span></h3>
+            <p class="jp-budoux">Googleマップへの保存 61.1% より多く使われています。</p>
+          </li>
+          <li class="why-stat">
+            <p class="why-num">52.5<small>%</small></p>
+            <h3><span class="no-break">全年代でも</span><wbr /><span class="no-break">Instagramを見る</span></h3>
+            <p class="jp-budoux">お店探しでよく見るメディアとして、若年層以外にも広がっています。</p>
+          </li>
+        </ul>
+
+        <p class="why-close jp-budoux"><strong>Instagramの価値は、フォロワー数ではなく「保存されること」にあります。</strong>行きたいお店として保存され、お腹が空いたときに思い出してもらえるかどうか。ただし、保存はお客様が投稿を見た瞬間にしか起きません。投稿が止まっている期間の保存は、ゼロです。</p>
+
+        <ul class="why-notes">
+          <li>
+            <h3><span class="no-break">投稿が見られるのは、</span><wbr /><span class="no-break">出した日です</span></h3>
+            <p class="jp-budoux">フィードは新しい順に並びます。月に何本出したかより、何日ぶん接点があったかが効いてきます。まとめて1日に出すと、その1日で終わります。</p>
+          </li>
+          <li>
+            <h3><span class="no-break">お店選びは、</span><wbr /><span class="no-break">毎日発生しています</span></h3>
+            <p class="jp-budoux">「今日どこで食べるか」は、その日に決まります。動いていない日は、そもそも候補に入りません。</p>
+          </li>
+          <li>
+            <h3><span class="no-break">止まっている</span><wbr /><span class="no-break">アカウントは、</span><wbr /><span class="no-break">信用を減らします</span></h3>
+            <p class="jp-budoux">最後の投稿が半年前だと、いまも営業しているのかが分かりません。行きたい人ほど、そこで確認して離れていきます。</p>
+          </li>
+        </ul>
+
+        <p class="fine-print">出典：ファストマーケティング「Z世代の飲食店情報収集に関する調査」（15〜29歳・360名／2025年1月調査）、syncAD「飲食店の選び方 2025年最新調査」。いずれも第三者による調査結果で、本サービスの利用実績ではありません。</p>
       </div>
     </section>
 
@@ -733,6 +786,45 @@ const jsonLd = {
           </ul>
         </div>
         <p class="fine-print">複数店舗でのご利用は個別にお見積もりします。Instagramのビジネスアカウント（と連携するFacebookページ）はお客様でご用意ください。契約期間や解約の条件は、個別のご契約でお取り決めします。</p>
+      </div>
+    </section>
+
+    <!-- 11.5 Payback — 損益分岐の計算。効果の約束ではないことが伝わるよう前提を数字の隣に置く -->
+    <section class="payback-section section-block" aria-labelledby="payback-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Payback</p>
+          <h2 id="payback-title"><span class="no-break">月30,000円は、</span><wbr /><span class="no-break">1日1〜2名ほどの</span><wbr /><span class="no-break">来店増で戻ります</span></h2>
+          <p class="section-lead jp-budoux">かかる費用に対して、何名増えれば元が取れるのか。客単価と粗利率から割り算しただけの数字です。お店の実際の原価率で計算し直せば、そのまま判断の材料になります。</p>
+        </div>
+
+        <div class="payback">
+          <div class="payback-case">
+            <h3>テイクアウト・ランチ</h3>
+            <p class="payback-assume">客単価 1,000円 ／ 粗利率 60%<br />＝ 1食あたりの粗利 600円</p>
+            <p class="payback-need">月30,000円を取り戻すには</p>
+            <p class="payback-value"><span class="payback-num">50</span><span class="payback-unit">食／月</span></p>
+            <p class="payback-day jp-budoux">月26日の営業なら、1日あたり約2食。</p>
+          </div>
+          <div class="payback-case">
+            <h3>居酒屋・ディナー</h3>
+            <p class="payback-assume">客単価 3,000円 ／ 粗利率 70%<br />＝ 1名あたりの粗利 2,100円</p>
+            <p class="payback-need">月30,000円を取り戻すには</p>
+            <p class="payback-value"><span class="payback-num">15</span><span class="payback-unit">名／月</span></p>
+            <p class="payback-day jp-budoux">月26日の営業なら、1日あたり0.6名ほど。</p>
+          </div>
+          <div class="payback-case">
+            <h3>割烹・専門店</h3>
+            <p class="payback-assume">客単価 5,000円 ／ 粗利率 70%<br />＝ 1名あたりの粗利 3,500円</p>
+            <p class="payback-need">月30,000円を取り戻すには</p>
+            <p class="payback-value"><span class="payback-num">9</span><span class="payback-unit">名／月</span></p>
+            <p class="payback-day jp-budoux">月26日の営業なら、1日あたり0.4名ほど。</p>
+          </div>
+        </div>
+
+        <p class="payback-close jp-budoux">客単価が高いお店ほど、必要な数は少なくなります。いずれも1日あたりで見れば1〜2名ぶん。判断できる大きさの数字だと思っています。</p>
+
+        <p class="fine-print">上の数字は「月額30,000円（税別）÷ 1名あたりの粗利」を計算したものです。客単価と粗利率は一般的な水準を仮に置いたもので、お店ごとに変わります。<strong>これだけの来店増が起きることをお約束するものではありません。</strong>実際に何名増えるかは、お店の立地・商圏・投稿の内容によって変わります。お店の客単価と原価率をお聞かせいただければ、その場で計算し直します。</p>
       </div>
     </section>
 

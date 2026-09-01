@@ -1921,3 +1921,166 @@
 @media (max-width: 640px) {
   .insta-lp-scope .legal-links { justify-content: flex-start; }
 }
+
+/* ============================================================
+   Why Instagram — なぜ飲食店でInstagramなのか
+   カードを並べず、大きな数字を罫線で仕切って誌面らしく見せる。
+   数字は他社調査の引用なので、必ず出典を添える。
+   ============================================================ */
+.insta-lp-scope .why-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 2px solid var(--ink);
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.insta-lp-scope .why-stat {
+  padding: 22px 20px 24px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.insta-lp-scope .why-stat:last-child { border-right: none; }
+.insta-lp-scope .why-num {
+  font-family: var(--mincho);
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--vermilion);
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+.insta-lp-scope .why-num small { font-size: 22px; margin-left: 1px; }
+.insta-lp-scope .why-stat h3 {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.6;
+  margin: 0 0 6px;
+}
+.insta-lp-scope .why-stat p {
+  font-size: 13px;
+  color: var(--ink-45);
+  margin: 0;
+  line-height: 1.7;
+}
+/* 締めの一文は罫線1本の帯で受ける（カードにしない） */
+.insta-lp-scope .why-close {
+  border-bottom: 2px solid var(--ink);
+  padding: 18px 0 20px;
+  margin: 0 0 10px;
+  font-size: 16px;
+  line-height: 1.9;
+}
+.insta-lp-scope .why-close strong { font-weight: 700; }
+
+/* 締めのあとの3項目。左が空く2カラムにせず、上の数字帯と同じ3分割で受ける */
+.insta-lp-scope .why-notes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+.insta-lp-scope .why-notes li {
+  padding: 4px 24px 6px 0;
+  border-right: 1px solid var(--rule);
+}
+.insta-lp-scope .why-notes li:last-child { border-right: none; padding-right: 0; }
+.insta-lp-scope .why-notes li + li { padding-left: 24px; }
+.insta-lp-scope .why-notes h3 {
+  font-family: var(--mincho);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.65;
+  margin: 0 0 8px;
+}
+.insta-lp-scope .why-notes p {
+  font-size: 14px;
+  color: var(--ink-65);
+  margin: 0;
+  line-height: 1.85;
+}
+
+/* ============================================================
+   Payback — 何名の来店増で費用が戻るか
+   効果の約束ではなく損益分岐の計算であることが読み取れるよう、
+   前提（客単価・粗利率）を必ず数字の近くに置く。
+   ============================================================ */
+.insta-lp-scope .payback {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 2px solid var(--ink);
+  margin-top: 4px;
+}
+.insta-lp-scope .payback-case {
+  padding: 22px 22px 24px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.insta-lp-scope .payback-case:last-child { border-right: none; }
+.insta-lp-scope .payback-case h3 {
+  font-size: 15.5px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+.insta-lp-scope .payback-assume {
+  font-size: 12.5px;
+  color: var(--ink-45);
+  margin: 0 0 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.insta-lp-scope .payback-need {
+  font-size: 12.5px;
+  color: var(--ink-45);
+  margin: 0 0 2px;
+}
+.insta-lp-scope .payback-value {
+  font-family: var(--mincho);
+  font-weight: 700;
+  line-height: 1.05;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+.insta-lp-scope .payback-num { font-size: 52px; color: var(--vermilion); }
+.insta-lp-scope .payback-unit { font-size: 17px; margin-left: 4px; }
+.insta-lp-scope .payback-day {
+  font-size: 13.5px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.7;
+}
+.insta-lp-scope .payback-close {
+  border-bottom: 2px solid var(--ink);
+  padding: 18px 0 20px;
+  margin: 0 0 10px;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+@media (max-width: 900px) {
+  .insta-lp-scope .why-stats { grid-template-columns: repeat(2, 1fr); }
+  .insta-lp-scope .why-notes { grid-template-columns: 1fr; gap: 20px; }
+  .insta-lp-scope .why-notes li,
+  .insta-lp-scope .why-notes li + li {
+    border-right: none;
+    padding: 0 0 18px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .insta-lp-scope .why-notes li:last-child { border-bottom: none; padding-bottom: 0; }
+  .insta-lp-scope .why-stat:nth-child(2n) { border-right: none; }
+  .insta-lp-scope .payback { grid-template-columns: 1fr; }
+  .insta-lp-scope .payback-case { border-right: none; }
+}
+@media (max-width: 640px) {
+  .insta-lp-scope .why-stat { padding: 18px 14px 20px; }
+  .insta-lp-scope .why-num { font-size: 38px; }
+  .insta-lp-scope .why-num small { font-size: 18px; }
+  .insta-lp-scope .why-stat h3 { font-size: 14px; }
+  .insta-lp-scope .why-close,
+  .insta-lp-scope .payback-close { font-size: 15px; }
+  .insta-lp-scope .payback-case { padding: 20px 16px 22px; }
+  .insta-lp-scope .payback-num { font-size: 46px; }
+}
