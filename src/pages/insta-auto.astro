@@ -1047,9 +1047,10 @@ const jsonLd = {
       const feedback = document.getElementById("form-feedback");
       const submitBtn = form.querySelector(".lead-form-submit");
 
-      // API側の獲得経路ホワイトリストに合わせる（"LP無料相談" は登録済みの値なので変更しない）
+      // API側の獲得経路ホワイトリストに合わせる。
+      // 採用HPのリードと同じNotion DBに入るので、おまかせグラム専用の値で区別する。
       function resolveSource() {
-        return "LP無料相談";
+        return "おまかせグラム相談";
       }
 
       // Meta の広告クリック識別子。ブラウザのcookieにあるものをそのままCAPIへ渡す。
