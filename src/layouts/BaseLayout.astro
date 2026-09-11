@@ -31,10 +31,16 @@ const resolvedOgImage = ogImage.startsWith("http")
 
 const resolvedCanonical = canonicalUrl || Astro.url.href;
 
-// GA4 測定ID。SAIMON > 「SAIMON 採用HP内製化LP」(properties/538575114) のストリーム。
+// GA4 測定ID。SAIMON's HP > sai-mon.co.jp (properties/529360152) のストリーム。
+//
+// 2026-09-02 に 538575114 の G-8ZHWYSPCH0 へ一本化したが、そのストリームは
+// 直接送信を受け付けず GA4 の計測が完全に停止した（9/4〜9/11 のデータを失った）。
+// 538575114 側にデータが入っていたのは転送経由だったと判明。2026-09-11 に差し戻し。
+// 一本化を再挑戦するなら、先に受信先ストリームで実際にヒットが入ることを確認すること。
+//
 // 公開値なので env にしない。env 経由だと GitHub Secrets が消えたときに
 // 条件レンダリングでタグごと消え、ビルドは緑のまま計測だけが静かに止まる。
-const GA4_MEASUREMENT_ID = "G-8ZHWYSPCH0";
+const GA4_MEASUREMENT_ID = "G-FSC03D4DCV";
 ---
 
 <!doctype html>
