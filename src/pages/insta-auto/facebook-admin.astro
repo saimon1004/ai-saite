@@ -9,11 +9,7 @@ const cssVersion = "20260830-v2";
 const cssHref = `${base}insta-auto/facebook-admin.css?v=${cssVersion}`;
 const pdfHref = `${base}insta-auto/facebook-admin-guide.pdf`;
 
-// 追加をお願いするアカウント。差し替えるときはPDF（public/insta-auto/facebook-admin-guide.pdf）も一緒に更新する
-const account = {
-  name: "松本隆",
-  profileUrl: "https://www.facebook.com/profile.php?id=61553316098735",
-};
+// 追加するアカウント（名前・プロフィールURL）はページに載せず、店舗さまごとに個別にお伝えする
 ---
 
 <BaseLayout
@@ -69,11 +65,7 @@ const account = {
           </div>
           <div>
             <dt>追加するアカウント</dt>
-            <dd><strong>{account.name}</strong></dd>
-          </div>
-          <div>
-            <dt>プロフィールURL</dt>
-            <dd><a class="url" href={account.profileUrl} target="_blank" rel="noopener">{account.profileUrl}</a></dd>
+            <dd><strong>担当者より別途お知らせします</strong>（アカウント名とプロフィールURLをご連絡します）</dd>
           </div>
           <div>
             <dt>付与する権限</dt>
@@ -83,7 +75,7 @@ const account = {
 
         <div class="callout">
           <p>InstagramやFacebookのパスワードをお伺いすることは一切ありません。</p>
-          <p>上記アカウントをページに追加していただくだけで完了します。</p>
+          <p>別途お知らせするアカウントをページに追加していただくだけで完了します。</p>
         </div>
       </section>
 
@@ -106,7 +98,7 @@ const account = {
           <li>ページの「設定」を開く</li>
           <li><strong>「ページのアクセス権限」</strong>（ページ設定 → 新しいページ体験）を選ぶ</li>
           <li>「Facebookのアクセス権限がある人」の<strong>「新しく追加」</strong>（または「追加」）をタップ</li>
-          <li>追加するアカウント（上記1章のアカウント名）を<strong>名前で検索</strong>して選択</li>
+          <li>追加するアカウント（別途お知らせしたアカウント名）を<strong>名前で検索</strong>して選択</li>
           <li><strong>「フルコントロールでの許可」</strong>を<strong>オン</strong>にして招待を送信</li>
           <li>確認のため、Facebookのパスワード入力を求められたら入力（※ご自身のパスワードです。当方に伝わることはありません）</li>
         </ol>
@@ -150,7 +142,7 @@ const account = {
         <div class="trouble">
           <div class="trouble-row">
             <div class="trouble-q">アカウントが検索で見つからない</div>
-            <div class="trouble-a">名前の表記ゆれの可能性があります。1章の<strong>プロフィールURL</strong>を開き、そのアカウントであることをご確認ください。見つからない場合はご連絡ください（メール招待など別の方法をご案内します）</div>
+            <div class="trouble-a">名前の表記ゆれの可能性があります。別途お知らせした<strong>プロフィールURL</strong>を開き、そのアカウントであることをご確認ください。見つからない場合はご連絡ください（メール招待など別の方法をご案内します）</div>
           </div>
           <div class="trouble-row">
             <div class="trouble-q">「フルコントロール」の選択肢が出ない</div>
