@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<!-- EDIT: sai-mon.co.jp/subsc-design/ のOGP画像（1200x630）。LPヒーローと同じダーク地＋作品の並び -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    position: relative;
+    font-family: "Zen Kaku Gothic New", "Hiragino Sans", sans-serif;
+    font-feature-settings: "palt";
+    color: #fff;
+    background: linear-gradient(160deg, #0a0e18 0%, #0d1322 55%, #131c30 100%);
+  }
+  h1, p { text-wrap: balance; word-break: auto-phrase; }
+  /* 作品の並び（右側、奥行きのある扇） */
+  .wall { position: absolute; right: 10px; top: 0; width: 700px; height: 630px; perspective: 1200px; transform: scale(0.84); transform-origin: 100% 50%; }
+  .card {
+    position: absolute;
+    top: 50%;
+    width: 210px;
+    aspect-ratio: 2 / 3;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -18px rgba(0, 0, 0, 0.75);
+  }
+  .card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .c1 { left: -10px;  transform: translateY(-50%) translateZ(-260px) rotateY(34deg); filter: brightness(0.6); }
+  .c2 { left: 110px; transform: translateY(-50%) translateZ(-120px) rotateY(22deg); filter: brightness(0.8); }
+  .c3 { left: 262px; transform: translateY(-50%) translateZ(0) rotateY(8deg); width: 230px; }
+  .c4 { left: 500px; transform: translateY(-50%) translateZ(-70px) rotateY(-12deg); }
+  .c5 { left: 650px; transform: translateY(-50%) translateZ(-230px) rotateY(-26deg); filter: brightness(0.62); }
+  .c1 { z-index: 1; } .c5 { z-index: 2; } .c2 { z-index: 3; } .c4 { z-index: 4; } .c3 { z-index: 5; }
+  .c4 { overflow: visible; } .c4 img { border-radius: 4px; }
+  /* カード上のコピー */
+  .cp { position: absolute; font-weight: 900; line-height: 1.35; }
+  .c3 .cp { left: 16px; top: 16px; font-size: 19px; color: #fff; text-shadow: 0 2px 10px rgba(0, 40, 90, 0.5); }
+  .c3 .en { position: absolute; left: 16px; bottom: 14px; font-family: Outfit, sans-serif; font-style: italic; font-weight: 800; font-size: 26px; line-height: 0.95; }
+  .c2 .mark { position: absolute; left: 10px; top: 8px; font-family: "Times New Roman", serif; font-weight: 700; font-size: 52px; line-height: 0.85; color: rgba(28, 4, 4, 0.82); }
+  .c4 .cp { left: 14px; top: 14px; font-size: 16px; color: #16233b; }
+  .sel { position: absolute; inset: -7px; border: 2px solid #6c8cff; }
+  .sel::after { content: "制作中"; position: absolute; left: -2px; top: -24px; font-size: 12px; font-weight: 700; color: #fff; background: #6c8cff; padding: 5px 8px; border-radius: 3px 3px 0 0; }
+  .sel i { position: absolute; width: 9px; height: 9px; background: #fff; border: 2px solid #6c8cff; }
+  .sel i:nth-child(1) { left: -5px; top: -5px; } .sel i:nth-child(2) { right: -5px; top: -5px; }
+  .sel i:nth-child(3) { left: -5px; bottom: -5px; } .sel i:nth-child(4) { right: -5px; bottom: -5px; }
+  /* 左側を読みやすくする暗幕 */
+  .veil { position: absolute; inset: 0; background: linear-gradient(90deg, #0a0e18 0%, rgba(10, 14, 24, 0.96) 40%, rgba(10, 14, 24, 0.35) 62%, rgba(10, 14, 24, 0) 78%); }
+  /* コピー */
+  .copy { position: absolute; left: 72px; top: 0; bottom: 0; width: 560px; display: flex; flex-direction: column; justify-content: center; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; font-size: 20px; font-weight: 700; letter-spacing: 0.06em; color: #b9c6ff; background: rgba(108, 140, 255, 0.14); border: 1px solid rgba(108, 140, 255, 0.3); border-radius: 999px; padding: 7px 18px; margin-bottom: 26px; }
+  .brand i { width: 10px; height: 10px; border-radius: 50%; background: #1fa877; }
+  h1 { font-size: 84px; font-weight: 900; line-height: 1.08; letter-spacing: 0.01em; white-space: nowrap; }
+  h1 span { background: linear-gradient(transparent 80%, #ffd66b 80%, #ffd66b 93%, transparent 93%); }
+  .sub { font-size: 36px; font-weight: 700; color: rgba(255, 255, 255, 0.85); margin: 18px 0 30px; white-space: nowrap; }
+  .chips { display: flex; gap: 12px; }
+  .chip { border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 10px 16px 8px; white-space: nowrap; }
+  .chip small { display: block; font-size: 15px; font-weight: 700; color: rgba(255, 255, 255, 0.62); }
+  .chip b { font-family: Outfit, sans-serif; font-size: 44px; font-weight: 800; color: #ffd66b; line-height: 1.05; margin-right: 4px; }
+  .chip span { font-size: 18px; font-weight: 700; }
+  .chip em { font-style: normal; font-size: 13px; color: rgba(255, 255, 255, 0.55); margin-left: 4px; }
+</style>
+</head>
+<body>
+  <div class="wall">
+    <div class="card c1"><img src="architecture.jpg" alt="" /></div>
+    <div class="card c2"><img src="fashion.jpg" alt="" /><b class="mark">ROUGE</b></div>
+    <div class="card c3"><img src="runner.jpg" alt="" /><p class="cp">動き出す。<br />もっと遠くへ。</p><b class="en">RUN<br />THE NEXT</b></div>
+    <div class="card c4"><img src="lemon.jpg" alt="" /><p class="cp">ひとくちで、<br />気分が晴れる。</p><span class="sel"><i></i><i></i><i></i><i></i></span></div>
+    <div class="card c5"><img src="skincare.jpg" alt="" /></div>
+  </div>
+  <div class="veil"></div>
+  <div class="copy">
+    <p class="brand"><i></i>SAIMON サブスクデザイン</p>
+    <h1><span>速い。</span>作り放題。</h1>
+    <p class="sub">月額定額の専属デザイナー。</p>
+    <div class="chips">
+      <div class="chip"><small>バナー</small><b>2</b><span>営業日</span><em>目安</em></div>
+      <div class="chip"><small>LP</small><b>3</b><span>営業日</span><em>目安</em></div>
+      <div class="chip"><small>見積もり</small><b>0</b><span>回</span></div>
+    </div>
+  </div>
+</body>
+</html>
