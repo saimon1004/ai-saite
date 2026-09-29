@@ -4,11 +4,32 @@ import Header from "../components/common/Header.astro";
 import Footer from "../components/common/Footer.astro";
 
 const base = import.meta.env.BASE_URL;
-// CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260716-v1";
-const cssHref = `${base}subsc-design/styles.css?v=${cssVersion}`;
+// CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする。
+// styles.css は partner LP と共用のため、本体は専用の lp.css を読む（2026-09-29 汎用リニューアル）
+const cssVersion = "20260929-v3";
+const cssHref = `${base}subsc-design/lp.css?v=${cssVersion}`;
+const asset = (f: string) => `${base}subsc-design/assets/${f}`;
 
 const pageUrl = "https://sai-mon.co.jp/subsc-design/";
+
+// lucide アイコン（ISC License）のパスをそのまま埋め込む
+const icon = {
+  pointer: '<path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"/>',
+  square: '<rect width="18" height="18" x="3" y="3" rx="2"/>',
+  image: '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>',
+  type: '<polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/>',
+  droplet: '<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+  target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  layers: '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+  code: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
+  arrow: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+};
+const svg = (name: keyof typeof icon, cls = "ic") =>
+  `<svg class="${cls}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icon[name]}</svg>`;
+
+const deliverables = ["バナー", "チラシ", "パンフレット", "LP", "Webサイト", "SNS画像", "営業資料", "ポスター", "DM・はがき", "メルマガ画像", "展示会パネル", "名刺・封筒"];
 
 // 構造化データ: 運営会社・サービス・料金・パンくず・FAQの関係を検索エンジンに伝える
 const faqEntity = {
@@ -20,6 +41,14 @@ const faqEntity = {
       acceptedAnswer: {
         "@type": "Answer",
         text: "依頼回数・修正回数に上限はありません。ただし制作は同時進行1件ずつで、いただいた依頼リストの上から順にお届けします。",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "納期の目安はどれくらいですか？",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "バナー等は2営業日、LPは3営業日が目安です（内容・分量・依頼の順番により変動します）。",
       },
     },
     {
@@ -57,13 +86,13 @@ const jsonLd = {
       name: "SAIMONサブスクデザイン",
       serviceType: "月額定額デザイン制作（デザインのサブスクリプション）",
       description:
-        "保険・互助会業界に特化した月額定額のデザイン制作サービス。バナー・チラシ・営業資料からLP・Webサイトまで、専属デザイナーに定額で何度でも依頼できます。",
+        "月額定額のデザイン制作サービス。バナー・チラシ・営業資料からLP・Webサイトまで、専属デザイナーに定額で何度でも依頼できます。バナー2営業日・LP3営業日目安。",
       url: pageUrl,
       provider: { "@id": "https://sai-mon.co.jp/#organization" },
       areaServed: "JP",
       audience: {
         "@type": "Audience",
-        audienceType: "保険会社・少額短期保険・冠婚葬祭互助会・代理店・個人事業主",
+        audienceType: "中小企業・スタートアップ・店舗・マーケティング担当者・個人事業主",
       },
       offers: [
         {
@@ -71,21 +100,21 @@ const jsonLd = {
           name: "ライトプラン",
           price: "110000",
           priceCurrency: "JPY",
-          description: "バナー・SNS画像・チラシ・営業資料が月額定額で依頼し放題（LP・Webサイトを除く）",
+          description: "バナー・SNS画像・チラシ・営業資料が月額定額で作り放題（LP・Webサイトを除く）",
         },
         {
           "@type": "Offer",
           name: "スタンダードプラン",
           price: "220000",
           priceCurrency: "JPY",
-          description: "ライトの全内容に加え、LP・Webサイトのデザインからデータ納品まで月額定額",
+          description: "ライトの全内容に加え、LP・Webサイトのデザインからデータ納品まで月額定額で作り放題",
         },
         {
           "@type": "Offer",
           name: "プレミアムプラン",
           price: "330000",
           priceCurrency: "JPY",
-          description: "スタンダードの全内容に加え、コーディング・公開作業・計測タグ設置まで月額定額",
+          description: "スタンダードの全内容に加え、コーディング・公開作業・計測タグ設置まで月額定額で作り放題",
         },
       ],
     },
@@ -102,8 +131,8 @@ const jsonLd = {
 ---
 
 <BaseLayout
-  title="保険・互助会特化のデザインサブスク | 月額定額デザイン制作"
-  description="保険・互助会業界特化の月額定額デザイン制作サブスク「SAIMONサブスクデザイン」。バナー・チラシ・LP・Webサイトを業界経験のある専属デザイナーに定額で何度でも依頼できます。バナー2営業日・LP3営業日目安、同時受入10社限定・複数社シェアOK。"
+  title="デザインのサブスク | 月額定額・作り放題のデザイン制作 | SAIMONサブスクデザイン"
+  description="月額定額で作り放題のデザインサブスク「SAIMONサブスクデザイン」。バナー・チラシ・LP・Webサイトを専属デザイナーに何度でも依頼できます。バナー2営業日・LP3営業日目安、見積もり・発注書は不要。同時受入10社限定・複数社シェアOK。"
   jsonLd={jsonLd}
 >
   <Fragment slot="head">
@@ -125,11 +154,11 @@ const jsonLd = {
     <!-- End Meta Pixel -->
     <!-- 研修LP向けのFAQ動画チャットボット（BaseLayout共通）はこのLPでは文脈が合わないため非表示 -->
     <style is:global>#faq-chatbot-root { display: none !important; }</style>
-    <!-- 見出し用ディスプレイ書体（格式のある明朝） -->
+    <!-- 見出し（和文ゴシック）と数字・欧文ラベル -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap"
       rel="stylesheet"
     />
   </Fragment>
@@ -137,84 +166,87 @@ const jsonLd = {
 
   <Header />
 
-  <main class="subsc-lp-scope">
+  <main class="sd-scope">
     <!-- 01 Hero -->
     <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-ambient" aria-hidden="true">
-        <i class="orb orb-a"></i>
-        <i class="orb orb-b"></i>
-      </div>
       <div class="hero-inner">
         <div class="hero-copy">
-          <p class="eyebrow">SAIMON サブスクデザイン</p>
-          <p class="industry-badge"><strong>保険・互助会業界</strong><span>特化</span></p>
+          <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>SAIMON サブスクデザイン</p>
           <h1 id="hero-title">
-            月額定額、<span class="hero-highlight">作り放題</span>の<br />
-            専属デザイナー。</h1>
-          <p class="hero-lead">
-            バナー・チラシからLP・Webサイトまで、月額定額で何度でも依頼できるサブスク型のデザイン制作サービスです。<strong class="lead-em">保険・互助会業界</strong>での勤務経験と制作実績を持つデザイナーが、御社専属で対応します。</p>
-          <div class="hero-pain-quotes" aria-label="デザイン外注で起きがちな悩み">
-            <span>バナー1枚でも、また見積もりと発注書…</span>
-            <span>業界の表現ルールを毎回イチから説明</span>
-            <span>LPとチラシで外注先がバラバラ</span>
-            <span>仕上がりの品質が担当者しだい</span>
-          </div>
-          <div class="slots-banner" aria-label="同時受入の上限">
-            <span class="slots-dot" aria-hidden="true"></span>
-            <p>専属品質を保つため、同時受入は<strong>10社限定</strong>です。空き枠は無料相談時にご案内します。</p>
-          </div>
+            <span class="no-break"><span class="hl">速い。</span>作り放題。</span><wbr /><span class="h1-sub"><span class="no-break">月額定額の</span><wbr /><span class="no-break">専属デザイナー。</span></span></h1>
+          <dl class="speed-chips" aria-label="納期の目安">
+            <div>
+              <dt>バナー</dt>
+              <dd><strong>2</strong>営業日<small>目安</small></dd>
+            </div>
+            <div>
+              <dt>LP</dt>
+              <dd><strong>3</strong>営業日<small>目安</small></dd>
+            </div>
+            <div>
+              <dt>見積もり</dt>
+              <dd><strong>0</strong>回</dd>
+            </div>
+          </dl>
+          <p class="hero-lead">バナー・チラシからLP・Webサイトまで、専属デザイナーに月額定額で何度でも頼めるデザインのサブスクです。見積もりも発注書もいりません。チャットで送れば、あとは届くのを待つだけです。</p>
           <div class="hero-actions">
             <a class="primary-cta" href="#contact-form" data-cta-source="hero-primary">
-              空き枠を確認して無料相談する<span aria-hidden="true">→</span>
+              空き枠を確認して無料相談する<Fragment set:html={svg("arrow")} />
             </a>
-            <p class="hero-cta-note">相談無料・しつこい営業なし／オンライン対応／1営業日以内に返信</p>
+            <p class="slots-line"><span class="slots-dot" aria-hidden="true"></span>品質を保つため、同時受入は<strong>10社限定</strong></p>
           </div>
+          <p class="hero-cta-note">相談無料・しつこい営業なし／オンライン対応／1営業日以内に返信／納期は目安です</p>
         </div>
 
+        <!-- シグネチャー: デザインが組み上がっていくキャンバス（装飾・スクリーンリーダー非対象） -->
         <div class="hero-visual" aria-hidden="true">
-          <div class="chat-mock">
-            <div class="chat-mock-head">
-              <i></i>
-              <span>専用チャット — SAIMONサブスクデザイン</span>
+          <div class="studio" id="studio">
+            <div class="studio-bar">
+              <span class="studio-dots"><i></i><i></i><i></i></span>
+              <span class="studio-file" id="studio-file">fair_banner.png — 1200×628</span>
+              <span class="studio-status" id="studio-status">制作中</span>
             </div>
-            <div class="chat-mock-body">
-              <div class="chat-msg chat-msg-client">
-                <em>御社</em>
-                <p>来月のキャンペーンLPと、告知バナーを3種お願いします</p>
+            <div class="studio-main" id="studio-main">
+              <div class="studio-tools">
+                <span data-tool="pointer" set:html={svg("pointer")} />
+                <span data-tool="square" set:html={svg("square")} />
+                <span data-tool="image" set:html={svg("image")} />
+                <span data-tool="type" set:html={svg("type")} />
+                <span class="studio-swatches">
+                  <i data-swatch="navy"></i>
+                  <i data-swatch="sun"></i>
+                  <i data-swatch="blue"></i>
+                </span>
               </div>
-              <div class="chat-msg chat-msg-designer">
-                <em>専属デザイナー</em>
-                <p>承知しました。まずバナー3種を今週中に、LPは来週初稿をお送りします</p>
+              <div class="studio-stage">
+                <div class="art" id="art" data-theme="navy">
+                  <div class="ly ly-kicker"><span id="art-kicker">週末限定</span></div>
+                  <div class="ly ly-title"><span id="art-title"></span><b class="caret"></b></div>
+                  <div class="ly ly-btn"><span id="art-btn">予約する</span></div>
+                  <div class="ly ly-photo"><img id="art-img" src={asset("work-wedding.jpg")} alt="" width="900" height="599" decoding="async" /></div>
+                  <div class="art-stamp"><span>納品</span></div>
+                </div>
               </div>
-              <div class="chat-msg chat-msg-deliver">
-                <span>納品</span>
-                <p>banner_A.png / banner_B.png / banner_C.png</p>
-              </div>
-              <div class="chat-msg chat-msg-client">
-                <em>御社</em>
-                <p>早い…！Bのコピーだけ、少し柔らかい言い回しにできますか？</p>
-              </div>
-              <div class="chat-msg chat-msg-designer">
-                <em>専属デザイナー</em>
-                <p>修正しました。気になる点があれば何度でもどうぞ</p>
-              </div>
-              <div class="chat-msg chat-msg-deliver">
-                <span>納品</span>
-                <p>banner_B_v2.png</p>
-              </div>
-              <div class="chat-msg chat-msg-client">
-                <em>御社</em>
-                <p>完璧です！では次はチラシの改訂をお願いします</p>
-              </div>
+              <svg class="studio-cursor" id="studio-cursor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"/></svg>
+            </div>
+            <div class="studio-foot">
+              <ol class="studio-steps">
+                <li data-step="0">依頼</li>
+                <li data-step="1">制作</li>
+                <li data-step="2">納品</li>
+              </ol>
+              <div class="studio-track"><i id="studio-fill"></i></div>
+              <p class="studio-eta">バナー目安 <strong>2営業日</strong></p>
             </div>
           </div>
+          <div class="studio-chat" id="studio-chat"></div>
         </div>
       </div>
 
       <dl class="hero-metrics" aria-label="サービス概要">
         <div>
           <dt>月額</dt>
-          <dd><strong>11万円〜</strong><br />（税込）</dd>
+          <dd><strong>11万円〜</strong><span>（税込）</span></dd>
         </div>
         <div>
           <dt>依頼回数</dt>
@@ -231,29 +263,28 @@ const jsonLd = {
       </dl>
     </section>
 
-    <!-- 制作物マーキー（作り放題の視覚化） -->
+    <!-- 制作物マーキー（作り放題の視覚化・2段逆走） -->
     <div class="mq" aria-hidden="true">
       <div class="mq-track">
-        <span>バナー</span><i>◆</i><span>チラシ</span><i>◆</i><span>パンフレット</span><i>◆</i><span>LP</span><i>◆</i><span>Webサイト</span><i>◆</i><span>SNS画像</span><i>◆</i><span>営業資料</span><i>◆</i><span>ポスター</span><i>◆</i><span>DM・はがき</span><i>◆</i><span>会報誌</span><i>◆</i><span>のぼり</span><i>◆</i><span>名刺・封筒</span><i>◆</i>
-        <span>バナー</span><i>◆</i><span>チラシ</span><i>◆</i><span>パンフレット</span><i>◆</i><span>LP</span><i>◆</i><span>Webサイト</span><i>◆</i><span>SNS画像</span><i>◆</i><span>営業資料</span><i>◆</i><span>ポスター</span><i>◆</i><span>DM・はがき</span><i>◆</i><span>会報誌</span><i>◆</i><span>のぼり</span><i>◆</i><span>名刺・封筒</span><i>◆</i>
+        {[0, 1].map(() => deliverables.map((d) => <><span>{d}</span><i></i></>))}
+      </div>
+      <div class="mq-track mq-reverse">
+        {[0, 1].map(() => deliverables.slice().reverse().map((d) => <><span>{d}</span><i></i></>))}
       </div>
     </div>
 
     <!-- 02 Problem -->
     <section class="problem section-block" aria-labelledby="problem-title">
-      <div class="section-number">02</div>
       <div class="section-grid">
-        <div>
+        <div class="section-heading">
           <p class="section-kicker">Problem</p>
-          <h2 id="problem-title">
-            <span class="no-break">デザインを頼むたびに、</span><br /><span class="no-break">こんな手間が</span><wbr /><span class="no-break">発生していませんか？</span></h2>
+          <h2 id="problem-title"><span class="no-break">デザインを頼むたびに、</span><wbr /><span class="no-break">こんな手間が</span><wbr /><span class="no-break">発生していませんか？</span></h2>
         </div>
         <div>
-          <p class="large-text">
-            単発の外注は、依頼のたびに「探す・説明する・<span class="no-break">見積もる</span>・<span class="no-break">検収する</span>」のコストがかかります。とくに<span class="no-break">保険・互助会</span>の販促物は、商品理解や<span class="no-break">表現の配慮</span>が欠かせないため、外注先への説明だけで<span class="no-break">ひと仕事</span>になりがちです。</p>
+          <p class="large-text">単発の外注は、依頼のたびに「探す・説明する・<span class="no-break">見積もる</span>・<span class="no-break">検収する</span>」のコストがかかります。社内にデザイナーがいない会社ほど、外注先とのやりとりと進行管理だけで<span class="no-break">ひと仕事</span>になりがちです。</p>
           <ul class="check-list">
             <li>バナー1枚でも、見積もり・発注書・請求書のやりとりが発生する</li>
-            <li><span class="no-break">保険・互助会</span>特有の表現ルールを、毎回<span class="no-break">イチから</span>説明している</li>
+            <li>商品やブランドのトーンを、毎回<span class="no-break">イチから</span>説明している</li>
             <li>制作会社は高く、クラウドソーシングは<span class="no-break">品質と管理</span>が不安</li>
             <li>LP・チラシ・SNS画像で外注先を<span class="no-break">使い分けて</span>いて、管理が大変</li>
             <li>キャンペーンの立ち上げに、制作が<span class="no-break">間に合わない</span></li>
@@ -262,14 +293,75 @@ const jsonLd = {
       </div>
     </section>
 
-    <!-- 03 Service -->
+    <!-- 03 Speed（新設: 納品までの日数レース） -->
+    <section id="speed" class="speed" aria-labelledby="speed-title">
+      <div class="section-block">
+        <div class="section-heading section-heading-center">
+          <p class="section-kicker">Speed</p>
+          <h2 id="speed-title"><span class="no-break">見積もりを待つ間に、</span><wbr /><span class="no-break">もう届く。</span></h2>
+          <p class="section-lead">都度外注では、制作が始まる前に「探す・見積もる・<span class="no-break">発注する</span>」が挟まります。サブスクなら、チャットで依頼した時点で<span class="no-break">制作の順番</span>に入ります。</p>
+        </div>
+
+        <div class="race" id="race">
+          <div class="race-head">
+            <p class="race-clock">経過 <strong id="race-day">0</strong> 営業日</p>
+            <ol class="race-scale" aria-hidden="true">
+              {Array.from({ length: 15 }, (_, i) => <li>{i + 1}</li>)}
+            </ol>
+          </div>
+
+          <div class="race-row race-row-other" data-days="15">
+            <p class="race-label">都度外注の例</p>
+            <div class="race-track">
+              <span class="seg seg-a" style="--from:0;--to:3">探す・見積もり</span>
+              <span class="seg seg-b" style="--from:3;--to:5">発注・契約</span>
+              <span class="seg seg-c" style="--from:5;--to:15">制作・修正</span>
+              <em class="race-done">納品</em>
+            </div>
+          </div>
+
+          <div class="race-row race-row-ours" data-days="2">
+            <p class="race-label">サブスク<small>バナー</small></p>
+            <div class="race-track">
+              <span class="seg seg-ours" style="--from:0;--to:2">制作</span>
+              <em class="race-done" style="--at:2" set:html={`${svg("check", "ic ic-sm")}納品`} />
+            </div>
+          </div>
+
+          <div class="race-row race-row-ours" data-days="3">
+            <p class="race-label">サブスク<small>LP</small></p>
+            <div class="race-track">
+              <span class="seg seg-ours" style="--from:0;--to:3">制作</span>
+              <em class="race-done" style="--at:3" set:html={`${svg("check", "ic ic-sm")}納品`} />
+            </div>
+          </div>
+
+          <p class="race-note">※都度外注の日数は一般的な進行の一例です。サブスクの日数は目安で、内容・分量・依頼の順番により変動します。</p>
+        </div>
+
+        <dl class="speed-stats">
+          <div>
+            <dt>バナー・SNS画像</dt>
+            <dd><strong data-count="2">2</strong>営業日<small>目安</small></dd>
+          </div>
+          <div>
+            <dt>LP</dt>
+            <dd><strong data-count="3">3</strong>営業日<small>目安</small></dd>
+          </div>
+          <div>
+            <dt>見積もり・発注書</dt>
+            <dd><strong data-count="0">0</strong>回<small>何本頼んでも</small></dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- 04 Service -->
     <section class="service section-block" aria-labelledby="service-title">
-      <div class="section-number">03</div>
       <div class="section-heading">
         <p class="section-kicker">Service</p>
         <h2 id="service-title"><span class="no-break">月額定額で</span><wbr /><span class="no-break">「頼んで、受け取って、</span><wbr /><span class="no-break">また頼む」だけ。</span></h2>
-        <p class="section-lead">
-          ご契約後は、<span class="no-break">専用チャットに</span>依頼を送るだけ。<span class="no-break">見積もり</span>も発注書も、もう<span class="no-break">必要ありません。</span>制作は<span class="no-break">同時進行1件ずつ</span>、<span class="no-break">依頼リスト</span>の上から順に丁寧に<span class="no-break">お届けします。</span></p>
+        <p class="section-lead">ご契約後は、<span class="no-break">専用チャットに</span>依頼を送るだけ。<span class="no-break">見積もり</span>も発注書も、もう<span class="no-break">必要ありません。</span>制作は<span class="no-break">同時進行1件ずつ</span>、<span class="no-break">依頼リスト</span>の上から順に丁寧に<span class="no-break">お届けします。</span></p>
       </div>
       <ol class="loop-visual" aria-label="依頼から納品までのループ">
         <li>
@@ -280,7 +372,7 @@ const jsonLd = {
         <li>
           <span class="loop-step">2</span>
           <h3>制作</h3>
-          <p>業界経験のある専属デザイナーが<span class="no-break">スピーディーに制作。</span></p>
+          <p>専属デザイナーが<span class="no-break">スピーディーに制作。</span></p>
         </li>
         <li>
           <span class="loop-step">3</span>
@@ -294,72 +386,59 @@ const jsonLd = {
         </li>
       </ol>
       <dl class="service-terms" aria-label="共通条件">
-        <div>
-          <dt>依頼回数</dt>
-          <dd>無制限</dd>
-        </div>
-        <div>
-          <dt>修正</dt>
-          <dd>何度でも</dd>
-        </div>
-        <div>
-          <dt>一時停止</dt>
-          <dd>OK</dd>
-        </div>
-        <div>
-          <dt>最低契約</dt>
-          <dd>6ヶ月</dd>
-        </div>
+        <div><dt>依頼回数</dt><dd>無制限</dd></div>
+        <div><dt>修正</dt><dd>何度でも</dd></div>
+        <div><dt>一時停止</dt><dd>OK</dd></div>
+        <div><dt>最低契約</dt><dd>6ヶ月</dd></div>
       </dl>
     </section>
 
-    <!-- 04 Reasons -->
-    <section class="reasons section-block" aria-labelledby="reasons-title">
-      <div class="section-number">04</div>
-      <div class="section-heading">
-        <p class="section-kicker">Why SAIMON</p>
-        <h2 id="reasons-title">選ばれる理由</h2>
-      </div>
-      <div class="reason-grid">
-        <article class="reason-card" data-index="01">
-          <h3>保険業界の<span class="no-break">「中の人」</span>だった経験</h3>
-          <p>
-            代表デザイナーは、<span class="no-break">保険業界</span>で<span class="no-break">WEBマーケティング</span>担当として勤務した経歴を持ちます。商品特性・訴求の勘所・<span class="no-break">表現の配慮</span>を理解しているため、業界説明のコストが<span class="no-break">かかりません。</span></p>
-          <em>説明いらずの業界理解</em>
-        </article>
-        <article class="reason-card" data-index="02">
-          <h3><span class="no-break">互助会・保険業界での</span><wbr /><span class="no-break">制作実績</span></h3>
-          <p>
-            大手<span class="no-break">互助会グループ</span>のキャンペーンLPや、<span class="no-break">葬儀保険</span>のLPなど、業界案件の制作・公開<span class="no-break">実績があります。</span>実物は無料相談時に<span class="no-break">ご覧いただけます。</span></p>
-          <em>業界案件の実績多数</em>
-        </article>
-        <article class="reason-card" data-index="03">
-          <h3>制作フローの効率化による<span class="no-break">圧倒的スピード</span></h3>
-          <p>
-            ヒアリングから制作・納品までのフローを<span class="no-break">徹底的に</span>効率化。品質を保ちながら、バナーは<span class="no-break">2営業日</span>、LPは<span class="no-break">3営業日</span>を目安に<span class="no-break">お届けします。</span></p>
-          <em>速さと品質の両立</em>
-        </article>
-        <article class="reason-card" data-index="04">
-          <h3>デザインから実装・公開まで一気通貫</h3>
-          <p>
-            デザインデータを渡して終わり、<span class="no-break">ではありません。</span>プレミアムプランでは、<span class="no-break">コーディング</span>から<span class="no-break">公開作業</span>、<span class="no-break">計測タグの設置</span>まで<span class="no-break">一貫して担当します。</span></p>
-          <em>「公開まで」を任せられる</em>
-        </article>
+    <!-- 05 Reasons -->
+    <section class="reasons" aria-labelledby="reasons-title">
+      <div class="section-block">
+        <div class="section-heading">
+          <p class="section-kicker">Why SAIMON</p>
+          <h2 id="reasons-title">選ばれる理由</h2>
+        </div>
+        <div class="reason-grid">
+          <article class="reason-card">
+            <span class="reason-icon" set:html={svg("zap")} />
+            <h3>制作フローの効率化による<span class="no-break">圧倒的スピード</span></h3>
+            <p>ヒアリングから制作・納品までのフローを<span class="no-break">徹底的に</span>効率化。品質を保ちながら、バナーは<span class="no-break">2営業日</span>、LPは<span class="no-break">3営業日</span>を目安に<span class="no-break">お届けします。</span></p>
+            <em>速さと品質の両立</em>
+          </article>
+          <article class="reason-card">
+            <span class="reason-icon" set:html={svg("target")} />
+            <h3>マーケター出身だから、<span class="no-break">「成果」</span>から設計する</h3>
+            <p>代表デザイナーは、事業会社で<span class="no-break">WEBマーケティング</span>担当として勤務した経歴を持ちます。見た目だけでなく、クリックや<span class="no-break">お問い合わせ</span>につながる訴求と導線まで考えて<span class="no-break">制作します。</span></p>
+            <em>見た目だけで終わらない</em>
+          </article>
+          <article class="reason-card">
+            <span class="reason-icon" set:html={svg("layers")} />
+            <h3>専属だから、<span class="no-break">2回目から話が早い</span></h3>
+            <p>毎回同じデザイナーが担当するため、商品やブランドのトーン、過去の制作物を踏まえて進められます。依頼のたびに<span class="no-break">イチから</span>説明する手間が、<span class="no-break">ぐっと減ります。</span></p>
+            <em>頼むほど、話が早くなる</em>
+          </article>
+          <article class="reason-card">
+            <span class="reason-icon" set:html={svg("code")} />
+            <h3>デザインから実装・公開まで一気通貫</h3>
+            <p>デザインデータを渡して終わり、<span class="no-break">ではありません。</span>プレミアムプランでは、<span class="no-break">コーディング</span>から<span class="no-break">公開作業</span>、<span class="no-break">計測タグの設置</span>まで<span class="no-break">一貫して担当します。</span></p>
+            <em>「公開まで」を任せられる</em>
+          </article>
+        </div>
       </div>
     </section>
 
-    <!-- 05 Works -->
+    <!-- 06 Works（制作実績は現行のまま） -->
     <section class="works section-block" aria-labelledby="works-title">
-      <div class="section-number">05</div>
       <div class="section-heading">
         <p class="section-kicker">Works</p>
         <h2 id="works-title">制作実績</h2>
-        <p class="section-lead">
-          保険・互助会業界を中心に、LP・バナー・営業資料まで幅広く手がけています。<span class="no-break">その品質を、</span>月額定額で何度でも。</p>
+        <p class="section-lead">LP・バナー・チラシから営業資料まで、幅広く手がけています。<span class="no-break">その品質を、</span>月額定額で何度でも。</p>
       </div>
       <div class="works-grid">
         <article class="work-card">
-          <figure class="work-media"><img src={`${base}subsc-design/assets/work-wedding.jpg`} alt="温かな光に包まれた結婚式場のイメージ" loading="lazy" width="900" height="599" /></figure>
+          <figure class="work-media"><img src={asset("work-wedding.jpg")} alt="温かな光に包まれた結婚式場のイメージ" loading="lazy" width="900" height="599" /></figure>
           <div class="work-body">
             <p class="work-tag">結婚式場LP</p>
             <h3>大手冠婚葬祭グループ様</h3>
@@ -367,7 +446,7 @@ const jsonLd = {
           </div>
         </article>
         <article class="work-card">
-          <figure class="work-media"><img src={`${base}subsc-design/assets/work-flower.jpg`} alt="白い菊とユリの上品なアレンジメントのイメージ" loading="lazy" width="900" height="599" /></figure>
+          <figure class="work-media"><img src={asset("work-flower.jpg")} alt="白い菊とユリの上品なアレンジメントのイメージ" loading="lazy" width="900" height="599" /></figure>
           <div class="work-body">
             <p class="work-tag">葬儀保険LP</p>
             <h3>少額短期保険様</h3>
@@ -375,7 +454,7 @@ const jsonLd = {
           </div>
         </article>
         <article class="work-card">
-          <figure class="work-media"><img src={`${base}subsc-design/assets/work-event.jpg`} alt="ネイビーと金の招待状・ギフトのイメージ" loading="lazy" width="900" height="599" /></figure>
+          <figure class="work-media"><img src={asset("work-event.jpg")} alt="ネイビーと金の招待状・ギフトのイメージ" loading="lazy" width="900" height="599" /></figure>
           <div class="work-body">
             <p class="work-tag">イベントチラシ</p>
             <h3>互助会代理店様</h3>
@@ -383,14 +462,13 @@ const jsonLd = {
           </div>
         </article>
       </div>
-      <p class="works-note">
-        ※写真は<span class="no-break">世界観のイメージ</span>です。実績の<span class="no-break">社名・制作物</span>の実物は、<span class="no-break">掲載許可</span>が取れたものから<span class="no-break">順次公開します</span>（無料相談ではすべて<span class="no-break">ご覧いただけます</span>）。</p>
+      <p class="works-note">※写真は<span class="no-break">世界観のイメージ</span>です。実績の<span class="no-break">社名・制作物</span>の実物は、<span class="no-break">掲載許可</span>が取れたものから<span class="no-break">順次公開します</span>（無料相談ではすべて<span class="no-break">ご覧いただけます</span>）。</p>
     </section>
 
     <!-- コスト診断（リードマグネット） -->
-    <section id="shindan" class="shindan section-block" aria-labelledby="shindan-title">
-      <div class="shindan-panel">
-        <div class="section-heading shindan-heading">
+    <section id="shindan" class="shindan" aria-labelledby="shindan-title">
+      <div class="section-block">
+        <div class="section-heading section-heading-center">
           <p class="section-kicker">Simulation</p>
           <h2 id="shindan-title"><span class="no-break">30秒でわかる、</span><wbr /><span class="no-break">デザイン外注費</span><wbr /><span class="no-break">かんたん診断</span></h2>
           <p class="section-lead"><span class="no-break">制作本数を入れるだけで、</span><wbr /><span class="no-break">年間の外注費と</span><wbr /><span class="no-break">サブスク切替時の差額を</span><wbr /><span class="no-break">その場で試算できます。</span></p>
@@ -408,7 +486,7 @@ const jsonLd = {
             <span>LP・Webサイト<em>本/月</em></span>
             <input type="number" id="sd-lp" min="0" max="99" value="0" inputmode="numeric" />
           </label>
-          <button type="button" id="sd-run" class="primary-cta shindan-run">診断する<span aria-hidden="true">→</span></button>
+          <button type="button" id="sd-run" class="primary-cta shindan-run">診断する<Fragment set:html={svg("arrow")} /></button>
         </div>
         <div id="sd-result" class="shindan-result" hidden>
           <div class="shindan-cards">
@@ -430,22 +508,19 @@ const jsonLd = {
           </div>
           <p id="sd-comment" class="shindan-comment"></p>
           <div class="shindan-cta">
-            <button type="button" id="sd-consult" class="primary-cta">この診断結果をもとに無料相談する<span aria-hidden="true">→</span></button>
+            <button type="button" id="sd-consult" class="primary-cta">この診断結果をもとに無料相談する<Fragment set:html={svg("arrow")} /></button>
           </div>
-          <p class="shindan-note">
-            ※一般的な外注相場（バナー2万円・チラシ5万円・LPは相場30〜60万円の下限30万円）で控えめに試算した概算です。実際の金額は内容・分量により変動します。</p>
+          <p class="shindan-note">※一般的な外注相場（バナー2万円・チラシ5万円・LPは相場30〜60万円の下限30万円）で控えめに試算した概算です。実際の金額は内容・分量により変動します。</p>
         </div>
       </div>
     </section>
 
-    <!-- 06 Price -->
+    <!-- 07 Price -->
     <section id="price" class="price section-block" aria-labelledby="price-title">
-      <div class="section-number">06</div>
       <div class="section-heading">
         <p class="section-kicker">Price</p>
         <h2 id="price-title">料金プラン</h2>
-        <p class="section-lead">
-          全プラン共通で、<span class="no-break">依頼回数無制限</span>・<span class="no-break">同時進行1件</span>・<span class="no-break">一時停止OK</span>・<span class="no-break">最低契約6ヶ月です。</span>詳細な条件は<a class="terms-link" href="/subsc-design/terms/">利用規約</a>を<span class="no-break">ご覧ください。</span></p>
+        <p class="section-lead">全プラン共通で、<span class="no-break">依頼回数無制限</span>・<span class="no-break">同時進行1件</span>・<span class="no-break">一時停止OK</span>・<span class="no-break">最低契約6ヶ月です。</span>詳細な条件は<a class="terms-link" href="/subsc-design/terms/">利用規約</a>を<span class="no-break">ご覧ください。</span></p>
       </div>
       <div class="plan-grid">
         <article class="plan-card">
@@ -469,7 +544,7 @@ const jsonLd = {
             <li>LPのデザイン〜データ納品</li>
             <li>Webサイトのデザイン〜データ納品</li>
           </ul>
-          <p class="plan-note">単発実績価格（LP1本20万円）なら、<span class="no-break">月1本で元が取れます。</span></p>
+          <p class="plan-note">外注相場（LP1本30万円〜）なら、<span class="no-break">月1本で元が取れます。</span></p>
         </article>
         <article class="plan-card">
           <p class="plan-name">プレミアム</p>
@@ -486,11 +561,9 @@ const jsonLd = {
       <div class="share-panel" aria-labelledby="share-title">
         <div class="share-copy">
           <p class="share-kicker">Share</p>
-          <h3 id="share-title">1つの契約を、<br class="sp-br" />複数社でシェアできます。</h3>
-          <p>
-            個人事業主の仲間同士、支部・代理店同士での相乗り契約OK。共通の専用チャットに各社から依頼でき、届いた順に<span class="no-break">1件ずつ</span>制作します（シェア社数が増えるほど、<span class="no-break">1社あたりの</span>依頼消化ペースは緩やかになります）。<span class="no-break">費用の分担方法は自由です。</span></p>
-          <p class="share-caveat">
-            ※「同時受入10社限定」の枠とは別に、<span class="no-break">1契約内で</span>シェアする社数・人数は自由です。</p>
+          <h3 id="share-title"><span class="no-break">1つの契約を、</span><wbr /><span class="no-break">複数社でシェアできます。</span></h3>
+          <p>グループ会社・店舗・取引先同士や、個人事業主の仲間同士での相乗り契約OK。共通の専用チャットに各社から依頼でき、届いた順に<span class="no-break">1件ずつ</span>制作します<span class="no-break">（シェア社数が</span>増えるほど、<span class="no-break">1社あたりの</span>依頼消化ペースは<span class="no-break">緩やかになります）。</span>費用の分担方法は自由です。</p>
+          <p class="share-caveat">※「同時受入10社限定」の枠とは別に、<span class="no-break">1契約内で</span>シェアする社数・人数は自由です。</p>
         </div>
         <div class="share-example" aria-label="シェア利用の例">
           <p>例：スタンダードプランを5社でシェア</p>
@@ -503,62 +576,62 @@ const jsonLd = {
       </div>
     </section>
 
-    <!-- 07 Comparison -->
-    <section class="comparison section-block" aria-labelledby="comparison-title">
-      <div class="section-number">07</div>
-      <div class="section-heading">
-        <p class="section-kicker">Comparison</p>
-        <h2 id="comparison-title">外注方法の比較</h2>
-      </div>
-      <div class="compare-scroll">
-        <table class="compare-table">
-          <thead>
-            <tr>
-              <th scope="col">比較項目</th>
-              <th scope="col">制作会社に都度外注</th>
-              <th scope="col">クラウドソーシング</th>
-              <th scope="col" class="compare-ours">SAIMON<br />サブスクデザイン</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">費用</th>
-              <td>LP1本30〜60万円が相場</td>
-              <td>安いが品質に波がある</td>
-              <td class="compare-ours"><strong>月額定額・依頼し放題</strong></td>
-            </tr>
-            <tr>
-              <th scope="row">発注の手間</th>
-              <td>都度、見積もり・契約</td>
-              <td>都度、募集・選定・検収</td>
-              <td class="compare-ours"><strong>チャットに送るだけ</strong></td>
-            </tr>
-            <tr>
-              <th scope="row">業界理解</th>
-              <td>毎回説明が必要</td>
-              <td>ほぼ期待できない</td>
-              <td class="compare-ours"><strong>業界経験者なので説明不要</strong></td>
-            </tr>
-            <tr>
-              <th scope="row">品質の安定</th>
-              <td>担当者しだい</td>
-              <td>ばらつきが大きい</td>
-              <td class="compare-ours"><strong>専属1人で一貫</strong></td>
-            </tr>
-            <tr>
-              <th scope="row">スピード</th>
-              <td>数週間〜</td>
-              <td>納期管理も自分の仕事</td>
-              <td class="compare-ours"><strong>バナー2営業日・LP3営業日目安</strong></td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- 08 Comparison -->
+    <section class="comparison" aria-labelledby="comparison-title">
+      <div class="section-block">
+        <div class="section-heading">
+          <p class="section-kicker">Comparison</p>
+          <h2 id="comparison-title">外注方法の比較</h2>
+        </div>
+        <div class="compare-scroll">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th scope="col">比較項目</th>
+                <th scope="col">制作会社に都度外注</th>
+                <th scope="col">クラウドソーシング</th>
+                <th scope="col" class="compare-ours">SAIMON<br />サブスクデザイン</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">スピード</th>
+                <td>数週間〜</td>
+                <td>納期管理も自分の仕事</td>
+                <td class="compare-ours"><strong>バナー2営業日・LP3営業日目安</strong></td>
+              </tr>
+              <tr>
+                <th scope="row">費用</th>
+                <td>LP1本30〜60万円が相場</td>
+                <td>安いが品質に波がある</td>
+                <td class="compare-ours"><strong>月額定額・依頼し放題</strong></td>
+              </tr>
+              <tr>
+                <th scope="row">発注の手間</th>
+                <td>都度、見積もり・契約</td>
+                <td>都度、募集・選定・検収</td>
+                <td class="compare-ours"><strong>チャットに送るだけ</strong></td>
+              </tr>
+              <tr>
+                <th scope="row">事業の理解</th>
+                <td>担当が変わるたびに説明</td>
+                <td>ほぼ期待できない</td>
+                <td class="compare-ours"><strong>専属なので2回目から説明ほぼ不要</strong></td>
+              </tr>
+              <tr>
+                <th scope="row">品質の安定</th>
+                <td>担当者しだい</td>
+                <td>ばらつきが大きい</td>
+                <td class="compare-ours"><strong>専属1人で一貫</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
-    <!-- 08 Flow -->
+    <!-- 09 Flow -->
     <section class="flow section-block" aria-labelledby="flow-title">
-      <div class="section-number">08</div>
       <div class="section-heading">
         <p class="section-kicker">Flow</p>
         <h2 id="flow-title">ご利用の流れ</h2>
@@ -587,69 +660,65 @@ const jsonLd = {
       </ol>
     </section>
 
-    <!-- 09 FAQ -->
-    <section id="faq" class="faq section-block" aria-labelledby="faq-title">
-      <div class="section-number">09</div>
-      <div class="section-heading">
-        <p class="section-kicker">FAQ</p>
-        <h2 id="faq-title">よくある質問</h2>
-      </div>
-      <div class="faq-list">
-        <details>
-          <summary>「作り放題」に上限はありますか？</summary>
-          <p>依頼回数・修正回数に上限はありません。ただし制作は同時進行1件ずつで、いただいた依頼リストの上から順にお届けします。</p>
-        </details>
-        <details>
-          <summary><span class="no-break">複数社での</span><wbr /><span class="no-break">シェア利用について</span><wbr /><span class="no-break">詳しく教えてください。</span></summary>
-          <p>1つの契約を複数の会社・個人事業主で共有できます。共通の専用チャットに各社から依頼でき、届いた順に1件ずつ制作します。なお、制作は契約単位で同時進行1件のため、シェア社数が多いほど1社あたりの消化ペースは緩やかになります。費用の分担方法はご自由です（代表者さまとのご契約となります）。</p>
-        </details>
-        <details>
-          <summary>契約を一時停止できますか？</summary>
-          <p>可能です。依頼が少ない月は一時停止し、残りの契約期間を持ち越せます。詳細はご契約時にご案内します。</p>
-        </details>
-        <details>
-          <summary>対応範囲を教えてください。</summary>
-          <p>バナー・SNS画像・チラシ・パンフレット・営業資料・LP・Webサイトなどに対応します。動画編集やロゴ制作はご相談ください。</p>
-        </details>
-        <details>
-          <summary><span class="no-break">保険・互助会業界以外でも</span><wbr /><span class="no-break">契約できますか？</span></summary>
-          <p>ご契約いただけます。ただし同時受入は10社限定のため、状況により業界のお客様を優先させていただく場合があります。</p>
-        </details>
-        <details>
-          <summary>納期の目安はどれくらいですか？</summary>
-          <p>バナー等は2営業日、LPは3営業日が目安です（内容・分量により変動します）。</p>
-        </details>
-        <details>
-          <summary>納品物の著作権はどうなりますか？</summary>
-          <p>納品物の著作権は、原則としてお客様に譲渡します。制作実績としての掲載は、個別に確認のうえ行います。</p>
-        </details>
-        <details>
-          <summary>解約はいつでもできますか？</summary>
-          <p>最低契約期間（6ヶ月）の経過後は、いつでも翌月での更新停止をお申し出いただけます。</p>
-        </details>
+    <!-- 10 FAQ -->
+    <section id="faq" class="faq" aria-labelledby="faq-title">
+      <div class="section-block">
+        <div class="section-heading section-heading-center">
+          <p class="section-kicker">FAQ</p>
+          <h2 id="faq-title">よくある質問</h2>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>「作り放題」に上限はありますか？</summary>
+            <p>依頼回数・修正回数に上限はありません。ただし制作は同時進行1件ずつで、いただいた依頼リストの上から順にお届けします。</p>
+          </details>
+          <details>
+            <summary>納期の目安はどれくらいですか？</summary>
+            <p>バナー等は2営業日、LPは3営業日が目安です（内容・分量・依頼の順番により変動します）。</p>
+          </details>
+          <details>
+            <summary><span class="no-break">どんな業種でも</span><wbr /><span class="no-break">依頼できますか？</span></summary>
+            <p>業種を問わずご依頼いただけます。専属で継続して担当するため、2回目以降は商品やブランドの説明がほとんど不要になります。</p>
+          </details>
+          <details>
+            <summary><span class="no-break">複数社での</span><wbr /><span class="no-break">シェア利用について</span><wbr /><span class="no-break">詳しく教えてください。</span></summary>
+            <p>1つの契約を複数の会社・個人事業主で共有できます。共通の専用チャットに各社から依頼でき、届いた順に1件ずつ制作します。なお、制作は契約単位で同時進行1件のため、シェア社数が多いほど1社あたりの消化ペースは緩やかになります。費用の分担方法はご自由です（代表者さまとのご契約となります）。</p>
+          </details>
+          <details>
+            <summary>契約を一時停止できますか？</summary>
+            <p>可能です。依頼が少ない月は一時停止し、残りの契約期間を持ち越せます。詳細はご契約時にご案内します。</p>
+          </details>
+          <details>
+            <summary>対応範囲を教えてください。</summary>
+            <p>バナー・SNS画像・チラシ・パンフレット・営業資料・LP・Webサイトなどに対応します。動画編集やロゴ制作はご相談ください。</p>
+          </details>
+          <details>
+            <summary>納品物の著作権はどうなりますか？</summary>
+            <p>納品物の著作権は、原則としてお客様に譲渡します。制作実績としての掲載は、個別に確認のうえ行います。</p>
+          </details>
+          <details>
+            <summary>解約はいつでもできますか？</summary>
+            <p>最低契約期間（6ヶ月）の経過後は、いつでも翌月での更新停止をお申し出いただけます。</p>
+          </details>
+        </div>
       </div>
     </section>
 
-    <!-- 10 CTA band + Form -->
+    <!-- 11 CTA band + Form -->
     <section class="cta-band" aria-labelledby="cta-title">
       <p class="section-kicker">Contact</p>
-      <h2 id="cta-title">
-        <span class="cta-title-line"><span class="no-break">同時受入は、</span><wbr /><span class="no-break">10社限定です。</span></span>
-      </h2>
-      <p>
-        専属デザイナーとして品質を保つため、<span class="no-break">同時にお受けするのは</span><wbr /><span class="no-break">10社までとしています。</span><br class="lp-break-md" />まずは現在の<span class="no-break">外注コスト</span>と照らし合わせて、<span class="no-break">お気軽にご相談ください。</span></p>
+      <h2 id="cta-title"><span class="no-break">同時受入は、</span><wbr /><span class="no-break">10社限定です。</span></h2>
+      <p>専属デザイナーとして品質とスピードを保つため、<span class="no-break">同時にお受けするのは</span><wbr /><span class="no-break">10社までとしています。</span>まずは現在の<span class="no-break">外注コスト</span>と照らし合わせて、<span class="no-break">お気軽にご相談ください。</span></p>
       <a class="primary-cta" href="#contact-form" data-cta-source="band-primary">
-        空き枠を確認して無料相談する<span aria-hidden="true">→</span>
+        空き枠を確認して無料相談する<Fragment set:html={svg("arrow")} />
       </a>
     </section>
 
     <section id="contact-form" class="contact-form-section section-block" aria-labelledby="contact-form-title">
-      <div class="section-number">10</div>
-      <div class="section-heading">
+      <div class="section-heading section-heading-center">
         <p class="section-kicker">Form</p>
-        <h2 id="contact-form-title">無料相談フォーム</h2>
-        <p class="contact-form-lead">
-          ご記入いただいた内容をもとに、1営業日以内に<span class="no-break">担当よりご連絡いたします。</span>入力は30秒。「空き枠だけ知りたい」「シェア利用の相談」だけでも<span class="no-break">お気軽にどうぞ。</span><wbr /><span class="no-break">しつこい営業はいたしません。</span></p>
+        <h2 id="contact-form-title">空き枠の確認・無料相談</h2>
+        <p class="contact-form-lead">ご記入いただいた内容をもとに、1営業日以内に<span class="no-break">担当よりご連絡いたします。</span>入力は30秒。<span class="no-break">「空き枠だけ</span>知りたい」<span class="no-break">「シェア利用の</span>相談」だけでも<span class="no-break">お気軽にどうぞ。</span><wbr /><span class="no-break">しつこい営業はいたしません。</span></p>
       </div>
 
       <form id="lead-form" class="lead-form" novalidate>
@@ -697,7 +766,7 @@ const jsonLd = {
 
         <div class="lead-form-actions">
           <button type="submit" class="primary-cta lead-form-submit">
-            送信する<span aria-hidden="true">→</span>
+            空き枠を確認して無料相談する<Fragment set:html={svg("arrow")} />
           </button>
           <p class="lead-form-note">送信後、1営業日以内に担当よりご連絡いたします。</p>
         </div>
@@ -706,9 +775,9 @@ const jsonLd = {
       </form>
     </section>
 
-    <div class="mobile-sticky-cta" id="mobile-sticky-cta" aria-hidden="false">
+    <div class="mobile-sticky-cta" id="mobile-sticky-cta">
       <a class="primary-cta" href="#contact-form" data-cta-source="sticky-mobile">
-        空き枠を確認して無料相談する<span aria-hidden="true">→</span>
+        空き枠を確認して無料相談する<Fragment set:html={svg("arrow")} />
       </a>
     </div>
   </main>
@@ -724,6 +793,7 @@ const jsonLd = {
 
       const feedback = document.getElementById("form-feedback");
       const submitBtn = form.querySelector(".lead-form-submit");
+      const submitHtml = submitBtn.innerHTML;
 
       // API側の獲得経路ホワイトリストに合わせる。LPの識別は UTM_campaign の既定値で行う
       function resolveSource() {
@@ -814,7 +884,7 @@ const jsonLd = {
             err.message ||
             "送信に失敗しました。お手数ですが info@sai-mon.co.jp まで直接ご連絡ください。";
           submitBtn.disabled = false;
-          submitBtn.innerHTML = '送信する <span aria-hidden="true">→</span>';
+          submitBtn.innerHTML = submitHtml;
         }
       });
 
@@ -826,12 +896,24 @@ const jsonLd = {
       var stickyCta = document.getElementById("mobile-sticky-cta");
       var formSection = document.getElementById("contact-form");
 
-      // フォーム到達（form_view・1回のみ）＋ 追従CTAをフォーム表示時に隠す
+      // フォーム到達（form_view・1回のみ）＋ 追従CTAはヒーローのCTAかフォームが見えている間は隠す（CTAの二重表示を避ける）
       var formViewed = false;
+      var heroCta = document.querySelector('[data-cta-source="hero-primary"]');
+      var ctaVisible = { hero: true, form: false };
+      function syncSticky() {
+        if (stickyCta) stickyCta.classList.toggle("is-hidden", ctaVisible.hero || ctaVisible.form);
+      }
+      syncSticky();
+      if (heroCta && "IntersectionObserver" in window) {
+        new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { ctaVisible.hero = e.isIntersecting; syncSticky(); });
+        }).observe(heroCta);
+      }
       if (formSection && "IntersectionObserver" in window) {
         var io = new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
-            if (stickyCta) stickyCta.classList.toggle("is-hidden", e.isIntersecting);
+            ctaVisible.form = e.isIntersecting;
+            syncSticky();
             if (e.isIntersecting && !formViewed) {
               formViewed = true;
               track("lp_form_view", { event_category: "subsc_design_funnel" });
@@ -850,13 +932,11 @@ const jsonLd = {
 
       // フォーム入力開始（最初のフォーカス・1回のみ）
       var formStarted = false;
-      if (form) {
-        form.addEventListener("focusin", function () {
-          if (formStarted) return;
-          formStarted = true;
-          track("lp_form_start", { event_category: "subsc_design_funnel" });
-        });
-      }
+      form.addEventListener("focusin", function () {
+        if (formStarted) return;
+        formStarted = true;
+        track("lp_form_start", { event_category: "subsc_design_funnel" });
+      });
 
       // ===== コスト診断（リードマグネット） =====
       (function () {
@@ -948,14 +1028,16 @@ const jsonLd = {
     })();
   </script>
 
-  <script is:inline>
+  <script is:inline define:vars={{ imgBase: `${base}subsc-design/assets/` }}>
     // ===== モーション層（reduced-motion 尊重） =====
     (function () {
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var scope = document.querySelector(".sd-scope");
+      if (!scope) return;
 
-      // スクロール連動リビール
-      var targets = document.querySelectorAll(
-        ".subsc-lp-scope .section-heading, .subsc-lp-scope .check-list li, .subsc-lp-scope .loop-visual li, .subsc-lp-scope .service-terms > div, .subsc-lp-scope .reason-card, .subsc-lp-scope .work-card, .subsc-lp-scope .plan-card, .subsc-lp-scope .share-panel, .subsc-lp-scope .shindan-panel, .subsc-lp-scope .compare-scroll, .subsc-lp-scope .flow-steps li, .subsc-lp-scope .faq-list details, .subsc-lp-scope .lead-form, .subsc-lp-scope .section-grid > div"
+      // ---- スクロール連動リビール ----
+      var targets = scope.querySelectorAll(
+        ".section-heading, .large-text, .check-list li, .race, .speed-stats > div, .loop-visual li, .service-terms > div, .reason-card, .work-card, .plan-card, .share-panel, .shindan-form, .compare-scroll, .flow-steps li, .faq-list details, .lead-form"
       );
       if (reduce || !("IntersectionObserver" in window)) {
         targets.forEach(function (el) { el.classList.add("rv-in"); });
@@ -964,89 +1046,23 @@ const jsonLd = {
           el.classList.add("rv");
           el.style.transitionDelay = (i % 4) * 70 + "ms";
         });
-        var io = new IntersectionObserver(function (entries) {
+        var rio = new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
             if (e.isIntersecting) {
               e.target.classList.add("rv-in");
-              io.unobserve(e.target);
+              rio.unobserve(e.target);
             }
           });
         }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-        targets.forEach(function (el) { io.observe(el); });
+        targets.forEach(function (el) { rio.observe(el); });
       }
 
-      // ヒーローのチャットをライブ再生（入力中→送信のループ）
-      var body = document.querySelector(".chat-mock-body");
-      if (body && !reduce) {
-        var msgs = Array.prototype.slice.call(body.querySelectorAll(".chat-msg"));
-        var typing = document.createElement("div");
-        typing.className = "chat-typing";
-        typing.innerHTML = "<i></i><i></i><i></i>";
-        var started = false;
-
-        function playLoop() {
-          var idx = 0;
-          msgs.forEach(function (m) { m.classList.remove("cm-show"); });
-          function next() {
-            if (idx >= msgs.length) {
-              setTimeout(playLoop, 4000);
-              return;
-            }
-            var m = msgs[idx];
-            var isDeliver = m.classList.contains("chat-msg-deliver");
-            if (!isDeliver) {
-              typing.className = "chat-typing " + (m.classList.contains("chat-msg-client") ? "t-client" : "t-designer");
-              body.insertBefore(typing, m);
-              typing.style.display = "flex";
-              setTimeout(function () {
-                typing.style.display = "none";
-                m.classList.add("cm-show");
-                idx++;
-                setTimeout(next, 900);
-              }, 750);
-            } else {
-              m.classList.add("cm-show");
-              idx++;
-              setTimeout(next, 900);
-            }
-          }
-          next();
-        }
-
-        msgs.forEach(function (m) { m.classList.add("cm"); });
-
-        // 全メッセージ表示時の高さで枠を固定し、再生中のレイアウトシフトを防ぐ
-        function lockHeight() {
-          var shown = msgs.map(function (m) { return m.classList.contains("cm-show"); });
-          msgs.forEach(function (m) { m.classList.add("cm-show"); });
-          body.style.height = "auto";
-          var h = body.offsetHeight;
-          body.style.height = h + "px";
-          msgs.forEach(function (m, i) { if (!shown[i]) m.classList.remove("cm-show"); });
-        }
-        lockHeight();
-        var rlock;
-        window.addEventListener("resize", function () {
-          clearTimeout(rlock);
-          rlock = setTimeout(lockHeight, 200);
-        });
-
-        var chatIO = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            if (e.isIntersecting && !started) {
-              started = true;
-              setTimeout(playLoop, 600);
-              chatIO.disconnect();
-            }
-          });
-        }, { threshold: 0.3 });
-        chatIO.observe(body);
-      }
-
-      // 診断結果のカウントアップ
+      // ---- 数字のカウントアップ（rAFが使えない環境でも最終値は必ず表示される） ----
       window.sdCountUp = function (el, to) {
-        if (reduce || to <= 0) { el.textContent = to.toLocaleString(); return; }
-        var dur = 500, t0 = null;
+        el.textContent = to.toLocaleString();
+        if (reduce || to <= 0 || typeof requestAnimationFrame !== "function") return;
+        var dur = 600, t0 = null;
+        el.textContent = "0";
         function step(t) {
           if (!t0) t0 = t;
           var p = Math.min((t - t0) / dur, 1);
@@ -1055,6 +1071,214 @@ const jsonLd = {
         }
         requestAnimationFrame(step);
       };
+
+      // ---- 03 Speed: 納品までの日数レース（CSSトランジション＋タイマー。rAF非依存） ----
+      var race = document.getElementById("race");
+      if (race) {
+        var dayEl = document.getElementById("race-day");
+        var TOTAL = 15, DUR = 5200;
+        function runRace() {
+          race.classList.remove("is-run", "is-end");
+          race.querySelectorAll(".race-row").forEach(function (r) { r.classList.remove("is-done"); });
+          void race.offsetWidth;
+          race.classList.add("is-run");
+          var day = 0;
+          dayEl.textContent = "0";
+          var timer = setInterval(function () {
+            day++;
+            dayEl.textContent = String(day);
+            race.querySelectorAll(".race-row").forEach(function (r) {
+              if (+r.getAttribute("data-days") <= day) r.classList.add("is-done");
+            });
+            if (day >= TOTAL) {
+              clearInterval(timer);
+              race.classList.add("is-end");
+            }
+          }, DUR / TOTAL);
+        }
+        if (reduce || !("IntersectionObserver" in window)) {
+          race.classList.add("is-run", "is-end", "no-anim");
+          race.querySelectorAll(".race-row").forEach(function (r) { r.classList.add("is-done"); });
+          dayEl.textContent = String(TOTAL);
+        } else {
+          var raceIO = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) { runRace(); raceIO.disconnect(); }
+            });
+          }, { threshold: 0.45 });
+          raceIO.observe(race);
+          var replay = document.createElement("button");
+          replay.type = "button";
+          replay.className = "race-replay";
+          replay.setAttribute("aria-label", "もう一度再生");
+          replay.title = "もう一度再生";
+          replay.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>';
+          replay.addEventListener("click", runRace);
+          race.querySelector(".race-head").appendChild(replay);
+        }
+      }
+
+      // ---- 01 Hero: デザインが組み上がるキャンバス ----
+      var studio = document.getElementById("studio");
+      if (!studio) return;
+      var art = document.getElementById("art");
+      var main = document.getElementById("studio-main");
+      var cursor = document.getElementById("studio-cursor");
+      var titleEl = document.getElementById("art-title");
+      var kickerEl = document.getElementById("art-kicker");
+      var btnEl = document.getElementById("art-btn");
+      var imgEl = document.getElementById("art-img");
+      var fileEl = document.getElementById("studio-file");
+      var statusEl = document.getElementById("studio-status");
+      var fillEl = document.getElementById("studio-fill");
+      var chat = document.getElementById("studio-chat");
+      var steps = studio.querySelectorAll(".studio-steps li");
+
+      var designs = [
+        { theme: "navy", img: "work-wedding.jpg", kicker: "週末限定", title: "ご見学フェア開催中", btn: "予約する", file: "fair_banner.png", req: "週末フェアの告知バナーをお願いします", res: "承知しました。すぐ着手します" },
+        { theme: "sun", img: "work-flower.jpg", kicker: "資料請求で", title: "いまなら特典プレゼント", btn: "資料を見る", file: "campaign_banner.png", req: "資料請求キャンペーンのバナーも欲しいです", res: "了解です。次の順番で制作します" },
+        { theme: "blue", img: "work-event.jpg", kicker: "会員様限定", title: "感謝イベントのご案内", btn: "詳細を見る", file: "event_sns.png", req: "会員向けイベントの告知画像を1枚", res: "承知しました。本日中に初稿を出します" },
+      ];
+      designs.forEach(function (d) { var im = new Image(); im.src = imgBase + d.img; });
+
+      function setTool(name) {
+        studio.querySelectorAll("[data-tool]").forEach(function (t) {
+          t.classList.toggle("is-active", t.getAttribute("data-tool") === name);
+        });
+      }
+      function setStep(n) {
+        steps.forEach(function (li, i) {
+          li.classList.toggle("is-on", i <= n);
+        });
+      }
+      function moveCursor(el, ox, oy) {
+        if (!el) return;
+        var mr = main.getBoundingClientRect();
+        var r = el.getBoundingClientRect();
+        var x = r.left - mr.left + r.width * (ox == null ? 0.5 : ox);
+        var y = r.top - mr.top + r.height * (oy == null ? 0.5 : oy);
+        cursor.style.transform = "translate(" + x + "px," + y + "px)";
+      }
+      function say(text, who) {
+        var m = document.createElement("div");
+        m.className = "chat-bubble chat-" + who;
+        m.innerHTML = "<em>" + (who === "client" ? "御社" : who === "deliver" ? "納品" : "専属デザイナー") + "</em><p></p>";
+        m.querySelector("p").textContent = text;
+        chat.appendChild(m);
+        while (chat.children.length > 2) chat.removeChild(chat.firstChild);
+      }
+      function typeTitle(text, done) {
+        var i = 0;
+        titleEl.textContent = "";
+        art.classList.add("is-typing");
+        var t = setInterval(function () {
+          i++;
+          titleEl.textContent = text.slice(0, i);
+          if (i >= text.length) {
+            clearInterval(t);
+            art.classList.remove("is-typing");
+            if (done) done();
+          }
+        }, 70);
+      }
+      function staticState(d) {
+        art.setAttribute("data-theme", d.theme);
+        art.className = "art s1 s2 s3 s4 s5 s6";
+        titleEl.textContent = d.title;
+        kickerEl.textContent = d.kicker;
+        btnEl.textContent = d.btn;
+        fillEl.style.width = "100%";
+        setStep(2);
+        statusEl.textContent = "納品済み";
+        statusEl.classList.add("is-done");
+        say(d.req, "client");
+        say(d.file, "deliver");
+      }
+
+      if (reduce) { staticState(designs[0]); return; }
+
+      var idx = 0, timers = [];
+      function at(ms, fn) { timers.push(setTimeout(fn, ms)); }
+      function play() {
+        timers.forEach(clearTimeout);
+        timers = [];
+        var d = designs[idx % designs.length];
+        idx++;
+        art.className = "art";
+        art.setAttribute("data-theme", d.theme);
+        titleEl.textContent = "";
+        kickerEl.textContent = d.kicker;
+        btnEl.textContent = d.btn;
+        imgEl.src = imgBase + d.img;
+        fileEl.textContent = d.file + " — 1200×628";
+        statusEl.textContent = "依頼受付";
+        statusEl.classList.remove("is-done");
+        fillEl.style.width = "4%";
+        setStep(0);
+        setTool("pointer");
+        say(d.req, "client");
+
+        at(700, function () {
+          say(d.res, "designer");
+          statusEl.textContent = "制作中";
+          setStep(1);
+          setTool("square");
+          art.classList.add("s1");
+          fillEl.style.width = "22%";
+          moveCursor(art, 0.12, 0.2);
+        });
+        at(1700, function () {
+          setTool("image");
+          art.classList.add("s2");
+          fillEl.style.width = "40%";
+          moveCursor(art.querySelector(".ly-photo"), 0.5, 0.5);
+        });
+        at(2700, function () {
+          setTool("type");
+          art.classList.add("s3");
+          moveCursor(art.querySelector(".ly-title"), 0.1, 0.6);
+          typeTitle(d.title);
+          fillEl.style.width = "60%";
+        });
+        at(4300, function () {
+          setTool("");
+          var sw = studio.querySelector('[data-swatch="' + d.theme + '"]');
+          moveCursor(sw, 0.5, 0.5);
+          if (sw) {
+            sw.classList.add("is-pick");
+            at(600, function () { sw.classList.remove("is-pick"); });
+          }
+        });
+        at(4800, function () {
+          art.classList.add("s4");
+          fillEl.style.width = "78%";
+        });
+        at(5500, function () {
+          setTool("pointer");
+          art.classList.add("s5");
+          moveCursor(art.querySelector(".ly-btn"), 0.6, 0.6);
+          fillEl.style.width = "90%";
+        });
+        at(6500, function () {
+          art.classList.add("s6");
+          setStep(2);
+          fillEl.style.width = "100%";
+          statusEl.textContent = "納品済み";
+          statusEl.classList.add("is-done");
+          say(d.file, "deliver");
+          moveCursor(art, 0.92, 0.9);
+        });
+        at(9200, play);
+      }
+
+      var started = false;
+      var hio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting && !started) { started = true; setTimeout(play, 500); }
+          else if (!e.isIntersecting && started) { timers.forEach(clearTimeout); timers = []; started = false; }
+        });
+      }, { threshold: 0.2 });
+      hio.observe(studio);
     })();
   </script>
 
@@ -1063,17 +1287,20 @@ const jsonLd = {
     import { loadDefaultJapaneseParser } from "budoux";
     const parser = loadDefaultJapaneseParser();
     const sel = [
-      ".subsc-lp-scope .section-lead",
-      ".subsc-lp-scope .large-text",
-      ".subsc-lp-scope .hero-lead",
-      ".subsc-lp-scope .reason-card p",
-      ".subsc-lp-scope .work-body p",
-      ".subsc-lp-scope .check-list li",
-      ".subsc-lp-scope .loop-visual p",
-      ".subsc-lp-scope .faq-list details p",
-      ".subsc-lp-scope .works-note",
-      ".subsc-lp-scope .cta-band p",
-      ".subsc-lp-scope .contact-form-lead",
+      ".sd-scope .section-lead",
+      ".sd-scope .large-text",
+      ".sd-scope .hero-lead",
+      ".sd-scope .reason-card p",
+      ".sd-scope .work-body p",
+      ".sd-scope .check-list li",
+      ".sd-scope .loop-visual p",
+      ".sd-scope .flow-steps p",
+      ".sd-scope .faq-list details p",
+      ".sd-scope .works-note",
+      ".sd-scope .race-note",
+      ".sd-scope .share-copy p",
+      ".sd-scope .cta-band p",
+      ".sd-scope .contact-form-lead",
     ].join(",");
     document.querySelectorAll(sel).forEach((el) => {
       try {
