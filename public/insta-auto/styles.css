@@ -62,8 +62,7 @@
   text-align: justify;
 }
 .insta-lp-scope .cta-band .jp-budoux,
-.insta-lp-scope .compare-close,
-.insta-lp-scope .monitor-lead {
+.insta-lp-scope .compare-close {
   text-align: center;
 }
 .insta-lp-scope p,
@@ -1970,7 +1969,7 @@
 }
 .insta-lp-scope .why-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   background: var(--paper-deep);
   border-top: 3px solid var(--ink);
   border-bottom: 3px solid var(--ink);
@@ -2111,7 +2110,7 @@
 }
 
 @media (max-width: 900px) {
-  .insta-lp-scope .why-stats { grid-template-columns: repeat(2, 1fr); }
+  .insta-lp-scope .why-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .insta-lp-scope .why-notes { grid-template-columns: 1fr; gap: 20px; }
   .insta-lp-scope .why-notes li,
   .insta-lp-scope .why-notes li + li {
@@ -2127,7 +2126,7 @@
 }
 @media (max-width: 640px) {
   .insta-lp-scope .why-stat { padding: 22px 14px 24px; }
-  .insta-lp-scope .why-stat .why-num { font-size: 52px; }
+  .insta-lp-scope .why-stat .why-num { font-size: 46px; }
   .insta-lp-scope .why-stat .why-num small { font-size: 22px; }
   .insta-lp-scope .why-stat h3 { font-size: 14.5px; padding-top: 10px; }
   .insta-lp-scope .why-stat p { font-size: 12.5px; }
@@ -2135,143 +2134,6 @@
   .insta-lp-scope .payback-close { font-size: 15px; }
   .insta-lp-scope .payback-case { padding: 20px 16px 22px; }
   .insta-lp-scope .payback-num { font-size: 46px; }
-}
-
-/* ===== 01.5 Monitor band =====================================================
-   広告からの着地点。生成りのLPの中で唯一の濃色ブロックにして視線を止める。
-   募集終了時はAstro側でセクションごと外せば、このCSSは無害に残る。 */
-.insta-lp-scope .monitor-band {
-  background: var(--ink);
-  color: var(--white);
-  padding: 60px 24px;
-}
-.insta-lp-scope .monitor-inner {
-  max-width: 720px;
-  margin-inline: auto;
-  text-align: center;
-}
-.insta-lp-scope .monitor-kicker {
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
-  color: #e8a993;
-  margin: 0 0 12px;
-}
-.insta-lp-scope .monitor-band h2 {
-  /* .insta-lp-scope h2 が --ink 固定なので、濃色背景では白を明示して打ち消す */
-  color: var(--white);
-  font-family: var(--mincho);
-  font-size: clamp(1.5rem, 4.2vw, 2.1rem);
-  line-height: 1.5;
-  text-wrap: balance;
-  margin: 0 0 16px;
-}
-.insta-lp-scope .monitor-lead {
-  /* 中央揃えのブロックなので justify にしない（短い行の文字間が極端に開く） */
-  text-align: center;
-  text-wrap: pretty;
-  color: rgba(255, 255, 255, 0.86);
-  max-width: 34em;
-  margin: 0 auto 32px;
-}
-.insta-lp-scope .monitor-price {
-  border-block: 1px solid rgba(255, 255, 255, 0.22);
-  padding: 24px 0;
-  margin-bottom: 28px;
-}
-.insta-lp-scope .monitor-price-value {
-  font-family: var(--mincho);
-  margin: 0;
-  line-height: 1;
-}
-.insta-lp-scope .monitor-num {
-  font-size: clamp(2.8rem, 9vw, 4rem);
-  letter-spacing: 0.01em;
-}
-.insta-lp-scope .monitor-unit {
-  font-size: 1.1rem;
-  margin-left: 4px;
-}
-.insta-lp-scope .monitor-unit small { font-size: 0.72rem; }
-.insta-lp-scope .monitor-price-label {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.86);
-  margin: 10px 0 0;
-}
-.insta-lp-scope .monitor-price-after {
-  font-size: 0.86rem;
-  color: rgba(255, 255, 255, 0.68);
-  margin: 6px 0 0;
-}
-.insta-lp-scope .monitor-terms {
-  margin-bottom: 28px;
-}
-.insta-lp-scope .monitor-terms-title {
-  font-size: 0.82rem;
-  letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.68);
-  margin: 0 0 10px;
-}
-.insta-lp-scope .monitor-terms ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px 20px;
-}
-.insta-lp-scope .monitor-terms li {
-  font-size: 0.92rem;
-  white-space: nowrap;
-}
-.insta-lp-scope .monitor-terms li::before {
-  content: "・";
-  color: #e8a993;
-}
-.insta-lp-scope .monitor-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--vermilion);
-  color: var(--white);
-  text-decoration: none;
-  font-size: 1.02rem;
-  padding: 16px 36px;
-  border-radius: 6px;
-  transition: background 0.2s ease;
-}
-.insta-lp-scope .monitor-cta:hover { background: var(--vermilion-deep); }
-.insta-lp-scope .monitor-slots {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.86);
-  margin: 14px 0 0;
-}
-.insta-lp-scope .monitor-slots b {
-  font-family: var(--mincho);
-  font-size: 1.3rem;
-  color: #e8a993;
-}
-.insta-lp-scope .monitor-slots-note {
-  font-size: 0.76rem;
-  color: rgba(255, 255, 255, 0.6);
-  margin-left: 6px;
-}
-.insta-lp-scope .monitor-fine {
-  /* 長い注記は中央揃えにせず、両端揃えの中央ブロックにする */
-  text-align: justify;
-  max-width: 30em;
-  margin: 24px auto 0;
-  font-size: 0.78rem;
-  line-height: 1.85;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-@media (max-width: 640px) {
-  .insta-lp-scope .monitor-band { padding: 44px 20px; }
-  /* 短い行長では文節折り返しが右側を空けるため、本文は通常折り返しに戻す */
-  .insta-lp-scope .monitor-lead { word-break: normal; }
-  .insta-lp-scope .monitor-terms ul { flex-direction: column; align-items: center; gap: 6px; }
-  .insta-lp-scope .monitor-cta { width: 100%; justify-content: center; }
 }
 
 /* ===== 04.5 Real screens ====================================================
@@ -2405,4 +2267,28 @@
   .insta-lp-scope .movie-frame { border-radius: 4px; }
   .insta-lp-scope .movie-sound { width: 40px; height: 40px; right: 10px; bottom: 14px; }
   .insta-lp-scope .movie-actions { margin-top: 22px; }
+}
+
+/* ===== モバイルの両端揃え解除（2026-09-29）=====================================
+   1行が短いと justify は字間が大きく開く（「見 つ け て 保 存 す る」状態）。
+   jp-typography-rules に従い、640px以下は左揃えに戻す。中央揃えのブロックは中央を維持。 */
+@media (max-width: 640px) {
+  .insta-lp-scope .section-lead,
+  .insta-lp-scope .hero-lead,
+  .insta-lp-scope .jp-budoux,
+  .insta-lp-scope .faq-a,
+  .insta-lp-scope .fine-print { text-align: left; }
+  .insta-lp-scope .cta-band .jp-budoux,
+  .insta-lp-scope .compare-close { text-align: center; }
+}
+
+/* ===== 360px以下（初代iPhone SE級）の最小幅対策（2026-09-29）================ */
+@media (max-width: 360px) {
+  .insta-lp-scope .hero-kicker { font-size: 11.5px; letter-spacing: 0.02em; gap: 4px 7px; flex-wrap: wrap; }
+  .insta-lp-scope .hero-kicker::before { width: 14px; }
+  .insta-lp-scope .why-stat { padding: 20px 10px 22px; }
+  .insta-lp-scope .why-stat .why-num { font-size: 38px; }
+  .insta-lp-scope .why-stat .why-num small { font-size: 17px; }
+  .insta-lp-scope .why-stat h3 { font-size: 13.5px; }
+  .insta-lp-scope .why-stat p { font-size: 12px; }
 }

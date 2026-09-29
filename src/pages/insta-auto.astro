@@ -13,7 +13,7 @@ const phrase = (t: string) => jpParser.parse(t).join(ZWSP);
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260929-v25";
+const cssVersion = "20260929-v28";
 const cssHref = `${base}insta-auto/styles.css?v=${cssVersion}`;
 
 const img = (name: string) => `${base}insta-auto/assets/${name}`;
@@ -243,7 +243,7 @@ const jsonLd = {
             <a class="primary-cta" href="#contact-form" data-cta-source="hero-primary">無料相談する<span aria-hidden="true">→</span></a>
             <a class="secondary-cta" href="#compare" data-cta-source="hero-compare">何が楽になるか見る</a>
           </div>
-          <p class="hero-note jp-budoux">ご用意いただくのは、Instagramのビジネスアカウント（と連携するFacebookページ）だけです。</p>
+          <p class="hero-note jp-budoux">ご用意いただくのは、Instagramのビジネスアカウント<span class="no-break">（と連携する</span>Facebookページ）だけです。</p>
         </div>
 
         <div class="feed-collage">
@@ -278,36 +278,6 @@ const jsonLd = {
           {/* 後半はスマホでは出さない。承認画面のモックがスマホでは非表示のため */}
           <p class="feed-caption">おまかせグラムで運用した投稿のイメージ。<span class="cap-screen">画面はイメージです。</span></p>
         </div>
-      </div>
-    </section>
-
-    <!-- 01.5 Monitor — 広告からの着地点。景表法の二重価格表示を避けるため「値引き」ではなく
-         「モニター募集」として提示し、比較対照は過去の販売実績ではなく将来価格（4ヶ月目以降）に置く。
-         募集を締めるときはこのセクションごと外せば元のLPに戻る。 -->
-    <section class="monitor-band" aria-labelledby="monitor-title">
-      <div class="monitor-inner">
-        <p class="monitor-kicker">モニター募集</p>
-        <h2 id="monitor-title"><span class="no-break">一緒に育てていただける</span><wbr /><span class="no-break">10店舗を募集します</span></h2>
-        <p class="monitor-lead jp-budoux">一緒に育ててくださるお店に、モニター価格でお使いいただきます。実際の運用を見せていただきながら、サービスを良くしていきます。</p>
-
-        <div class="monitor-price">
-          <p class="monitor-price-value"><span class="monitor-num">15,000</span><span class="monitor-unit">円<small>（税別）</small></span></p>
-          <p class="monitor-price-label"><span class="no-break">1店舗あたり月額</span><wbr /><span class="no-break">／ 最初の3ヶ月</span></p>
-          <p class="monitor-price-after"><span class="no-break">4ヶ月目以降は通常価格の</span><wbr /><span class="no-break">月30,000円（税別）になります。</span></p>
-        </div>
-
-        <div class="monitor-terms">
-          <p class="monitor-terms-title">お願いする3つのこと</p>
-          <ul>
-            <li>最低3ヶ月のご利用</li>
-            <li>導入事例としての掲載へのご協力</li>
-            <li>月1回15分の運用ヒアリング</li>
-          </ul>
-        </div>
-
-        <a class="monitor-cta" href="/insta-auto/apply/?unit=15000&amp;init=0&amp;term=3&amp;plan=monitor" data-cta-source="monitor-band">モニターに申し込む<span aria-hidden="true">→</span></a>
-        <p class="monitor-slots">残り <b>10</b> 店舗<span class="monitor-slots-note">（2026年9月1日時点）</span></p>
-        <p class="monitor-fine">10店舗に達した時点で募集を終了します。初期費用はかかりません。解約は前月末日までにお知らせいただければ、翌月以降の料金は発生しません。</p>
       </div>
     </section>
 
@@ -349,7 +319,7 @@ const jsonLd = {
       <div class="section-inner split">
         <div class="section-heading">
           <p class="section-kicker">Problem</p>
-          <h2 id="problem-title"><span class="no-break">続けるつもりだったのに、</span><wbr /><span class="no-break">止まってしまう</span></h2>
+          <h2 id="problem-title"><span class="no-break">続けるつもり</span><wbr /><span class="no-break">だったのに、</span><wbr /><span class="no-break">止まってしまう</span></h2>
           <p class="section-lead jp-budoux">投稿が止まるのは、やる気の問題ではありません。1回の投稿に、工程が多すぎるからです。</p>
         </div>
         <div>
@@ -395,12 +365,12 @@ const jsonLd = {
           <li class="why-stat">
             <p class="why-num">67.5<small>%</small></p>
             <h3><span class="no-break">Instagramで</span><wbr /><span class="no-break">情報を集める</span></h3>
-            <p class="jp-budoux">YouTube 48.1%・TikTok 46.1% を上回って最多。</p>
+            <p class="jp-budoux">YouTube <span class="no-break">48.1%・</span><span class="no-break">TikTok 46.1%</span> を上回って最多。</p>
           </li>
           <li class="why-stat">
             <p class="why-num">71.2<small>%</small></p>
             <h3><span class="no-break">Instagramに</span><wbr /><span class="no-break">お店を保存する</span></h3>
-            <p class="jp-budoux">Googleマップへの保存 61.1% より多く使われています。</p>
+            <p class="jp-budoux">Googleマップへの保存 <span class="no-break">61.1%</span> より多く使われています。</p>
           </li>
           <li class="why-stat">
             <p class="why-num">52.5<small>%</small></p>
@@ -409,7 +379,7 @@ const jsonLd = {
           </li>
         </ul>
 
-        <p class="why-close jp-budoux"><strong>Instagramの価値は、フォロワー数ではなく「保存されること」にあります。</strong>行きたいお店として保存され、お腹が空いたときに思い出してもらえるかどうか。ただし、保存はお客様が投稿を見た瞬間にしか起きません。投稿が止まっている期間の保存は、ゼロです。</p>
+        <p class="why-close jp-budoux"><strong>Instagramの価値は、フォロワー数<wbr />ではなく<wbr /><span class="no-break">「保存されること」</span><wbr />にあります。</strong>行きたいお店として保存され、お腹が空いたときに思い出してもらえるかどうか。ただし、保存はお客様が投稿を見た瞬間にしか起きません。投稿が止まっている期間の保存は、ゼロです。</p>
 
         <ul class="why-notes">
           <li>
@@ -426,7 +396,7 @@ const jsonLd = {
           </li>
         </ul>
 
-        <p class="fine-print">出典：ファストマーケティング「Z世代の飲食店情報収集に関する調査」（15〜29歳・360名／2025年1月調査）、syncAD「飲食店の選び方 2025年最新調査」。いずれも第三者による調査結果で、本サービスの利用実績ではありません。</p>
+        <p class="fine-print">出典：ファストマーケティング「Z世代の飲食店情報収集に関する調査」（15〜29歳・360名／<span class="no-break">2025年1月調査）、</span>syncAD「飲食店の選び方 <span class="no-break">2025年最新調査」。</span>いずれも第三者による調査結果で、本サービスの利用実績ではありません。</p>
       </div>
     </section>
 
@@ -566,7 +536,7 @@ const jsonLd = {
           </li>
         </ol>
 
-        <p class="fine-print">デモ店舗「おまかせ体験ダイニング」の実画面です（2026年8月21日撮影）。03のタイトルとキャプションとハッシュタグは、送った写真からAIが実際に作ったものです。</p>
+        <p class="fine-print">デモ店舗「おまかせ体験ダイニング」の実画面です<span class="no-break">（2026年8月21日</span>撮影）。03のタイトルとキャプションとハッシュタグは、送った写真からAIが実際に作ったものです。</p>
       </div>
     </section>
 
@@ -825,7 +795,7 @@ const jsonLd = {
           </li>
           <li>
             <h3>設定</h3>
-            <p class="jp-budoux">画像加工プラン、価格表示、店舗プロフィール（テイスト・売り・エリア・固定タグ・NG）を管理します。</p>
+            <p class="jp-budoux">画像加工プラン、価格表示、店舗プロフィール<span class="no-break">（テイスト・</span>売り・エリア・固定タグ・NG）を管理します。</p>
           </li>
         </ul>
         <p class="fine-print">メニュー名の誤りは、お店の信用に直結します。だから推測させずに、登録した名前と照合しています。</p>
@@ -887,12 +857,12 @@ const jsonLd = {
           <ul class="price-includes">
             <li>店舗アプリ（写真の送信・投稿案の承認・予定と履歴の確認・設定）</li>
             <li>AIによる画像の加工と、文章・ハッシュタグの作成</li>
-            <li>承認後の予約投稿と自動投稿（失敗時の自動再試行と通知を含みます）</li>
+            <li>承認後の予約投稿と自動投稿<span class="no-break">（失敗時の</span>自動再試行と通知を含みます）</li>
             <li>メニュー・作成ルール・装飾テンプレート・投稿ルールの設定</li>
             <li>Instagramの仕様変更への追従</li>
           </ul>
         </div>
-        <p class="fine-print">複数店舗でのご利用は個別にお見積もりします。Instagramのビジネスアカウント（と連携するFacebookページ）はお客様でご用意ください。契約期間や解約の条件は、個別のご契約でお取り決めします。</p>
+        <p class="fine-print">複数店舗でのご利用は個別にお見積もりします。Instagramのビジネスアカウント<span class="no-break">（と連携する</span>Facebookページ）はお客様でご用意ください。契約期間や解約の条件は、個別のご契約でお取り決めします。</p>
       </div>
     </section>
 
@@ -1063,7 +1033,7 @@ const jsonLd = {
         <p class="legal-links">
           <a href="/insta-auto/terms/">利用規約</a><a href="/insta-auto/tokushoho/">特定商取引法に基づく表記</a><a href="/privacy-policy/">プライバシーポリシー</a>
         </p>
-        <p class="trademark-note">Instagram、Facebook は Meta Platforms, Inc. の商標です。本サービスは Meta Platforms, Inc. とは関係ありません。</p>
+        <p class="trademark-note">Instagram、Facebook は Meta Platforms, Inc. の商標です。<span class="no-break">本サービスは</span> Meta Platforms, Inc. とは関係ありません。</p>
       </div>
     </section>
   </main>
@@ -1302,7 +1272,10 @@ const jsonLd = {
     // BudouX: 日本語の文節を自動判定して折り返す（Safari含む全ブラウザで語中改行を防ぐ）
     import { loadDefaultJapaneseParser } from "budoux";
     const parser = loadDefaultJapaneseParser();
+    // .jp-budoux を付けた要素はすべて処理する（個別列挙だけだと、後から足したセクションが漏れて
+    // keep-all だけが効き、折り返せずにはみ出す。2026-09-29 に Why Instagram で発生）
     const sel = [
+      ".insta-lp-scope .jp-budoux",
       ".insta-lp-scope .hero-lead",
       ".insta-lp-scope .hero-note",
       ".insta-lp-scope .section-lead",
