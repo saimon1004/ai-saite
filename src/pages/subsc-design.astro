@@ -6,7 +6,7 @@ import Footer from "../components/common/Footer.astro";
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする。
 // styles.css は partner LP と共用のため、本体は専用の lp.css を読む（2026-09-29 汎用リニューアル）
-const cssVersion = "20260929-v6";
+const cssVersion = "20260929-v7";
 const cssHref = `${base}subsc-design/lp.css?v=${cssVersion}`;
 const asset = (f: string) => `${base}subsc-design/assets/${f}`;
 
@@ -33,22 +33,17 @@ const svg = (name: keyof typeof icon, cls = "ic") =>
 type WallCard = { k: "poster" | "web" | "img" | "video"; t?: string; img?: string; src?: string; poster?: string; ar: string; s?: number };
 const wallCards: WallCard[] = [
   { k: "poster", t: "fashion", img: "fashion.jpg", ar: "2 / 3" },
-  { k: "img", img: "og-a-time.jpg", ar: "4 / 5" },
   { k: "video", src: "nature.mp4", poster: "nature-poster.jpg", ar: "9 / 16" },
   { k: "poster", t: "runner", img: "runner.jpg", ar: "2 / 3" },
-  { k: "img", img: "lp-recruit.jpg", ar: "16 / 10", s: 0.68 },
+  { k: "img", img: "lp-insta.jpg", ar: "16 / 10", s: 0.68 },
   { k: "poster", t: "lemon", img: "lemon.jpg", ar: "2 / 3" },
   { k: "web", t: "coffee", img: "coffee.jpg", ar: "4 / 5" },
   { k: "video", src: "omakase.mp4", poster: "omakase-poster.jpg", ar: "16 / 9", s: 0.66 },
   { k: "poster", t: "architecture", img: "architecture.jpg", ar: "2 / 3" },
-  { k: "img", img: "og-c-pain.jpg", ar: "4 / 5" },
-  { k: "img", img: "lp-videofaq.jpg", ar: "16 / 10", s: 0.68 },
   { k: "poster", t: "skincare", img: "skincare.jpg", ar: "2 / 3" },
-  { k: "img", img: "lp-insta.jpg", ar: "16 / 10", s: 0.68 },
-  { k: "img", img: "og-b-price.jpg", ar: "4 / 5" },
 ];
 const hero = (f: string) => `${base}subsc-design/assets/hero/${f}`;
-const backThumbs = ["fashion.jpg", "lp-recruit.jpg", "lemon.jpg", "og-a-time.jpg", "architecture.jpg", "lp-insta.jpg", "coffee.jpg", "og-c-pain.jpg", "runner.jpg", "lp-videofaq.jpg", "skincare.jpg", "og-b-price.jpg"];
+const backThumbs = ["fashion.jpg", "nature-poster.jpg", "lemon.jpg", "lp-insta.jpg", "architecture.jpg", "coffee.jpg", "runner.jpg", "omakase-poster.jpg", "skincare.jpg"];
 
 const deliverables = ["バナー", "チラシ", "パンフレット", "LP", "Webサイト", "SNS画像", "営業資料", "ポスター", "DM・はがき", "メルマガ画像", "展示会パネル", "名刺・封筒"];
 
@@ -1114,6 +1109,8 @@ const jsonLd = {
       var cards = Array.prototype.slice.call(wall.querySelectorAll(".wc")).map(function (el) {
         return { el: el, w: 0, s: 0, built: false, video: el.querySelector("video") };
       });
+      // 動画は組み上がり演出をかけず、常に完成状態で再生し続ける
+      cards.forEach(function (c) { if (c.video) c.el.classList.add("is-built", "is-done", "is-static"); });
       var L = 1, R = 1500, gap = 28, speed = 60, tOff = 0, vw = window.innerWidth;
 
       function cssNum(name, def) {
@@ -1164,6 +1161,7 @@ const jsonLd = {
           c.el.style.transform = "translate3d(" + tx.toFixed(1) + "px,0," + tz.toFixed(1) + "px) rotateY(" + (-th * 38).toFixed(2) + "deg)";
           c.el.style.opacity = a > 1.25 ? 0 : Math.min(1, 1.7 - a * 1.25).toFixed(3);
           c.el.style.zIndex = String(1000 - Math.round(a * 100));
+          if (c.video) return;
           if (!c.built && x < bx && x > bx - 600) setBuilt(c, animateBuild);
           else if (c.built && x > bx + 40) reset(c);
           if (animateBuild === false && !c.built && x < bx) setBuilt(c, false);
