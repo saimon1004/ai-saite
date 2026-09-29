@@ -2339,3 +2339,70 @@
 @media (max-width: 560px) {
   .insta-lp-scope .screen-list { grid-auto-columns: 68%; }
 }
+
+/* ============================================================
+   01.7 Movie — 46秒のPR動画
+   ============================================================ */
+.insta-lp-scope .movie { background: var(--paper-deep); }
+.insta-lp-scope .movie-heading { text-align: center; }
+.insta-lp-scope .movie-heading .section-kicker { justify-content: center; }
+.insta-lp-scope .movie-frame {
+  position: relative;
+  max-width: 960px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #e9e6df;
+  box-shadow: 0 24px 50px -24px rgba(32, 30, 26, 0.45);
+}
+.insta-lp-scope .movie-frame video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+.insta-lp-scope .movie-sound {
+  position: absolute;
+  right: 14px;
+  bottom: 18px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(32, 30, 26, 0.72);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.insta-lp-scope .movie-sound:hover { background: var(--vermilion); transform: scale(1.06); }
+.insta-lp-scope .movie-sound:focus-visible { outline: 3px solid var(--vermilion); outline-offset: 3px; }
+.insta-lp-scope .movie-ic { width: 20px; height: 20px; }
+.insta-lp-scope .movie-ic-on { display: none; }
+.insta-lp-scope .movie-sound[aria-pressed="true"] .movie-ic-on { display: block; }
+.insta-lp-scope .movie-sound[aria-pressed="true"] .movie-ic-off { display: none; }
+.insta-lp-scope .movie-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: rgba(32, 30, 26, 0.12);
+}
+.insta-lp-scope .movie-progress i {
+  display: block;
+  height: 100%;
+  background: var(--vermilion);
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 0.25s linear;
+}
+.insta-lp-scope .movie-actions { text-align: center; margin-top: 28px; }
+@media (max-width: 640px) {
+  .insta-lp-scope .movie-frame { border-radius: 4px; }
+  .insta-lp-scope .movie-sound { width: 40px; height: 40px; right: 10px; bottom: 14px; }
+  .insta-lp-scope .movie-actions { margin-top: 22px; }
+}

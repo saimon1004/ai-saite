@@ -13,7 +13,7 @@ const phrase = (t: string) => jpParser.parse(t).join(ZWSP);
 
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする
-const cssVersion = "20260901-v24";
+const cssVersion = "20260929-v25";
 const cssHref = `${base}insta-auto/styles.css?v=${cssVersion}`;
 
 const img = (name: string) => `${base}insta-auto/assets/${name}`;
@@ -308,6 +308,39 @@ const jsonLd = {
         <a class="monitor-cta" href="/insta-auto/apply/?unit=15000&amp;init=0&amp;term=3&amp;plan=monitor" data-cta-source="monitor-band">モニターに申し込む<span aria-hidden="true">→</span></a>
         <p class="monitor-slots">残り <b>10</b> 店舗<span class="monitor-slots-note">（2026年9月1日時点）</span></p>
         <p class="monitor-fine">10店舗に達した時点で募集を終了します。初期費用はかかりません。解約は前月末日までにお知らせいただければ、翌月以降の料金は発生しません。</p>
+      </div>
+    </section>
+
+    <!-- 01.7 Movie — 46秒のPR動画。画面に入ったら無音で自動再生し、音はボタンで出す。
+         料金の場面（初期費用0円・月額30,000円・税別）は通常価格。価格を変えたら動画も差し替えること。 -->
+    <section class="movie section-block" aria-labelledby="movie-title">
+      <div class="section-inner">
+        <div class="section-heading movie-heading">
+          <p class="section-kicker">Movie</p>
+          <h2 id="movie-title"><span class="no-break">46秒でわかる、</span><wbr /><span class="no-break">おまかせグラム</span></h2>
+        </div>
+        <figure class="movie-frame">
+          <video
+            id="pr-movie"
+            src={`${base}insta-auto/video/omakasegram-pr.mp4`}
+            poster={`${base}insta-auto/video/omakasegram-pr-poster.jpg`}
+            width="1280"
+            height="720"
+            muted
+            playsinline
+            loop
+            preload="metadata"
+            aria-label="おまかせグラムの紹介動画（46秒）。写真を送り、届いた投稿案を承認するだけでInstagramに投稿される流れを紹介しています。"
+          ></video>
+          <button type="button" class="movie-sound" id="pr-movie-sound" aria-pressed="false" aria-label="音声をオンにする" title="音声をオンにする">
+            <svg class="movie-ic movie-ic-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>
+            <svg class="movie-ic movie-ic-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>
+          </button>
+          <span class="movie-progress" aria-hidden="true"><i id="pr-movie-bar"></i></span>
+        </figure>
+        <div class="movie-actions">
+          <a class="primary-cta" href="#contact-form" data-cta-source="movie">無料相談する<span aria-hidden="true">→</span></a>
+        </div>
       </div>
     </section>
 
@@ -1213,6 +1246,55 @@ const jsonLd = {
         if (fired[100]) window.removeEventListener("scroll", onScroll);
       }
       window.addEventListener("scroll", onScroll, { passive: true });
+    })();
+  </script>
+
+  <script is:inline>
+    // ===== PR動画: 画面内で無音自動再生・画面外で停止・音声トグル・進捗バー =====
+    (function () {
+      var v = document.getElementById("pr-movie");
+      if (!v) return;
+      var btn = document.getElementById("pr-movie-sound");
+      var bar = document.getElementById("pr-movie-bar");
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var userPaused = false, viewed = false;
+      function track(name) {
+        try { if (typeof window.gtag === "function") window.gtag("event", name, { event_category: "insta_auto_funnel" }); } catch (_) {}
+      }
+      function play() { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              if (!viewed) { viewed = true; track("lp_movie_view"); }
+              if (!reduce && !userPaused) play();
+            } else {
+              v.pause();
+            }
+          });
+        }, { threshold: 0.5 }).observe(v);
+      }
+      v.addEventListener("click", function () {
+        if (v.paused) { userPaused = false; play(); } else { userPaused = true; v.pause(); }
+      });
+      btn.addEventListener("click", function () {
+        v.muted = !v.muted;
+        var on = !v.muted;
+        btn.setAttribute("aria-pressed", String(on));
+        var label = on ? "音声をオフにする" : "音声をオンにする";
+        btn.setAttribute("aria-label", label);
+        btn.title = label;
+        if (on) {
+          track("lp_movie_unmute");
+          // 音を出すときは頭から見せる
+          v.currentTime = 0;
+          userPaused = false;
+          play();
+        }
+      });
+      v.addEventListener("timeupdate", function () {
+        if (v.duration) bar.style.transform = "scaleX(" + (v.currentTime / v.duration).toFixed(4) + ")";
+      });
     })();
   </script>
 
