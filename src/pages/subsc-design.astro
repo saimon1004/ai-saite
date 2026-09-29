@@ -6,7 +6,7 @@ import Footer from "../components/common/Footer.astro";
 const base = import.meta.env.BASE_URL;
 // CSSはXserverで1年間キャッシュされるため、内容変更時はバージョンを上げてキャッシュバストする。
 // styles.css は partner LP と共用のため、本体は専用の lp.css を読む（2026-09-29 汎用リニューアル）
-const cssVersion = "20260929-v3";
+const cssVersion = "20260929-v6";
 const cssHref = `${base}subsc-design/lp.css?v=${cssVersion}`;
 const asset = (f: string) => `${base}subsc-design/assets/${f}`;
 
@@ -28,6 +28,27 @@ const icon = {
 };
 const svg = (name: keyof typeof icon, cls = "ic") =>
   `<svg class="${cls}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icon[name]}</svg>`;
+
+// ヒーローの作品壁（実物＋サンプル作品。サンプルは生成写真に日本語コピーをHTMLで組んだもの）
+type WallCard = { k: "poster" | "web" | "img" | "video"; t?: string; img?: string; src?: string; poster?: string; ar: string; s?: number };
+const wallCards: WallCard[] = [
+  { k: "poster", t: "fashion", img: "fashion.jpg", ar: "2 / 3" },
+  { k: "img", img: "og-a-time.jpg", ar: "4 / 5" },
+  { k: "video", src: "nature.mp4", poster: "nature-poster.jpg", ar: "9 / 16" },
+  { k: "poster", t: "runner", img: "runner.jpg", ar: "2 / 3" },
+  { k: "img", img: "lp-recruit.jpg", ar: "16 / 10", s: 0.68 },
+  { k: "poster", t: "lemon", img: "lemon.jpg", ar: "2 / 3" },
+  { k: "web", t: "coffee", img: "coffee.jpg", ar: "4 / 5" },
+  { k: "video", src: "omakase.mp4", poster: "omakase-poster.jpg", ar: "16 / 9", s: 0.66 },
+  { k: "poster", t: "architecture", img: "architecture.jpg", ar: "2 / 3" },
+  { k: "img", img: "og-c-pain.jpg", ar: "4 / 5" },
+  { k: "img", img: "lp-videofaq.jpg", ar: "16 / 10", s: 0.68 },
+  { k: "poster", t: "skincare", img: "skincare.jpg", ar: "2 / 3" },
+  { k: "img", img: "lp-insta.jpg", ar: "16 / 10", s: 0.68 },
+  { k: "img", img: "og-b-price.jpg", ar: "4 / 5" },
+];
+const hero = (f: string) => `${base}subsc-design/assets/hero/${f}`;
+const backThumbs = ["fashion.jpg", "lp-recruit.jpg", "lemon.jpg", "og-a-time.jpg", "architecture.jpg", "lp-insta.jpg", "coffee.jpg", "og-c-pain.jpg", "runner.jpg", "lp-videofaq.jpg", "skincare.jpg", "og-b-price.jpg"];
 
 const deliverables = ["バナー", "チラシ", "パンフレット", "LP", "Webサイト", "SNS画像", "営業資料", "ポスター", "DM・はがき", "メルマガ画像", "展示会パネル", "名刺・封筒"];
 
@@ -167,100 +188,68 @@ const jsonLd = {
   <Header />
 
   <main class="sd-scope">
-    <!-- 01 Hero -->
+    <!-- 01 Hero（ダーク。作品が弧状の壁を流れながら次々と組み上がる） -->
     <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-inner">
-        <div class="hero-copy">
-          <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>SAIMON サブスクデザイン</p>
-          <h1 id="hero-title">
-            <span class="no-break"><span class="hl">速い。</span>作り放題。</span><wbr /><span class="h1-sub"><span class="no-break">月額定額の</span><wbr /><span class="no-break">専属デザイナー。</span></span></h1>
+      <div class="hero-head">
+        <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>SAIMON サブスクデザイン</p>
+        <h1 id="hero-title"><span class="no-break"><span class="hl">速い。</span>作り放題。</span><span class="h1-sub"><span class="no-break">月額定額の</span><wbr /><span class="no-break">専属デザイナー。</span></span></h1>
+        <div class="hero-row">
           <dl class="speed-chips" aria-label="納期の目安">
-            <div>
-              <dt>バナー</dt>
-              <dd><strong>2</strong>営業日<small>目安</small></dd>
-            </div>
-            <div>
-              <dt>LP</dt>
-              <dd><strong>3</strong>営業日<small>目安</small></dd>
-            </div>
-            <div>
-              <dt>見積もり</dt>
-              <dd><strong>0</strong>回</dd>
-            </div>
+            <div><dt>バナー</dt><dd><strong>2</strong>営業日<small>目安</small></dd></div>
+            <div><dt>LP</dt><dd><strong>3</strong>営業日<small>目安</small></dd></div>
+            <div><dt>見積もり</dt><dd><strong>0</strong>回</dd></div>
           </dl>
-          <p class="hero-lead">バナー・チラシからLP・Webサイトまで、専属デザイナーに月額定額で何度でも頼めるデザインのサブスクです。見積もりも発注書もいりません。チャットで送れば、あとは届くのを待つだけです。</p>
-          <div class="hero-actions">
-            <a class="primary-cta" href="#contact-form" data-cta-source="hero-primary">
-              無料で相談してみる<Fragment set:html={svg("arrow")} />
-            </a>
-            <p class="slots-line"><span class="slots-dot" aria-hidden="true"></span>品質を保つため、同時受入は<strong>10社限定</strong></p>
-          </div>
-          <p class="hero-cta-note">相談無料・しつこい営業なし／オンライン対応／1営業日以内に返信／納期は目安です</p>
+          <a class="primary-cta" href="#contact-form" data-cta-source="hero-primary">無料で相談してみる<Fragment set:html={svg("arrow")} /></a>
         </div>
-
-        <!-- シグネチャー: デザインが組み上がっていくキャンバス（装飾・スクリーンリーダー非対象） -->
-        <div class="hero-visual" aria-hidden="true">
-          <div class="studio" id="studio">
-            <div class="studio-bar">
-              <span class="studio-dots"><i></i><i></i><i></i></span>
-              <span class="studio-file" id="studio-file">fair_banner.png — 1200×628</span>
-              <span class="studio-status" id="studio-status">制作中</span>
-            </div>
-            <div class="studio-main" id="studio-main">
-              <div class="studio-tools">
-                <span data-tool="pointer" set:html={svg("pointer")} />
-                <span data-tool="square" set:html={svg("square")} />
-                <span data-tool="image" set:html={svg("image")} />
-                <span data-tool="type" set:html={svg("type")} />
-                <span class="studio-swatches">
-                  <i data-swatch="navy"></i>
-                  <i data-swatch="sun"></i>
-                  <i data-swatch="blue"></i>
-                </span>
-              </div>
-              <div class="studio-stage">
-                <div class="art" id="art" data-theme="navy">
-                  <div class="ly ly-kicker"><span id="art-kicker">週末限定</span></div>
-                  <div class="ly ly-title"><span id="art-title"></span><b class="caret"></b></div>
-                  <div class="ly ly-btn"><span id="art-btn">予約する</span></div>
-                  <div class="ly ly-photo"><img id="art-img" src={asset("work-wedding.jpg")} alt="" width="900" height="599" decoding="async" /></div>
-                  <div class="art-stamp"><span>納品</span></div>
-                </div>
-              </div>
-              <svg class="studio-cursor" id="studio-cursor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"/></svg>
-            </div>
-            <div class="studio-foot">
-              <ol class="studio-steps">
-                <li data-step="0">依頼</li>
-                <li data-step="1">制作</li>
-                <li data-step="2">納品</li>
-              </ol>
-              <div class="studio-track"><i id="studio-fill"></i></div>
-              <p class="studio-eta">バナー目安 <strong>2営業日</strong></p>
-            </div>
-          </div>
-          <div class="studio-chat" id="studio-chat"></div>
-        </div>
+        <ul class="hero-facts" aria-label="サービス概要">
+          <li>月額<strong>11万円〜</strong>（税込）</li>
+          <li>依頼・修正<strong>無制限</strong></li>
+          <li><strong>複数社</strong>でシェアOK</li>
+          <li class="hero-facts-slots"><span class="slots-dot" aria-hidden="true"></span>同時受入<strong>10社限定</strong></li>
+        </ul>
       </div>
 
-      <dl class="hero-metrics" aria-label="サービス概要">
-        <div>
-          <dt>月額</dt>
-          <dd><strong>11万円〜</strong><span>（税込）</span></dd>
+      <div class="wall" aria-hidden="true">
+        <div class="wall-back">
+          {[0, 1].map((row) => (
+            <div class={`wall-back-row wall-back-row-${row}`}>
+              {[0, 1].map(() => (row ? backThumbs.slice().reverse() : backThumbs).map((f) => <img src={hero(f)} alt="" loading="lazy" decoding="async" width="160" height="200" />))}
+            </div>
+          ))}
         </div>
-        <div>
-          <dt>依頼回数</dt>
-          <dd><strong>無制限</strong></dd>
+        <div class="wall-streaks"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="wall-stage" id="wall">
+          {wallCards.map((c) => (
+            <div class={`wc wc-${c.k}${c.t ? ` wc-${c.t}` : ""}`} style={`--ar:${c.ar};--s:${c.s ?? 1}`}>
+              <div class="wc-draft"><i></i><i></i><i></i><i></i></div>
+              <div class="wc-body">
+                {c.k === "img" && <img src={hero(c.img!)} alt="" decoding="async" width="560" height="700" />}
+                {c.k === "video" && <video src={hero(c.src!)} poster={hero(c.poster!)} muted loop playsinline preload="none"></video>}
+                {c.k === "poster" && <img class="wc-photo" src={hero(c.img!)} alt="" decoding="async" width="640" height="960" />}
+                {c.t === "fashion" && <div class="wc-copy"><b class="f-mark">ROUGE</b><p class="f-jp">美しさは、<br />生き方から。</p><small class="f-foot">FASHION / LIFESTYLE</small></div>}
+                {c.t === "runner" && <div class="wc-copy"><small class="r-brand">KAZE</small><p class="r-jp">動き出す。<br />もっと遠くへ。</p><b class="r-en">RUN<br />THE NEXT</b></div>}
+                {c.t === "lemon" && <div class="wc-copy"><small class="l-brand">SUNNY LEMON</small><p class="l-jp">ひとくちで、<br />気分が晴れる。</p><em class="l-script">Good mood, every day</em></div>}
+                {c.t === "architecture" && <div class="wc-copy"><small class="a-brand">NORTH ATELIER</small><div class="a-panel"><p class="a-jp">建てることは、<br />未来をつくること。</p><small>ARCHITECTURE FOR TOMORROW</small></div></div>}
+                {c.t === "skincare" && <div class="wc-copy"><small class="s-brand">SORA SKIN</small><p class="s-jp">肌に、<br />静かな余白を。</p><small class="s-foot">Moist Serum 30ml</small></div>}
+                {c.t === "coffee" && (
+                  <div class="wc-web">
+                    <div class="w-nav"><b>TOMOSHIBI</b><i></i><i></i><i></i></div>
+                    <div class="w-main">
+                      <div class="w-copy"><p>日常を、<br />少し特別に。</p><span>コーヒーのある景色</span><em>VIEW MORE</em></div>
+                      <img src={hero(c.img!)} alt="" decoding="async" width="640" height="960" />
+                    </div>
+                    <div class="w-thumbs"><i></i><i></i><i></i></div>
+                  </div>
+                )}
+              </div>
+              <span class="wc-sel"><i></i><i></i><i></i><i></i></span>
+              <span class="wc-done" set:html={`${svg("check", "ic ic-sm")}納品`} />
+            </div>
+          ))}
         </div>
-        <div>
-          <dt>修正</dt>
-          <dd><strong>何度でも</strong></dd>
-        </div>
-        <div>
-          <dt>シェア利用</dt>
-          <dd><strong>複数社OK</strong></dd>
-        </div>
-      </dl>
+        <p class="wall-note">※一部、制作イメージのサンプル作品を含みます</p>
+      </div>
+
     </section>
 
     <!-- 制作物マーキー（作り放題の視覚化・2段逆走） -->
@@ -1028,7 +1017,7 @@ const jsonLd = {
     })();
   </script>
 
-  <script is:inline define:vars={{ imgBase: `${base}subsc-design/assets/` }}>
+  <script is:inline>
     // ===== モーション層（reduced-motion 尊重） =====
     (function () {
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1118,167 +1107,125 @@ const jsonLd = {
         }
       }
 
-      // ---- 01 Hero: デザインが組み上がるキャンバス ----
-      var studio = document.getElementById("studio");
-      if (!studio) return;
-      var art = document.getElementById("art");
-      var main = document.getElementById("studio-main");
-      var cursor = document.getElementById("studio-cursor");
-      var titleEl = document.getElementById("art-title");
-      var kickerEl = document.getElementById("art-kicker");
-      var btnEl = document.getElementById("art-btn");
-      var imgEl = document.getElementById("art-img");
-      var fileEl = document.getElementById("studio-file");
-      var statusEl = document.getElementById("studio-status");
-      var fillEl = document.getElementById("studio-fill");
-      var chat = document.getElementById("studio-chat");
-      var steps = studio.querySelectorAll(".studio-steps li");
+      // ---- 01 Hero: 作品壁（弧状に流れ、中央手前で1枚ずつ組み上がる） ----
+      var wall = document.getElementById("wall");
+      if (!wall) return;
+      var heroSec = wall.closest(".hero");
+      var cards = Array.prototype.slice.call(wall.querySelectorAll(".wc")).map(function (el) {
+        return { el: el, w: 0, s: 0, built: false, video: el.querySelector("video") };
+      });
+      var L = 1, R = 1500, gap = 28, speed = 60, tOff = 0, vw = window.innerWidth;
 
-      var designs = [
-        { theme: "navy", img: "work-wedding.jpg", kicker: "週末限定", title: "ご見学フェア開催中", btn: "予約する", file: "fair_banner.png", req: "週末フェアの告知バナーをお願いします", res: "承知しました。すぐ着手します" },
-        { theme: "sun", img: "work-flower.jpg", kicker: "資料請求で", title: "いまなら特典プレゼント", btn: "資料を見る", file: "campaign_banner.png", req: "資料請求キャンペーンのバナーも欲しいです", res: "了解です。次の順番で制作します" },
-        { theme: "blue", img: "work-event.jpg", kicker: "会員様限定", title: "感謝イベントのご案内", btn: "詳細を見る", file: "event_sns.png", req: "会員向けイベントの告知画像を1枚", res: "承知しました。本日中に初稿を出します" },
-      ];
-      designs.forEach(function (d) { var im = new Image(); im.src = imgBase + d.img; });
-
-      function setTool(name) {
-        studio.querySelectorAll("[data-tool]").forEach(function (t) {
-          t.classList.toggle("is-active", t.getAttribute("data-tool") === name);
+      function cssNum(name, def) {
+        var v = parseFloat(getComputedStyle(wall).getPropertyValue(name));
+        return isNaN(v) ? def : v;
+      }
+      function measure() {
+        vw = window.innerWidth;
+        gap = cssNum("--gap", 28);
+        R = cssNum("--radius", 1500);
+        speed = cssNum("--speed", 60);
+        var acc = 0;
+        cards.forEach(function (c) {
+          c.w = c.el.offsetWidth;
+          c.s = acc + c.w / 2;
+          acc += c.w + gap;
         });
+        L = acc;
       }
-      function setStep(n) {
-        steps.forEach(function (li, i) {
-          li.classList.toggle("is-on", i <= n);
+      function buildX() { return vw * (vw < 700 ? 0.18 : 0.26); }
+      function setBuilt(c, animate) {
+        c.built = true;
+        if (!animate) {
+          c.el.classList.add("no-tr", "is-built", "is-done");
+          void c.el.offsetWidth;
+          c.el.classList.remove("no-tr");
+          return;
+        }
+        c.el.classList.add("is-building");
+        setTimeout(function () { c.el.classList.add("is-built"); }, 380);
+        setTimeout(function () { c.el.classList.remove("is-building"); c.el.classList.add("is-done", "is-pop"); }, 1900);
+      }
+      function reset(c) {
+        c.built = false;
+        c.el.classList.add("no-tr");
+        c.el.classList.remove("is-built", "is-done", "is-building", "is-pop");
+        void c.el.offsetWidth;
+        c.el.classList.remove("no-tr");
+      }
+      function place(animateBuild) {
+        var half = L / 2, bx = buildX();
+        cards.forEach(function (c) {
+          var x = ((c.s - tOff) % L + L) % L - half;
+          var th = x / R;
+          var a = Math.abs(th);
+          var tx = R * Math.sin(th) - c.w / 2;
+          var tz = R * (Math.cos(th) - 1);
+          c.el.style.transform = "translate3d(" + tx.toFixed(1) + "px,0," + tz.toFixed(1) + "px) rotateY(" + (-th * 38).toFixed(2) + "deg)";
+          c.el.style.opacity = a > 1.25 ? 0 : Math.min(1, 1.7 - a * 1.25).toFixed(3);
+          c.el.style.zIndex = String(1000 - Math.round(a * 100));
+          if (!c.built && x < bx && x > bx - 600) setBuilt(c, animateBuild);
+          else if (c.built && x > bx + 40) reset(c);
+          if (animateBuild === false && !c.built && x < bx) setBuilt(c, false);
         });
-      }
-      function moveCursor(el, ox, oy) {
-        if (!el) return;
-        var mr = main.getBoundingClientRect();
-        var r = el.getBoundingClientRect();
-        var x = r.left - mr.left + r.width * (ox == null ? 0.5 : ox);
-        var y = r.top - mr.top + r.height * (oy == null ? 0.5 : oy);
-        cursor.style.transform = "translate(" + x + "px," + y + "px)";
-      }
-      function say(text, who) {
-        var m = document.createElement("div");
-        m.className = "chat-bubble chat-" + who;
-        m.innerHTML = "<em>" + (who === "client" ? "御社" : who === "deliver" ? "納品" : "専属デザイナー") + "</em><p></p>";
-        m.querySelector("p").textContent = text;
-        chat.appendChild(m);
-        while (chat.children.length > 2) chat.removeChild(chat.firstChild);
-      }
-      function typeTitle(text, done) {
-        var i = 0;
-        titleEl.textContent = "";
-        art.classList.add("is-typing");
-        var t = setInterval(function () {
-          i++;
-          titleEl.textContent = text.slice(0, i);
-          if (i >= text.length) {
-            clearInterval(t);
-            art.classList.remove("is-typing");
-            if (done) done();
-          }
-        }, 70);
-      }
-      function staticState(d) {
-        art.setAttribute("data-theme", d.theme);
-        art.className = "art s1 s2 s3 s4 s5 s6";
-        titleEl.textContent = d.title;
-        kickerEl.textContent = d.kicker;
-        btnEl.textContent = d.btn;
-        fillEl.style.width = "100%";
-        setStep(2);
-        statusEl.textContent = "納品済み";
-        statusEl.classList.add("is-done");
-        say(d.req, "client");
-        say(d.file, "deliver");
       }
 
-      if (reduce) { staticState(designs[0]); return; }
-
-      var idx = 0, timers = [];
-      function at(ms, fn) { timers.push(setTimeout(fn, ms)); }
-      function play() {
-        timers.forEach(clearTimeout);
-        timers = [];
-        var d = designs[idx % designs.length];
-        idx++;
-        art.className = "art";
-        art.setAttribute("data-theme", d.theme);
-        titleEl.textContent = "";
-        kickerEl.textContent = d.kicker;
-        btnEl.textContent = d.btn;
-        imgEl.src = imgBase + d.img;
-        fileEl.textContent = d.file + " — 1200×628";
-        statusEl.textContent = "依頼受付";
-        statusEl.classList.remove("is-done");
-        fillEl.style.width = "4%";
-        setStep(0);
-        setTool("pointer");
-        say(d.req, "client");
-
-        at(700, function () {
-          say(d.res, "designer");
-          statusEl.textContent = "制作中";
-          setStep(1);
-          setTool("square");
-          art.classList.add("s1");
-          fillEl.style.width = "22%";
-          moveCursor(art, 0.12, 0.2);
-        });
-        at(1700, function () {
-          setTool("image");
-          art.classList.add("s2");
-          fillEl.style.width = "40%";
-          moveCursor(art.querySelector(".ly-photo"), 0.5, 0.5);
-        });
-        at(2700, function () {
-          setTool("type");
-          art.classList.add("s3");
-          moveCursor(art.querySelector(".ly-title"), 0.1, 0.6);
-          typeTitle(d.title);
-          fillEl.style.width = "60%";
-        });
-        at(4300, function () {
-          setTool("");
-          var sw = studio.querySelector('[data-swatch="' + d.theme + '"]');
-          moveCursor(sw, 0.5, 0.5);
-          if (sw) {
-            sw.classList.add("is-pick");
-            at(600, function () { sw.classList.remove("is-pick"); });
-          }
-        });
-        at(4800, function () {
-          art.classList.add("s4");
-          fillEl.style.width = "78%";
-        });
-        at(5500, function () {
-          setTool("pointer");
-          art.classList.add("s5");
-          moveCursor(art.querySelector(".ly-btn"), 0.6, 0.6);
-          fillEl.style.width = "90%";
-        });
-        at(6500, function () {
-          art.classList.add("s6");
-          setStep(2);
-          fillEl.style.width = "100%";
-          statusEl.textContent = "納品済み";
-          statusEl.classList.add("is-done");
-          say(d.file, "deliver");
-          moveCursor(art, 0.92, 0.9);
-        });
-        at(9200, play);
+      measure();
+      if (reduce) {
+        tOff = cards[Math.floor(cards.length / 2)].s;
+        place(false);
+        cards.forEach(function (c) { if (!c.built) setBuilt(c, false); });
+        return;
       }
+      tOff = cards[3].s - vw * 0.05;
+      place(false);
 
-      var started = false;
-      var hio = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting && !started) { started = true; setTimeout(play, 500); }
-          else if (!e.isIntersecting && started) { timers.forEach(clearTimeout); timers = []; started = false; }
-        });
-      }, { threshold: 0.2 });
-      hio.observe(studio);
+      var running = false, last = 0, usingRaf = false, rafSeen = false, iv = null;
+      function step(now) {
+        if (!running) return;
+        var dt = last ? Math.min(0.05, (now - last) / 1000) : 0;
+        last = now;
+        tOff += speed * dt;
+        place(true);
+      }
+      function rafLoop(now) {
+        rafSeen = true;
+        step(now);
+        if (running && usingRaf) requestAnimationFrame(rafLoop);
+      }
+      function start() {
+        if (running) return;
+        running = true; last = 0;
+        usingRaf = typeof requestAnimationFrame === "function";
+        if (usingRaf) {
+          requestAnimationFrame(rafLoop);
+          // rAF が発火しない環境（一部の埋め込みブラウザ）向けのフォールバック
+          setTimeout(function () {
+            if (running && !rafSeen) { usingRaf = false; iv = setInterval(function () { step(performance.now()); }, 33); }
+          }, 400);
+        } else {
+          iv = setInterval(function () { step(performance.now()); }, 33);
+        }
+        cards.forEach(function (c) { if (c.video) { c.video.preload = "auto"; var p = c.video.play(); if (p && p.catch) p.catch(function () {}); } });
+      }
+      function stop() {
+        running = false;
+        if (iv) { clearInterval(iv); iv = null; }
+        cards.forEach(function (c) { if (c.video) c.video.pause(); });
+      }
+      var heroIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) start(); else stop(); });
+      }, { threshold: 0.05 });
+      heroIO.observe(heroSec);
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) stop();
+        else if (heroSec.getBoundingClientRect().bottom > 0) start();
+      });
+      var rz;
+      window.addEventListener("resize", function () {
+        clearTimeout(rz);
+        rz = setTimeout(function () { measure(); place(false); }, 150);
+      });
     })();
   </script>
 

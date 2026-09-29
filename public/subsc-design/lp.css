@@ -155,41 +155,28 @@
 }
 
 /* ============================================================
-   01 Hero
+   01 Hero（ダーク。作品が弧状の壁を流れ、中央手前で1枚ずつ組み上がる）
    ============================================================ */
 .sd-scope .hero {
-  padding: 64px 24px 40px;
-  background: var(--bg);
+  --stage: #0a0e18;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  background: linear-gradient(180deg, #0a0e18 0%, #0d1322 55%, #121a2c 100%);
+  padding: 36px 0 0;
 }
-/* 右側に方眼（デザインツールのアートボードを想起させる地模様） */
-.sd-scope .hero::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 0 46%;
-  background-image: radial-gradient(circle, var(--line-2) 1px, transparent 1.2px);
-  background-size: 22px 22px;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%);
-  mask-image: linear-gradient(90deg, transparent, #000 30%);
-  opacity: 0.7;
-  pointer-events: none;
-}
-.sd-scope .hero > * { position: relative; }
-.sd-scope .hero-inner {
-  max-width: 1120px;
+.sd-scope .hero-head {
+  position: relative;
+  z-index: 6;
+  max-width: 900px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
-  gap: 56px;
-  align-items: center;
+  padding: 0 20px;
+  text-align: center;
 }
-.sd-scope .hero-copy > * { animation: sd-rise 0.7s var(--ease) both; }
-.sd-scope .hero-copy > *:nth-child(2) { animation-delay: 0.08s; }
-.sd-scope .hero-copy > *:nth-child(3) { animation-delay: 0.2s; }
-.sd-scope .hero-copy > *:nth-child(4) { animation-delay: 0.3s; }
-.sd-scope .hero-copy > *:nth-child(5) { animation-delay: 0.4s; }
-.sd-scope .hero-copy > *:nth-child(6) { animation-delay: 0.5s; }
-.sd-scope .hero-visual { animation: sd-rise 0.9s var(--ease) 0.35s both; }
-
+.sd-scope .hero-head > * { animation: sd-rise 0.7s var(--ease) both; }
+.sd-scope .hero-head > *:nth-child(2) { animation-delay: 0.08s; }
+.sd-scope .hero-head > *:nth-child(3) { animation-delay: 0.2s; }
+.sd-scope .hero-head > *:nth-child(4) { animation-delay: 0.3s; }
 .sd-scope .eyebrow {
   display: inline-flex;
   align-items: center;
@@ -197,11 +184,12 @@
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: var(--blue);
-  background: var(--blue-soft);
+  color: #b9c6ff;
+  background: rgba(108, 140, 255, 0.14);
+  border: 1px solid rgba(108, 140, 255, 0.28);
   border-radius: 999px;
-  padding: 6px 14px;
-  margin: 0 0 18px;
+  padding: 5px 14px;
+  margin: 0 0 16px;
 }
 .sd-scope .eyebrow-dot {
   width: 8px; height: 8px;
@@ -210,419 +198,406 @@
   animation: sd-pulse 2s ease-out infinite;
 }
 .sd-scope .hero h1 {
-  font-size: clamp(38px, 4.6vw, 60px);
+  font-size: clamp(40px, 5.2vw, 70px);
   font-weight: 900;
-  line-height: 1.22;
-  margin: 0 0 24px;
+  line-height: 1.12;
+  color: #fff;
+  margin: 0 0 20px;
 }
 .sd-scope .hero h1 .hl {
-  background: linear-gradient(transparent 60%, var(--sun) 60%, var(--sun) 92%, transparent 92%);
+  background: linear-gradient(transparent 80%, var(--sun) 80%, var(--sun) 93%, transparent 93%);
   background-repeat: no-repeat;
   background-size: 0% 100%;
-  animation: sd-marker 0.8s var(--ease) 0.7s forwards;
-  padding: 0 0.04em;
+  animation: sd-marker 0.8s var(--ease) 0.6s forwards;
 }
 @keyframes sd-marker { to { background-size: 100% 100%; } }
 .sd-scope .hero h1 .h1-sub {
   display: block;
-  font-size: 0.56em;
+  font-size: 0.42em;
   font-weight: 700;
-  color: var(--ink-2);
-  margin-top: 0.45em;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 0.5em;
   line-height: 1.4;
 }
-
 .sd-scope .speed-chips {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
-  max-width: 480px;
-  margin: 0 0 22px;
+  width: 420px;
+  margin: 0;
+  text-align: left;
 }
 .sd-scope .speed-chips > div {
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 10px 14px 8px;
-  background: #fff;
+  padding: 8px 12px 6px;
 }
-.sd-scope .speed-chips dt {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-  margin: 0;
-}
-.sd-scope .speed-chips dd {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--ink);
-  white-space: nowrap;
-}
-.sd-scope .speed-chips small { font-size: 10.5px; font-weight: 700; color: var(--muted); margin-left: 3px; }
+.sd-scope .speed-chips dt { font-size: 11.5px; font-weight: 700; color: rgba(255, 255, 255, 0.6); margin: 0; }
+.sd-scope .speed-chips dd { margin: 0; font-size: 12.5px; font-weight: 700; color: #fff; white-space: nowrap; }
 .sd-scope .speed-chips strong {
   font-family: var(--font-num);
-  font-size: 34px;
+  font-size: 30px;
   font-weight: 800;
   line-height: 1.1;
-  color: var(--blue);
+  color: var(--sun);
   margin-right: 3px;
 }
-.sd-scope .hero-lead {
-  font-size: 16px;
-  color: var(--ink-2);
-  max-width: 520px;
-  margin: 0 0 26px;
-}
-.sd-scope .hero-actions {
+.sd-scope .speed-chips small { font-size: 10.5px; font-weight: 700; color: rgba(255, 255, 255, 0.55); margin-left: 3px; }
+.sd-scope .hero-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 14px 20px;
+  justify-content: center;
+  gap: 14px 18px;
 }
-.sd-scope .slots-line {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13.5px;
-  color: var(--ink-2);
-  margin: 0;
+.sd-scope .hero-facts {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 0;
+  margin: 16px 0 0;
+  padding: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
 }
-.sd-scope .slots-line strong { color: var(--ink); font-weight: 900; }
+.sd-scope .hero-facts li { display: inline-flex; align-items: center; gap: 2px; padding: 0 14px; white-space: nowrap; }
+.sd-scope .hero-facts li + li { border-left: 1px solid rgba(255, 255, 255, 0.2); }
+.sd-scope .hero-facts strong { color: #fff; font-weight: 900; margin: 0 2px; }
+.sd-scope .hero-facts-slots { gap: 7px !important; }
 .sd-scope .slots-dot {
-  width: 9px; height: 9px;
+  width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--mint);
   animation: sd-pulse 2s ease-out infinite;
+  margin-right: 4px;
 }
-.sd-scope .hero-cta-note { margin: 14px 0 0; font-size: 12.5px; color: var(--muted); }
+.sd-scope .hero .primary-cta { box-shadow: 0 12px 30px rgba(229, 72, 42, 0.4); }
 
-/* ---- シグネチャー: 組み上がるデザインキャンバス ---- */
-.sd-scope .hero-visual { position: relative; }
-.sd-scope .studio {
+/* ---- 作品壁 ---- */
+.sd-scope .wall {
+  --h: 330px;       /* 基準カード高さ */
+  --radius: 1700;   /* 弧の半径(px) */
+  --gap: 34;        /* カード間隔(px) */
+  --speed: 58;      /* 流れる速さ(px/秒) */
   position: relative;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  box-shadow: 0 30px 60px -20px rgba(22, 35, 59, 0.25), 0 8px 18px rgba(22, 35, 59, 0.06);
-  overflow: hidden;
+  height: calc(var(--h) + 96px);
+  margin-top: 0;
+  perspective: 1400px;
+  perspective-origin: 50% 10%;
 }
-.sd-scope .studio-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  height: 40px;
-  padding: 0 14px;
-  border-bottom: 1px solid var(--line);
-  font-size: 12px;
-}
-.sd-scope .studio-dots { display: inline-flex; gap: 6px; }
-.sd-scope .studio-dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--line-2); }
-.sd-scope .studio-dots i:nth-child(1) { background: #ff8a73; }
-.sd-scope .studio-dots i:nth-child(2) { background: var(--sun); }
-.sd-scope .studio-dots i:nth-child(3) { background: #7fd3a6; }
-.sd-scope .studio-file {
-  flex: 1;
-  min-width: 0;
-  color: var(--muted);
-  font-family: var(--font-num);
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.sd-scope .studio-status {
-  flex: none;
-  min-width: 76px;
-  text-align: center;
-  font-weight: 700;
-  font-size: 11.5px;
-  color: var(--blue);
-  background: var(--blue-soft);
-  border-radius: 999px;
-  padding: 3px 10px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-.sd-scope .studio-status.is-done { color: #fff; background: var(--mint); }
-
-.sd-scope .studio-main {
-  position: relative;
-  display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
-  background-color: var(--bg-soft);
-  background-image: radial-gradient(circle, #dfe4ee 1px, transparent 1.2px);
-  background-size: 16px 16px;
-}
-.sd-scope .studio-tools {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 0;
-  background: #fff;
-  border-right: 1px solid var(--line);
-}
-.sd-scope .studio-tools [data-tool] {
-  display: grid;
-  place-items: center;
-  width: 32px; height: 32px;
-  border-radius: 6px;
-  color: var(--muted);
-  transition: background-color 0.25s ease, color 0.25s ease;
-}
-.sd-scope .studio-tools [data-tool] .ic { width: 17px; height: 17px; }
-.sd-scope .studio-tools [data-tool].is-active { background: var(--blue-soft); color: var(--blue); }
-.sd-scope .studio-swatches {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: auto;
-  padding-top: 10px;
-}
-.sd-scope .studio-swatches i {
-  display: block;
-  width: 16px; height: 16px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 0 0 1px var(--line-2);
-  transition: box-shadow 0.2s ease, transform 0.2s var(--ease);
-}
-.sd-scope [data-swatch="navy"] { background: var(--ink); }
-.sd-scope [data-swatch="sun"] { background: var(--sun); }
-.sd-scope [data-swatch="blue"] { background: var(--blue-light); }
-.sd-scope .studio-swatches i.is-pick { box-shadow: 0 0 0 2px var(--blue); transform: scale(1.25); }
-.sd-scope .studio-stage { padding: 26px 22px; }
-
-/* アートボード（中身は container query 単位で拡縮） */
-.sd-scope .art {
-  --art-bg: #eceff5;
-  --art-fg: var(--ink);
-  --art-acc: var(--muted);
-  --btn-bg: var(--ink);
-  --btn-fg: #fff;
-  position: relative;
-  container-type: inline-size;
-  aspect-ratio: 1200 / 628;
-  background: var(--art-bg);
-  color: var(--art-fg);
-  border-radius: 4px;
-  overflow: hidden;
-  box-shadow: 0 14px 30px -12px rgba(22, 35, 59, 0.3);
-  transition: background-color 0.7s var(--ease), color 0.5s ease;
-}
-.sd-scope .art.s4[data-theme="navy"] { --art-bg: #16233b; --art-fg: #fff; --art-acc: var(--sun); --btn-bg: var(--sun); --btn-fg: #16233b; }
-.sd-scope .art.s4[data-theme="sun"] { --art-bg: #ffe39a; --art-fg: #16233b; --art-acc: var(--blue); --btn-bg: #16233b; --btn-fg: #fff; }
-.sd-scope .art.s4[data-theme="blue"] { --art-bg: #dbe3ff; --art-fg: #16233b; --art-acc: var(--blue); --btn-bg: var(--blue); --btn-fg: #fff; }
-
-.sd-scope .ly { position: absolute; }
-.sd-scope .ly::before {
-  content: "";
+.sd-scope .wall-stage {
   position: absolute;
-  inset: 0;
-  border: 1.5px dashed #9aa6bd;
-  border-radius: 2px;
-  opacity: 0;
-  transform: scale(0.94);
-  transition: opacity 0.4s ease, transform 0.5s var(--ease), border-color 0.3s ease;
-  pointer-events: none;
+  left: 0; right: 0;
+  top: 34px;
+  height: var(--h);
+  transform-style: preserve-3d;
   z-index: 2;
 }
-.sd-scope .art.s1 .ly::before { opacity: 1; transform: none; }
-.sd-scope .art.s1 .ly-kicker::before { transition-delay: 0s; }
-.sd-scope .art.s1 .ly-title::before { transition-delay: 0.12s; }
-.sd-scope .art.s1 .ly-btn::before { transition-delay: 0.24s; }
-.sd-scope .art.s1 .ly-photo::before { transition-delay: 0.36s; }
-.sd-scope .art.s4 .ly::before { opacity: 0; }
-/* 選択中レイヤーは実線の青枠 */
-.sd-scope .art.s2:not(.s3) .ly-photo::before,
-.sd-scope .art.s3:not(.s4) .ly-title::before,
-.sd-scope .art.s5:not(.s6) .ly-btn::before { opacity: 1; border: 2px solid var(--blue-light); transition-delay: 0s; }
+/* 左右のフェードと床（映り込みを溶かす） */
+.sd-scope .wall::before,
+.sd-scope .wall::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+}
+.sd-scope .wall::before {
+  inset: 0;
+  background: linear-gradient(90deg, #0d1322 0%, rgba(13, 19, 34, 0) 16%, rgba(13, 19, 34, 0) 84%, #0d1322 100%);
+}
+.sd-scope .wall::after {
+  left: 0; right: 0; bottom: 0;
+  height: 96px;
+  background: linear-gradient(180deg, rgba(18, 26, 44, 0) 0%, #121a2c 88%);
+}
+.sd-scope .wall-note {
+  position: absolute;
+  right: 20px;
+  bottom: 8px;
+  margin: 0;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  z-index: 4;
+}
 
-.sd-scope .ly-kicker { left: 6%; top: 15%; width: 40%; height: 10%; }
-.sd-scope .ly-title { left: 6%; top: 29%; width: 44%; height: 36%; }
-.sd-scope .ly-btn { left: 6%; top: 72%; width: 23%; height: 13%; }
-.sd-scope .ly-photo { right: 0; top: 0; width: 45%; height: 100%; }
+/* 奥の作品群（ぼかして奥行きを出す） */
+.sd-scope .wall-back {
+  position: absolute;
+  inset: 0 0 20px;
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  filter: blur(3px) brightness(0.42) saturate(0.8);
+  opacity: 0.85;
+  z-index: 1;
+}
+.sd-scope .wall-back-row {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  animation: sd-mq 90s linear infinite;
+}
+.sd-scope .wall-back-row-1 { animation-duration: 120s; animation-direction: reverse; margin-left: -120px; }
+.sd-scope .wall-back img {
+  height: 128px;
+  width: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 3px;
+}
 
-.sd-scope .ly-kicker span {
-  display: inline-block;
-  font-family: var(--font-head);
-  font-size: 3.6cqi;
-  font-weight: 700;
-  color: var(--art-acc);
-  border-bottom: 0.35cqi solid currentColor;
-  line-height: 1.5;
+/* 光の筋（スピード感） */
+.sd-scope .wall-streaks { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+.sd-scope .wall-streaks i {
+  position: absolute;
+  left: 0;
+  width: 38%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
   opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.4s ease, transform 0.4s var(--ease), color 0.5s ease;
+  animation: sd-streak 3.2s linear infinite;
 }
-.sd-scope .art.s3 .ly-kicker span { opacity: 1; transform: none; }
-.sd-scope .ly-title #art-title {
-  font-family: var(--font-head);
-  font-size: 6.3cqi;
-  font-weight: 900;
-  line-height: 1.3;
-  display: inline;
+.sd-scope .wall-streaks i:nth-child(1) { top: 18%; animation-delay: 0s; }
+.sd-scope .wall-streaks i:nth-child(2) { top: 36%; animation-delay: 1.1s; width: 26%; background: linear-gradient(90deg, rgba(255, 214, 107, 0), rgba(255, 214, 107, 0.8), rgba(255, 214, 107, 0)); }
+.sd-scope .wall-streaks i:nth-child(3) { top: 62%; animation-delay: 0.5s; width: 46%; }
+.sd-scope .wall-streaks i:nth-child(4) { top: 78%; animation-delay: 2.1s; background: linear-gradient(90deg, rgba(108, 140, 255, 0), rgba(108, 140, 255, 0.85), rgba(108, 140, 255, 0)); }
+.sd-scope .wall-streaks i:nth-child(5) { top: 8%; animation-delay: 1.7s; width: 20%; }
+.sd-scope .wall-streaks i:nth-child(6) { top: 50%; animation-delay: 2.7s; width: 30%; }
+@keyframes sd-streak {
+  0% { transform: translateX(110vw); opacity: 0; }
+  10% { opacity: 1; }
+  60% { opacity: 0.8; }
+  100% { transform: translateX(-60vw); opacity: 0; }
 }
-.sd-scope .ly-title .caret {
-  display: none;
-  width: 0.4cqi;
-  height: 6.3cqi;
-  margin-left: 0.4cqi;
-  vertical-align: -0.9cqi;
-  background: var(--blue-light);
-  animation: sd-blink 0.8s steps(1) infinite;
+
+/* カード */
+.sd-scope .wc {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: calc(var(--h) * var(--s, 1));
+  aspect-ratio: var(--ar);
+  margin-top: calc(var(--h) * (1 - var(--s, 1)) / 2);
+  border-radius: 4px;
+  background: #151b2a;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+  -webkit-box-reflect: below 6px linear-gradient(transparent 70%, rgba(255, 255, 255, 0.14));
+  will-change: transform, opacity;
+  transform: translate3d(-50%, 0, -2000px);
+  opacity: 0;
 }
-.sd-scope .art.is-typing .caret { display: inline-block; }
-@keyframes sd-blink { 50% { opacity: 0; } }
-.sd-scope .ly-btn span {
+.sd-scope .wc-draft {
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
-  font-family: var(--font-head);
-  font-size: 3.1cqi;
-  font-weight: 900;
-  color: var(--btn-fg);
-  background: var(--btn-bg);
-  border-radius: 999px;
-  opacity: 0;
-  transform: scale(0.5);
-  transition: opacity 0.3s ease, transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.5s ease;
+  border-radius: 4px;
+  background: #182033;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  transition: opacity 0.6s ease 0.55s;
 }
-.sd-scope .art.s5 .ly-btn span { opacity: 1; transform: none; }
-.sd-scope .ly-photo img {
+.sd-scope .wc-draft i { position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px; }
+.sd-scope .wc-draft i:nth-child(1) { top: 9%; left: 9%; width: 46%; height: 6%; }
+.sd-scope .wc-draft i:nth-child(2) { top: 19%; left: 9%; width: 64%; height: 4%; }
+.sd-scope .wc-draft i:nth-child(3) { top: 34%; left: 9%; right: 9%; bottom: 26%; border: 1px dashed rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.03); }
+.sd-scope .wc-draft i:nth-child(4) { bottom: 9%; left: 9%; width: 34%; height: 8%; border-radius: 999px; }
+.sd-scope .wc-body {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  container-type: inline-size;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1.1s cubic-bezier(0.7, 0, 0.2, 1);
+}
+.sd-scope .wc.is-built .wc-body { clip-path: inset(0 0 0 0); }
+.sd-scope .wc.is-built .wc-draft { opacity: 0; }
+.sd-scope .wc-body > img,
+.sd-scope .wc-body > video,
+.sd-scope .wc-body .wc-photo {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  clip-path: inset(0 0 0 100%);
-  transform: scale(1.12);
-  transition: clip-path 0.9s var(--ease), transform 1.4s var(--ease);
 }
-.sd-scope .art.s2 .ly-photo img { clip-path: inset(0 0 0 0); transform: none; }
-.sd-scope .art-stamp {
+.sd-scope .wc-body .wc-photo { transform: scale(1.14); transition: transform 1.8s var(--ease); }
+.sd-scope .wc.is-built .wc-photo { transform: none; }
+.sd-scope .wc-copy > * {
   position: absolute;
-  right: 4%;
-  bottom: 8%;
-  width: 17cqi;
-  aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #fff;
-  border: 0.6cqi solid var(--mint);
-  color: var(--mint);
-  font-family: var(--font-head);
-  font-size: 4.2cqi;
-  font-weight: 900;
-  box-shadow: 0 8px 20px rgba(22, 35, 59, 0.2);
+  margin: 0;
   opacity: 0;
-  transform: scale(1.8) rotate(-24deg);
-  transition: opacity 0.25s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 3;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.6s var(--ease);
 }
-.sd-scope .art.s6 .art-stamp { opacity: 1; transform: scale(1) rotate(-12deg); }
-
-.sd-scope .studio-cursor {
+.sd-scope .wc.is-built .wc-copy > * { opacity: 1; transform: none; }
+.sd-scope .wc.is-built .wc-copy > *:nth-child(1) { transition-delay: 0.7s; }
+.sd-scope .wc.is-built .wc-copy > *:nth-child(2) { transition-delay: 0.9s; }
+.sd-scope .wc.is-built .wc-copy > *:nth-child(3) { transition-delay: 1.1s; }
+/* 制作中の選択枠 */
+.sd-scope .wc-sel {
   position: absolute;
-  top: 0; left: 0;
-  width: 22px; height: 22px;
-  fill: var(--ink);
-  stroke: #fff;
-  stroke-width: 1.5;
-  transform: translate(120px, 60px);
-  transition: transform 0.75s cubic-bezier(0.65, 0, 0.35, 1);
-  filter: drop-shadow(0 2px 3px rgba(22, 35, 59, 0.3));
-  z-index: 5;
+  inset: -7px;
+  border: 1.5px solid var(--blue-light);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
   pointer-events: none;
 }
-
-.sd-scope .studio-foot {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 16px;
-  border-top: 1px solid var(--line);
-  font-size: 12px;
-}
-.sd-scope .studio-steps {
-  display: flex;
-  gap: 4px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.sd-scope .studio-steps li {
+.sd-scope .wc-sel::after {
+  content: "制作中";
+  position: absolute;
+  left: -1.5px;
+  top: -22px;
+  font-size: 11px;
   font-weight: 700;
-  color: var(--muted);
-  background: var(--bg-soft);
-  border-radius: 999px;
-  padding: 2px 10px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  line-height: 1;
+  color: #fff;
+  background: var(--blue-light);
+  border-radius: 3px 3px 0 0;
+  padding: 5px 8px;
+  white-space: nowrap;
 }
-.sd-scope .studio-steps li.is-on { background: var(--blue-soft); color: var(--blue); }
-.sd-scope .studio-steps li:last-child.is-on { background: var(--mint); color: #fff; }
-.sd-scope .studio-track { height: 6px; border-radius: 999px; background: var(--bg-soft); overflow: hidden; }
-.sd-scope .studio-track i {
-  display: block;
-  height: 100%;
-  width: 4%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--blue-light), var(--blue));
-  transition: width 0.9s var(--ease);
-}
-.sd-scope .studio-eta { margin: 0; color: var(--muted); white-space: nowrap; }
-.sd-scope .studio-eta strong { color: var(--ink); }
-
-/* 専用チャット（キャンバスと同期して流れる通知） */
-/* キャンバスの下に積む。2件分の高さを確保してレイアウトシフトを防ぐ */
-.sd-scope .studio-chat {
-  position: relative;
-  width: min(300px, 100%);
-  margin: 14px 0 0 -28px;
-  min-height: 124px;
-  display: grid;
-  gap: 8px;
-  align-content: start;
-  z-index: 6;
-}
-.sd-scope .chat-bubble {
+.sd-scope .wc-sel i {
+  position: absolute;
+  width: 8px; height: 8px;
   background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 8px 12px;
-  box-shadow: 0 12px 28px -8px rgba(22, 35, 59, 0.28);
-  animation: sd-rise 0.45s var(--ease) both;
+  border: 1.5px solid var(--blue-light);
 }
-.sd-scope .chat-bubble em {
-  display: block;
-  font-style: normal;
-  font-size: 10.5px;
-  font-weight: 700;
-  color: var(--muted);
-  line-height: 1.4;
+.sd-scope .wc-sel i:nth-child(1) { left: -5px; top: -5px; }
+.sd-scope .wc-sel i:nth-child(2) { right: -5px; top: -5px; }
+.sd-scope .wc-sel i:nth-child(3) { left: -5px; bottom: -5px; }
+.sd-scope .wc-sel i:nth-child(4) { right: -5px; bottom: -5px; }
+.sd-scope .wc.is-building .wc-sel { opacity: 1; }
+/* 納品バッジ（組み上がった瞬間に出て、少しして消える） */
+.sd-scope .wc-done {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 900;
+  color: var(--ink);
+  background: var(--sun);
+  border-radius: 999px;
+  padding: 4px 10px;
+  opacity: 0;
+  z-index: 2;
 }
-.sd-scope .chat-bubble p { margin: 2px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--ink); }
-.sd-scope .chat-designer { background: var(--blue-soft); border-color: #d6defc; }
-.sd-scope .chat-designer em { color: var(--blue); }
-.sd-scope .chat-deliver { background: var(--sun-soft); border-color: #f5e2a6; }
-.sd-scope .chat-deliver em { color: #8a6400; }
-.sd-scope .chat-deliver p { font-family: var(--font-num); font-weight: 700; }
+.sd-scope .wc.is-pop .wc-done { animation: sd-done 2.8s var(--ease) forwards; }
+@keyframes sd-done {
+  0% { opacity: 0; transform: scale(0.5); }
+  12% { opacity: 1; transform: scale(1.08); }
+  20% { transform: scale(1); }
+  78% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.sd-scope .wc.no-tr,
+.sd-scope .wc.no-tr * { transition: none !important; }
 
-/* Heroメトリクス（カード化せず区切り線で並べる） */
-.sd-scope .hero-metrics {
-  max-width: 1120px;
-  margin: 40px auto 0;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  border-top: 1px solid var(--line);
-  animation: sd-rise 0.8s var(--ease) 0.7s both;
+/* ---- サンプル作品のタイポグラフィ（カード幅基準の cqi で拡縮） ---- */
+.sd-scope .wc-copy { position: absolute; inset: 0; }
+.sd-scope .f-mark {
+  top: 4cqi; left: 5cqi;
+  font-family: "Times New Roman", "Hiragino Mincho ProN", serif;
+  font-size: 27cqi;
+  font-weight: 700;
+  line-height: 0.85;
+  color: rgba(28, 4, 4, 0.82);
 }
-.sd-scope .hero-metrics > div { padding: 18px 20px 0; border-left: 1px solid var(--line); }
-.sd-scope .hero-metrics > div:first-child { border-left: none; padding-left: 0; }
-.sd-scope .hero-metrics dt { font-size: 12px; font-weight: 700; color: var(--muted); margin: 0 0 2px; }
-.sd-scope .hero-metrics dd { margin: 0; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
-.sd-scope .hero-metrics dd strong { font-size: 21px; font-weight: 900; color: var(--ink); font-family: var(--font-head); margin-right: 2px; }
+.sd-scope .f-jp {
+  top: 30cqi; left: 6cqi;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", serif;
+  font-size: 7.6cqi;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #fff;
+}
+.sd-scope .f-foot { bottom: 5cqi; right: 6cqi; font-size: 3.4cqi; letter-spacing: 0.22em; color: #fff; }
+.sd-scope .r-brand { top: 6cqi; left: 7cqi; font-family: var(--font-num); font-size: 6cqi; font-weight: 800; letter-spacing: 0.12em; color: #fff; }
+.sd-scope .r-jp { top: 17cqi; left: 7cqi; font-size: 7.4cqi; font-weight: 900; line-height: 1.4; color: #fff; text-shadow: 0 2px 10px rgba(0, 40, 90, 0.45); }
+.sd-scope .r-en { bottom: 7cqi; left: 7cqi; font-family: var(--font-num); font-style: italic; font-size: 11cqi; font-weight: 800; line-height: 0.95; color: #fff; }
+.sd-scope .l-brand { top: 7cqi; left: 7cqi; font-family: var(--font-num); font-size: 4.6cqi; font-weight: 800; letter-spacing: 0.16em; color: var(--ink); }
+.sd-scope .l-jp { top: 15cqi; left: 7cqi; font-size: 7.2cqi; font-weight: 900; line-height: 1.4; color: var(--ink); }
+.sd-scope .l-script { bottom: 7cqi; right: 7cqi; font-family: Georgia, serif; font-style: italic; font-size: 5.6cqi; color: var(--ink); }
+.sd-scope .a-brand { top: 6cqi; left: 7cqi; font-family: var(--font-num); font-size: 4.6cqi; font-weight: 700; letter-spacing: 0.22em; color: var(--ink); }
+.sd-scope .a-panel { left: 0; right: 0; bottom: 0; background: rgba(255, 255, 255, 0.94); padding: 6cqi 7cqi 5cqi; }
+.sd-scope .a-panel .a-jp {
+  margin: 0 0 2cqi;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", serif;
+  font-size: 6.4cqi;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.sd-scope .a-panel small { display: block; font-size: 2.8cqi; letter-spacing: 0.2em; color: var(--muted); }
+.sd-scope .s-brand { top: 7cqi; left: 7cqi; font-family: var(--font-num); font-size: 4.6cqi; font-weight: 500; letter-spacing: 0.3em; color: #6b4a4a; }
+.sd-scope .s-jp {
+  top: 16cqi; left: 5cqi;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", serif;
+  font-size: 7.6cqi;
+  font-weight: 600;
+  line-height: 1.55;
+  color: #3e2626;
+  background: rgba(255, 247, 243, 0.82);
+  padding: 2.4cqi 4cqi;
+  border-radius: 1cqi;
+}
+.sd-scope .s-foot { bottom: 7cqi; left: 7cqi; font-size: 3.4cqi; letter-spacing: 0.14em; color: #6b4a4a; }
+/* Web（LP）サンプル */
+.sd-scope .wc-web {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  background: #f6f1ea;
+  color: var(--ink);
+}
+.sd-scope .w-nav { display: flex; align-items: center; gap: 3cqi; padding: 4cqi 5cqi; }
+.sd-scope .w-nav b { font-family: var(--font-num); font-size: 4.2cqi; font-weight: 700; letter-spacing: 0.14em; margin-right: auto; }
+.sd-scope .w-nav i { width: 8cqi; height: 1cqi; border-radius: 1cqi; background: #cbbfb0; }
+.sd-scope .w-main { display: grid; grid-template-columns: 1fr 1.05fr; gap: 4cqi; padding: 2cqi 5cqi 4cqi; min-height: 0; }
+.sd-scope .w-copy { align-self: center; }
+.sd-scope .w-copy p {
+  margin: 0 0 3cqi;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", serif;
+  font-size: 6.4cqi;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.sd-scope .w-copy span { display: block; font-size: 3cqi; color: var(--muted); margin-bottom: 4cqi; }
+.sd-scope .w-copy em { font-style: normal; font-size: 2.8cqi; letter-spacing: 0.16em; border-bottom: 1px solid currentColor; padding-bottom: 0.6cqi; }
+.sd-scope .w-main img { width: 100%; height: 100%; object-fit: cover; border-radius: 1cqi; min-height: 0; }
+.sd-scope .w-thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2cqi; padding: 0 5cqi 5cqi; }
+.sd-scope .w-thumbs i { aspect-ratio: 4 / 3; border-radius: 1cqi; background: #3b2a1f; }
+.sd-scope .w-thumbs i:nth-child(2) { background: #6f7f52; }
+.sd-scope .w-thumbs i:nth-child(3) { background: #9b7a5c; }
+
+@media (max-width: 960px) {
+  .sd-scope .wall { --h: 270px; --radius: 1200; --speed: 50; }
+  .sd-scope .speed-chips { width: min(420px, 100%); }
+}
+@media (max-width: 640px) {
+  .sd-scope .hero { padding-top: 32px; }
+  .sd-scope .hero h1 { font-size: clamp(36px, 10vw, 44px); margin-bottom: 16px; }
+  .sd-scope .speed-chips { gap: 8px; margin-bottom: 18px; }
+  .sd-scope .speed-chips > div { padding: 7px 9px 5px; }
+  .sd-scope .speed-chips strong { font-size: 26px; }
+  .sd-scope .hero-row { flex-direction: column; align-items: stretch; }
+  .sd-scope .hero-facts { font-size: 12px; gap: 6px 0; }
+  .sd-scope .hero-facts li { padding: 0 9px; }
+  .sd-scope .hero-facts li:nth-child(3) { border-left: none; }
+  .sd-scope .wall { --h: 210px; --radius: 760; --gap: 18; --speed: 42; height: calc(var(--h) + 80px); margin-top: 4px; }
+  .sd-scope .wall-stage { top: 30px; }
+  .sd-scope .wall-back img { height: 90px; }
+  .sd-scope .wc-sel::after { font-size: 10px; top: -20px; padding: 4px 6px; }
+  .sd-scope .wc-done { font-size: 10px; padding: 3px 8px; }
+  .sd-scope .wall-note { right: 12px; font-size: 10px; }
+}
 
 /* ============================================================
    制作物マーキー（2段逆走）
@@ -1354,14 +1329,7 @@
 /* ============================================================
    レスポンシブ
    ============================================================ */
-@media (max-width: 1100px) {
-  .sd-scope .studio-chat { margin-left: -12px; }
-}
 @media (max-width: 960px) {
-  .sd-scope .hero::before { inset: 40% 0 0 0; -webkit-mask-image: linear-gradient(180deg, transparent, #000 30%); mask-image: linear-gradient(180deg, transparent, #000 30%); }
-  .sd-scope .hero-inner { grid-template-columns: 1fr; gap: 36px; }
-  .sd-scope .hero-visual { max-width: 580px; width: 100%; margin: 0 auto; }
-  .sd-scope .studio-chat { width: auto; margin: 12px 0 0; }
   .sd-scope .section-grid { grid-template-columns: 1fr; gap: 24px; }
   .sd-scope .reason-grid { grid-template-columns: 1fr; }
   .sd-scope .works-grid { grid-template-columns: 1fr; max-width: 560px; }
@@ -1372,8 +1340,6 @@
   .sd-scope .loop-visual li:not(:last-child)::after { display: none; }
   .sd-scope .flow-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 20px; }
   .sd-scope .flow-num::after { display: none; }
-  .sd-scope .hero-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .sd-scope .hero-metrics > div:nth-child(3) { border-left: none; padding-left: 0; }
   .sd-scope .shindan-form { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .sd-scope .shindan-run { grid-column: 1 / -1; justify-self: center; width: 100%; max-width: 420px; }
   .sd-scope .shindan-cards { grid-template-columns: 1fr; }
@@ -1389,27 +1355,7 @@
   .sd-scope .section-heading-center .section-lead { text-align: left; }
 
   .sd-scope .section-block { padding: 44px 20px; }
-  .sd-scope .hero { padding: 40px 20px 32px; }
-  .sd-scope .hero h1 { font-size: clamp(34px, 9.4vw, 42px); margin-bottom: 20px; }
-  .sd-scope .speed-chips { gap: 8px; }
-  .sd-scope .speed-chips > div { padding: 8px 10px 6px; }
-  .sd-scope .speed-chips strong { font-size: 28px; }
-  .sd-scope .hero-actions { flex-direction: column; align-items: stretch; text-align: center; }
-  .sd-scope .slots-line { justify-content: center; }
-  .sd-scope .hero-cta-note { text-align: center; }
   .sd-scope .primary-cta { width: 100%; padding: 17px 20px; font-size: 16px; }
-  .sd-scope .studio-bar { height: 36px; padding: 0 10px; gap: 8px; }
-  .sd-scope .studio-main { grid-template-columns: 38px minmax(0, 1fr); }
-  .sd-scope .studio-tools [data-tool] { width: 28px; height: 28px; }
-  .sd-scope .studio-tools [data-tool] .ic { width: 15px; height: 15px; }
-  .sd-scope .studio-stage { padding: 16px 12px; }
-  .sd-scope .studio-foot { grid-template-columns: auto minmax(0, 1fr); gap: 10px; padding: 10px 12px; }
-  .sd-scope .studio-eta { display: none; }
-  .sd-scope .studio-cursor { width: 18px; height: 18px; }
-  .sd-scope .hero-metrics { margin-top: 28px; }
-  .sd-scope .hero-metrics > div { padding: 14px 12px 0; }
-  .sd-scope .hero-metrics > div:nth-child(odd) { padding-left: 0; }
-  .sd-scope .hero-metrics dd strong { font-size: 18px; }
   .sd-scope .mq-track span { font-size: 17px; }
 
   .sd-scope .race { padding: 18px 14px 16px; }
