@@ -26,6 +26,8 @@ const base = import.meta.env.BASE_URL;
   title={`${arc.name} | CodeQuest 無料研修`}
   description={arc.description}
 >
+  <!-- 章へのリンク集だけの薄いページなので索引には載せない（リンクはたどらせる） -->
+  <meta slot="head" name="robots" content="noindex, follow" />
   <Header />
 
   <main class="min-h-screen">

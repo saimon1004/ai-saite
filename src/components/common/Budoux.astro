@@ -1,0 +1,31 @@
+---
+// .jp-budoux を付けた要素を BudouX で文節区切りにする（Safari でも語中改行しない）。
+// トップ（index.astro）と同じ方式を、下層ページで使い回すための部品。
+---
+
+<style is:global>
+  .jp-budoux {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+  :is(h1, h2, h3).jp-budoux {
+    text-wrap: balance;
+  }
+  :is(p, li, dd, td).jp-budoux {
+    text-wrap: pretty;
+  }
+  /* 1行20字前後のモバイルでは文節折り返しだと行末が大きく空くので、本文は通常の折り返しに戻す */
+  @media (max-width: 640px) {
+    :is(p, li, dd, td).jp-budoux {
+      word-break: normal;
+    }
+  }
+</style>
+
+<script>
+  import { loadDefaultJapaneseParser } from "budoux";
+  const parser = loadDefaultJapaneseParser();
+  document.querySelectorAll<HTMLElement>(".jp-budoux").forEach((el) => {
+    parser.applyToElement(el);
+  });
+</script>

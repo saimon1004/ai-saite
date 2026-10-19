@@ -1,0 +1,51 @@
+---
+// サービスを「画像・内容・対象・料金」の横並びで比べるリスト（/services/ と /ai-training/ で共用）
+import type { Solution } from "../../data/solutions";
+
+interface Props {
+  items: Solution[];
+}
+
+const { items } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<ul class="divide-y divide-border border-y border-border" role="list">
+  {items.map((s) => (
+    <li class="py-6 grid gap-x-6 gap-y-4 grid-cols-[96px_1fr] md:grid-cols-[200px_1fr_260px] items-start">
+      <a href={s.href} class="block overflow-hidden rounded-md aspect-square md:aspect-[4/2.65]" tabindex="-1" aria-hidden="true">
+        <img src={`${base}${s.image}`} alt="" class="h-full w-full object-cover" loading="lazy" />
+      </a>
+
+      <div class="min-w-0">
+        <h3 class="text-lg font-heading font-black text-navy">
+          <a href={s.href} class="hover:text-teal transition-colors">{s.title}</a>
+        </h3>
+        <p class="jp-budoux mt-2 text-sm text-text-secondary leading-relaxed">{s.description}</p>
+        {s.subLinks && (
+          <ul class="mt-2 flex flex-wrap gap-x-4" role="list">
+            {s.subLinks.map((l) => (
+              <li><a href={l.href} class="text-sm font-bold text-teal-dark hover:underline">{l.label}</a></li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <dl class="col-span-2 md:col-span-1 grid grid-cols-[4.5em_1fr] gap-x-3 gap-y-2 text-sm">
+        <dt class="font-bold text-text-secondary">対象</dt>
+        <dd class="jp-budoux text-text-primary">{s.target}</dd>
+        <dt class="font-bold text-text-secondary">料金</dt>
+        <dd class="jp-budoux font-bold text-navy">{s.price}</dd>
+        <dt class="sr-only">詳細</dt>
+        <dd class="col-start-2">
+          <a href={s.href} class="inline-flex items-center gap-1.5 font-bold text-teal-dark hover:text-navy transition-colors">
+            {s.href === "/contact/" ? "相談する" : "詳しく見る"}
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </dd>
+      </dl>
+    </li>
+  ))}
+</ul>

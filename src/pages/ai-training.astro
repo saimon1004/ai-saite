@@ -1,0 +1,190 @@
+---
+import SinglePageLayout from "../layouts/SinglePageLayout.astro";
+import PageBanner from "../components/common/PageBanner.astro";
+import Budoux from "../components/common/Budoux.astro";
+import SolutionList from "../components/common/SolutionList.astro";
+import StatsBarSection from "../components/sections/StatsBarSection.astro";
+import TrainingModulesSection from "../components/sections/TrainingModulesSection.astro";
+import ResultsSection from "../components/sections/ResultsSection.astro";
+import ContactSection from "../components/sections/ContactSection.astro";
+import { company } from "../data/company";
+import { aiImpactLab } from "../data/services";
+import { learnSolutions } from "../data/solutions";
+
+const { pricing, steps, faq } = aiImpactLab;
+// 研修本体を除いた、AI研修の関連プログラム（助成金・石垣島・採用HP内製化）
+const related = learnSolutions.filter((s) => s.href !== "/ai-training/");
+
+const pageUrl = `${company.url}/ai-training/`;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": `${pageUrl}#service`,
+      name: "AI IMPACT LAB（企業向けAI研修）",
+      serviceType: "法人向けAI研修・リスキリング",
+      description:
+        "外注していたサイト制作・資料作成・業務自動化を、現場の社員がAIで自分たちでつくれるようにする実践型のAI研修。知る・考える・実践するの3段階で、オンライン・対面に対応。",
+      url: pageUrl,
+      provider: { "@id": `${company.url}/#organization` },
+      areaServed: "JP",
+      audience: { "@type": "BusinessAudience", audienceType: "AIを全社で使える状態にしたい企業" },
+      offers: {
+        "@type": "Offer",
+        price: pricing.startPrice.replace(/,/g, ""),
+        priceCurrency: "JPY",
+        priceSpecification: {
+          "@type": "PriceSpecification",
+          minPrice: Number(pricing.startPrice.replace(/,/g, "")),
+          priceCurrency: "JPY",
+          valueAddedTaxIncluded: false,
+        },
+      },
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faq.map((f) => ({
+        "@type": "Question",
+        name: f.question,
+        acceptedAnswer: { "@type": "Answer", text: f.answer },
+      })),
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "ホーム", item: `${company.url}/` },
+        { "@type": "ListItem", position: 2, name: "サービス一覧", item: `${company.url}/services/` },
+        { "@type": "ListItem", position: 3, name: "AI研修", item: pageUrl },
+      ],
+    },
+  ],
+};
+---
+
+<SinglePageLayout
+  title="企業向けAI研修 AI IMPACT LAB｜実践型リスキリング"
+  description="株式会社SAIMONの企業向けAI研修「AI IMPACT LAB」。知る・考える・実践するの3段階で、現場の社員がAIで資料・サイト・業務自動化を自分たちでつくれるようにします。10万円〜（税抜）、人材開発支援助成金の活用にも対応。"
+  jsonLd={jsonLd}
+>
+  <PageBanner
+    eyebrow="AI IMPACT LAB"
+    title="企業向けAI研修"
+    lead="外注していたサイト制作・資料作成・業務自動化を、現場の社員が自分たちでつくれるようにする。そのための実践型AI研修です。"
+    image="solutions/solution-training.jpg"
+    breadcrumb={[{ label: "ホーム", href: "/" }, { label: "サービス一覧", href: "/services/" }, { label: "AI研修" }]}
+  />
+
+  <StatsBarSection />
+  <TrainingModulesSection />
+  <ResultsSection />
+
+  <!-- 料金 -->
+  <section id="price" class="saimon-section bg-white" aria-labelledby="price-title">
+    <div class="saimon-shell">
+      <div class="text-center mb-8">
+        <p class="saimon-eyebrow">料金</p>
+        <h2 id="price-title" class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">料金と、ご利用の流れ</h2>
+      </div>
+
+      <div class="grid gap-8 lg:grid-cols-2 lg:gap-12 items-start">
+        <div>
+          <p class="text-4xl sm:text-5xl font-heading font-black text-navy">
+            ¥{pricing.startPrice}<span class="ml-1 text-base font-bold text-text-secondary">{pricing.priceNote}</span>
+          </p>
+          <p class="jp-budoux mt-4 text-sm sm:text-base text-text-secondary leading-relaxed">
+            貴社の課題やレベル感に合わせて、研修内容・時間・回数を柔軟にカスタマイズいたします。
+          </p>
+          <ul class="mt-6 space-y-3" role="list">
+            {pricing.includes.map((item) => (
+              <li class="flex items-start gap-3 text-sm text-text-primary font-medium">
+                <svg class="mt-0.5 w-5 h-5 text-teal shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <ul class="mt-6 flex flex-wrap gap-2" role="list">
+            {pricing.features.map((f) => (
+              <li class="text-sm font-medium bg-navy/5 text-navy px-3 py-1.5 rounded-md">{f}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="rounded-lg border border-teal/30 bg-teal/5 p-6 sm:p-8">
+          <p class="font-bold text-teal-dark text-sm">{pricing.subsidy.label}</p>
+          <p class="mt-1 text-sm text-text-secondary">{pricing.subsidy.description}</p>
+          <p class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">{pricing.subsidy.price}</p>
+          <p class="jp-budoux mt-3 text-sm text-text-secondary leading-relaxed">
+            人材開発支援助成金（事業展開等リスキリング支援コース）を使うと、中小企業は研修経費の最大75%が助成されます。
+          </p>
+          <a href="/subsidy-plan/" class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-teal-dark hover:text-navy transition-colors">
+            助成金活用プランを見る
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <h3 class="mt-14 mb-6 text-center text-lg font-heading font-black text-navy">ご利用の流れ</h3>
+      <ol class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6" role="list">
+        {steps.map((step) => (
+          <li class="text-center">
+            <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-navy text-white font-heading text-sm font-black">
+              {String(step.number).padStart(2, "0")}
+            </span>
+            <p class="mt-3 text-sm font-bold text-text-primary">{step.title}</p>
+            <p class="jp-budoux mt-1 text-xs text-text-secondary leading-relaxed">{step.description}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 関連プログラム -->
+  <section class="saimon-section bg-surface" aria-labelledby="related-title">
+    <div class="saimon-shell">
+      <div class="text-center mb-8">
+        <p class="saimon-eyebrow">関連プログラム</p>
+        <h2 id="related-title" class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">目的に合わせて選べるAI研修</h2>
+      </div>
+      <SolutionList items={related} />
+      <p class="mt-8 text-center">
+        <a href="/cases/" class="inline-flex items-center gap-2 text-sm font-bold text-navy hover:text-teal transition-colors">
+          研修から生まれた導入事例を見る
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="saimon-section bg-white" aria-labelledby="faq-title">
+    <div class="saimon-shell">
+      <div class="text-center mb-8">
+        <p class="saimon-eyebrow">FAQ</p>
+        <h2 id="faq-title" class="mt-3 text-2xl sm:text-3xl font-heading font-black text-navy">よくあるご質問</h2>
+      </div>
+      <div class="max-w-3xl mx-auto divide-y divide-border border-y border-border">
+        {faq.map((item) => (
+          <details class="group">
+            <summary class="flex items-center justify-between gap-4 cursor-pointer py-5 text-sm sm:text-base font-bold text-text-primary hover:text-navy transition-colors list-none">
+              <span class="jp-budoux">{item.question}</span>
+              <svg class="w-4 h-4 text-text-secondary shrink-0 transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <p class="jp-budoux pb-5 text-sm text-text-secondary leading-relaxed">{item.answer}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <ContactSection />
+  <Budoux />
+</SinglePageLayout>

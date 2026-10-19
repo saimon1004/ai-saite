@@ -4,7 +4,7 @@ export const company = {
   ceo: "齋本 竜也",
   ceoReading: "さいもと たつや",
   founded: "2020年10月",
-  business: "AI研修事業（AI IMPACT LAB）",
+  business: "AI研修事業（AI IMPACT LAB）、飲食店のInstagram運用（おまかせグラム）、デザイン制作（サブスクデザイン）、AI活用の顧問・業務委託",
   postalCode: "〒540-0014",
   address: "大阪府大阪市中央区龍造寺町4-3",
 

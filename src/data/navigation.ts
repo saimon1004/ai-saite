@@ -6,12 +6,11 @@ export interface NavItem {
 
 export const navigation: NavItem[] = [
   { label: "トップ", labelEn: "HOME", href: "/" },
+  { label: "サービス一覧", labelEn: "SERVICES", href: "/services/" },
+  { label: "AI研修", labelEn: "AI TRAINING", href: "/ai-training/" },
   { label: "おまかせグラム", labelEn: "INSTAGRAM", href: "/insta-auto/" },
-  { label: "石垣島研修", labelEn: "ISHIGAKI", href: "/ishigaki/" },
   { label: "サブスクデザイン", labelEn: "DESIGN", href: "/subsc-design/" },
   { label: "顔の見えるFAQ", labelEn: "VIDEO FAQ", href: "/video-faq/" },
-  { label: "研修プログラム", labelEn: "PROGRAM", href: "/#modules" },
-  { label: "導入実績", labelEn: "CASES", href: "/#cases" },
-  { label: "無料研修コンテンツ", labelEn: "無料研修", href: "/blog/" },
+  { label: "導入事例", labelEn: "CASES", href: "/cases/" },
   { label: "お問い合わせ", labelEn: "CONTACT", href: "/contact/" },
 ];

@@ -3,6 +3,12 @@ import { aiImpactLab } from "../../data/services";
 
 const base = import.meta.env.BASE_URL;
 const { modules } = aiImpactLab;
+interface Props {
+  /** トップでだけ専用ページへの導線を出す */
+  moreHref?: string;
+  moreLabel?: string;
+}
+const { moreHref, moreLabel = "詳しく見る" } = Astro.props;
 ---
 
 <section id="modules" class="py-11 sm:py-14" data-particles>
@@ -119,5 +125,15 @@ const { modules } = aiImpactLab;
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
       </a>
     </div>
+    {moreHref && (
+      <div class="mt-10 text-center">
+        <a href={moreHref} class="inline-flex items-center gap-2 text-sm font-bold text-navy hover:text-teal transition-colors">
+          {moreLabel}
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    )}
   </div>
 </section>

@@ -1,0 +1,47 @@
+---
+// 下層ページの見出し帯。写真の上にネイビーを重ね、パンくず・H1・リードを置く。
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead?: string;
+  image: string;
+  breadcrumb: { label: string; href?: string }[];
+}
+
+const { eyebrow, title, lead, image, breadcrumb } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<section class="relative overflow-hidden bg-navy">
+  <img
+    src={`${base}${image}`}
+    alt=""
+    aria-hidden="true"
+    class="absolute inset-0 h-full w-full object-cover"
+    fetchpriority="high"
+  />
+  <div class="absolute inset-0 bg-navy/80" aria-hidden="true"></div>
+
+  <div class="relative saimon-shell py-10 sm:py-14">
+    <nav aria-label="パンくずリスト">
+      <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-white/70">
+        {breadcrumb.map((item, idx) => (
+          <li class="flex items-center gap-2">
+            {item.href ? (
+              <a href={item.href} class="hover:text-white transition-colors">{item.label}</a>
+            ) : (
+              <span aria-current="page" class="text-white">{item.label}</span>
+            )}
+            {idx < breadcrumb.length - 1 && <span aria-hidden="true">/</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <p class="mt-6 font-heading text-xs sm:text-sm font-black uppercase text-teal-light">{eyebrow}</p>
+    <h1 class="jp-budoux mt-2 text-3xl sm:text-4xl font-heading font-black text-white leading-tight">{title}</h1>
+    {lead && (
+      <p class="jp-budoux mt-4 max-w-2xl text-sm sm:text-base text-white/85 leading-relaxed">{lead}</p>
+    )}
+  </div>
+</section>

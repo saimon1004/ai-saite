@@ -16,6 +16,7 @@ export default defineConfig({
       // 載せたままだと「索引に入れろ（sitemap）」と「入れるな（meta）」の
       // 矛盾したシグナルになり、クロールも無駄になる。
       filter: (page) =>
+        !new URL(page).pathname.startsWith("/blog/series/") &&
         ![
           "/insta-auto/terms/",
           "/insta-auto/tokushoho/",

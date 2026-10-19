@@ -1,73 +1,7 @@
 ---
+import { learnSolutions, delegateSolutions } from "../../data/solutions";
+
 const base = import.meta.env.BASE_URL;
-
-interface Solution {
-  title: string;
-  description: string;
-  image: string;
-  href: string;
-  badge?: { label: string; tone: "new" | "popular" };
-}
-
-// 学ぶ（研修系）— 社内に"つくる力"を育てる
-const learnSolutions: Solution[] = [
-  {
-    title: "AI実務研修",
-    description: "実務に必要なAIスキルを、体系的に学べる研修プログラム。",
-    image: "solutions/solution-training.jpg",
-    href: "#modules",
-  },
-  {
-    title: "助成金活用プラン",
-    description: "人材開発支援助成金を使い、費用を抑えてAI研修を導入。申請テンプレートも提供します。",
-    image: "solutions/solution-subsidy.jpg",
-    href: "/subsidy-plan/",
-  },
-  {
-    title: "石垣島AI実践研修",
-    description: "石垣島の自然のなかで、AI実践研修とチームビルディングを3泊4日で。",
-    image: "ishigaki/cover.jpg",
-    href: "/ishigaki/",
-    badge: { label: "NEW", tone: "new" },
-  },
-  {
-    title: "採用HP内製化",
-    description: "採用HPを採用担当者がAIと一緒に更新できる体制をつくる3日間。外注待ちをなくし、改善を社内資産に。",
-    image: "recruit-hp/assets/hero-ai-jitsumu-poster.png",
-    href: "/recruit-hp/",
-    badge: { label: "人気", tone: "popular" },
-  },
-];
-
-// 任せる（制作・伴走系）— プロの"つくる力"を月額で
-const delegateSolutions: Solution[] = [
-  {
-    title: "サブスクデザイン",
-    description: "保険・互助会業界特化の月額定額デザイン制作。バナー・チラシ・LP・Webサイトを専属デザイナーに何度でも依頼可能。",
-    image: "solutions/solution-design.jpg",
-    href: "/subsc-design/",
-  },
-  {
-    title: "顔の見えるFAQ",
-    description: "よくある質問に、担当者が動画で答えるFAQチャットボット。タグを貼るだけで設置でき、動画の制作はSAIMONが引き受けます。",
-    image: "video-faq/assets/card-video-faq-v2.jpg",
-    href: "/video-faq/",
-    badge: { label: "NEW", tone: "new" },
-  },
-  {
-    title: "おまかせグラム",
-    description: "飲食店のInstagram運用を、写真を送るのと承認するのだけに。AIが加工と文章を用意し、承認すると決めた時間に投稿されます。",
-    image: "insta-auto/assets/feed-salad.jpg",
-    href: "/insta-auto/",
-    badge: { label: "NEW", tone: "new" },
-  },
-  {
-    title: "顧問・伴走支援",
-    description: "研修後のAI活用を月額で継続サポート。定着支援から業務改善の相談まで、社外のAI顧問として伴走します。",
-    image: "solutions/solution-advisor.jpg",
-    href: "#contact",
-  },
-];
 
 const badgeStyles: Record<"new" | "popular", string> = {
   new: "bg-amber-400 text-navy ring-2 ring-white",
@@ -83,7 +17,7 @@ const badgeStyles: Record<"new" | "popular", string> = {
         "育てる"と"任せる"、2つのかたち。
       </h2>
       <p class="mt-4 max-w-2xl mx-auto text-sm sm:text-base text-text-secondary leading-relaxed">
-        SAIMONは、AI研修で社内人材を育てる「学ぶ」ソリューションと、プロのデザインチームが制作を担う「任せる」ソリューションの2本柱で、企業の"つくる力"を支えます。
+        SAIMONは、AI研修で社内人材を育てる「学ぶ」と、デザイン制作・Instagram運用・AI顧問をプロが引き受ける「任せる」の2つのかたちで、企業の"つくる力"を支えます。
       </p>
     </div>
 
@@ -167,6 +101,15 @@ const badgeStyles: Record<"new" | "popular", string> = {
           </a>
         ))}
       </div>
+    </div>
+
+    <div class="mt-10 text-center">
+      <a href="/services/" class="inline-flex items-center gap-2 text-sm font-bold text-navy hover:text-teal transition-colors">
+        料金と対象を一覧で比べる
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
     </div>
   </div>
 </section>

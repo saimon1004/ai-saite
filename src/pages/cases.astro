@@ -1,0 +1,70 @@
+---
+import SinglePageLayout from "../layouts/SinglePageLayout.astro";
+import PageBanner from "../components/common/PageBanner.astro";
+import Budoux from "../components/common/Budoux.astro";
+import CaseStudySection from "../components/sections/CaseStudySection.astro";
+import WorksSection from "../components/sections/WorksSection.astro";
+import ClientsSection from "../components/sections/ClientsSection.astro";
+import { company } from "../data/company";
+import { aiImpactLab } from "../data/services";
+
+const pageUrl = `${company.url}/cases/`;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      name: "導入事例",
+      url: pageUrl,
+      about: { "@id": `${company.url}/#organization` },
+      hasPart: aiImpactLab.caseStudies.map((cs) => ({
+        "@type": "CreativeWork",
+        name: cs.titleJa,
+        description: cs.description,
+        ...(cs.url && { url: cs.url }),
+      })),
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "ホーム", item: `${company.url}/` },
+        { "@type": "ListItem", position: 2, name: "導入事例", item: pageUrl },
+      ],
+    },
+  ],
+};
+---
+
+<SinglePageLayout
+  title="導入事例｜AI研修とデザイン制作の実績"
+  description="株式会社SAIMONの導入事例。AI研修を受けた現場の担当者が、採用サイト・サービスサイト・自社HPを自分たちで制作した事例と、デザイン制作の実績、お取引先を紹介します。"
+  jsonLd={jsonLd}
+>
+  <PageBanner
+    eyebrow="Cases"
+    title="導入事例"
+    lead="AI研修を受けた現場の担当者が、自分たちの手でつくったサイトと、SAIMONが制作を引き受けた実績です。"
+    image="solutions/solution-design.jpg"
+    breadcrumb={[{ label: "ホーム", href: "/" }, { label: "導入事例" }]}
+  />
+
+  <CaseStudySection />
+  <WorksSection />
+  <ClientsSection />
+
+  <section class="bg-navy py-11 sm:py-14">
+    <div class="saimon-shell text-center">
+      <h2 class="jp-budoux text-xl sm:text-2xl font-heading font-black text-white">自社でも同じことができるか、まずはご相談ください</h2>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a href="/contact/" class="inline-flex items-center gap-2 bg-teal text-white font-bold text-sm px-8 py-3.5 rounded-md hover:bg-teal-dark transition-colors">
+          無料で相談する
+        </a>
+        <a href="/services/" class="inline-flex items-center gap-2 border border-white/40 text-white font-bold text-sm px-8 py-3.5 rounded-md hover:bg-white/10 transition-colors">
+          サービス一覧を見る
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Budoux />
+</SinglePageLayout>

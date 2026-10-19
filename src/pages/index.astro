@@ -14,6 +14,7 @@ import CompanySection from "../components/sections/CompanySection.astro";
 import ContactSection from "../components/sections/ContactSection.astro";
 import { company } from "../data/company";
 import { siteConfig } from "../data/seo";
+import { learnSolutions, delegateSolutions } from "../data/solutions";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -44,16 +45,14 @@ const jsonLd = {
       email: company.email,
       description: siteConfig.defaultDescription,
       // AI検索が「SAIMONは何を提供しているか」をサービスページと結び付けられるようにする
-      makesOffer: [
-        { name: "おまかせグラム（飲食店Instagram運用代行）", url: "/insta-auto/" },
-        { name: "AI IMPACT LAB（企業向けAI研修）", url: "/#modules" },
-        { name: "石垣島で学ぶAI実践研修", url: "/ishigaki/" },
-        { name: "サブスクデザイン（月額定額のデザイン制作）", url: "/subsc-design/" },
-        { name: "顔の見えるFAQ（動画FAQチャットボット）", url: "/video-faq/" },
-        { name: "採用HP内製化プログラム", url: "/recruit-hp/" },
-      ].map((s) => ({
+      makesOffer: [...learnSolutions, ...delegateSolutions].map((s) => ({
         "@type": "Offer",
-        itemOffered: { "@type": "Service", name: s.name, url: `${company.url}${s.url}` },
+        itemOffered: {
+          "@type": "Service",
+          name: s.serviceName ?? s.title,
+          // 顧問は専用ページがない（問い合わせ先）ので URL を付けない
+          ...(s.href !== "/contact/" && { url: `${company.url}${s.href}` }),
+        },
       })),
     },
     {
@@ -79,9 +78,9 @@ const jsonLd = {
   <SolutionOverviewSection />
   <StatsBarSection />
   <ResultsSection />
-  <TrainingModulesSection />
+  <TrainingModulesSection moreHref="/ai-training/" moreLabel="AI研修の料金・流れ・よくある質問" />
   <ClientsSection />
-  <CaseStudySection />
+  <CaseStudySection moreHref="/cases/" moreLabel="導入事例をすべて見る" />
   <WorksSection />
   <AboutSection />
   <TeamSection />
