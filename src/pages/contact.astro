@@ -1,0 +1,23 @@
+---
+import SinglePageLayout from "../layouts/SinglePageLayout.astro";
+import ContactSection from "../components/sections/ContactSection.astro";
+import { company } from "../data/company";
+
+// 以前は /contact/ が存在せず 404 になっていた（GA4 で 5 週間に 11PV）。
+// フォームはトップと同じ ContactSection を使い、contact_submit の計測もそのまま効かせる。
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: "お問い合わせ",
+  url: `${company.url}/contact/`,
+  about: { "@id": `${company.url}/#organization` },
+};
+---
+
+<SinglePageLayout
+  title="お問い合わせ"
+  description="株式会社SAIMONへのお問い合わせ窓口です。AI研修、おまかせグラム、サブスクデザイン、顔の見えるFAQなど、各サービスのご相談・お見積もりはこちらからどうぞ。"
+  jsonLd={jsonLd}
+>
+  <ContactSection />
+</SinglePageLayout>

@@ -21,7 +21,9 @@ const {
   chatbot = true,
 } = Astro.props;
 
-const pageTitle = title === siteConfig.siteName
+// ページ側で社名を含めたタイトルを渡すこともあるので、含まれていれば付け足さない
+// （以前は「〜 | 株式会社SAIMON | 株式会社SAIMON」と二重になっていた）
+const pageTitle = title.includes(siteConfig.siteName)
   ? title
   : `${title} | ${siteConfig.siteName}`;
 

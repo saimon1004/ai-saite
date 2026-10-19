@@ -43,6 +43,18 @@ const jsonLd = {
       },
       email: company.email,
       description: siteConfig.defaultDescription,
+      // AI検索が「SAIMONは何を提供しているか」をサービスページと結び付けられるようにする
+      makesOffer: [
+        { name: "おまかせグラム（飲食店Instagram運用代行）", url: "/insta-auto/" },
+        { name: "AI IMPACT LAB（企業向けAI研修）", url: "/#modules" },
+        { name: "石垣島で学ぶAI実践研修", url: "/ishigaki/" },
+        { name: "サブスクデザイン（月額定額のデザイン制作）", url: "/subsc-design/" },
+        { name: "顔の見えるFAQ（動画FAQチャットボット）", url: "/video-faq/" },
+        { name: "採用HP内製化プログラム", url: "/recruit-hp/" },
+      ].map((s) => ({
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: s.name, url: `${company.url}${s.url}` },
+      })),
     },
     {
       "@type": "WebSite",
