@@ -539,11 +539,12 @@ h1[data-bx],h2[data-bx],h3[data-bx],.dh[data-bx],.hit-box .h[data-bx]{text-wrap:
 .loop{margin-top:20px}
 .pay-h{margin-top:20px}
 /* 見出しの右のキャラ */
-.ttl{position:absolute;right:0;top:2px;width:124px;height:160px}
-.sec:has(>.ttl) .sec-en,.sec:has(>.ttl) h2{padding-right:88px}
-.sec:has(>.ttl) h2{min-height:84px}
+.ttl{position:absolute;right:10px;top:26px;width:92px;height:118px}
+/* 見出しが1行のときは、見出しの高さに収まる大きさにする */
+.ttl.one{top:14px;width:76px;height:96px}
+.sec:has(>.ttl) h2{padding-right:80px}
 html:not(.has3d) .ttl{display:none}
-html:not(.has3d) .sec:has(>.ttl) .sec-en,html:not(.has3d) .sec:has(>.ttl) h2{padding-right:0}
+html:not(.has3d) .sec:has(>.ttl) h2{padding-right:0}
 .form .cbx{display:flex;gap:8px;align-items:flex-start;font-size:12px;font-weight:700;line-height:1.6}
 .form .cbx input{width:18px;height:18px;margin:2px 0 0;flex:none;accent-color:var(--navy)}
 .form .cbx a{color:var(--navy);text-decoration:underline}
@@ -731,7 +732,7 @@ fbq('init','2033821807210209');fbq('track','PageView');}
   </section>
 
   <section class="sec" id="price">
-    <div class="c3d ttl" data-kind="team" data-room="1.3" data-chars="beaver" data-pose="cheer" aria-hidden="true"></div>
+    <div class="c3d ttl one" data-kind="team" data-room="1.3" data-chars="beaver" data-pose="cheer" aria-hidden="true"></div>
     <p class="sec-en rv">PRICE</p>
     <h2 class="rv" data-bx><span>料金</span></h2>
     <p class="lead rv" data-bx>初期費用は​0円です。​店長モードを​使うか​どうかで、​2つの​プランから​選べます。</p>
@@ -750,14 +751,14 @@ fbq('init','2033821807210209');fbq('track','PageView');}
   </section>
 
   <section class="sec" id="status" style="background:var(--g1)">
-    <div class="c3d ttl" data-kind="team" data-room="1.3" data-chars="beaver" aria-hidden="true"></div>
+    <div class="c3d ttl one" data-kind="team" data-room="1.3" data-chars="beaver" aria-hidden="true"></div>
     <p class="sec-en rv">FEATURES</p>
     <h2 class="rv" data-bx>いまできる​こと</h2>
     <ul class="st rv"><li data-bx><i data-lucide="check"></i><span>店長モード（今週の投稿メニュー）<span class="st-new">NEW</span></span></li><li data-bx><i data-lucide="check"></i>フィード・カルーセル・リールの​投稿</li><li data-bx><i data-lucide="check"></i>お店の​プロフィールに​沿った​文章と​ハッシュタグ</li><li data-bx><i data-lucide="check"></i>料理に​寄せた​トリミングと​控えめな​補正</li><li data-bx><i data-lucide="check"></i>メニュー名と​価格の​登録と、​自動での​照合</li><li data-bx><i data-lucide="check"></i>予約投稿・日時の​変更・取り消し</li><li data-bx><i data-lucide="check"></i>投稿に​失敗した​ときの​自動再試行と​通知</li><li data-bx><i data-lucide="check"></i>毎月の​レポート</li></ul>
   </section>
 
   <section class="sec" id="faq">
-    <div class="c3d ttl" data-kind="team" data-room="1.3" data-chars="owl" data-pose="think" aria-hidden="true"></div>
+    <div class="c3d ttl one" data-kind="team" data-room="1.3" data-chars="owl" data-pose="think" aria-hidden="true"></div>
     <p class="sec-en rv">FAQ</p>
     <h2 class="rv" data-bx>よく​ある​ご質問</h2>
     <div class="faq-list">
